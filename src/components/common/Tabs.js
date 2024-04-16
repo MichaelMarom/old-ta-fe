@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Tabs = ({ links, activeTab, setActiveTab, activeTabIndex, setActiveTabIndex }) => {
@@ -30,7 +30,7 @@ const Tabs = ({ links, activeTab, setActiveTab, activeTabIndex, setActiveTabInde
                         onClick={() => handleTabClick(index, tab.component)}
                         className={location.pathname === tab.link ? 'active' : ''}
                     >
-                        <a>{tab.label}</a>
+                        {tab.label}
                     </li>
                 ))}
             </ul>

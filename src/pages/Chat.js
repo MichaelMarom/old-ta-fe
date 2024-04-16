@@ -49,7 +49,7 @@ function Chat() {
             }
             setStatus();
         }
-    }, [loggedInUserDetail])
+    }, [loggedInUserDetail, loggedInRole, studentLoggedIn])
 
     useEffect(() => {
         if (loggedInUserDetail.AcademyId && selectedChat.id) {
@@ -85,7 +85,7 @@ function Chat() {
 
     useEffect(() => {
         arrivalMsg && arrivalMsg.senderId === selectedChat.AcademyId && setMessages((prev) => [...prev, { ...arrivalMsg, photo: selectedChat.avatarSrc }]);
-    }, [arrivalMsg]);
+    }, [arrivalMsg, selectedChat]);
 
     useEffect(() => {
         if (socket) {
@@ -93,18 +93,15 @@ function Chat() {
                 setArrivalMsg(msgObj);
             });
             socket.on("online", (id) => {
-                const updatedChats = chats.map(chat => chat.AcademyId === id ? { ...chat, online: true } : chat)
-                console.log(updatedChats, chats)
                 loggedInUserDetail.AcademyId && dispatch(setChats(loggedInUserDetail.AcademyId, loggedInRole))
             })
             socket.on("offline", (id, role, action) => {
-                const updatedChats = chats.map(chat => chat.AcademyId === id ? { ...chat, online: false } : chat)
-                console.log(updatedChats, chats, id, action)
+                // chats.map(chat => chat.AcademyId === id ? { ...chat, online: false } : chat)
                 id && action === 'disconn' && set_online_status(0, id, role)
                 loggedInUserDetail.AcademyId && dispatch(setChats(loggedInUserDetail.AcademyId, loggedInRole))
             })
         }
-    }, []);
+    }, [loggedInUserDetail, dispatch, loggedInRole]);
 
     useEffect(() => {
         setFetchingMessages(true);
@@ -124,7 +121,7 @@ function Chat() {
             const currentPath = `/${loggedInRole}/chat/${selectedChat.id}`;
             navigate(currentPath);
         }
-    }, [selectedChat.id, navigate, studentLoggedIn])
+    }, [selectedChat.id, navigate, studentLoggedIn, loggedInRole])
 
     useEffect(() => {
         // eslint-disable-next-line

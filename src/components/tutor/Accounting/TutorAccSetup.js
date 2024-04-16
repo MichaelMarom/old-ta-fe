@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { get_bank_details, post_tutor_setup, upload_tutor_bank } from '../../../axios/tutor';
 import { showDate } from '../../../helperFunctions/timeHelperFunctions';
-import Acad_Commission from './Acad_Commission._Table';
+import AcadCommission from './Acad_Commission._Table';
 import Actions from '../../common/Actions'
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux'
@@ -31,7 +31,7 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
 
     useEffect(() => {
         !email?.length && set_email(tutor.Email)
-    }, [tutor])
+    }, [tutor, email])
 
     useEffect(() => {
         if (!dbValues.AcademyId) setEditMode(true)
@@ -161,7 +161,7 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
             }
         }
         setUnSavedChanges(compareStates(dbValues, localState))
-    }, [dbValues, acct_name, acct_type, acct, bank_name, ssh, email, routing, payment_option])
+    }, [dbValues, acct_name, acct_type, acct, bank_name, ssh, email, routing, payment_option, tutor])
 
     return (
         <div className="d-flex" style={{ height: "72vh", overflowY:"auto" }}>
@@ -180,7 +180,7 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                             showDate(sessions?.[sessions.length - 1]?.start, monthFormatWithYYYY) :'N/A'}</p>
                         </div>
 
-                        <Acad_Commission />
+                    <AcadCommission />
                     </div>
 
                 </div>

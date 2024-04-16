@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
 import { get_user_detail } from '../../axios/auth';
-import Button from '../common/Button';
 import Modal from '../common/Modal'
 import { useAuth, useSignIn } from "@clerk/clerk-react";
 import { setUser } from '../../redux/auth_state/auth';
@@ -101,7 +100,7 @@ export const ForgetPasswordModal = ({ modalOpen, setOpenModel }) => {
             }
             fetchUser()
         }
-    }, [userId, isLoaded, token, isSignedIn])
+    }, [userId, isLoaded, token, isSignedIn, dispatch, navigate])
 
     return (
         <Modal

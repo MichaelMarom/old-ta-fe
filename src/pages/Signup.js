@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { FaFacebook, FaGoogle, FaTwitter, FaGithub } from 'react-icons/fa';
+import React, {  useState } from 'react';
+import { Link } from 'react-router-dom';
 import { signup } from '../axios/auth';
 import { toast } from 'react-toastify';
-import { useSignUp, useAuth, SignUp, SignIn, useUser } from "@clerk/clerk-react";
-import Button from '../components/common/Button';
+import { useSignUp, useAuth } from "@clerk/clerk-react";
 
 import TAButton from '../components/common/TAButton'
 const Signup = () => {
@@ -13,57 +11,13 @@ const Signup = () => {
     password: '',
     role: ''
   });
-  const [errors, setErrors] = useState({})
   const [loading, setLoading] = useState(false);
   const [verifying, setVerifying]=useState(false)
-  const navigate = useNavigate()
   const { isLoaded, signUp, setActive } = useSignUp();
-  const { user } = useUser();
-  const { userId } = useAuth()
 
   const { getToken } = useAuth();
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState("");
-
-  const handleValidation = () => {
-    const newErrors = {};
-
-    if (signupFormValues.email.trim() === '') {
-      newErrors.email = 'Email is required';
-    } else if (!isValidEmail(signupFormValues.email)) {
-      newErrors.email = 'Invalid email address';
-    }
-
-    if (signupFormValues.password.trim() === '') {
-      newErrors.password = 'Password is required';
-    } else if (!isValidPassword(signupFormValues.password)) {
-      newErrors.password = 'Password must be at least 6 characters and contain letters and numbers';
-    }
-    const acceptedRoles = ['tutor', 'student', 'visitor', 'admin', 'parent']
-    if (!acceptedRoles.includes(signupFormValues.role)) {
-      newErrors.role = 'Please select role! '
-    }
-
-    setErrors(newErrors);
-
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const isValidEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const isValidPassword = (password) => {
-    if (password.length < 6) {
-      return false;
-    }
-
-    const hasLetter = /[a-zA-Z]/.test(password);
-    const hasNumber = /\d/.test(password);
-
-    return hasLetter && hasNumber;
-  }
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -172,7 +126,6 @@ const Signup = () => {
                           value={signupFormValues.email}
                           onChange={handleInputChange}
                         />
-                        {errors.email && <span className='small text-danger'>{errors.email}</span>}
                       </div>
                       <div className="form-outline mb-4 col-md-6">
                         <input
@@ -184,7 +137,6 @@ const Signup = () => {
                           value={signupFormValues.password}
                           onChange={handleInputChange}
                         />
-                        {errors.password && <span className='small text-danger'>{errors.password}</span>}
 
                       </div>
                     </div>
@@ -201,7 +153,6 @@ const Signup = () => {
                         <option value="parent">Parent</option>
                         <option value="admin">Admin</option>
                       </select>
-                      {errors.role && <span className='small text-danger'>{errors.role}</span>}
                     </div>
 
                     <TAButton type="submit" loading={loading} buttonText={'Sign Up'} className="saving-btn blinking-button mb-4" />

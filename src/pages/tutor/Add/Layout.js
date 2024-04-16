@@ -4,7 +4,6 @@ import Tabs from '../../../components/common/Tabs'
 import Ads from '../../../components/student/Ads'
 import List from '../../../components/tutor/Ads/ListComponent'
 import Classified from '../../../components/tutor/Ads/Classified'
-import { useLocation } from 'react-router-dom'
 
 const Layout = ({ children }) => {
     let [activeTab, setActiveTab] = useState('')

@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import Cards from "react-credit-cards-2";
-import "react-credit-cards-2/dist/es/styles-compiled.css";
+import React from "react";
+// import Cards from "react-credit-cards-2";
+// import "react-credit-cards-2/dist/es/styles-compiled.css";
 import Payment from "payment";
 
 const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, setErrors }) => {
 
     const handleInputChange = (e) => {
-        console.log(e, 'ehm ehm')
         const { name, value } = e.target;
         setCreditDebitState((prev) => ({ ...prev, [name]: value }));
         if (name === "number") {
@@ -43,13 +42,13 @@ const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, 
         <div className='container m-auto'>
             <div className="d-flex justify-content-center align-items-center mt-4" style={{ gap: "2%" }}>
                 <div className="mt-4">
-                    <Cards
+                    {/* <Cards
                         number={creditDebitState.number}
                         expiry={creditDebitState.expiry}
                         cvc={creditDebitState.cvc}
                         name={creditDebitState.name}
                         focused={creditDebitState.focus}
-                    />
+                    /> */}
                 </div>
 
                 <div className="mt-3">

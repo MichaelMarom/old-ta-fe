@@ -13,7 +13,6 @@ import Actions from '../common/Actions';
 import { toast } from 'react-toastify';
 import Button from '../common/Button';
 import BTN_ICON from '../../assets/images/button__icon.png';
-import { useNavigate } from 'react-router-dom';
 import { compareStates } from '../../helperFunctions/generalHelperFunctions';
 
 const StudentSetup = () => {
@@ -22,7 +21,6 @@ const StudentSetup = () => {
     let [mname, set_mname] = useState('')
     let [sname, set_sname] = useState('')
     let [email, set_email] = useState('')
-    let [pwd, set_pwd] = useState('')
 
     let [cell, set_cell] = useState('')
     let [acadId, set_acadId] = useState('')
@@ -40,14 +38,11 @@ const StudentSetup = () => {
 
     let [photo, set_photo] = useState('')
 
-    let [countryList, setCountryList] = useState('')
-    let [stateList, setStateList] = useState('');
     const [parentAEmail, setParentAEmail] = useState('');
     const [parentBEmail, setParentBEmail] = useState('');
     const [parentAName, setParentAName] = useState('');
     const [parentBName, setParentBName] = useState('');
     const [secLan, setSecLang] = useState('')
-    const navigate = useNavigate()
 
     const options = {
         "Australia": AUST_STATES,
@@ -56,16 +51,15 @@ const StudentSetup = () => {
         "UnitedKingdom": UK_STATES
     }
 
-    let [lang_list, setlang_list] = useState([
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
+    let lang_list = [
         'English',
         'French',
         'German',
         'Spanish'
-    ])
-    let [GMTList, setGMTList] = useState('')
+    ]
     let [GradeList, setGradeList] = useState('')
 
-    let [data, set_data] = useState(false);
     const [dateTime, setDateTime] = useState('')
     const [userId, setUserId] = useState('')
     const { user } = useSelector(state => state.user)
@@ -82,7 +76,7 @@ const StudentSetup = () => {
         let response = await upload_setup_form(fname, mname, sname, user.role === 'student' ?
             user.email : email,
             lang, secLan, parentAEmail, parentBEmail, parentAName, parentBName,
-            is_18, pwd, cell, grade, add1, add2, city, state, zipCode, country, timeZone,
+            is_18, null, cell, grade, add1, add2, city, state, zipCode, country, timeZone,
             photo, acadId, parentConsent,
             user.role === 'student' ? user.SID : userId)
         if (response.bool) {
@@ -109,6 +103,7 @@ const StudentSetup = () => {
     }, [student])
 
     //unsavedChanges
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
     const currentState = {
         Address2: add2,
         AgeGrade: is_18,
@@ -179,7 +174,7 @@ const StudentSetup = () => {
             }
         }
         fetchStudentSetup();
-    }, [student])
+    }, [student, user])
 
     useEffect(() => {
         let id = window.localStorage.getItem('student_user_id') !== null ? window.localStorage.getItem('student_user_id') : null
@@ -201,7 +196,6 @@ const StudentSetup = () => {
             }} value=''>Country</option>
 
         list.unshift(head);
-        setCountryList(list)
 
 
         let gmt_list = GMT.map((item, index) =>
@@ -215,7 +209,6 @@ const StudentSetup = () => {
             }} value=''>GMT</option>
 
         gmt_list.unshift(gmt_head);
-        setGMTList(gmt_list)
 
 
         let grades_list = GRADES.map((item, index) =>
@@ -240,9 +233,8 @@ const StudentSetup = () => {
             style={{ height: '50px', width: '100%', outline: 'none', padding: '0 10px 0 10px', borderRadius: '0' }} value=''>State</option>
 
         states_list.unshift(state_head);
-        setStateList(states_list)
 
-    }, [data])
+    }, [])
 
     let handleImage = () => {
 
@@ -298,7 +290,7 @@ const StudentSetup = () => {
                         style={{ display: 'none' }} id="photo" />
                     <div className="m-auto border shadow" style={{ width: "200px", height: "200px" }}>
                         <img src={photo}
-                            style={{ height: "100%", width: "100%" }} alt='photo' />
+                            style={{ height: "100%", width: "100%" }} alt='profile-pic' />
                     </div>
                     <label id='btn' className='action-btn mt-4' htmlFor="photo">
                         <div className='button__content'>
@@ -567,7 +559,7 @@ const StudentSetup = () => {
                         {is_18 === 'no' && <div
                             style={{
                                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                                width: '100%', display: 'flex', justifyContent: 'center', whiteSpace: 'nowrap'
+                                width: '100%',  whiteSpace: 'nowrap'
                             }}>
 
                             <h5>Parent(s) video recording consent</h5>
@@ -595,7 +587,7 @@ const StudentSetup = () => {
                         </div>}
                         {is_18 === 'yes' && <div
                             style={{
-                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                               flexDirection: 'column', alignItems: 'center',
                                 width: '100%', display: 'flex', justifyContent: 'center', whiteSpace: 'nowrap'
                             }}>
 

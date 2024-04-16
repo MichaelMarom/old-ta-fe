@@ -29,13 +29,12 @@ function EventModal({
 }) {
   const [selectedType, setSelectedType] = useState(null);
   const [canPostEvents, setCanPostEvents] = useState(true)
-  const sessionInFuture = convertToDate(clickedSlot.end).getTime() > (new Date()).getTime()
   const { selectedTutor } = useSelector(state => state.selectedTutor);
   const [rescheduleTime, setRescheduleTime] = useState(timeZone ? (moment().add(1, 'hours').set({ minute: 0 }).tz(timeZone)).toDate() : moment().toDate())
   const [invoiceNum, setInvoiceNum] = useState(null)
 
   const formatUTC = (dateInt, addOffset = false) => {
-    let date = (!dateInt || dateInt.length < 1) ? new Date : new Date(dateInt);
+    let date = (!dateInt || dateInt.length < 1) ? new Date() : new Date(dateInt);
     const currentDate = new Date();
     if (date < currentDate) {
       return null; // You can also throw an error here if you prefer
@@ -108,7 +107,8 @@ function EventModal({
   }, [selectedType])
 
   useEffect(() => {
-    const existIntroSession = reservedSlots?.some(slot => slot.type === 'intro' && selectedTutor.subject === slot.subject && (!isStudentLoggedIn || slot.studentId === student.AcademyId))
+    const existIntroSession = reservedSlots?.some(slot => slot.type === 'intro' &&
+     selectedTutor.subject === slot.subject && (!isStudentLoggedIn || slot.studentId === student.AcademyId))
     if (existIntroSession && selectedType === 'intro' && selectedSlots[0]?.start) {
       toast.warning('Cannot add more than 1 Intro Session!')
       setCanPostEvents(false)
@@ -124,7 +124,7 @@ function EventModal({
     else {
       setCanPostEvents(true)
     }
-  }, [selectedSlots, selectedType, reservedSlots])
+  }, [selectedSlots, selectedType, reservedSlots, isStudentLoggedIn, selectedTutor, student, ])
 
   return (
     <LeftSideBar
@@ -166,7 +166,7 @@ function EventModal({
               onClick={() => setSelectedType("reserved")}>Mark as Reserved Session</button>
             <button type="button" className="action-btn btn btn-sm"
               onClick={() => setSelectedType("delete")}>Delete</button>
-            {clickedSlot.request == 'postpone' &&
+            {clickedSlot.request === 'postpone' &&
               <div className='d-flex justify-content-between align-items-center h-100'>
                 <DatePicker
                   selected={formatUTC(rescheduleTime, true)}
@@ -184,7 +184,7 @@ function EventModal({
         </div>
 
         {
-          selectedType == 'delete' &&
+          selectedType === 'delete' &&
           <div className=" p-4">
             <hr />
             <p className="text-danger">Are you sure you want to delete your reservation?!</p>

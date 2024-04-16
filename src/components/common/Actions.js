@@ -68,14 +68,14 @@ const Actions = ({
         { next: null, current: `tutor-profile`, back: null, withRolePrefix: true },
     ]
 
-    const currentTabInfo = (isStudentSide ? studentTabsNavigationInfo : tutorTabsNavigationInfo).
-        find(tab => tab.current === currentTab)
-    const nextTabInfo = (isStudentSide ? studentTabsNavigationInfo : tutorTabsNavigationInfo).
-        find(tab => {
+    const currentTabInfo = (isStudentSide ? studentTabsNavigationInfo : tutorTabsNavigationInfo)
+        .find(tab => tab.current === currentTab)
+    const nextTabInfo = (isStudentSide ? studentTabsNavigationInfo : tutorTabsNavigationInfo)
+        .find(tab => {
             return tab.back === currentTab
         })
-    const backTabInfo = (isStudentSide ? studentTabsNavigationInfo : tutorTabsNavigationInfo).
-        find(tab => tab.next === currentTab)
+    const backTabInfo = (isStudentSide ? studentTabsNavigationInfo : tutorTabsNavigationInfo)
+        .find(tab => tab.next === currentTab)
 
     const isNextTabExist = currentTabInfo.next;
     const isBackTabExist = currentTabInfo.back;
@@ -132,9 +132,9 @@ const Actions = ({
                     </div>
                     <div className="" style={{ width: "10%" }}>
                         <button onClick={onNext}
-                            disabled={(!saveDisabled && (unSavedChanges || loading))
+                            disabled={((!saveDisabled && (unSavedChanges || loading))
                                 || !isNextTabExist || nextDisabled ||
-                                currentTab === STEPS[tutor.Step] && !isStudentSide}
+                                currentTab === STEPS[tutor.Step]) && !isStudentSide}
                             type='button' className="next-btn action-btn btn">
                             <div className="button__content">
                                 <div className="button__icon">

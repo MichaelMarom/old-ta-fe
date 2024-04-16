@@ -45,7 +45,7 @@ const SubMenu = ({ faculty, selectedFaculty, setSelectedFaculty }) => {
                                 background: item.Id === selectedFaculty ? "#2471A3" : "",
                                 color: item.Id === selectedFaculty ? " #F7F9F9" : "",
                             }}
-                            onClick={() => setSelectedFaculty(item.Id)}><a>{item.Faculty}</a></li>
+                            onClick={() => setSelectedFaculty(item.Id)}>{item.Faculty}</li>
                     }
                     )
                 }

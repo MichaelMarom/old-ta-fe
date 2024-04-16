@@ -132,13 +132,14 @@ const Rates = () => {
         result?.length && setSubjects(result)
       }).catch(err => toast.error(err.message))
     }
-  }, [discountEnabled])
+  }, [discountEnabled, tutor])
 
   useEffect(() => {
     fetchTutorRateRecord()
     // eslint-disable-next-line
   }, []);
 
+  // eslint-disable-next-line
   const currentState = {
     MutiStudentHourlyRate: MultiStudentHourlyRate,
     CancellationPolicy: selectedCancellationPolicy,

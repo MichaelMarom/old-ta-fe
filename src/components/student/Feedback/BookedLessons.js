@@ -6,7 +6,6 @@ import StarRating from '../../common/StarRating';
 import { convertToDate } from '../../common/Calendar/Calendar';
 import { useSelector } from 'react-redux';
 import Tooltip from '../../common/ToolTip';
-import { moment } from '../../../config/moment'
 import TAButton from '../../common/TAButton'
 import { convertTutorIdToName } from '../../../helperFunctions/generalHelperFunctions';
 
@@ -17,7 +16,6 @@ function BookedLessons({
   setEvents
 }) {
   const { shortlist } = useSelector(state => state.shortlist)
-  const [eventsWithPhoto, setEventsWithPhoto] = useState([])
   const [sortedEvents, setSortedEvents] = useState([])
 
   useEffect(() => {
@@ -44,7 +42,6 @@ function BookedLessons({
       return startDateB - startDateA;
     })
     setSortedEvents(sortedEvents)
-    setEventsWithPhoto(updatedEvents);
 
   }, [events, shortlist]);
 

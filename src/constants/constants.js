@@ -1048,11 +1048,11 @@ export const COMMISSION_DATA = [
   }
 ]
 
-const setDefaultHours = `
-update  TutorSetup set disableHoursRange = '[["1:00 am","2:00 am"],["2:00 am","3:00 am"],["3:00 am","4:00 am"],["4:00 am","5:00 am"],["5:00 am","6:00 am"],["7:00 am","8:00 am"],["9:00 pm","10:00 pm"],["10:00 pm","11:00 pm"],["11:00 pm","12:00 am (midnight)"],["6:00 am","7:00 am"],["12:00 am","1:00 am","midnight"]]'
-ALTER TABLE TutorSetup
-add disableHoursRange VARCHAR(MAX) DEFAULT '[["1:00 am","2:00 am"],["2:00 am","3:00 am"],["3:00 am","4:00 am"],["4:00 am","5:00 am"],["5:00 am","6:00 am"],["7:00 am","8:00 am"],["9:00 pm","10:00 pm"],["10:00 pm","11:00 pm"],["11:00 pm","12:00 am (midnight)"],["6:00 am","7:00 am"],["12:00 am","1:00 am","midnight"]]'
-`
+// const setDefaultHours = `
+// update  TutorSetup set disableHoursRange = '[["1:00 am","2:00 am"],["2:00 am","3:00 am"],["3:00 am","4:00 am"],["4:00 am","5:00 am"],["5:00 am","6:00 am"],["7:00 am","8:00 am"],["9:00 pm","10:00 pm"],["10:00 pm","11:00 pm"],["11:00 pm","12:00 am (midnight)"],["6:00 am","7:00 am"],["12:00 am","1:00 am","midnight"]]'
+// ALTER TABLE TutorSetup
+// add disableHoursRange VARCHAR(MAX) DEFAULT '[["1:00 am","2:00 am"],["2:00 am","3:00 am"],["3:00 am","4:00 am"],["4:00 am","5:00 am"],["5:00 am","6:00 am"],["7:00 am","8:00 am"],["9:00 pm","10:00 pm"],["10:00 pm","11:00 pm"],["11:00 pm","12:00 am (midnight)"],["6:00 am","7:00 am"],["12:00 am","1:00 am","midnight"]]'
+// `
 export const loggedInAdmin = {}
 
 export const languages = [
@@ -1162,60 +1162,60 @@ export const DEFAULT_URL_AFTER_LOGIN = {
 }
 
 
-const countriesWithUnicodeFlags = [
-  { name: 'Angola', flag: '🇦🇴' },
-  { name: 'Burkina Faso', flag: '🇧🇫' },
-  { name: 'Burundi', flag: '🇧🇮' },
-  { name: 'Benin', flag: '🇧🇯' },
-  { name: 'Botswana', flag: '🇧🇼' },
-  { name: 'Democratic Republic of the Congo', flag: '🇨🇩' },
-  { name: 'Central African Republic', flag: '🇨🇫' },
-  { name: 'Republic of the Congo', flag: '🇨🇬' },
-  { name: 'Côte d\'Ivoire', flag: '🇨🇮' },
-  { name: 'Cameroon', flag: '🇨🇲' },
-  { name: 'Cape Verde', flag: '🇨🇻' },
-  { name: 'Djibouti', flag: '🇩🇯' },
-  { name: 'Algeria', flag: '🇩🇿' },
-  { name: 'Egypt', flag: '🇪🇬' },
-  { name: 'Western Sahara', flag: '🇪🇭' },
-  { name: 'Eritrea', flag: '🇪🇷' },
-  { name: 'Ethiopia', flag: '🇪🇹' },
-  { name: 'Gabon', flag: '🇬🇦' },
-  { name: 'Ghana', flag: '🇬🇭' },
-  { name: 'Gambia', flag: '🇬🇲' },
-  { name: 'Guinea', flag: '🇬🇳' },
-  { name: 'Equatorial Guinea', flag: '🇬🇶' },
-  { name: 'Guinea-Bissau', flag: '🇬🇼' },
-  { name: 'Kenya', flag: '🇰🇪' },
-  { name: 'Comoros', flag: '🇰🇲' },
-  { name: 'Liberia', flag: '🇱🇷' },
-  { name: 'Lesotho', flag: '🇱🇸' },
-  { name: 'Libya', flag: '🇱🇾' },
-  { name: 'Morocco', flag: '🇲🇦' },
-  { name: 'Madagascar', flag: '🇲🇬' },
-  { name: 'Mali', flag: '🇲🇱' },
-  { name: 'Mauritania', flag: '🇲🇷' },
-  { name: 'Mauritius', flag: '🇲🇺' },
-  { name: 'Malawi', flag: '🇲🇼' },
-  { name: 'Mozambique', flag: '🇲🇿' },
-  { name: 'Namibia', flag: '🇳🇦' },
-  { name: 'Niger', flag: '🇳🇪' },
-  { name: 'Nigeria', flag: '🇳🇬' },
-  { name: 'Rwanda', flag: '🇷🇼' },
-  { name: 'Seychelles', flag: '🇸🇨' },
-  { name: 'Sudan', flag: '🇸🇩' },
-  { name: 'Sierra Leone', flag: '🇸🇱' },
-  { name: 'Senegal', flag: '🇸🇳' },
-  { name: 'Somalia', flag: '🇸🇴' },
-  { name: 'South Sudan', flag: '🇸🇸' },
-  { name: 'Eswatini', flag: '🇸🇿' },
-  { name: 'Chad', flag: '🇹🇩' },
-  { name: 'Togo', flag: '🇹🇬' },
-  { name: 'Tunisia', flag: '🇹🇳' },
-  { name: 'Tanzania', flag: '🇹🇿' },
-  { name: 'Uganda', flag: '🇺🇬' },
-  { name: 'Zambia', flag: '🇿🇲' },
-  { name: 'Zimbabwe', flag: '🇿🇼' },
-  // ... (The Americas, Asia & The Middle East, Europe, Oceania, Island Nations & Territories)
-];
+// const countriesWithUnicodeFlags = [
+//   { name: 'Angola', flag: '🇦🇴' },
+//   { name: 'Burkina Faso', flag: '🇧🇫' },
+//   { name: 'Burundi', flag: '🇧🇮' },
+//   { name: 'Benin', flag: '🇧🇯' },
+//   { name: 'Botswana', flag: '🇧🇼' },
+//   { name: 'Democratic Republic of the Congo', flag: '🇨🇩' },
+//   { name: 'Central African Republic', flag: '🇨🇫' },
+//   { name: 'Republic of the Congo', flag: '🇨🇬' },
+//   { name: 'Côte d\'Ivoire', flag: '🇨🇮' },
+//   { name: 'Cameroon', flag: '🇨🇲' },
+//   { name: 'Cape Verde', flag: '🇨🇻' },
+//   { name: 'Djibouti', flag: '🇩🇯' },
+//   { name: 'Algeria', flag: '🇩🇿' },
+//   { name: 'Egypt', flag: '🇪🇬' },
+//   { name: 'Western Sahara', flag: '🇪🇭' },
+//   { name: 'Eritrea', flag: '🇪🇷' },
+//   { name: 'Ethiopia', flag: '🇪🇹' },
+//   { name: 'Gabon', flag: '🇬🇦' },
+//   { name: 'Ghana', flag: '🇬🇭' },
+//   { name: 'Gambia', flag: '🇬🇲' },
+//   { name: 'Guinea', flag: '🇬🇳' },
+//   { name: 'Equatorial Guinea', flag: '🇬🇶' },
+//   { name: 'Guinea-Bissau', flag: '🇬🇼' },
+//   { name: 'Kenya', flag: '🇰🇪' },
+//   { name: 'Comoros', flag: '🇰🇲' },
+//   { name: 'Liberia', flag: '🇱🇷' },
+//   { name: 'Lesotho', flag: '🇱🇸' },
+//   { name: 'Libya', flag: '🇱🇾' },
+//   { name: 'Morocco', flag: '🇲🇦' },
+//   { name: 'Madagascar', flag: '🇲🇬' },
+//   { name: 'Mali', flag: '🇲🇱' },
+//   { name: 'Mauritania', flag: '🇲🇷' },
+//   { name: 'Mauritius', flag: '🇲🇺' },
+//   { name: 'Malawi', flag: '🇲🇼' },
+//   { name: 'Mozambique', flag: '🇲🇿' },
+//   { name: 'Namibia', flag: '🇳🇦' },
+//   { name: 'Niger', flag: '🇳🇪' },
+//   { name: 'Nigeria', flag: '🇳🇬' },
+//   { name: 'Rwanda', flag: '🇷🇼' },
+//   { name: 'Seychelles', flag: '🇸🇨' },
+//   { name: 'Sudan', flag: '🇸🇩' },
+//   { name: 'Sierra Leone', flag: '🇸🇱' },
+//   { name: 'Senegal', flag: '🇸🇳' },
+//   { name: 'Somalia', flag: '🇸🇴' },
+//   { name: 'South Sudan', flag: '🇸🇸' },
+//   { name: 'Eswatini', flag: '🇸🇿' },
+//   { name: 'Chad', flag: '🇹🇩' },
+//   { name: 'Togo', flag: '🇹🇬' },
+//   { name: 'Tunisia', flag: '🇹🇳' },
+//   { name: 'Tanzania', flag: '🇹🇿' },
+//   { name: 'Uganda', flag: '🇺🇬' },
+//   { name: 'Zambia', flag: '🇿🇲' },
+//   { name: 'Zimbabwe', flag: '🇿🇼' },
+//   // ... (The Americas, Asia & The Middle East, Europe, Oceania, Island Nations & Territories)
+// ];
 

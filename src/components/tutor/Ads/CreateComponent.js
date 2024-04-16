@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { fetch_tutor_ads, get_tutor_market_data, post_tutor_ad } from "../../../axios/tutor";
 import { useSelector } from "react-redux";
 import { capitalizeFirstLetter, compareStates } from "../../../helperFunctions/generalHelperFunctions";
-import { FaEye } from "react-icons/fa";
 import Pill from '../../common/Pill'
 import Loading from "../../common/Loading";
 import { RxCross2 } from "react-icons/rx";
@@ -47,7 +46,7 @@ const CreateComponent = ({ setActiveTab }) => {
                 })
                 .catch(err => console.log(err))
         }
-    }, [])
+    }, [AcademyId])
 
     useEffect(() => {
         if (tutor.AcademyId) {
@@ -108,6 +107,7 @@ const CreateComponent = ({ setActiveTab }) => {
     }
 
     //compare changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
     const currentState = {
         Subject: subject,
         Grades: grades,

@@ -1,6 +1,5 @@
 import React from 'react';
 import Avatar from '../common/Avatar';
-import Loading from '../common/Loading';
 
 function DiscussionItem({ fetchingMessages, screenName, online, setSelectedChat, selectedChat, datetime, message, avatarSrc, unread, groupAmount, id }) {
     return (

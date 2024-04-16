@@ -204,17 +204,17 @@ const ShowCalendar = ({
         setTimeZone(timezone[0] || null);
       }
     }
-  }, [student, tutor])
+  }, [student, tutor, isStudentLoggedIn])
 
   //setting default timeZone
   useEffect(() => {
-    console.log(timeZone, tutor, selectedTutor, student)
     moment.tz.setDefault(timeZone);
   }, [timeZone]);
 
   useEffect(() => {
     fetchBookings();
     //remove student //changes made
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, [selectedTutor, user])
 
   const onStudentModalRequestClose = () => {
@@ -301,6 +301,7 @@ const ShowCalendar = ({
 
   useEffect(() => {
     getTutorSetup()
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, [timeZone])
 
   useEffect(() => {
@@ -372,7 +373,7 @@ const ShowCalendar = ({
         ...slot,
         type,
         id: uuidv4(),
-        title: type == 'reserved' ? 'Reserved' :
+        title: type === 'reserved' ? 'Reserved' :
           type === 'intro' ? 'Intro' : "Booked",
         studentName: student.FirstName,
         studentId: student.AcademyId,
@@ -441,7 +442,7 @@ const ShowCalendar = ({
 
     if (!isStudentRoute && !disableColor) { toast.warning("Please select color before disabling slots!"); return }
     if (isEventAlreadyExist && slotInfo.action === "doubleClick") { toast.warning("This time slot already reserved. Please select from white slots to continue!"); return }
-    if (clickedUpperSlot && activeView != views.MONTH) return;
+    if (clickedUpperSlot && activeView !== views.MONTH) return;
     if (clickedDate.getTime() < (new Date()).getTime() && slotInfo.action === "doubleClick") {
       toast.warning(`Cannot ${!isStudentLoggedIn ? 'Disable/Enable ' : "Book/Reserve"} Older Slots`);
       return
@@ -500,14 +501,14 @@ const ShowCalendar = ({
               const storedMomentDate = moment(storedDate);
               return storedMomentDate.isSame(slotDateMoment, 'day')
             });
-            if (disabledHours &&
+            if ((disabledHours &&
               disabledHours?.some((timeRange) => {
                 const [start, end] = timeRange;
                 return formattedTime >= start && formattedTime < end;
-              }) || existInDisabledDate) {
+              })) || existInDisabledDate) {
 
               if (!enableHourSlots?.some(date => convertToDate(date).getTime() === slotInfo.start.getTime())) {
-                setEnableHourSlots([...(enableHourSlots ?? []), , slotInfo.start, endTime])
+                setEnableHourSlots([...(enableHourSlots ?? []), slotInfo.start, endTime])
               }
               else {
                 const reservedSlotsHaveClickedSlot = reservedSlots?.some(slot => slot.start.getTime() === slotInfo.start.getTime())
@@ -567,13 +568,13 @@ const ShowCalendar = ({
 
           //student general
           const existInReservedSlots = reservedSlots?.some(dateTime => convertToDate(dateTime).getTime() === clickedDate.getTime())
-          if (!existInEnableSlots && disableWeekDays?.includes(dayName) && !existsinEnabledInMonth && !existsinEnabledInWeek || isDisableDate) {
+          if ((!existInEnableSlots && disableWeekDays?.includes(dayName) && !existsinEnabledInMonth && !existsinEnabledInWeek) || isDisableDate) {
             alert("This slot is blocked, please select a white slot.");
           }
-          else if (existInDisableHourSlots || !existInEnableSlots && disabledHours?.some((timeRange) => {
+          else if (existInDisableHourSlots || (!existInEnableSlots && disabledHours?.some((timeRange) => {
             const [start] = timeRange;
             return formattedTime === start;
-          })) {
+          }))) {
             alert("This slot is blocked, please select a white slot.");
           }
           else {
@@ -643,6 +644,7 @@ const ShowCalendar = ({
         const enabledSlotUTCTime = moment(convertToDate(dateTime));
         if (moment.utc(date).isSame(moment(convertToDate(dateTime))))
           return slotUTCTime.isSame(enabledSlotUTCTime)
+        return false
       })
       const twentyFourHoursAgo = moment(date).subtract(24, 'hours');
       const existInDisableDates = disableDates?.some(slot => moment(slot).isBetween(twentyFourHoursAgo, moment(date)))
@@ -654,8 +656,8 @@ const ShowCalendar = ({
         const momentTime = moment(formattedTime, 'h:mm A');
 
         if (endTime.isBefore(startTime)) {
-          return slot[0] === formattedTime && momentTime.isBetween(startTime, moment('11:59 PM', 'h:mm A'), undefined, '[]') ||
-            momentTime.isBetween(moment('12:00 AM', 'h:mm A'), endTime, undefined, '[]');
+          return slot[0] === formattedTime && (momentTime.isBetween(startTime, moment('11:59 PM', 'h:mm A'), undefined, '[]') ||
+            momentTime.isBetween(moment('12:00 AM', 'h:mm A'), endTime, undefined, '[]'));
         }
 
         return slot[0] === formattedTime && momentTime.isBetween(startTime, endTime, undefined, '[]');
@@ -722,7 +724,11 @@ const ShowCalendar = ({
 
     }
     return {};
-  }, [disabledHours, enableHourSlots, disableHourSlots, reservedSlots, selectedSlots, weekDaysTimeSlots, disableColor]);
+  }, [disabledHours, enableHourSlots, disableHourSlots,
+    reservedSlots, selectedSlots, weekDaysTimeSlots,
+    disableColor, disableDates, isStudentLoggedIn,
+    selectedTutor, timeDifference, timeZone, tutor
+  ]);
 
   const dayPropGetter = useCallback((date) => {
     const dayName = moment(date).format("dddd");
@@ -742,9 +748,9 @@ const ShowCalendar = ({
       return storedMomentDate.isSame(slotDateMoment, 'day')
     })
 
-    if (isFutureDate &&
+    if ((isFutureDate &&
       (!isStudentLoggedIn && disableWeekDays && disableWeekDays?.includes(dayName))
-      && !existsinEnabledInMonth && !existsinEnabledInWeek || isDisableDate) {
+      && !existsinEnabledInMonth && !existsinEnabledInWeek) || isDisableDate) {
       return {
         style: {
           backgroundColor: disableColor
@@ -757,7 +763,7 @@ const ShowCalendar = ({
     }
     return {};
   },
-    [disableWeekDays, enabledDays, disableDates, disableColor]);
+    [disableWeekDays, enabledDays, disableDates, disableColor, isStudentLoggedIn]);
 
   const eventPropGetter = (event) => {
     const secSubject = reservedSlots?.some(slot => slot.type === 'intro'
@@ -885,11 +891,12 @@ const ShowCalendar = ({
       const middle = weekTab.scrollHeight / 3.5;
       weekTab.scrollTop = middle;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, [activeView, isStudentRoute]);
 
   useEffect(() => {
     if (isStudentRoute) setActiveView('week')
-  }, [location])
+  }, [location, isStudentRoute])
 
   //update day end slot to 11:59PM --> 12:PM end time does not show events
   function updateDayEndSlotEndTime() {

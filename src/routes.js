@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { Route, Routes, useLocation, useNavigate, useRoutes } from "react-router-dom";
-import { isExpired, decodeToken } from 'react-jwt'
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { isExpired } from 'react-jwt'
 import React from "react";
 
 import "./styles/Tab_Styles/LargeScreen.css";
@@ -24,12 +24,12 @@ import { setTutor } from "./redux/tutor_store/tutorData";
 import { setChats } from "./redux/chat/chat";
 import { moment } from './config/moment';
 import {
-  useClerk, useAuth, useUser,
+  useClerk, useAuth,
   SignedIn
 } from '@clerk/clerk-react';
 import { redirect_to_login } from "./helperFunctions/auth";
-import { setStudentSessions } from "./redux/student_store/studentSessions";
-import { setTutorSessions } from "./redux/tutor_store/tutorSessions";
+// import { setStudentSessions } from "./redux/student_store/studentSessions";
+// import { setTutorSessions } from "./redux/tutor_store/tutorSessions";
 import TutorClass from "./pages/tutor/TutorClass";
 import CallWithChatExperience from "./pages/tutor/Test1";
 
@@ -45,15 +45,12 @@ const App = () => {
   const { tutor } = useSelector((state => state.tutor))
 
   const [activeRoutes, setActiveRoutes] = useState([]);
-  const storedUser = localStorage.getItem("user");
   const studentUserId = localStorage.getItem('student_user_id')
   const tutorUserId = localStorage.getItem('tutor_user_id')
   const studentLoggedIn = user?.role === 'student';
   const loggedInUserDetail = studentLoggedIn ? student : tutor;
   const role = studentLoggedIn ? 'student' : 'tutor';
   const nullValues = ['undefined', 'null'];
-
-  const screen = location.pathname.split('/')[1]
 
   const handleExpiredToken = (result) => {
     const isExpired = result?.response?.data?.message?.includes('expired');
@@ -89,7 +86,8 @@ const App = () => {
       }
       fetch()
     }
-  }, [userId, token, isSignedIn])
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
+  }, [userId, token, isSignedIn, dispatch, navigate])
 
   useEffect(() => {
     if (user && user.role !== 'admin' && user.SID && isSignedIn && token)
@@ -97,6 +95,7 @@ const App = () => {
         handleExpiredToken(result);
         result?.data?.[0]?.AcademyId && localStorage.setItem("tutor_user_id", result?.data?.[0]?.AcademyId);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, [user, isSignedIn, token]);
 
   //dispatch
@@ -107,7 +106,7 @@ const App = () => {
     else {
       moment.tz.setDefault(tutor.timeZone);
     }
-  }, [tutor, student, userId, isSignedIn])
+  }, [tutor, student, userId, isSignedIn, studentLoggedIn])
 
   //sessions :nextsession, :allsessions, :time remaing for next lesson
   useEffect(() => {
@@ -143,6 +142,7 @@ const App = () => {
 
   useEffect(() => {
     if (userId && token && isSignedIn) getStudentDetails()
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, [dispatch, studentUserId, userId, isSignedIn, token])
 
   useEffect(() => {
@@ -207,7 +207,7 @@ const App = () => {
       }
     }
     else { navigate('/login') }
-  }, [])
+  }, [navigate])
 
   return (
     <Routes>

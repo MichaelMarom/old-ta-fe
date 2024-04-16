@@ -15,7 +15,6 @@ function SessionsTable({
   selectedEvent,
 }) {
   const { shortlist } = useSelector(state => state.shortlist)
-  const [eventsWithPhoto, setEventsWithPhoto] = useState([])
   const [sortedEvents, setSortedEvents] = useState([])
 
   useEffect(() => {
@@ -42,7 +41,6 @@ function SessionsTable({
       return startDateB - startDateA;
     })
     setSortedEvents(sortedEvents)
-    setEventsWithPhoto(updatedEvents);
 
   }, [events, shortlist]);
   const Header = [{

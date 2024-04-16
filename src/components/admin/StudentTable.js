@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { get_student_data, set_student_status } from '../../axios/admin';
+import { get_student_data } from '../../axios/admin';
 import { COLUMNS } from '../../Tables/Admin/column_0';
 import { convertGMTOffsetToLocalString } from '../../helperFunctions/timeHelperFunctions'
 import Loading from '../common/Loading'
@@ -86,7 +85,7 @@ const StudentTable = () => {
                                             </td>
 
                                             <td data-src={null}>
-                                                <img src={item.Photo} style={{ height: '80px', width: '100px' }} />
+                                                <img src={item.Photo} alt="profile=pic" style={{ height: '80px', width: '100px' }} />
                                             </td>
                                             <td data-src={item.AcademyId}>{item.AcademyId}</td>
                                             <td data-src={item.FirstName + ' ' + item.LastName}>{item.FirstName + ' ' + item.LastName}</td>

@@ -28,11 +28,9 @@ const TutorClass = () => {
     (state) => state.tutorSessions
   );
 
-  const [zenModeEnabled, setZenModeEnabled] = useState(false);
-  const [gridModeEnabled, setGridModeEnabled] = useState(false);
   const [excalidrawAPI, setExcalidrawAPI] = useState(null);
   const [elements, setElements] = useState([]);
-  const [collaborators, setCollaborators] = useState(new Map());
+  // const [collaborators, setCollaborators] = useState(new Map());
   const [files, setFiles] = useState([]);
   const navigate = useNavigate();
 
@@ -112,6 +110,7 @@ const TutorClass = () => {
         }
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, [
     sessionId,
     student,
@@ -129,7 +128,7 @@ const TutorClass = () => {
     ) {
       navigate(`/${user.role}/feedback`);
     }
-  }, [timeRemainingToEndCurrentSession, currentSession, tutorCurrentSession]);
+  }, [timeRemainingToEndCurrentSession, currentSession, tutorCurrentSession, navigate, user]);
 
   useEffect(() => {
     if (openedSession.start) {
@@ -237,7 +236,8 @@ const TutorClass = () => {
         }
       });
     }
-  }, [sessionId, excalidrawAPI, sessionTime, timeRemainingToEndCurrentSession]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
+  }, [sessionId, excalidrawAPI, sessionTime, timeRemainingToEndCurrentSession, user, openedSession, hasAuth]);
 
   useEffect(() => {
     if (user.role === "student") {
@@ -253,7 +253,7 @@ const TutorClass = () => {
     if (excalidrawAPI) {
       excalidrawAPI.updateScene({ elements });
     }
-  }, [elements, collaborators, excalidrawAPI]);
+  }, [elements, excalidrawAPI]);
 
   useEffect(() => {
     excalidrawAPI &&
@@ -306,7 +306,7 @@ const TutorClass = () => {
         hasAuthorization: isChecked,
       });
     }
-  }, [isChecked, sessionId, sessionTime, timeRemainingToEndCurrentSession]);
+  }, [isChecked, sessionId, sessionTime, timeRemainingToEndCurrentSession, student]);
 
   useEffect(() => {
     excalidrawAPI &&
@@ -388,7 +388,7 @@ const TutorClass = () => {
                       )}
                   </WelcomeScreen.Center.Heading>
                 }
-                <img src={logo} at="logo" width={400} height={130} />
+                <img src={logo} alt="logo" width={400} height={130} />
 
                 <WelcomeScreen.Center.Heading>
                   {user.role === "tutor" &&

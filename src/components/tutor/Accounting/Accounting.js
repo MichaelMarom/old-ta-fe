@@ -14,7 +14,9 @@ const Accounting = () => {
     const [activeTabIndex, setActiveTabIndex] = useState(0);
     const AcademyId = localStorage.getItem('tutor_user_id')
 
-    useEffect(() => { setActiveTab(<TutorAccSetup sessions={sessions} currentYearAccHours={currentYearHrs} currentYearEarning={currentYearEarning} previousYearEarning={previousYearEarning} />) }, [sessions])
+    useEffect(() => { setActiveTab(<TutorAccSetup sessions={sessions} currentYearAccHours={currentYearHrs}
+         currentYearEarning={currentYearEarning} previousYearEarning={previousYearEarning} />) }, 
+         [sessions, currentYearEarning, previousYearEarning,currentYearHrs ])
 
     useEffect(() => {
         const fetchSessionDetails = async () => {
@@ -27,7 +29,7 @@ const Accounting = () => {
             }
         }
         fetchSessionDetails()
-    }, [])
+    }, [AcademyId])
 
     const tabs = [
         { label: 'Account Settings', component: <TutorAccSetup sessions={sessions} currentYearAccHours={currentYearHrs} currentYearEarning={currentYearEarning} previousYearEarning={previousYearEarning} /> },

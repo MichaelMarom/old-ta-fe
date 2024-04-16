@@ -66,7 +66,7 @@ const Feedback = () => {
             })
 
             const removedPhotoSessions = updatedSlots.map(sessions => {
-                const { ['photo']: omittedKey, ...rest } = sessions;
+                const { photo, ...rest } = sessions;
                 return rest;
             })
             dispatch(postStudentBookings({
@@ -94,7 +94,7 @@ const Feedback = () => {
             return slot
         })
         const removedPhotoSessions = updatedSlots.map(sessions => {
-            const { ['photo']: omittedKey, ...rest } = sessions;
+            const { photo, ...rest } = sessions;
             return rest;
         })
         const data = dispatch(postStudentBookings({
@@ -149,7 +149,7 @@ const Feedback = () => {
 
         setFeedbackData(updatedSlots)
         setSelectedEvent({ ...selectedEvent, comment })
-
+// eslint-disable-next-line react-hooks/exhaustive-deps 
     }, [comment])
 
     useEffect(() => {
@@ -167,7 +167,7 @@ const Feedback = () => {
         }
         else setComment('')
         setQuestions(questions.map(question => ({ ...question, star: null })))
-    }, [selectedEvent.id])
+    }, [selectedEvent.id, questions, selectedEvent, tutor])
 
     if (fetchingSessions)
         return <Loading />

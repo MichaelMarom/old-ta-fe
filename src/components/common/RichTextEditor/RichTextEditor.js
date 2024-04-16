@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import ReactQuill, { Quill } from 'react-quill';
 import ImageResize from 'quill-image-resize-module-react';
-import ImageDropAndPaste from 'quill-image-drop-and-paste'
+// import ImageDropAndPaste from 'quill-image-drop-and-paste'
 import 'react-quill/dist/quill.snow.css';
 
 import './styles.css'

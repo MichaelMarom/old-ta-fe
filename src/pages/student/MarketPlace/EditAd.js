@@ -30,7 +30,6 @@ const EditAd = () => {
     const [timeZone, setTimezone] = useState('')
     const [certificate, setCertificate] = useState('')
     const [loading, setLoading] = useState(false)
-    const [status, setStatus] = useState('')
     const [dataFetched, setDataFetched] = useState(false)
     const [publishDate, setPublishDate] = useState(null)
 
@@ -43,6 +42,7 @@ const EditAd = () => {
 
     const navigate = useNavigate();
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const currentState = {
         AdHeader: header,
         Subject: subject,
@@ -82,7 +82,7 @@ const EditAd = () => {
                 .catch(err => toast.error(err.message))
         }
 
-    }, [activeFaculty])
+    }, [activeFaculty, dataFetched, dbValues])
 
     useEffect(() => {
         if (student.AcademyId) {
@@ -107,7 +107,6 @@ const EditAd = () => {
                 setCertificate(data.TutorCertificate)
                 setActiveFaculty(`${data.FacultyId}`)
                 setSubject(data.Subject)
-                setStatus(data.Status)
                 setPublishDate(data.Published_At)
                 setDataFetched(true)
             }

@@ -21,7 +21,7 @@ function CustomEvent({
             const newRemainingTime = calculateRemainingTime(event.createdAt);
             setRemainingTime(newRemainingTime);
 
-            if (newRemainingTime.minutes === 0 && newRemainingTime.seconds === 1 || newRemainingTime.minutes >= 60) {
+            if ((newRemainingTime.minutes === 0 && newRemainingTime.seconds === 1) || newRemainingTime.minutes >= 60) {
                 clearInterval(intervalId);
                 setExtraFiveMinStart(true)
             }
@@ -32,7 +32,7 @@ function CustomEvent({
         }
 
         return () => clearInterval(intervalId);
-    }, [event.createdAt]);
+    }, [event]);
 
     useEffect(() => {
         let intervalId;
@@ -59,7 +59,8 @@ function CustomEvent({
         return () => {
             clearInterval(intervalId);
         };
-    }, [event.createdAt, extraFiveMinStart]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps 
+    }, [event, extraFiveMinStart, reservedSlots]);
 
     function calculateRemainingTime(createdAt) {
         const createdAtMoment = moment(createdAt);

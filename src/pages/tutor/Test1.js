@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { CommunicationIdentityClient } from '@azure/communication-identity';
 import { ChatClient } from '@azure/communication-chat';
-import { AzureCommunicationTokenCredential, CommunicationUserCredential } from '@azure/communication-common';
-import { CommunicationAccessToken } from '@azure/communication-signaling';
+import { AzureCommunicationTokenCredential } from '@azure/communication-common';
+// import { CommunicationAccessToken } from '@azure/communication-signaling';
 import { apiClient } from '../../axios/config';
 
 const CallWithChatExperience = () => {
     const [chatClient, setChatClient] = useState(null);
     const [userToken, setUserToken] = useState(null);
     const [userId, setUserId] = useState(null);
-    const [meetingLink, setMeetingLink] = useState(null);
+    // const [meetingLink, setMeetingLink] = useState(null);
 
+    console.log(chatClient)
     useEffect(() => {
         // Function to fetch user token and create chat client
         const initializeChatClient = async () => {
@@ -52,7 +53,7 @@ const CallWithChatExperience = () => {
             <h1>Azure Communication Services Example</h1>
             <p>User ID: {userId}</p>
             <p>User Token: {userToken}</p>
-            <p>Meeting Link: {meetingLink}</p>
+            <p>Meeting Link:</p>
             {/* Add more UI components as needed */}
         </div>
     );

@@ -21,7 +21,6 @@ const StudentIntro = () => {
     const [fetching, setFetching] = useState(true);
     const { student } = useSelector(state => state.student)
     const [agreed, setAgreed] = useState();
-    const { upcomingSessionFromNow, upcomingSession } = useSelector(state => state.studentSessions)
 
     const dispatch = useDispatch();
 
@@ -55,7 +54,7 @@ const StudentIntro = () => {
         } else {
             setUnSavedChanges(false);
         }
-    }, [terms, db_terms, agreed, student])
+    }, [terms, db_terms, agreed, student, editMode])
 
     const handleSave = async (e) => {
         e.preventDefault()

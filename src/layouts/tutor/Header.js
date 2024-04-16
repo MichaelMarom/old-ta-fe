@@ -19,6 +19,7 @@ const Header = () => {
 
     let [tutorState, setTutorState] = useState('Pending')
     const { tutor } = useSelector(state => state.tutor);
+    const screenname = localStorage.getItem('tutor_screen_name')
     const handleSignOut = () => {
         localStorage.clear()
         dispatch(setUser({}))
@@ -65,7 +66,7 @@ const Header = () => {
 
     useEffect(() => {
         set_screen_name(localStorage.getItem('tutor_screen_name'))
-    }, [localStorage.getItem('tutor_screen_name')]);
+    }, [screenname]);
 
     useEffect(() => {
         setTutorState(tutor.Status)
@@ -144,7 +145,7 @@ const Header = () => {
                             onClick={handleTabClick}
                             id={(activeTab === (tab.url).replace(/ /g, '%20') || (activeTab.split('/').length > 3 && activeTab.split('/').slice(0, -1).join() === tab.url.split('/').slice(0, -1).join())) ? 'tutor-tab-header-list-active' : ''}
                         >
-                            <a>{tab.name}</a>
+                            {tab.name}
                         </li>)
                     })}
                 </ul>

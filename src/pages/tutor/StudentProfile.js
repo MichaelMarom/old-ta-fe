@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import TutorLayout from '../../layouts/TutorLayout'
-import StudentProfileCnt from '../../components/student/StudentProfile'
 import Avatar from '../../components/common/Avatar'
 import { useNavigate, useParams } from 'react-router-dom'
 import { moment } from '../../config/moment'

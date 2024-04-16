@@ -3,7 +3,6 @@ import { recomendation } from '../../axios/chat';
 import { convertTutorIdToName } from '../../helperFunctions/generalHelperFunctions';
 
 const Recomendation = ({ AcademyId }) => {
-    const [loading, setLoading] = useState(false);
     const [recom, setRecom] = useState('')
 
     useEffect(() => {

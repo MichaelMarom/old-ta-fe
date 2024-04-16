@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { get_tutor_data, send_sms, set_tutor_status } from '../../axios/admin';
+import { get_tutor_data, set_tutor_status } from '../../axios/admin';
 import { COLUMNS } from '../../Tables/Admin/column';
 import 'react-loading-skeleton/dist/skeleton.css'
 import { convertGMTOffsetToLocalString } from '../../helperFunctions/timeHelperFunctions';
@@ -10,17 +9,13 @@ import Pill from '../common/Pill';
 import { FcApprove } from "react-icons/fc";
 import { FcDisapprove } from "react-icons/fc";
 import { toast } from 'react-toastify'
-import { PROFILE_STATUS, statesColours } from '../../constants/constants';
+import { statesColours } from '../../constants/constants';
 
 const TutorTable = () => {
     let [data, set_data] = useState([]);
-    let navigate = useNavigate();
     const [fetching, setFetching] = useState(true);
     const [updatingStatus, setUpdatingStatus] = useState(false)
 
-    useEffect(() => {
-        console.log('inside tutor data')
-    }, [])
     useEffect(() => {
         get_tutor_data()
             .then((result) => {
@@ -88,7 +83,7 @@ const TutorTable = () => {
                                     //     toast.warning('You cannot view Closed tutor Profile!') :
                                     redirect_to_tutor_setup(item.AcademyId, item.TutorScreenname)
                                 }}>
-                                    <img src={item.Photo}
+                                    <img src={item.Photo} alt="profile=pic"
                                         style={{ height: '80px', width: '100px' }} />
                                 </td>
                                 <td data-src={item.TutorScreenname}>{item.TutorScreenname}</td>

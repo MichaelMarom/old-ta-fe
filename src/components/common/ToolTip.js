@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 
-const tooltipStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  width: '200px',
-  height: 'auto',
-  whiteSpace: 'normal',
-  wordWrap: 'break-word',
-  overflow: 'hidden',
-};
 
 const Tooltip = ({ text, children, iconSize = 16, direction = "top", width = "100px", color = "rgb(0, 150, 255)",
   style, customStyling = false }) => {
@@ -31,6 +22,7 @@ const Tooltip = ({ text, children, iconSize = 16, direction = "top", width = "10
     if (customStyling) {
       if (style) setTooltipStye({ ...tooltipStyle, ...style })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customStyling, style])
 
   return (

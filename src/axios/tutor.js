@@ -1,9 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 import { apiClient, showErrorToast } from './config'
 import { capitalizeFirstLetter } from '../helperFunctions/generalHelperFunctions';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@clerk/clerk-react'
 
 export let upload_new_subject = (faculty, subject, reason, AcademyId, facultyId) => {
     return new Promise((resolve, reject) => {

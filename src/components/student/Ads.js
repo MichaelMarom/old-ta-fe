@@ -12,17 +12,8 @@ const Ads = () => {
     let [education_list, set_education_list] = useState([])
     let [exprience_list, set_exprience_list] = useState([])
     let [certificate_list, set_certificate_list] = useState([])
-    let [utc_list, set_utc_list] = useState([])
     let [faculty_list, set_faculty_list] = useState([])
-    let [lang_list, set_lang_list] = useState('')
     let [subject_list, set_subject_list] = useState([])
-    let [gmt_list, set_gmt_list] = useState([])
-
-    let [education, set_education] = useState([])
-    let [exprience, set_exprience] = useState([])
-    let [certificate, set_certificate] = useState([])
-    let [utc, set_utc] = useState([])
-    let [faculty, set_faculty] = useState([])
     let [subject, set_subject] = useState([])
 
     let [activeFaculty, setActiveFaculty] = useState('')
@@ -35,10 +26,10 @@ const Ads = () => {
     useEffect(() => {
         console.log(activeFaculty)
 
-        let list = subject.filter(item => item.FacultyId == activeFaculty)
+        let list = subject.filter(item => item.FacultyId === activeFaculty)
 
         set_subject_list(list)
-    }, [activeFaculty])
+    }, [activeFaculty, subject])
 
 
     useEffect(() => {
@@ -48,12 +39,11 @@ const Ads = () => {
                 .then((result) => {
                     if (!result?.response?.data) {
                         const { StudentData, EducationalLevel, Exprience, CertificateTypes,
-                            Subjects, Faculty, GMT } = result
+                            Subjects, Faculty } = result
                         set_screen_name(StudentData[0].ScreenName)
                         set_grade(StudentData[0].Grade)
                         set_country(StudentData[0].Country)
                         set_lang(StudentData[0].Language)
-                        set_gmt_list(GMT)
 
                         set_education_list(EducationalLevel)
                         set_certificate_list(CertificateTypes)
@@ -68,7 +58,7 @@ const Ads = () => {
     }, [])
 
     useEffect(() => {
-        document.querySelector('#price-max').value = eval(price_max) + 1
+        document.querySelector('#price-max').value = price_max + 1
     }, [price_max])
 
 
@@ -143,9 +133,9 @@ const Ads = () => {
 
                         <div className="input-cnt" style={{ display: 'flex', alignItems: 'center', justifyContent: 'left' }}>
                             <label htmlFor="">Price Range</label>
-                            <input style={{ width: '30%' }} onInput={e => set_price_max(e.target.value)} defaultValue={0} min={0} type="number" name="" id="Ad" />
+                            <input style={{ width: '30%' }} onInput={e => set_price_max(parseInt(e.target.value))} defaultValue={0} min={0} type="number" name="" id="Ad" />
                             &nbsp; <b>To</b> &nbsp;
-                            <input style={{ width: '30%' }} min={eval(price_max) + 1} defaultValue={eval(price_max) + 1} type="number" name="" id="price-max" />
+                            <input style={{ width: '30%' }} min={price_max + 1} defaultValue={price_max + 1} type="number" name="" id="price-max" />
                         </div>
 
                     </div>

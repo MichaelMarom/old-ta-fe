@@ -5,7 +5,6 @@ import StudentLayout from '../../../layouts/StudentLayout'
 import Marketplace from './Marketplace'
 import Ad from './Ad'
 import Bids from './Bids'
-import Actions from '../../../components/common/Actions'
 import StudentAdList from './StudentAdList'
 
 const Layout = ({ children }) => {

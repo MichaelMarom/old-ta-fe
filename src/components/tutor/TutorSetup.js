@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { BsCameraVideo, BsCloudUpload, BsTrash } from "react-icons/bs";
+import { BsCameraVideo, BsCloudUpload } from "react-icons/bs";
 import { moment } from "../../config/moment";
 import { PhoneInput } from 'react-international-phone';
 import 'react-international-phone/style.css';
@@ -14,7 +14,7 @@ import {
 } from "../../axios/tutor";
 import { useDispatch } from "react-redux";
 // import { setscreenNameTo } from "../../redux/tutor_store/ScreenName";
-import { convertGMTOffsetToLocalString, showDate } from "../../helperFunctions/timeHelperFunctions";
+import { convertGMTOffsetToLocalString } from "../../helperFunctions/timeHelperFunctions";
 import WebcamCapture from "./Recorder/VideoRecorder"
 import Loading from "../common/Loading";
 import ToolTip from '../common/ToolTip'
@@ -25,7 +25,7 @@ import { AUST_STATES, CAN_STATES, Countries, GMT, RESPONSE, UK_STATES, US_STATES
 import { setTutor } from "../../redux/tutor_store/tutorData";
 import { capitalizeFirstLetter, unsavedChangesHelper } from "../../helperFunctions/generalHelperFunctions";
 import ReactDatePicker from "react-datepicker";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Button from "../common/Button";
 import { IoPersonCircle } from "react-icons/io5";
 import { convertToDate } from "../common/Calendar/Calendar";
@@ -62,7 +62,6 @@ const TutorSetup = () => {
   let [photo, set_photo] = useState("");
   const lastNameInputRef = useRef(null);
   let [video, set_video] = useState("");
-  const [newVideo, setNewVideo] = useState(null)
 
   let grades = [
     { grade: "1st grade" },
@@ -88,7 +87,8 @@ const TutorSetup = () => {
   let [countryList, setCountryList] = useState("");
   let [GMTList, setGMTList] = useState("");
   let [response_list, set_response_list] = useState("");
-  let [recordedVideo, setRecordedVideo] = useState(null);
+  let dispatch = useDispatch();
+
   let [userExist, setUserExist] = useState(false);
   const [uploadPhotoClicked, setUploadPhotoClicked] = useState(false)
   const [uploadVideoClicked, setUploadVideoClicked] = useState(false)
@@ -121,7 +121,7 @@ const TutorSetup = () => {
       post_tutor_setup({ userId: tutor.userId, fname: tutor.FirstName, lname: tutor.LastName, mname: tutor.MiddleName, vacation_mode: false })
       dispatch(setTutor())
     }
-  }, [tutor, userId])
+  }, [tutor, userId, dispatch])
 
   const options = {
     "Australia": AUST_STATES,
@@ -151,50 +151,12 @@ const TutorSetup = () => {
       set_state('')
     }
   }, [country, dbCountry])
-  let dispatch = useDispatch();
 
   const [selectedVideoOption, setSelectedVideoOption] = useState(null);
 
   const handleOptionClick = (option) => {
     setUploadVideoClicked(true);
     setSelectedVideoOption(option);
-  }
-
-  async function handleVideoRecord(params) {
-    // const buttonStart = document.querySelector('#buttonStart')
-    // const buttonStop = document.querySelector('#buttonStop')
-    // const videoLive = document.querySelector('#videoLive')
-    const videoRecorderElem = document.querySelector('.setup-video-recorder')
-
-    const stream = await navigator.mediaDevices.getUserMedia({ // <1>
-      video: true,
-      audio: true,
-    })
-
-    videoRecorderElem.srcObject = stream
-
-    if (!MediaRecorder.isTypeSupported('video/webm')) { // <2>
-      console.warn('video/webm is not supported')
-    }
-
-    const mediaRecorder = new MediaRecorder(stream, { // <3>
-      mimeType: 'video/webm',
-    })
-
-    mediaRecorder.start() // <4>
-    // buttonStart.setAttribute('disabled', '')
-    // buttonStop.removeAttribute('disabled')
-
-    // buttonStop.addEventListener('click', () => {
-    //   mediaRecorder.stop() // <5>
-    //   buttonStart.removeAttribute('disabled')
-    //   buttonStop.setAttribute('disabled', '')
-    // })
-
-    mediaRecorder.addEventListener('dataavailable', event => {
-      videoRecorderElem.src = URL.createObjectURL(event.data) // <6>
-    })
-
   }
 
   let handleTutorGrade = (grade) => {
@@ -220,7 +182,7 @@ const TutorSetup = () => {
       }
     }
     postImage()
-  }, [photo, userExist])
+  }, [photo, userExist, dispatch, fname, lname, mname, userId, uploadPhotoClicked])
 
   const handleEditClick = () => {
     setEditMode(!editMode);
@@ -235,7 +197,7 @@ const TutorSetup = () => {
       }
     }
     upload_video()
-  }, [video, tutor])
+  }, [video, tutor, dispatch, fname, lname, photo, mname, userExist,userId, uploadVideoClicked])
 
   useEffect(() => {
     const fetchTutorSetup = async () => {
@@ -265,7 +227,6 @@ const TutorSetup = () => {
         setTutorGrades(JSON.parse((data?.Grades ?? '[]')));
 
         set_video(data.Video);
-        setRecordedVideo(data.VideoRecorded)
         setSelectedVideoOption("upload");
         set_vacation_mode(data.VacationMode)
         setStart(data.StartVacation)
@@ -556,18 +517,6 @@ const TutorSetup = () => {
     setDateTime(localTime);
   }, [timeZone]);
 
-  const handleVideoBlob = (blobObj) => {
-    if (blobObj instanceof Blob) {
-      const reader = new FileReader();
-
-      reader.onload = (event) => {
-        const arrayBuffer = event.target.result;
-        setRecordedVideo(arrayBuffer);
-      };
-
-      reader.readAsArrayBuffer(blobObj);
-    }
-  };
 
   useEffect(() => {
     if (vacation_mode) {
@@ -602,7 +551,7 @@ const TutorSetup = () => {
               {picUploading && <Loading height="10px" iconSize="20px" loadingText="uploading picture ..." />}
             </div>
             <div className=" h-100 border shadow">
-              {photo ? <img src={photo} style={{ height: '230px', width: '230px' }} alt='photo' /> :
+              {photo ? <img src={photo} style={{ height: '230px', width: '230px' }} alt='profile-pic' /> :
                 `You must upload your picture, and video on this tab.  
                   You are permitted to move to next tabs without validating that, but your account will not be activated until it’s done`
               }
@@ -732,7 +681,6 @@ const TutorSetup = () => {
                 padding: "0",
                 alignItems: "center",
 
-                alignItems: "center",
                 width: "100%",
                 whiteSpace: "nowrap",
               }}
@@ -782,7 +730,6 @@ const TutorSetup = () => {
 
                 alignItems: "center",
                 margin: "0 0 10px 0",
-                display: "flex",
 
                 whiteSpace: "nowrap",
               }}
@@ -809,7 +756,6 @@ const TutorSetup = () => {
                 width: "100%",
 
                 alignItems: "center",
-                display: "flex",
 
                 whiteSpace: "nowrap",
               }}
@@ -838,7 +784,6 @@ const TutorSetup = () => {
               style={{
                 display: "flex",
                 width: "100%",
-                display: "flex",
                 margin: "0 0 10px 0",
                 padding: "0",
 
@@ -867,7 +812,6 @@ const TutorSetup = () => {
 
                 alignItems: "center",
                 margin: "0 0 10px 0",
-                display: "flex",
 
                 whiteSpace: "nowrap",
               }}
@@ -892,7 +836,6 @@ const TutorSetup = () => {
                 width: "100%",
                 alignItems: "center",
                 margin: "0 0 10px 0",
-                display: "flex",
 
                 whiteSpace: "nowrap",
               }}
@@ -913,7 +856,7 @@ const TutorSetup = () => {
               />
             </div>
             <div
-              style={{ display: "flex", width: "100%", alignItems: "center", margin: "0 0 10px 0", display: "flex", whiteSpace: "nowrap" }}>
+              style={{ display: "flex", width: "100%", alignItems: "center", margin: "0 0 10px 0", whiteSpace: "nowrap" }}>
               <label className="input-group-text w-50" htmlFor="country">
                 Country
               </label>
@@ -937,7 +880,6 @@ const TutorSetup = () => {
                   width: "100%",
 
                   alignItems: "center",
-                  display: "flex",
 
                   whiteSpace: "nowrap",
                 }}
@@ -969,7 +911,6 @@ const TutorSetup = () => {
 
                 alignItems: "center",
                 margin: "0 0 10px 0",
-                display: "flex",
 
                 whiteSpace: "nowrap",
               }}
@@ -995,7 +936,6 @@ const TutorSetup = () => {
                 width: "100%",
 
                 alignItems: "center",
-                display: "flex",
 
                 whiteSpace: "nowrap",
               }}

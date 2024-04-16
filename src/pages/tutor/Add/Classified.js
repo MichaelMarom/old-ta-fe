@@ -37,7 +37,7 @@ const Classified = () => {
         <div className='container'>
           {ad.map(item =>
             <div className=' rounded m-1 border' style={{ background: "lightgray" }}>
-              <div onClick={() => selectedAd.Id == item.Id ? setSelectedAd({}) : setSelectedAd(item)}
+              <div onClick={() => selectedAd.Id === item.Id ? setSelectedAd({}) : setSelectedAd(item)}
                 className='ad  click-effect-elem  shadow-sm p-2  d-flex justify-content-between align-items-center'
                 style={{ gap: "20px" }} >
                 <div>

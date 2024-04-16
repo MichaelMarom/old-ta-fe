@@ -5,7 +5,7 @@ import { get_faculty_subject } from "../../../axios/tutor";
 import Layout from "./Layout";
 import { useSelector } from "react-redux";
 import UserRichTextEditor from "../../../components/common/RichTextEditor/UserRichTextEditor";
-import { CERTIFICATES, EXPERIENCE, GMT, LEVEL, languages } from "../../../constants/constants";
+import { CERTIFICATES, EXPERIENCE, LEVEL, languages } from "../../../constants/constants";
 import ReactSelect from "react-select";
 import { toast } from "react-toastify";
 import Actions from "../../../components/common/Actions";
@@ -32,6 +32,7 @@ const Ads = () => {
 
     let [activeFaculty, setActiveFaculty] = useState('')
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
     const currentState = {
         AdHeader: header,
         Subject: subject,

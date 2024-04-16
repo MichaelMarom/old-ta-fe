@@ -6,10 +6,6 @@ import Tabs from '../../common/Tabs';
 import Lessons from './Lessons';
 
 const StudentAccounting = () => {
-    const AcademyId = localStorage.getItem('student_user_id')
-
-
-
 
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
@@ -35,7 +31,7 @@ const StudentAccounting = () => {
         console.log(bookedSlots, reservedSlots, item, 'slostF');
 
         const combinedPaymentData = reservedSlots.concat(bookedSlots);
-        const final = combinedPaymentData.filter(data => data.type != 'reserved')
+        const final = combinedPaymentData.filter(data => data.type !== 'reserved')
         return final
     };
 
@@ -54,11 +50,12 @@ const StudentAccounting = () => {
                 }, [])
 
                 const transformedData = uniqueData.map(item => transformIntoPaymentReport(item)).flat().filter(slot => slot.studentId === studentId);
-                setPaymentReportData([...paymentReportData, ...transformedData]);
+                setPaymentReportData((prevValue)=>([...prevValue, ...transformedData]));
             }
         };
 
         fetchPaymentReport();
+
     }, []);
 
     return (

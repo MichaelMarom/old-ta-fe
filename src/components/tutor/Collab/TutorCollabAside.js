@@ -3,18 +3,14 @@ import screenLarge from "../../../assets/images/screen-full-svgrepo-com.svg";
 import screenNormal from "../../../assets/images/screen-normal-svgrepo-com.svg";
 import {
   useLocation,
-  useNavigate,
-  useParams,
-  useSearchParams,
 } from "react-router-dom";
 import { socket } from "../../../config/socket";
 import { Peer } from "peerjs";
-import FlipCountdown from "@rumess/react-flip-countdown";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import { FaCamera, FaMicrophone } from "react-icons/fa";
-import { RiCameraOffFill, RiContactsBookLine } from "react-icons/ri";
+import { RiCameraOffFill } from "react-icons/ri";
 import { PiMicrophoneSlashFill } from "react-icons/pi";
 import _ from "lodash";
 
@@ -24,15 +20,16 @@ const TutorAside = ({
   openedSessionTimeRemainingToStart,
   timeRemainingToEndCurrentSession,
 }) => {
-  const navigate = useNavigate();
-  const {
-    upcomingSessionFromNow: tutorUpcomingFromNow,
-    upcomingSession: tutorUpcoming,
-    inMins: isTutorUpcomgLessonInMins,
-    currentSession: tutorCurrentSession,
-  } = useSelector((state) => state.tutorSessions);
-  const { upcomingSessionFromNow, upcomingSession, inMins, currentSession } =
-    useSelector((state) => state.studentSessions);
+
+  // const {
+  //   upcomingSessionFromNow: tutorUpcomingFromNow,
+  //   upcomingSession: tutorUpcoming,
+  //   inMins: isTutorUpcomgLessonInMins,
+  //   currentSession: tutorCurrentSession,
+  // } = useSelector((state) => state.tutorSessions);
+  // const { upcomingSessionFromNow, upcomingSession, inMins, currentSession } =
+  //   useSelector((state) => state.studentSessions);
+
   console.log(
     openedSessionTimeRemainingToStart,
     parseInt(openedSessionTimeRemainingToStart / 60),
@@ -49,10 +46,7 @@ const TutorAside = ({
   const { student } = useSelector((state) => state.student);
 
   let [mssg, setMssg] = useState("");
-  const params = useParams();
-  let [mssgList, setMssgList] = useState([]);
   let location = useLocation();
-  let [peerId, setPeerId] = useState("");
   let [videoLoader, setVideoLoader] = useState("");
   let [screenType, setScreenType] = useState(screenLarge);
   const chatContainer = useRef(null);
@@ -263,11 +257,12 @@ const TutorAside = ({
         }
       };
     },
-    [location]
+    [visuals]
   );
 
   useEffect(() => {
     initStreamAndSocket();
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, []);
 
   const children = ({ remainingTime }) => {
@@ -377,7 +372,7 @@ const TutorAside = ({
             isSmoothColorTransition={false}
             strokeWidth={13}
           >
-            {({ }) => '00:00'}
+            {() => '00:00'}
           </CountdownCircleTimer>
         </div>
       }
@@ -487,7 +482,6 @@ const TutorAside = ({
                 style={{
                   maxWidth: "80%",
                   textAlign: "left",
-                  padding: "10px 15px",
                   float: "right",
                   position: "relative",
                   borderTopLeftRadius: "15px",

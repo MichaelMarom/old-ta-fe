@@ -9,7 +9,6 @@ import { convertTutorIdToName } from '../../../helperFunctions/generalHelperFunc
 export const TutorFeedbackModal = ({ isOpen, onClose, clickedSlot, handlePostpone, handleDeleteSessionByTutor }) => {
     const [questions, setQuestions] = useState([]);
     const [questionLoading, setQuestionLoading] = useState(false);
-    const [confirmDelete, setConfirmDelete] = useState(false)
 
     useEffect(() => {
         if (clickedSlot.id) {
@@ -25,7 +24,6 @@ export const TutorFeedbackModal = ({ isOpen, onClose, clickedSlot, handlePostpon
     }, [clickedSlot])
 
     const handleClose = () => {
-        setConfirmDelete(false)
         onClose()
     }
 

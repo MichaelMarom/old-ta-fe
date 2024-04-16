@@ -1,25 +1,16 @@
 import { useEffect, useState } from 'react';
 import {
     getTutorsAccordingToSubjectandFaculty,
-    get_student_short_list,
-    get_student_short_list_data,
-    get_tutor_subject,
-    upload_student_short_list
 } from '../../axios/student';
-import { create_chat } from '../../axios/chat';
 import { get_faculty, get_faculty_subject } from '../../axios/tutor';
 
-import { socket } from '../../config/socket';
 import Actions from '../common/Actions';
-import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import Tooltip from '../common/ToolTip';
-import { convertToDate } from '../common/Calendar/Calendar';
 import Pill from '../common/Pill';
-import { statesColours, wholeDateFormat } from '../../constants/constants';
+import {wholeDateFormat } from '../../constants/constants';
 import SubMenu from '../common/SubMenu';
 import Loading from '../common/Loading';
-import { BiChevronDown } from 'react-icons/bi';
 import { convertTutorIdToName } from '../../helperFunctions/generalHelperFunctions';
 import Avatar from '../common/Avatar';
 import { showDate } from '../../helperFunctions/timeHelperFunctions';

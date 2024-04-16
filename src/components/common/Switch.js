@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { toast } from 'react-toastify';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import './ToggleSwitch.css'; // Assuming you have a CSS file named ToggleSwitch.css for styling

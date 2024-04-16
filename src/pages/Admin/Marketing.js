@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
 import TAButton from '../../components/common/TAButton'
-import Pill from '../../components/common/Pill'
 import AdminLayout from '../../layouts/AdminLayout'
 import _ from 'lodash';
 import { send_sms } from '../../axios/admin';

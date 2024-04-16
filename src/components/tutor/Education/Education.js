@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { IoIosCheckmarkCircle } from 'react-icons/io';
 
 import { get_my_edu, post_edu, post_tutor_setup } from '../../../axios/tutor';
-import { deleteFileOnServer, getPreviousFilePathFromDB, upload_file } from '../../../axios/file';
+import { upload_file } from '../../../axios/file';
 import career from '../../../assets/images/Experience-photo50.jpg';
 
 import { moment } from '../../../config/moment'
@@ -13,17 +13,13 @@ import { FaRegTimesCircle } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import Loading from '../../common/Loading';
 import { AUST_STATES, CAN_STATES, CERTIFICATES, Countries, EXPERIENCE, LEVEL, UK_STATES, US_STATES, languages } from '../../../constants/constants'
-import { compareStates, getFileExtension, unsavedEducationChangesHelper } from '../../../helperFunctions/generalHelperFunctions';
-import RichTextEditor from '../../common/RichTextEditor/RichTextEditor';
-import PDFViewer from './PDFViewer'
+import { compareStates } from '../../../helperFunctions/generalHelperFunctions';
 import Button from '../../common/Button';
-import UserRichTextEditor from '../../common/RichTextEditor/UserRichTextEditor';
 import Tooltip from '../../common/ToolTip';
 import ReactDatePicker from 'react-datepicker';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTutor } from '../../../redux/tutor_store/tutorData';
 import DebounceInput from '../../common/DebounceInput';
-import _ from 'lodash';
 
 const languageOptions = languages.map((language) => ({
     value: language,
@@ -72,15 +68,13 @@ const Education = () => {
     let [certificate_list, set_certificate_list] = useState('')
     let [d_list, set_d_list] = useState([])
 
-    let [data, set_data] = useState(false);
     let [dbValues, setDbValues] = useState({});
 
     const [degreeFile, setDegreeFile] = useState(null);
-    const [resumeFile, setResumeFile] = useState(null);
     const [resumePath, set_resumePath] = useState(null);
-    const [degreeFileContent, setDegreeFileContent] = useState('')
+    // const [degreeFileContent, setDegreeFileContent] = useState('')
     const [certificateFile, setCertificateFile] = useState(null);
-    const [certFileContent, setCertFileContent] = useState('')
+    // const [certFileContent, setCertFileContent] = useState('')
     const [dataFetched, setDataFetched] = useState(false)
     let [db_edu_level, set_db_edu_level] = useState('');
     let [db_edu_cert, set_db_edu_cert] = useState('');
@@ -140,7 +134,7 @@ const Education = () => {
             set_deg_state('')
             set_deg_file_name('')
         }
-    }, [level, db_edu_level])
+    }, [level, db_edu_level, dataFetched])
 
     useEffect(() => {
         if (dataFetched && db_edu_cert !== certificate) {
@@ -149,7 +143,7 @@ const Education = () => {
             set_expiration('')
             set_cert_file_name('')
         }
-    }, [certificate, db_edu_cert])
+    }, [certificate, db_edu_cert, dataFetched])
 
     const options = {
         "Australia": AUST_STATES,
@@ -161,18 +155,18 @@ const Education = () => {
     useEffect(() => {
         if (dataFetched && db_edu_level !== level) {
             setDegreeFile(null)
-            setDegreeFileContent(null)
+            // setDegreeFileContent(null)
         }
         if (dataFetched && db_edu_cert !== certificate) {
             setCertificateFile(null)
-            setCertFileContent(null)
+            // setCertFileContent(null)
         }
         if (level === 'Undergraduate Student') {
             set_bach_year('current')
         }
 
         // eslint-disable-next-line
-    }, [level, certificate])
+    }, [level, certificate, dataFetched])
 
     const handleLanguageChange = (selectedOption) => {
         set_othelang(selectedOption);
@@ -249,6 +243,7 @@ const Education = () => {
                     flag.value = fields
                 }
             }
+            return flag;
         })
         return flag
     }
@@ -300,6 +295,7 @@ const Education = () => {
         setEditMode(!editMode);
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
     let fieldValues = {
         EducationalLevel: level,
         Bach_College: uni_bach,
@@ -381,8 +377,8 @@ const Education = () => {
                     set_certificate(data.Certificate)
                     set_db_edu_cert(data.Certificate)
 
-                    setDegreeFileContent(data.DegreeFile)
-                    setCertFileContent(data.CertificateFile)
+                    // setDegreeFileContent(data.DegreeFile)
+                    // setCertFileContent(data.CertificateFile)
 
                     set_level(data.EducationalLevel)
                     set_db_edu_level(data.EducationalLevel)
@@ -432,8 +428,8 @@ const Education = () => {
             .finally(() => {
                 setFetchingEdu(false)
                 setRecordFetched(true)
-                set_data(true)
             })
+        // eslint-disable-next-line react-hooks/exhaustive-deps 
     }, [])
 
     useEffect(() => {
@@ -493,8 +489,7 @@ const Education = () => {
         if (file) {
             const reader = new FileReader();
             reader.onload = () => {
-                const base64 = reader.result
-                setDegreeFileContent(base64);
+                // setDegreeFileContent(base64);
             };
             reader.readAsDataURL(file);
             const fileExtension = file.name.split('.').pop().toLowerCase();
@@ -510,6 +505,7 @@ const Education = () => {
             dynamicSave('DegFileName', deg_file_name)
 
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps 
     }, [degreeFile, level, deg_file_name])
 
     useEffect(() => {
@@ -517,16 +513,17 @@ const Education = () => {
             handleUploadCertificateToServer()
             dynamicSave('CertFileName', cert_file_name)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps 
     }, [certificate, cert_file_name, certificateFile])
 
-    const handleResumeFileUpload = (event) => {
-        const file = event.target.files[0];
+    // const handleResumeFileUpload = (event) => {
+    //     const file = event.target.files[0];
 
-        if (file) {
-            setResumeFile(file);
-            set_resumePath(`${AcademyId}-resume-${(new Date()).getTime()}-${file.name}`);
-        }
-    }
+    //     if (file) {
+    //         setResumeFile(file);
+    //         set_resumePath(`${AcademyId}-resume-${(new Date()).getTime()}-${file.name}`);
+    //     }
+    // }
 
     const handleUploadDegreeToServer = async () => {
         if (degreeFile) {
@@ -540,27 +537,27 @@ const Education = () => {
         }
     };
 
-    const handleUploadResumeToServer = async () => {
-        if (resumeFile) {
-            const previousFilePath = await getPreviousFilePathFromDB(AcademyId);
-            if (previousFilePath) {
-                await deleteFileOnServer(AcademyId);
-            }
-            const formData = new FormData();
-            formData.append('file', resumeFile);
+    // const handleUploadResumeToServer = async () => {
+    //     if (resumeFile) {
+    //         const previousFilePath = await getPreviousFilePathFromDB(AcademyId);
+    //         if (previousFilePath) {
+    //             await deleteFileOnServer(AcademyId);
+    //         }
+    //         const formData = new FormData();
+    //         formData.append('file', resumeFile);
 
-            try {
-                const fileName = resumePath
-                const response = await upload_file(formData, fileName)
+    //         try {
+    //             const fileName = resumePath
+    //             const response = await upload_file(formData, fileName)
 
-                console.log(response.data);
-            } catch (error) {
-                console.error('Error uploading file:', error);
-            }
-        } else {
-            console.log('Please select a file before uploading.');
-        }
-    };
+    //             console.log(response.data);
+    //         } catch (error) {
+    //             console.error('Error uploading file:', error);
+    //         }
+    //     } else {
+    //         console.log('Please select a file before uploading.');
+    //     }
+    // };
 
     const handleUploadCertificateToServer = async () => {
         if (certificateFile) {
@@ -580,8 +577,7 @@ const Education = () => {
         if (file) {
             const reader = new FileReader();
             reader.onload = () => {
-                const base64 = reader.result
-                setCertFileContent(base64);
+                // setCertFileContent(base64);
             };
             reader.readAsDataURL(file);
             setCertificateFile(file);

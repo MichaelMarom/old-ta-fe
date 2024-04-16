@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { showDate } from '../../../helperFunctions/timeHelperFunctions';
 import PaymentForm from '../../common/PaymentForm';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -8,7 +7,7 @@ import Actions from '../../common/Actions';
 import _ from "lodash";
 import { compareStates } from '../../../helperFunctions/generalHelperFunctions';
 
-function BankDetails({ }) {
+function BankDetails() {
     let [AccountName, set_acct_name] = useState(null)
     const [errors, setErrors] = useState({})
 
@@ -57,6 +56,7 @@ function BankDetails({ }) {
 
     useEffect(() => {
         fetchBankDetails()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const validateCreditDebitInfo = () => {
@@ -125,6 +125,7 @@ function BankDetails({ }) {
         setLoading(false)
     }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const currentState = {
         "AccountName": AccountName,
         "BankName": BankName,

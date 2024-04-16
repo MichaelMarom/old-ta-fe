@@ -5,7 +5,7 @@ import QuestionFeedback from '../../components/student/Feedback/QuestionFeedback
 import { get_all_feedback_questions, get_feedback_to_question, get_payment_report, post_feedback_to_question } from '../../axios/student';
 import { showDate } from '../../helperFunctions/timeHelperFunctions';
 import { wholeDateFormat } from '../../constants/constants';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { postStudentBookings } from '../../redux/student_store/studentBookings';
 import Actions from '../../components/common/Actions';
 import { toast } from 'react-toastify';
@@ -14,7 +14,6 @@ import Loading from '../../components/common/Loading';
 import { moment } from '../../config/moment'
 
 export const Feedback = () => {
-    const { student } = useSelector(state => state.student)
     const [questions, setQuestions] = useState([]);
     const [comment, setComment] = useState('')
     const [reservedSlots, setReservedSlots] = useState([])
@@ -158,13 +157,13 @@ export const Feedback = () => {
         else
             setReservedSlots([...updatedSlots])
 
-
-    }, [comment])
+        // eslint-disable-next-line react-hooks/exhaustive-deps 
+    }, [comment,])
 
     useEffect(() => {
         setQuestions(questions.map(question => ({ ...question, star: null })))
         setComment('')
-    }, [selectedEvent.id])
+    }, [selectedEvent.id, questions])
 
     const transformFeedbackData = (item) => {
         let bookedSlots = JSON.parse(item.bookedSlots);
@@ -190,7 +189,7 @@ export const Feedback = () => {
         })
 
         const combinedPaymentData = reservedSlots.concat(bookedSlots);
-        const final = combinedPaymentData.filter(data => data.type != 'reserved')
+        const final = combinedPaymentData.filter(data => data.type !== 'reserved')
         return final
     };
 
@@ -216,7 +215,7 @@ export const Feedback = () => {
         };
 
         fetchPaymentReport();
-    }, []);
+    }, [studentId]);
 
     useEffect(() => {
         if (selectedEvent.id) {
@@ -245,7 +244,7 @@ export const Feedback = () => {
         setReservedSlots(categorizedData.reservedSlots);
         setBookedSlots(categorizedData.bookedSlots);
 
-    }, [selectedEvent])
+    }, [selectedEvent, studentId, feedbackData])
 
     // useEffect(() => {
     //     if (!!feedbackData.length && student.timeZone) {

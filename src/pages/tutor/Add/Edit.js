@@ -1,9 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import TutorLayout from '../../../layouts/TutorLayout'
-import Tabs from '../../../components/common/Tabs'
-import Ads from '../../../components/student/Ads'
-import List from '../../../components/tutor/Ads/ListComponent'
-import Classified from '../../../components/tutor/Ads/Classified'
 import Layout from './Layout'
 import UserRichTextEditor from '../../../components/common/RichTextEditor/UserRichTextEditor'
 import Pill from '../../../components/common/Pill'
@@ -27,7 +22,6 @@ const Edit = () => {
     const navigate = useNavigate();
     let [education, set_education] = useState({})
     const [subjects, set_subjects] = useState([])
-    const [fetching, setFetching] = useState(false);
     const [status, setStatus] = useState(null)
     const [subject, setSubject] = useState('');
     const [grades, setGrades] = useState([])
@@ -87,15 +81,6 @@ const Edit = () => {
         }
     }, [params])
 
-    console.log(notEditableAfterPublish)
-    const handleClickPill = (grade) => {
-        const gradeExist = grades.find(item => item === grade)
-        if (gradeExist) {
-            return setGrades(grades.filter(item => item !== grade))
-        }
-        return setGrades([...grades, grade])
-    }
-
     const handleUpdate = async (e) => {
         e.preventDefault();
         if (!grades.length) return toast.warning('Please select at least one school grade!')
@@ -137,7 +122,7 @@ const Edit = () => {
         catch (err) { }
     }
 
-    if (fetching || !tutor.AcademyId || !education?.EducationalLevel?.length)
+    if (!tutor.AcademyId || !education?.EducationalLevel?.length)
         return <Loading />
     return (
         <Layout>

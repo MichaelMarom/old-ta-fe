@@ -40,7 +40,7 @@ const TermOfUse = () => {
             setFetching(false)
         }
         fetchData();
-    }, []);
+    }, [user]);
 
     useEffect(() => {
         if (tutor.AgreementDate)
@@ -54,7 +54,7 @@ const TermOfUse = () => {
         } else {
             setUnSavedChanges(false);
         }
-    }, [terms, db_terms, agreed, tutor])
+    }, [terms, db_terms, agreed, tutor, editMode])
 
     const handleEditorChange = (value) => {
         set_terms(value);

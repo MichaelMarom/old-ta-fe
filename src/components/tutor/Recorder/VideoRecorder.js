@@ -4,7 +4,7 @@ import './record.css'
 import { toast } from 'react-toastify'
 import { fileUploadClient } from '../../../axios/config'
 import Webcam from 'react-webcam'
-import { BsPause, BsPlay, BsTrash, BsUpload } from 'react-icons/bs'
+import { BsUpload } from 'react-icons/bs'
 import { IoTrash } from 'react-icons/io5'
 import Tooltip from '../../common/ToolTip'
 import { FaRegCirclePlay } from 'react-icons/fa6'
@@ -201,7 +201,7 @@ const WebcamCapture = ({ user_id, record_duration }) => {
   )
 
   const handleUpload = async () => {
-   // need to install ffmpeg on this computer as well.....
+    // need to install ffmpeg on this computer as well.....
     try {
       setLoading(true)
       if (blob) {
@@ -210,6 +210,7 @@ const WebcamCapture = ({ user_id, record_duration }) => {
         })
 
         const formData = new FormData()
+        // eslint-disable-next-line
         const userId = user_id.replace(/[\s\.\-]/g, '')
         formData.append('file', video)
         formData.append('user_id', userId)

@@ -1,5 +1,3 @@
-import { useState } from 'react';
-import { useEffect } from 'react';
 import moment from 'moment-timezone'
 import { useSelector } from 'react-redux';
 import Avatar from '../common/Avatar';

@@ -51,7 +51,7 @@ const Header = () => {
     const handleSignOut = () => {
         localStorage.clear()
         dispatch(setUser({}))
-        
+
         dispatch(setTutor({}))
         dispatch(setStudent({}))
         //setTutor tonull
@@ -70,7 +70,7 @@ const Header = () => {
                         <li key={tab.id} data-url={tab.id} onClick={handleTabClick}
                             id={`${activeTab === tab.id ? 'admin-tab-header-list-active' : ''}`}
                         >
-                            <a>{tab.label}</a>
+                            {tab.label}
                         </li>
                     ))}
                 </ul>

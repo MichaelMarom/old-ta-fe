@@ -34,6 +34,7 @@ const StudentLayout = ({ children }) => {
     }
   }, [
     currentSession.id,
+    navigate,
     inMins,
     upcomingSession.id,
     remainingTime,

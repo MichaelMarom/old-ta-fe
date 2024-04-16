@@ -65,7 +65,7 @@ const AccDetails = ({ sessions }) => {
             setSelectedWeekSession(filteredSession);
         }
 
-    }, [endDate, startDate])
+    }, [endDate, startDate, sessions])
 
     const handleBack = () => {
         const newEndDate = moment(startDate).subtract(1, 'days').toDate();

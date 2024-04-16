@@ -9,12 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../redux/auth_state/auth";
 import { ForgetPasswordModal } from "../components/auth/ForgetPasswordModal";
 import "../styles/auth.css";
-import Button from "../components/common/Button";
 import {
-  useSignUp,
   useAuth,
-  SignUp,
-  SignIn,
   useSignIn,
   useSession,
 } from "@clerk/clerk-react";
@@ -23,11 +19,10 @@ import TAButton from "../components/common/TAButton";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem("access_token");
   const { user } = useSelector((state) => state.user);
   const { signIn, setActive, isLoaded } = useSignIn();
   const [showPassword, setShowPassword] = useState(false);
-  const { isSignedIn, getToken, userId } = useAuth();
+  const { isSignedIn, userId } = useAuth();
   const { session, isSignedIn: sessionSignedIn } = useSession();
   console.log(session, isSignedIn, "session info");
   const [modalOpen, setOpenModel] = useState(false);
@@ -124,6 +119,7 @@ const LoginPage = () => {
     if (userId && isSignedIn) {
       fetchUser(userId);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, [userId, isLoaded, isSignedIn]);
 
   return (
