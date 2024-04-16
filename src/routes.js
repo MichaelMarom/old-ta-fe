@@ -13,8 +13,8 @@ import "./styles/Collaboration_Styles/LargeScreen.css";
 import { setUser } from "./redux/auth_state/auth";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import rolePermissions from "./utils/permissions";
-import UnAuthorizeRoute from "./utils/UnAuthorizeRoute";
+import rolePermissions from "./config/permissions";
+import UnAuthorizeRoute from "./pages/UnAuthorizeRoute";
 import { get_tutor_setup } from "./axios/tutor";
 import { get_my_data, get_student_setup_by_userId } from "./axios/student";
 import { get_user_detail } from "./axios/auth";
@@ -111,6 +111,7 @@ const App = () => {
 
   //sessions :nextsession, :allsessions, :time remaing for next lesson
   useEffect(() => {
+    console.log(process.env.REACT_APP_SERVER_URL)
     if (token) {
       // const dispatchUserSessions = async () => {
       //   const studentSessions = student.AcademyId && dispatch(await setStudentSessions(student));

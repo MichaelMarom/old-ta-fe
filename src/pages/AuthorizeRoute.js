@@ -1,4 +1,3 @@
-import React from 'react'
 import { isAllowed } from './permissions';
 import { useNavigate } from 'react-router-dom';
 
