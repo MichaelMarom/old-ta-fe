@@ -1,0 +1,515 @@
+:root {
+  --backgroundColor: rgba(246, 241, 209);
+  --colorShadeA: rgb(16, 16, 16);
+  --colorShadeB: rgb(72, 72, 72);
+  --colorShadeC: rgb(157, 157, 157);
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0.9;
+  }
+
+  50% {
+    opacity: 0.3;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+
+@keyframes border-blinking {
+  50% {
+    border-color: limegreen;
+  }
+}
+
+
+.blinking-frame-red {
+  animation: blinking_red 1s infinite;
+}
+
+
+.blinking-border-bottom {
+  border: none;
+  border-bottom: 10px solid green;
+  animation-name: border-blinking;
+  animation-duration: 1s;
+  animation-iteration-count: 100;
+}
+
+
+.blinking-button {
+  animation: blink 1s infinite;
+}
+
+.click-effect-elem {
+  transition: background-color 0.3s ease;
+}
+
+.click-effect-elem:active {
+  background-color: #b7b7b7 !important;
+}
+
+
+/* -------------------------------------------------calender------------------------------------------- */
+.rbc-calendar {
+  min-height: 600px;
+}
+
+.rbc-label {
+  font-weight: bold;
+}
+
+.rbc-label.rbc-time-header-gutter::before {
+  content: 'hh:mm a' !important;
+}
+
+.rbc-btn-group button:nth-child(1) {
+  background-color: yellow !important;
+  color: #000 !important;
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.rbc-btn-group button:nth-child(2) {
+  background-color: #4caf50 !important;
+  color: #fff !important;
+}
+
+.rbc-btn-group button:nth-child(3) {
+  background-color: #007bff !important;
+  color: #fff !important;
+}
+
+.rbc-btn-group button:not(.rbc-active) {
+  padding: 8px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5) !important;
+}
+
+.form-check-input.gray-checkbox:checked {
+  background-color: lightgray;
+  border-color: black;
+}
+
+.rbc-toolbar-label {
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.rbc-row.rbc-month-header {
+  background-color: #007bff;
+  color: white;
+}
+
+.rbc-row.rbc-time-header-cell .rbc-header {
+  background-color: #4caf50 !important;
+  color: white;
+}
+
+.rbc-current-time-indicator:before {
+  content: 'Tutor UTC Time';
+  font-size: 12px;
+  bottom: 3px;
+  position: absolute;
+  font-weight: bold;
+  color: black;
+  width: 100%;
+  margin-left: auto;
+  text-align: center;
+}
+
+.student-calender .rbc-current-time-indicator:before {
+  content: 'Student UTC Time';
+}
+
+.rbc-current-time-indicator {
+  height: 3px !important;
+  background-color: rgb(230, 16, 16) !important;
+}
+
+
+/* ----------------------------------------------------------react-datepicker--------------------------------------*/
+.react-datepicker__time-container {
+  width: 75px !important;
+}
+
+.react-datepicker__time-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.react-datepicker__input-container input {
+  width: 100% !important;
+  margin: 5px;
+}
+
+/*-------------------------------------------------pdfviwer--------------------------------------------*/
+.react-pdf__Page__textContent {
+  display: none;
+}
+
+
+
+/*----TOAST------*/
+
+.custom-toast-container {
+  bottom: 100px
+}
+
+.react-toastify-icon.toast-info svg {
+  fill: white;
+}
+
+.setup-private-info .Toastify__close-button>svg {
+  width: 30px !important;
+  height: 30px !important;
+  color: rgb(0, 255, 51) !important;
+  animation: blink 1s infinite;
+}
+
+.setup-private-info .Toastify__close-button {
+  opacity: 1 !important;
+}
+
+.edu {
+  bottom: 300px
+}
+
+/*---________________________BUtton ______________________---*/
+
+
+.action-btn {
+  position: relative;
+  padding: 0;
+  width: 100px;
+  height: 50px;
+  border: 2px solid #888888;
+  outline: none;
+  background-color: #f4f5f6;
+  border-radius: 40px;
+  transition: 0.13s ease-in-out;
+  cursor: pointer;
+}
+
+.action-btn.btn.save-btn:hover {
+  background-color: #f4f5f6 !important;
+}
+
+.action-btn:active {
+  box-shadow: none;
+}
+
+.action-btn:active .button__content {
+  box-shadow: none;
+}
+
+.action-btn:active .button__content .button__text,
+.btn:active .button__content .button__icon {
+  transform: translate3d(0px, 0px, 0px);
+}
+
+.action-btn-square {
+  position: relative;
+  padding: 0;
+  width: 100px;
+  height: 50px;
+  border: 2px solid #888888;
+  outline: none;
+  background-color: #f4f5f6;
+  border-radius: 10px;
+  box-shadow: -6px -12px 10px #ffffff, -6px -10px 15px #ffffff, -21px 0px 6px #ffffff, 6px 6px 11px rgba(0, 0, 0, 0.2);
+  transition: 0.13s ease-in-out;
+  cursor: pointer;
+}
+
+.action-btn-square:active {
+  box-shadow: none;
+}
+
+.action-btn-square:active .button__content {
+  box-shadow: none;
+}
+
+.action-btn-square:active .button__content .button__text,
+.btn:active .button__content .button__icon {
+  transform: translate3d(0px, 0px, 0px);
+}
+
+.action-btn-square .button__content {
+  position: relative;
+  display: grid;
+  padding: 5px;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  box-shadow: inset 0px -8px 0px #dddddd, 0px -8px 0px #f4f5f6;
+  border-radius: 10px;
+  transition: 0.13s ease-in-out;
+  z-index: 1;
+}
+
+.action-btn-square .button__icon {
+  position: relative;
+  display: flex;
+  transform: translate3d(0px, -4px, 0px);
+  grid-column: 4;
+  align-self: center;
+  justify-self: center;
+  width: 20px;
+  height: 20px;
+  transition: 0.13s ease-in-out;
+}
+
+.action-btn-square .button__text {
+  position: relative;
+  transform: translate3d(0px, -4px, 0px);
+  margin: 0;
+  align-self: center;
+  grid-column: 1/4;
+  grid-row: 1;
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+  background-color: #888888;
+  color: #5e5e5e;
+  text-shadow: 2px 2px 3px rgba(255, 255, 255, 0.5);
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+  transition: 0.13s ease-in-out;
+}
+
+.action-btn .button__content {
+  position: relative;
+  display: grid;
+  padding: 5px;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  box-shadow: inset 0px -8px 0px #dddddd, 0px -8px 0px #f4f5f6;
+  border-radius: 40px;
+  transition: 0.13s ease-in-out;
+  z-index: 1;
+}
+
+.action-btn .button__icon {
+  position: relative;
+  display: flex;
+  transform: translate3d(0px, -4px, 0px);
+  grid-column: 4;
+  align-self: center;
+  justify-self: center;
+  width: 20px;
+  height: 20px;
+  transition: 0.13s ease-in-out;
+}
+
+.action-btn .button__text {
+  position: relative;
+  transform: translate3d(0px, -4px, 0px);
+  margin: 0;
+  align-self: center;
+  grid-column: 1/4;
+  grid-row: 1;
+  text-align: center;
+  font-size: 15px;
+  font-weight: bold;
+  background-color: #888888;
+  color: #5e5e5e;
+  text-shadow: 2px 2px 3px rgba(255, 255, 255, 0.5);
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+  transition: 0.13s ease-in-out;
+}
+
+
+.action-btn.saving-btn {
+  position: relative;
+  padding: 0;
+  width: 100px;
+  height: 50px;
+  border: 2px solid green;
+  outline: none;
+  background-color: lightgreen;
+  border-radius: 40px;
+  box-shadow: -6px -12px 10px #fff, -6px -10px 15px #fff, -21px 0px 6px #fff, 6px 6px 11px rgba(1, 164, 44, 0.2);
+  transition: 0.13s ease-in-out;
+  cursor: pointer;
+}
+
+.action-btn.saving-btn:active {
+  box-shadow: none;
+}
+
+.action-btn.saving-btn:active .button__content {
+  box-shadow: none;
+}
+
+.action-btn.saving-btn:active .button__content .button__text,
+.btn:active .button__content .button__icon {
+  transform: translate3d(0px, 0px, 0px);
+}
+
+.action-btn.saving-btn .button__content {
+  position: relative;
+  display: grid;
+  padding: 5px;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  box-shadow: inset 0px -8px 0px #92be7e, 0px -8px 0px #fff;
+  border-radius: 40px;
+  transition: 0.13s ease-in-out;
+  z-index: 1;
+}
+
+.action-btn.saving-btn .button__icon {
+  position: relative;
+  display: flex;
+  transform: translate3d(0px, -4px, 0px);
+  grid-column: 4;
+  align-self: center;
+  justify-self: center;
+  width: 20px;
+  height: 20px;
+  transition: 0.13s ease-in-out;
+}
+
+.action-btn.saving-btn .button__text {
+  position: relative;
+  transform: translate3d(0px, -4px, 0px);
+  margin: 0;
+  align-self: center;
+  grid-column: 1/4;
+  grid-row: 1;
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+  background-color: green;
+  color: rgb(17, 52, 17);
+  text-shadow: 2px 2px 3px rgb(34, 73, 34);
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+  transition: 0.13s ease-in-out;
+}
+
+
+/* -----------------------------------------------------------------SmallSideBar---------------------------------- */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -200px;
+  width: 200px;
+  height: 100vh;
+  background-color: #f8f9fa;
+  transition: right 0.3s ease;
+}
+
+.sidebar.open {
+  right: 0;
+}
+
+.sidebar-content {
+  padding: 20px;
+}
+
+.sidebar-toggle {
+  position: absolute;
+  top: 10px;
+  right: -30px;
+}
+
+.content {
+  margin-left: 200px;
+  padding: 20px;
+}
+
+
+
+
+/*--------------------- scrollbar -----------------*/
+::-webkit-scrollbar {
+  width: 8px;
+  height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 6px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #47c176;
+  border-radius: 200px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.countdown div {
+  left: 30%
+}
+
+/*---------------------------------------swicth--------------------------*/
+.toggle-collab {
+  position: relative;
+  display: inline-block;
+  width: 100px;
+  height: 30px;
+  background-color: rgb(229, 68, 46);
+  border-radius: 30px;
+  border: 2px solid rgb(173, 173, 173);
+}
+
+.toggle-collab.checked::after {
+  left: 70px;
+}
+
+.toggle-collab::after {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: rgb(173, 173, 173);
+  border: 2px solid white;
+
+  top: 1px;
+  left: 1px;
+  transition: all 0.5s;
+}
+
+.checkbox {
+  display: none;
+}
+
+.toggle-collab.checked {
+  background-color: rgb(63, 231, 21);
+}
+
+.toggle-collab p {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+}

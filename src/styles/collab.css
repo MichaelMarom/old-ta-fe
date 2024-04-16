@@ -1,0 +1,679 @@
+@media screen and (min-width: 800px) {
+    * {
+        box-sizing: border-box;
+    }
+
+
+    .color-pallete,
+    .fill-pallete {
+        height: 500px;
+        width: 300px;
+        position: absolute;
+        padding: 10px;
+        z-index: 10;
+        border-radius: 6px;
+        top: 60px;
+        background-color: #ffffff;
+    }
+
+    .pen-color {
+        height: 60%;
+        width: 100%;
+        background-color: #ffffff;
+        padding: 5px;
+    }
+
+    .pen-thickness {
+        height: 40%;
+        width: 100%;
+        background-color: #ffffff;
+    }
+
+    .line-illustration {
+        height: 60%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+    }
+
+    .slider {
+        width: 100%;
+        height: 5px;
+        border-radius: 5px;
+        background: #d3d3d3;
+        outline: none;
+        opacity: 0.7;
+        -webkit-transition: .2s;
+        transition: opacity .2s;
+    }
+
+    .slider:hover {
+        opacity: 1;
+
+    }
+
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #04AA6D;
+        cursor: pointer;
+    }
+
+    .slider::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #04AA6D;
+        cursor: pointer;
+    }
+
+
+    .line-thickness-cnt {
+        height: 40%;
+        width: 100%;
+
+    }
+
+    .pen-color div {
+        height: 40px;
+        width: 40px;
+        float: left;
+        display: flex;
+        cursor: pointer;
+        padding: 5px 0 0 0;
+        align-items: center;
+        background-color: red;
+        justify-content: center;
+        margin: 0 13px 10px 13px;
+        border-radius: 50%;
+    }
+
+    .fill-pallete div {
+        height: 30px;
+        width: 30px;
+        float: left;
+        display: flex;
+        padding: 5px 0 0 0;
+        align-items: center;
+        justify-content: center;
+        margin: 0 3px 10px 3px;
+        border-radius: 50%;
+    }
+
+    .color-pallete div:hover {
+        background-color: #ffffff;
+    }
+
+    .thickness-panel {
+        height: fit-content;
+        width: 150px;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        z-index: 25;
+        position: absolute;
+        background: #ffffff;
+        top: 150px;
+    }
+
+    .shapes-option-cnt {
+        height: 400px;
+        width: 300px;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        z-index: 25;
+        position: absolute;
+        background: #ffffff;
+        top: 150px;
+
+    }
+
+    .shapes {
+        height: 30%;
+        width: 100%;
+
+    }
+
+    .shape-styles {
+        height: 70%;
+        width: 100%;
+        display: block;
+    }
+
+    .shape-stroke-color {
+        height: 50%;
+        width: 100%;
+        float: unset;
+        display: block;
+    }
+
+    .shape-stroke-color div {
+        float: left;
+        height: 50px;
+        width: 50px;
+        margin: 0 5px 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .shape-fill-color {
+        height: 50%;
+        width: 100%;
+        float: unset;
+        display: block;
+    }
+
+    .shape-fill-color div {
+        float: left;
+        height: 50px;
+        width: 50px;
+        margin: 0 5px 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .shapes-option-cnt .shape-option {
+        padding: 10px;
+        float: left;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: large;
+        font-weight: bold;
+        border-radius: 5px;
+        text-transform: capitalize;
+        cursor: pointer;
+    }
+
+
+    .digit {
+        font-size: 20px;
+        color: #fff;
+    }
+
+    .txt {
+        font-size: large;
+        color: #fffcd6;
+    }
+
+    .left {
+        float: left;
+        height: 100%;
+        display: flex;
+        position: relative;
+        align-items: center;
+    }
+
+    .left button {
+        padding: 12px;
+        border-radius: 5px;
+        border: none;
+        margin: 0 5px 0 5px;
+        outline: none;
+    }
+
+    .right {
+        float: right;
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
+
+    .right button {
+        padding: 12px;
+        border-radius: 5px;
+        border: none;
+        outline: none;
+    }
+
+    .right div {
+        padding: 12px;
+        border-radius: 5px;
+        border: none;
+        margin: 0 10px 0 10px;
+        outline: none;
+    }
+
+
+
+    html,
+    body {
+        height: 100%;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        background: #f9f9f9;
+    }
+
+    .StudentCollabHeader {
+        height: 60px;
+        padding: 0 20px 0 20px;
+        width: 100%;
+        position: relative;
+        background-color: #212F3D;
+    }
+
+    .student-writing-set {
+        height: 100%;
+        width: fit-content;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        margin: auto;
+        float: left;
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .student-writing-set button {
+        padding: 12px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        outline: none;
+        margin: 0 5px 0 5px;
+    }
+
+    .StudentAside {
+        height: calc(100% - 250px);
+        width: 300px;
+        transition: .4s;
+        position: fixed;
+        position: fixed;
+        top: 42%;
+        z-index: 1000;
+        right: 0%;
+        transform: translate(-5%, -50%);
+        background-color: #fff;
+        border-radius: 5px;
+    }
+
+    #StudentAsideVideoCnt {
+        position: absolute;
+        right: 0;
+        top: 0;
+        transition: 1s;
+
+        height: calc(100vh - 150px);
+        width: calc(100vw - 35px);
+        z-index: 1000;
+    }
+
+    .StudentCollabFooter {
+        height: 50px;
+        width: 100%;
+        position: fixed;
+        right: 5px;
+        bottom: 1px;
+        background-color: #e6e6e6;
+        border-radius: 5px;
+    }
+
+    .StudentAsideVideoCnt {
+        height: 30%;
+        width: 100%;
+        background-color: #000;
+        position: relative;
+
+    }
+
+    .StudentAsideVideoCnt video {
+        height: 100%;
+        width: 100%;
+
+    }
+
+    .StudentAsideVideoCnt ul {
+        list-style-type: none;
+        position: absolute;
+        bottom: 5px;
+        left: 0;
+        display: flex;
+
+
+    }
+
+    .StudentAsideVideoCnt ul li {
+        margin: 0 2.5px 0 2.5px;
+    }
+
+    .StudentAsideChatCnt {
+        height: 70%;
+        position: relative;
+        width: 100%;
+    }
+
+    .StudentAsideChatBox {
+        height: calc(100% - 60px);
+        bottom: 55px;
+        width: 100%;
+        position: absolute;
+        padding: 5px;
+        overflow: auto;
+        background-color: #fff;
+
+    }
+
+    .StudentAsideChatControl {
+        height: 50px;
+        bottom: 0;
+        width: 100%;
+        position: absolute;
+        background-color: transparent;
+        padding: 0 5px 0 5px;
+    }
+
+    .StudentAsideChatControl button {
+        padding: 12px;
+        height: 45px;
+        border-radius: 5px;
+        font-weight: 'bold';
+        border: none;
+        cursor: pointer;
+        outline: none;
+        margin: 0 5px 0 5px;
+    }
+
+
+    .StudentMessageCnt {
+        width: 100%;
+        height: fit-content;
+        display: flex;
+        justify-content: right;
+        position: relative;
+        margin: 0 0 8px 0;
+    }
+
+    .StudentMessageCntContent {
+        max-width: 80%;
+        text-align: left;
+        padding: 10px;
+        float: right;
+        position: relative;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        border-bottom-right-radius: 1.15px;
+        border-bottom-left-radius: 15px;
+        background-color: #0062ff;
+        color: #fff;
+    }
+
+    #StudentAside {
+        right: -100%;
+        transition: .4s;
+    }
+
+
+    .StudentBoardAccessIndicator {
+        height: 100%;
+        width: 300px;
+        position: absolute;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: right;
+    }
+
+    .StudentBoardAccessIndicator button {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        border: none;
+        cursor: pointer;
+        outline: none;
+        justify-content: center;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    .TutorCollabHeader {
+        height: 60px;
+        padding: 0 20px 0 20px;
+        width: 100%;
+        position: relative;
+        background-color: #212F3D;
+    }
+
+    #TutorAsideVideoCnt {
+        position: absolute;
+        right: 0;
+        top: 90px;
+        transition: 1s;
+
+        height: calc(100vh - 220px);
+        width: calc(100vw - 35px);
+        z-index: 1000;
+    }
+
+    .tutor-writing-set {
+        height: 100%;
+        width: fit-content;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        margin: auto;
+        float: left;
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .tutor-writing-set button {
+        padding: 12px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        outline: none;
+        margin: 0 5px 0 5px;
+    }
+
+    .TutorAside {
+        height: calc(100% - 300px);
+        width: 300px;
+        position: absolute;
+        top: 50%;
+        right: 0%;
+        z-index: 1000;
+        transition: .4s;
+        transform: translate(-5%, -50%);
+        background-color: #fff;
+        border-radius: 5px;
+    }
+
+    #TutorAside {
+        right: -100%;
+        transition: .4s;
+    }
+
+    .TutorCollabFooter {
+        height: 50px;
+        width: 100%;
+        position: fixed;
+        right: 0px;
+        bottom: 92px;
+        padding: 0;
+        background-color: #e6e6e6;
+        border-radius: 5px;
+    }
+
+    .TutorAsideVideoCnt {
+        height: 30%;
+        width: 100%;
+        background-color: #000;
+        position: relative;
+    }
+
+    .TutorAsideVideoCnt video {
+        height: 100%;
+        width: 100%;
+
+    }
+
+    .TutorAsideVideoCnt ul {
+        list-style-type: none;
+        position: absolute;
+        bottom: 5px;
+        left: 0;
+        padding: 0 0 0 5px;
+        display: flex;
+
+
+    }
+
+    .TutorAsideVideoCnt ul li {
+        margin: 0 2.5px 0 2.5px;
+        padding: 8px;
+    }
+
+    #collab-action {
+        background-color: yellow;
+        padding: 4px;
+        border-radius: 5px;
+    }
+
+    .TutorAsideChatCnt {
+        position: relative;
+        width: 100%;
+    }
+
+    .TutorAsideChatBox {
+        height: calc(100% - 60px);
+        bottom: 55px;
+        width: 100%;
+        position: absolute;
+        padding: 5px;
+        overflow: auto;
+        background-color: #fff;
+
+    }
+
+
+
+    .TutorAsideChatControl {
+        height: 50px;
+        bottom: 0;
+        width: 100%;
+        position: absolute;
+        background-color: transparent;
+        padding: 0 5px 0 5px;
+    }
+
+    .TutorAsideChatControl button {
+        height: 45px;
+        font-weight: 'bold';
+        border: none;
+        cursor: pointer;
+        outline: none;
+    }
+
+
+    .TutorMessageCnt {
+        width: 100%;
+        height: fit-content;
+        display: flex;
+        justify-content: right;
+        position: relative;
+        margin: 0 0 8px 0;
+    }
+
+    .TutorMessageCntContent {
+        max-width: 80%;
+        text-align: left;
+        padding: 10px;
+        float: right;
+        position: relative;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        border-bottom-right-radius: 1.15px;
+        border-bottom-left-radius: 15px;
+        background-color: #0062ff;
+        color: #fff;
+    }
+
+    .TutorBoardAccessIndicator {
+        height: 100%;
+        width: 300px;
+        position: absolute;
+        right: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: right;
+    }
+
+    .TutorBoardAccessIndicator button {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        border: none;
+        cursor: pointer;
+        outline: none;
+        justify-content: center;
+    }
+
+}
+
+/* countdown */
+
+.flip-countdown-title {
+    display: none;
+}
+
+
+.card__top,
+.card__bottom {
+    color: limegreen !important;
+}
+
+.flip-countdown .flip-countdown-piece .flip-countdown-card .flip-countdown-card-sec .card__top,
+.flip-countdown .flip-countdown-piece .flip-countdown-card .flip-countdown-card-sec .card__bottom,
+.flip-countdown .flip-countdown-piece .flip-countdown-card .flip-countdown-card-sec .card__back::before,
+.flip-countdown .flip-countdown-piece .flip-countdown-card .flip-countdown-card-sec .card__back::after {
+    color: rgb(41, 182, 41)
+}
+
+.excalidraw .App-menu_top {
+    margin-top: -20px !important
+}

@@ -1,0 +1,9 @@
+.fade.modal.show{
+display: flex !important;
+justify-content: center;
+ align-items: center;
+}
+.modal-content{
+    min-width: 430px;
+    min-height: 400px;
+}

@@ -1,0 +1,432 @@
+@media screen and (min-width: 720px) {
+  .form-subject-data-tabs {
+    height: 60px;
+    width: 100%;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: cursive;
+    position: relative;
+    background: #212F3D;
+  }
+
+  .form-subject-data-tabs ul {
+    list-style-type: none;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    overflow-x: auto;
+    overflow-y: none;
+    padding: 0 50px 0 50px;
+    background: #212F3D;
+    scroll-behavior: smooth;
+    transition: cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+
+  .form-subject-data-tabs ul::-webkit-scrollbar {
+    display: block;
+    margin-top: -80px;
+  }
+
+  .form-subject-data-tabs ul li {
+    padding: 15px 20px 15px 20px;
+    color: #fff;
+    display: flex;
+    transform: skew(-40deg);
+    font-size: large;
+    transition: all .2s ease-in;
+    white-space: nowrap;
+    font-weight: 400;
+    font-family: 'Times New Roman', Times, serif;
+    align-items: center;
+    justify-content: center;
+    float: left;
+    cursor: pointer;
+  }
+
+  .form-subject-data-tabs ul li a {
+    display: block;
+    transform: skew(40deg);
+    transition: all .2s ease-in;
+    background: transparent;
+  }
+
+  #form-subject-data-tabs-list-active {
+    background: #2471A3;
+    color: #F7F9F9;
+  }
+
+
+
+  .form-subject-data-tabs ul li:hover {
+    background: #2471A3;
+    color: #F7F9F9;
+  }
+
+  #form-subject-data-collection-table {
+    width: 85%;
+    height: 100%;
+    margin: auto;
+  }
+
+  .form-subject-data-tabs ul li a {
+    display: block;
+    transform: skew(40deg);
+    transition: all .2s ease-in;
+    background: transparent;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  .student-tab-header {
+    height: 60px;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: cursive;
+    position: relative;
+    background: #212F3D;
+  }
+
+  .student-tab-header ul::-webkit-scrollbar {
+    display: block;
+  }
+
+
+
+  #active {
+    background-color: #ffffff;
+  }
+
+  .student-tab-header ul {
+    list-style-type: none;
+    margin: auto;
+    width: calc(100% - 120px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0 8px 0 8px;
+    background: #212F3D;
+    scroll-behavior: smooth;
+    transition: cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+
+  .student-tab-header ul li {
+    padding: 15px 20px 15px 20px;
+    color: #fff;
+    display: flex;
+    transform: skew(-40deg);
+    font-size: large;
+    transition: all .2s ease-in;
+    white-space: nowrap;
+    font-weight: 400;
+    font-family: 'Times New Roman', Times, serif;
+    align-items: center;
+    justify-content: center;
+    float: left;
+    cursor: pointer;
+  }
+
+  .student-tab-header ul li:first-child {
+    margin-left: 20px;
+  }
+
+  .student-tab-header ul li a {
+    display: block;
+    transform: skew(40deg);
+    transition: all .2s ease-in;
+    background: transparent;
+  }
+
+  #student-tab-header-list-active {
+    background: #2471A3;
+    color: white;
+  }
+
+
+
+  .student-tab-header ul li:hover {
+    background: #2471A3;
+    color: #F7F9F9;
+  }
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #dbdbdb;
+    border-radius: 6px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #47c176;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #47c176;
+  }
+
+
+  .student-market-place-cnt {
+    height: calc(100vh - 140px);
+    width: 100%;
+
+  }
+
+  .student-market-place-header {
+    height: 50px;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  .student-market-place-header ul {
+    list-style-type: none;
+    height: 100%;
+    margin: 0;
+    padding: 2.5px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: #002036;
+  }
+
+  .student-market-place-header ul li {
+    padding: 5px 10px 5px 10px;
+    margin: 0 10px 0 10px;
+    transform: skew(-40deg);
+    height: 100%;
+    border-radius: 5px;
+    background-color: #002036;
+    color: #fff;
+  }
+
+  .student-market-place-header ul li a {
+    display: block;
+    transform: skew(40deg);
+    transition: all .2s ease-in;
+    background: transparent;
+  }
+
+  #student-market-place-header-active {
+    background: #2471A3;
+    color: #fff;
+  }
+
+  .student-market-place-header ul li:hover {
+    background: #2471A3;
+    color: #F7F9F9;
+  }
+
+  .student-market-place-body {
+    height: calc(100% - 200px);
+    width: 100%;
+    overflow: auto;
+    position: relative;
+    padding: 0 0 0 40px;
+
+  }
+
+  .student-market-place-buttons {
+    height: 1%;
+    width: 100%;
+    float: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: absolute;
+    bottom: 45px;
+    left: 0;
+  }
+
+
+  .student-market-place-top-form {
+    height: 80px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .student-market-place-top-form .input-cnt input[type=radio] {
+    height: 20px;
+    width: 20px;
+  }
+
+  .student-market-place-top-form .input-cnt select {
+    height: 20px;
+    width: 300px;
+  }
+
+  .student-market-place-top-form .input-cnt input[type=text] {
+    height: 50px;
+    width: 300px;
+  }
+
+  .student-market-place-top-form {
+
+    height: 6%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    white-space: nowrap;
+  }
+
+  .student-market-place-body-form {
+    height: 40%;
+    width: 50%;
+    float: left;
+  }
+
+  .student-market-place-report-ad {
+    height: fit-content;
+    display: flex;
+    width: 100%;
+    padding-left: 20px;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .input-cnt {
+    width: 400px;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .input-cnt label {
+    float: left;
+    width: 55%;
+  }
+
+
+  .input-cnt input {
+    float: right;
+    width: 300px;
+  }
+
+  .student-market-place-btm-form {
+    height: 40%;
+    width: 50%;
+    float: right;
+  }
+
+  .form-student-profile {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+}
+
+.worst:hover {
+  color: darkred;
+}
+
+.angry:hover {
+  color: orangered;
+}
+
+.neutral:hover {
+  color: yellow;
+}
+
+.good:hover {
+  color: limegreen;
+}
+
+.best:hover {
+  color: green;
+}
+
+.worst:active {
+  color: darkred;
+}
+
+.angry:active {
+  color: orangered;
+}
+
+.neutral:active {
+  color: yellow;
+}
+
+.good:active {
+  color: limegreen;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.best:active {
+  color: green;
+}
+
+
+/* feedback */
+@keyframes blinking {
+  50% {
+    border: 1px solid rgb(17, 219, 17);
+    box-shadow: 0 0 20px rgb(36, 227, 36);
+  }
+}
+
+@keyframes blinking_red {
+  50% {
+    border: 1px solid red;
+    box-shadow: 0 0 10px red;
+  }
+}
+
+
+
+/* Marketplace */
+
+.ad:hover {
+  background: lightblue;
+}

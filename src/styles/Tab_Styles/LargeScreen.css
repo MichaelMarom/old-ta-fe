@@ -1,0 +1,966 @@
+.save_loader {
+    position: relative;
+    width: 85px;
+    height: 50px;
+    background-repeat: no-repeat;
+    background-image: linear-gradient(#000 50px, transparent 0),
+        linear-gradient(#000 50px, transparent 0),
+        linear-gradient(#000 50px, transparent 0),
+        linear-gradient(#000 50px, transparent 0),
+        linear-gradient(#000 50px, transparent 0),
+        linear-gradient(#000 50px, transparent 0);
+    background-position: 0px center, 15px center, 30px center, 45px center, 60px center, 75px center, 90px center;
+    animation: rikSpikeRoll 0.65s linear infinite alternate;
+}
+
+@keyframes rikSpikeRoll {
+    0% {
+        background-size: 10px 3px;
+    }
+
+    16% {
+        background-size: 10px 50px, 10px 3px, 10px 3px, 10px 3px, 10px 3px, 10px 3px
+    }
+
+    33% {
+        background-size: 10px 30px, 10px 50px, 10px 3px, 10px 3px, 10px 3px, 10px 3px
+    }
+
+    50% {
+        background-size: 10px 10px, 10px 30px, 10px 50px, 10px 3px, 10px 3px, 10px 3px
+    }
+
+    66% {
+        background-size: 10px 3px, 10px 10px, 10px 30px, 10px 50px, 10px 3px, 10px 3px
+    }
+
+    83% {
+        background-size: 10px 3px, 10px 3px, 10px 10px, 10px 30px, 10px 50px, 10px 3px
+    }
+
+    100% {
+        background-size: 10px 3px, 10px 3px, 10px 3px, 10px 10px, 10px 30px, 10px 50px
+    }
+}
+
+.tutor-popin {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #000;
+    color: #fff;
+    position: fixed;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    width: fit-content;
+    bottom: -100px;
+    transition: .8s;
+    z-index: 2;
+}
+
+.next {
+    pointer-events: none;
+    opacity: .5;
+}
+
+#next {
+    pointer-events: all;
+    opacity: 1;
+}
+
+#tutor-popin {
+    bottom: 90px;
+}
+
+
+.save-overlay {
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgb(0, 0, 0);
+    background-color: rgb(0, 0, 0, .1);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+#save-overlay {
+    display: flex;
+}
+
+
+#err-border {
+    border: 1px solid red;
+}
+
+#err-mssg {
+    display: block;
+}
+
+.err-mssg {
+    display: none;
+    position: relative;
+    color: red;
+    font-weight: lighter;
+    font-size: small;
+    margin-top: -10px;
+}
+
+
+.scroller-right {
+    height: 40px;
+    width: 40px;
+    position: absolute;
+    right: 0;
+    background-color: rgb(0, 0, 0);
+    background-color: rgb(0, 0, 0, .1);
+    z-index: 2;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+    cursor: pointer;
+}
+
+.input-cnt {
+    display: flex;
+}
+
+.scroller-left {
+    height: 40px;
+    width: 40px;
+    position: absolute;
+    left: 0;
+    background-color: rgb(0, 0, 0);
+    background-color: rgb(0, 0, 0, .1);
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+    z-index: 2;
+    cursor: pointer;
+}
+
+#hide_table {
+    display: none;
+}
+
+html,
+body {
+    overflow: hidden;
+}
+
+@media screen and (min-width: 800px) {
+    * {
+        box-sizing: border-box;
+    }
+
+    .tutor-tab-header {
+        height: 50px;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        z-index: 998;
+        align-items: center;
+        font-family: cursive;
+        position: relative;
+        background: #212F3D;
+        scroll-behavior: smooth;
+    }
+
+    .tutor-tab-header ul::-webkit-scrollbar {
+        display: block;
+    }
+
+    .tutor-tab-header ul {
+        list-style-type: none;
+        margin: 0;
+        height: 100%;
+        width: calc(100% - 150px);
+        display: flex;
+        align-items: center;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 0 8px 0 8px;
+        background: #212F3D;
+        scroll-behavior: smooth;
+        transition: cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    .tutor-tab-header ul li {
+        padding: 15px 20px 15px 20px;
+        color: #fff;
+        display: flex;
+        transform: skew(-40deg);
+        font-size: large;
+        transition: all .2s ease-in;
+        white-space: nowrap;
+        font-weight: 400;
+        font-family: 'Times New Roman', Times, serif;
+        align-items: center;
+        justify-content: center;
+        float: left;
+        cursor: pointer;
+    }
+
+    .tutor-tab-header ul li a {
+        display: block;
+        font-size: 14px;
+        transform: skew(40deg);
+        transition: all .2s ease-in;
+        background: transparent;
+    }
+
+    #tutor-tab-header-list-active {
+        background: #2471A3;
+        color: #F7F9F9;
+    }
+
+
+
+    .tutor-tab-header ul li:hover {
+        background: #2471A3;
+        color: #F7F9F9;
+    }
+
+
+
+
+    #active {
+        background-color: #ffffff;
+    }
+
+    ul {
+        list-style-type: none;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 0 8px 0 8px;
+        scroll-behavior: smooth;
+        transition: cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    ul.header {
+        height: 100%;
+        overflow-x: auto;
+    }
+
+    ul li {
+        padding: 15px 15px 15px 15px;
+        display: flex;
+        font-size: 100%;
+        white-space: nowrap;
+        font-weight: 400;
+        font-family: 'Times New Roman', Times, serif;
+        align-items: center;
+        justify-content: center;
+        float: left;
+        cursor: pointer;
+    }
+
+    ul.nav.nav-tabs li {
+        padding: 0 !important;
+    }
+
+
+    .inputValidator {
+        display: none;
+        color: red;
+        width: 100%;
+        margin: auto;
+        text-align: center;
+    }
+
+    #inputValidator {
+        display: block;
+    }
+
+    .tutor-tab-intro {
+        height: 80px;
+        width: 100%;
+        position: relative;
+        padding: 0;
+        overflow: hidden;
+        margin: 0;
+        display: flex;
+        font-family: 'Times New Roman', Times, serif;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+    }
+
+    .tutor-tab-intro-notice {
+        height: calc(100vh - 350px);
+        width: 100%;
+    }
+
+    .note-one,
+    .note-two,
+    .note-three {
+        height: 100%;
+        width: 30%;
+        margin: 0 1.6% 0 1.6%;
+        padding: 10px;
+        float: left;
+    }
+
+    .tutor-tab-intro-prompt {
+        height: 200px;
+        width: 100%;
+        margin: 20px 0 0 0;
+    }
+
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        text-align: center;
+        font-size: small;
+        position: relative;
+
+    }
+
+
+
+    td {
+        border: 1px solid #000000;
+        text-align: left;
+        width: 20px;
+        padding: 0;
+        text-align: center;
+        height: 40px;
+
+    }
+
+    th {
+        border: 1px solid #000000;
+        text-align: left;
+        width: 20px;
+        padding: 0;
+        text-align: center;
+        height: 40px;
+        top: 0;
+        color: #fff;
+        position: sticky;
+        background: #2471A3;
+
+    }
+
+    tr:nth-child(even) {
+        background-color: hsl(0, 0%, 100%);
+    }
+
+    .tutor-tab-setup {
+        height: calc(100vh - 60px);
+        width: 100%;
+    }
+
+    form {
+        height: 100%;
+        width: 100%;
+    }
+
+
+    button {
+        outline: none;
+        border: none;
+        margin: 10px;
+        padding: 5px;
+    }
+
+    textarea {
+        outline: none;
+        background-color: #fbfbfb;
+        border: 1px solid #000;
+        border-radius: 2.5px;
+        resize: none;
+    }
+
+    .tutor-setup-top-field {
+        display: flex;
+    }
+
+    .tutor-setup-bottom-field {
+        height: 40%;
+        width: 100%;
+        margin: 0;
+        padding: 20px 0 0 0;
+
+        background-color: #ffffff;
+        float: left;
+    }
+
+    .tutor-setup-bottom-field div {
+        width: 50%;
+    }
+
+    .tutor-tab-about-data {
+        height: 100%;
+        width: 50%;
+        padding: 5px;
+        float: right;
+    }
+
+    .tutor-tab-photo-frame {
+        height: 250px;
+        width: 250px;
+        border: 1px dashed #000000;
+    }
+
+    .profile-photo-cnt {
+        height: 50%;
+        width: 50%;
+        float: left;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    .profile-details-cnt {
+        height: 50%;
+        width: 50%;
+        float: right;
+        display: block;
+        position: relative;
+        font-size: small;
+        font-weight: 500;
+    }
+
+    select {
+        height: 35px;
+        border-radius: 2.5px;
+        width: 300px;
+        outline: none;
+    }
+
+    select#yr1,
+    #yr2,
+    #yr3,
+    #state1,
+    #state2,
+    #state3 {
+        width: 100px;
+    }
+
+    #state1,
+    #state2,
+    #state3,
+    #university1,
+    #university2,
+    #degree,
+    #certificate {
+        margin-top: 30px;
+    }
+
+    option {
+        height: 50px;
+        width: 300px;
+        outline: none;
+    }
+
+    .tutor-tab-video-frame {
+        height: 250px;
+        width: auto;
+        border: 1px dashed rgb(0, 0, 0);
+    }
+
+    .profile-video-cnt {
+        height: 50%;
+        width: 50%;
+        float: right;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+
+
+    .tutor-tab-education-info {
+        height: calc(100% - 40px);
+        width: 60%;
+        float: left;
+        text-align: center;
+        font-size: small;
+        font-weight: 500;
+
+    }
+
+    .tutor-tab-education-notice {
+        height: fit-content;
+        width: 600px;
+        text-align: left;
+        display: block;
+        position: relative;
+        margin: auto;
+        background-color: #fbfbfb;
+        margin-bottom: 100px;
+    }
+
+    .tutor-tab-education-experience {
+        height: calc(100% - 40px);
+        width: 40%;
+        padding: 0 50px 0 50px;
+        float: right;
+
+    }
+
+    .tutor-tab-education-work-experience-logo {
+        height: 170px;
+        width: 50%;
+        margin: auto;
+        text-align: center;
+        display: block;
+        margin-top: 10px;
+        position: relative;
+        border: 1px solid #000;
+    }
+
+    .tutor-footer {
+        height: 50px;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        padding: 0 0 10px 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #ffffff;
+        margin: 0;
+    }
+
+    .tutor-footer button {
+        padding: 0 5px;
+        line-height: 33px;
+    }
+
+
+
+    .tutor-tab-rates {
+        height: calc(100vh - 100px);
+        width: 100%;
+    }
+
+    .tutor-tab-rate-section {
+        height: 100%;
+    }
+
+    .tutor-tab-rate-box {
+        height: 100%;
+        width: 50%;
+        float: left;
+        overflow: auto;
+        padding: 25px;
+        display: block;
+    }
+
+    h6 {
+        text-align: center;
+    }
+
+    .highlight {
+        height: fit-content;
+        width: 100%;
+        margin: auto;
+        text-align: left;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        background-color: #d4e9efad;
+        padding: 10px;
+    }
+
+    .rate-table {
+        width: 90%;
+        margin: auto;
+        margin-bottom: 30px;
+        padding: 10px;
+    }
+
+    .tutor-tab-accounting {
+        height: calc(100vh - 120px);
+        width: 100%;
+        padding: 10px;
+    }
+
+    .tutor-tab-acct-start-day {
+        position: relative;
+        height: 100%;
+        width: 25%;
+        float: left;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding-top: 40px;
+        flex-direction: column;
+        text-align: center;
+        border: 1px solid #efefef;
+    }
+
+    .tutor-tab-acct-pay-option {
+        height: 100%;
+        width: 37.5%;
+        overflow-y: auto;
+        border: 1px solid #efefef;
+    }
+
+    .tutor-bank-info {
+        pointer-events: none;
+        opacity: .4;
+    }
+
+    #tutor-bank-info {
+        pointer-events: all;
+        opacity: 1;
+    }
+
+    .tutor-tab-acct-time-range {
+        height: 100%;
+        text-align: center;
+        width: 37.5%;
+        overflow-y: auto;
+        border: 1px solid #efefef;
+    }
+
+    .tutor-tab-subjects {
+        height: calc(100% - 200px);
+        position: relative;
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .tutor-tab-subjects-info {
+        height: fit-content;
+        width: 100%;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .tutor-tab-subject-data-collection-table {
+        height: fit-content;
+        width: 90%;
+        margin: auto;
+
+    }
+
+    #active-subject {
+        border-bottom: 1px solid #000;
+    }
+
+    .tutor-tab-subject-data-tabs {
+        height: 40px;
+        width: 100%;
+        display: flex;
+        flex-wrap: nowrap;
+        background: #212F3D;
+        margin: 0 0 20px 0;
+        overflow-x: auto;
+        position: relative;
+        padding: 0 40px 0 40px;
+    }
+
+
+    #table_options_menu {
+        background: #2471A3;
+        color: #F7F9F9;
+    }
+
+    .tutor-tab-subject-data-tabs ul {
+        list-style-type: none;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        padding: 0 8px 0 8px;
+        background: #212F3D;
+        scroll-behavior: smooth;
+        transition: cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    .tutor-tab-subject-data-tabs ul::-webkit-scrollbar {
+        display: block;
+    }
+
+
+    .tutor-tab-subject-data-tabs ul li {
+        padding: 15px 20px 15px 20px;
+        color: #fff;
+        display: flex;
+        transform: skew(-40deg);
+        font-size: large;
+        transition: all .2s ease-in;
+        white-space: nowrap;
+        font-weight: 400;
+        font-family: 'Times New Roman', Times, serif;
+        align-items: center;
+        justify-content: center;
+        float: left;
+        cursor: pointer;
+    }
+
+    .tutor-tab-subject-data-tabs ul li a {
+        display: block;
+        font-size: 14px;
+        transform: skew(40deg);
+        transition: all .2s ease-in;
+        background: transparent;
+    }
+
+    .tutor-tab-subject-search-bar {
+        height: 50px;
+        width: 100%;
+    }
+
+    .search-bar {
+        float: right;
+    }
+
+    .form-my-students {
+        height: 100%;
+        width: 100%;
+    }
+
+    .form-term-of-use {
+        padding: 5px;
+    }
+
+    .term-of-use-cnt {
+        padding: 45px;
+        font-size: large;
+    }
+
+    .term-of-use-cnt {
+        height: 70vh;
+        width: 100vw;
+    }
+
+    .form-tutor-profile {
+        position: relative;
+        height: calc(100vh - 120px);
+        width: 100%;
+        overflow: auto;
+    }
+
+    .form-tutor-profile-head {
+        height: 50px;
+        width: 100%;
+        padding: 5px;
+        background-color: #979797;
+    }
+
+    .form-tutor-profile-body {
+        height: calc(70% - 50px);
+        width: 100%;
+        background-color: #ffffff;
+        display: flex;
+    }
+
+    .tutor-intel1,
+    .tutor-intel2,
+    .tutor-intel3 {
+        height: 100%;
+        width: 33.3%;
+        font-size: medium;
+        padding: 10px 0 10px 0;
+        display: block;
+        text-align: center;
+
+    }
+
+    .education-intel {
+        width: 100%;
+        height: calc(100% - 200px);
+    }
+
+    .form-tutor-profile-btm {
+        height: 40%;
+        width: 100%;
+        margin: 100px 0 0 0;
+        display: block;
+
+    }
+
+    .form-scheduling-cnt-month,
+    .form-scheduling-cnt-day {
+        margin-top: 20px;
+        width: 100%;
+        display: none;
+    }
+
+    #form-scheduling-cnt {
+        display: flex;
+    }
+
+    .form-scheduling-cnt-left {
+        height: 100%;
+        width: 15rem;
+        float: left;
+        text-align: center;
+        padding: 20px;
+        background-color: #ffffff;
+    }
+
+    .form-scheduling-hours {
+        display: flex;
+        flex-direction: column;
+        gap: 0px;
+        height: auto;
+        overflow-y: scroll;
+        border: 1px solid #80808029;
+        border-radius: 3px;
+        padding: 5px;
+        margin-bottom: 10px;
+    }
+
+    .form-scheduling-cnt-right {
+        width: calc(100% - 300px);
+        float: right;
+    }
+
+    .form-scheduling-cnt-right-header {
+        height: 60px;
+        width: 100%;
+        float: right;
+        background-color: #2471A3;
+    }
+
+    #on {
+        background-color: #979797;
+        color: #ffffff;
+        border: 1px solid #fff;
+        font-weight: bold;
+        border-radius: 5px;
+    }
+
+    .tutor-teaching-subject {
+        height: 100px;
+        width: 350px;
+        padding: 5px;
+        overflow: auto;
+        border-radius: 10px;
+        background-color: #efefef;
+    }
+
+    .tutor-teaching-subject div {
+        padding: 8px;
+        float: left;
+        font-size: small;
+        margin: 6px 4px 6px 4px;
+        background-color: #2471A3;
+        color: #fff;
+        border-radius: 5px;
+    }
+
+
+    .tutor-tab-header ul {
+        list-style-type: none;
+        margin: 0;
+        float: right;
+        height: 100%;
+        width: calc(100% - 150px);
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 0 8px 0 8px;
+        background: #212F3D;
+        scroll-behavior: smooth;
+        transition: cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    .tutor-acct-tab-menu ul {
+        list-style-type: none;
+        margin: 0;
+        float: right;
+        height: 100%;
+        width: calc(100% - 150px);
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 0 8px 0 8px;
+        background: #212F3D;
+        scroll-behavior: smooth;
+        transition: cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    .tutor-acct-tab-menu ul li {
+        padding: 15px 20px 15px 20px;
+        color: #fff;
+        display: flex;
+        transform: skew(-40deg);
+        font-size: large;
+        transition: all .2s ease-in;
+        white-space: nowrap;
+        font-weight: 400;
+        font-family: 'Times New Roman', Times, serif;
+        align-items: center;
+        justify-content: center;
+        float: left;
+        cursor: pointer;
+    }
+
+    .tutor-acct-tab-menu ul li a {
+        display: block;
+        font-size: 14px;
+        transform: skew(40deg);
+        transition: all .2s ease-in;
+        background: transparent;
+    }
+
+    #tutor-acct-tab-menu-list-active {
+        background: #2471A3;
+        color: #F7F9F9;
+    }
+
+
+
+    .tutor-acct-tab-menu ul li:hover {
+        background: #2471A3;
+        color: #F7F9F9;
+    }   
+
+}
+
+
+::-webkit-scrollbar {
+    width: 5px;
+    border-radius: 20px;
+}
+
+::-webkit-scrollbar-track {
+    background: #e5e5e5;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(117, 117, 117);
+    border-radius: 200px;
+
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+    border-radius: 200px;
+}
+
+.grades-sec::-webkit-scrollbar {
+    height: 8px;
+}
+
+.grades-sec::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+}
+
+.grades-sec::-webkit-scrollbar-track {
+    background-color: #f4f4f4;
+    width: 5px;
+}

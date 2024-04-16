@@ -1,0 +1,138 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.rbc-allday-cell {
+  display: none;
+}
+
+.disabled-date.rbc-day-slot.rbc-time-column {
+  pointer-events: auto !important;
+}
+
+.rbc-time-slot.enable-slot {
+  background-color: white !important;
+}
+
+.rbc-day-slot.rbc-time-column.rbc-now.rbc-today .enable-slot {
+  background-color: #eaf6ff !important;
+}
+
+
+.rbc-event-label {
+  display: none !important;
+}
+
+.Toastify__toast {
+  background: black !important;
+  color: #fff !important;
+}
+
+.rbc-day-slot.rbc-time-column .place-holder-end-slot {
+  border: 1px solid red !important;
+  border-top: 0 !important;
+}
+
+.rbc-day-slot.rbc-time-column .rbc-timeslot-group .rbc-time-slot.place-holder-start-slot {
+  border: 1px solid red !important;
+  border-bottom: 0 !important;
+}
+
+.rbc-day-slot.rbc-time-column .rbc-timeslot-group .rbc-time-slot.place-holder-start-slot::after {
+  content: "Place holder";
+  display: block;
+  color: rgb(249, 5, 5);
+  font-size: 9px;
+}
+
+button.Toastify__close-button.Toastify__close-button--light {
+  color: white;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #00ff001a;
+}
+
+.default-avatar {
+  width: 150px;
+  height: 150px;
+  background-color: #ccc;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-pic {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+}
+
+.language-selector {
+  width: 18rem;
+  font-size: 16px;
+}
+
+.custom-tooltip-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.custom-tooltip {
+  position: absolute;
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 4px;
+  font-size: 13px;
+  z-index: 999;
+}
+
+.custom-tooltip.top {
+  bottom: 20px;
+  left: 4rem;
+}
+
+.custom-tooltip.bottomleft {
+  position: absolute;
+  top: 20px;
+  right: -27px;
+}
+
+.custom-tooltip.left {
+  height: auto;
+  position: absolute;
+  top: -83px;
+  left: -3rem;
+}
+
+.custom-tooltip.bottomright {
+  position: absolute;
+  top: 20px;
+  left: 50px;
+}
+
+/* video recorder */
+.record-button__Button-sc-1n5amwk-0.jbBlLf {
+  margin: 0 !important;
+}
+
+input[type="checkbox"] {
+  accent-color: green
+}
+
+.form-check-input:checked {
+  background-color: green;
+  border-color: green;
+}
