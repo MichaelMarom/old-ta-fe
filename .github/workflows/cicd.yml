@@ -1,4 +1,4 @@
-name: depoy-to-azure
+name: app-deploy-to-azure
 on:
   push:
     branches:
