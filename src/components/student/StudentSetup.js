@@ -14,7 +14,6 @@ import { toast } from 'react-toastify';
 import Button from '../common/Button';
 import BTN_ICON from '../../assets/images/button__icon.png';
 import { useNavigate } from 'react-router-dom';
-import { setShortlist } from '../../redux/student_store/shortlist';
 import { compareStates } from '../../helperFunctions/generalHelperFunctions';
 
 const StudentSetup = () => {
@@ -274,9 +273,8 @@ const StudentSetup = () => {
             if (student.AcademyId && data.AcademyId) {
                 const result = await code_applied(student.AcademyId, data.AcademyId);
                 if (result.message && result?.response?.status !== 400) {
-                    dispatch(setShortlist())
                     toast.success(result.message);
-                    navigate('/student/short-list')
+                    // navigate('/student/short-list')
                 }
             }
         }

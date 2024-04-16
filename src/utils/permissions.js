@@ -21,13 +21,11 @@ import TutorFeedback from '../pages/tutor/Feedback'
 // students
 import StudentSetup from "../pages/student/StudentSetup";
 import StudentFaculty from "../pages/student/StudentFaculty";
-import StudentShortLists from "../pages/student/StudentShortList";
 import StudentAccountings from "../pages/student/StudentAccounting";
 import StudentScheduling from "../pages/student/StudentScheduling";
 import StudentTermOfUse from "../pages/student/TermOfUse";
 import StudentProfile from "../pages/student/StudentProfile";
 import StudentIntro from "../pages/student/StudentIntro";
-import StudentClass from "../pages/student/StudentClass";
 import { Feedback } from "../pages/student/Feedback";
 import { Schedules } from "../pages/student/Schedules";
 import { SingleTutorFeedbacks } from "../pages/student/SingleTutorFeedbacks";
@@ -81,7 +79,6 @@ const rolePermissions = {
     { path: "/student/intro", component: <StudentIntro /> },
     { path: "/student/setup", component: <StudentSetup /> },
     { path: "/student/faculties", component: <StudentFaculty /> },
-    { path: "/student/short-list", component: <StudentShortLists /> },
     { path: "/student/accounting", component: <StudentAccountings /> },
     { path: "/student/market-place", component: <Marketplace /> },
     { path: "/student/booking", component: <StudentScheduling /> },

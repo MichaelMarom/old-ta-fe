@@ -19,7 +19,6 @@ import { get_tutor_setup } from "./axios/tutor";
 import { get_my_data, get_student_setup_by_userId } from "./axios/student";
 import { get_user_detail } from "./axios/auth";
 
-import { setShortlist } from "./redux/student_store/shortlist";
 import { setStudent } from "./redux/student_store/studentData";
 import { setTutor } from "./redux/tutor_store/tutorData";
 import { setChats } from "./redux/chat/chat";
@@ -52,7 +51,6 @@ const App = () => {
   const studentLoggedIn = user?.role === 'student';
   const loggedInUserDetail = studentLoggedIn ? student : tutor;
   const role = studentLoggedIn ? 'student' : 'tutor';
-  const { shortlist, isLoading } = useSelector(state => state.shortlist)
   const nullValues = ['undefined', 'null'];
 
   const screen = location.pathname.split('/')[1]
@@ -80,14 +78,11 @@ const App = () => {
           localStorage.setItem('user', JSON.stringify(data));
 
           data.SID && data.role === 'tutor' && dispatch(setTutor())
-          if (data.SID && (data.role === 'student' || screen === 'student')) {
-            dispatch(setShortlist())
-            if (data.role === 'student') {
-              const result = await get_student_setup_by_userId(data.SID);
-              if (result?.[0] && result[0].AcademyId) {
-                dispatch(setStudent(result[0]))
-                localStorage.setItem('student_user_id', result[0].AcademyId);
-              }
+          if (data.role === 'student') {
+            const result = await get_student_setup_by_userId(data.SID);
+            if (result?.[0] && result[0].AcademyId) {
+              dispatch(setStudent(result[0]))
+              localStorage.setItem('student_user_id', result[0].AcademyId);
             }
           }
         }

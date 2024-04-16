@@ -56,9 +56,8 @@ const Actions = ({
     const studentTabsNavigationInfo = [
         { next: "setup", current: "intro", back: null, withRolePrefix: true },
         { next: "faculties", current: "setup", back: "intro", withRolePrefix: true },
-        { next: "short-list", current: "faculties", back: "setup", withRolePrefix: true },
-        { next: "accounting", current: "short-list", back: "faculties", withRolePrefix: true },
-        { next: "feedback", current: "accounting", back: "short-list", withRolePrefix: true },
+        { next: "accounting", current: "faculties", back: "setup", withRolePrefix: true },
+        { next: "feedback", current: "accounting", back: "faculties", withRolePrefix: true },
         { next: "calender", current: "feedback", back: "accounting", withRolePrefix: true },
         { next: "term-of-use", current: "calender", back: "feedback", withRolePrefix: true },
         { next: "chat", current: "term-of-use", back: "calender", withRolePrefix: true },

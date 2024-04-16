@@ -8,7 +8,6 @@ import { useClerk } from "@clerk/clerk-react";
 import { setUser } from "../../redux/auth_state/auth";
 import { setTutor } from "../../redux/tutor_store/tutorData";
 import { setStudent } from "../../redux/student_store/studentData";
-import { setShortlist } from "../../redux/student_store/shortlist";
 
 
 const Header = () => {
@@ -23,7 +22,6 @@ const Header = () => {
         { name: 'Introduction', url: '/student/intro' },
         { name: 'Student Setup', url: '/student/setup' },
         { name: 'Faculties', url: '/student/faculties' },
-        { name: 'Short List', url: '/student/short-list' },
         { name: 'Accounting', url: '/student/accounting' },
         { name: "Feedback", url: '/student/feedback' },
         { name: 'Calender', url: '/student/calender' },
@@ -92,7 +90,6 @@ const Header = () => {
 
         dispatch(setTutor({}))
         dispatch(setStudent({}))
-        dispatch(setShortlist())
         //setTutor tonull
         //setStudent tonull
         nav('/login')

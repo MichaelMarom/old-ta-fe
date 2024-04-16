@@ -8,7 +8,6 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/auth_state/auth";
 import { setTutor } from "../../redux/tutor_store/tutorData";
 import { setStudent } from "../../redux/student_store/studentData";
-import { setShortlist } from "../../redux/student_store/shortlist";
 
 
 const Header = () => {
@@ -55,7 +54,6 @@ const Header = () => {
         
         dispatch(setTutor({}))
         dispatch(setStudent({}))
-        dispatch(setShortlist())
         //setTutor tonull
         //setStudent tonull
         nav('/login')

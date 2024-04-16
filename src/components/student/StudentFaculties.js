@@ -13,7 +13,6 @@ import { socket } from '../../config/socket';
 import Actions from '../common/Actions';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
-import { setShortlist } from '../../redux/student_store/shortlist';
 import Tooltip from '../common/ToolTip';
 import { convertToDate } from '../common/Calendar/Calendar';
 import Pill from '../common/Pill';

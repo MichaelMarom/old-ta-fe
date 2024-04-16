@@ -19,7 +19,7 @@ const slice = createSlice({
             state.shortlist = action.payload;
         },
         setShortlist: (state, action) => {
-            console.log('ffe, ', action.payload)
+            console.log('shortlist, ', action.payload)
             state.isLoading = false;
             state.shortlist = action.payload
         }
