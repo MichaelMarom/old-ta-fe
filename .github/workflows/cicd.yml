@@ -24,7 +24,7 @@ jobs:
           npm run build --if-present
         env:
             NODE_OPTIONS: --max-old-space-size=4096
-            
+
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r 
 
@@ -54,7 +54,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'tutoring-academy-app'
+          app-name: 'tutoringacademy'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZURE_APP_PUBLISH_PROFILE }}
           package: .
