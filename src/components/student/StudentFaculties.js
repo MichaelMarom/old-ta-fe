@@ -8,7 +8,7 @@ import Actions from '../common/Actions';
 import { useDispatch, useSelector } from 'react-redux';
 import Tooltip from '../common/ToolTip';
 import Pill from '../common/Pill';
-import {wholeDateFormat } from '../../constants/constants';
+import { wholeDateFormat } from '../../constants/constants';
 import SubMenu from '../common/SubMenu';
 import Loading from '../common/Loading';
 import { convertTutorIdToName } from '../../helperFunctions/generalHelperFunctions';
@@ -33,14 +33,15 @@ const StudentFaculties = () => {
     const navigate = useNavigate()
 
     const handleNavigateToSchedule = async (item) => {
+        console.log(item)
         dispatch(setTutor({
-            id: item.SID[0],
+            id: item.SID,
             academyId: item.AcademyId,
             GMT: item.GMT,
             firstName: item.FirstName,
             lastName: item.LastName,
             subject: selectedSubject.SubjectName,
-            rate: item.Rate,
+            rate: item.rate,
             disableColor: item.disableColor,
             introDiscountEnabled: item.IntroSessionDiscount || false,
             activateSubscriptionOption: item.ActivateSubscriptionOption === "true",

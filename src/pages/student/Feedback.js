@@ -161,9 +161,9 @@ export const Feedback = () => {
     }, [comment,])
 
     useEffect(() => {
-        setQuestions(questions.map(question => ({ ...question, star: null })))
+        setQuestions((prevValue) => prevValue.map(question => ({ ...question, star: null })))
         setComment('')
-    }, [selectedEvent.id, questions])
+    }, [selectedEvent.id])
 
     const transformFeedbackData = (item) => {
         let bookedSlots = JSON.parse(item.bookedSlots);

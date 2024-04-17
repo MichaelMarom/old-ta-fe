@@ -54,6 +54,6 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'learn-tutoringacademy-appno'
+          app-name: 'learn-tutoringacademy-app-new'
           publish-profile: ${{ secrets.AZURE_APP_PUBLISH_PROFILE }}
           package: .

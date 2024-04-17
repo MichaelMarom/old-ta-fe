@@ -194,7 +194,7 @@ const App = () => {
 
   useEffect(() => {
     if (location.pathname === '/')
-      navigate('/tutor/setup')
+      navigate('/login')
   }, [location, navigate])
 
 
