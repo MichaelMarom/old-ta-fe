@@ -30,16 +30,16 @@ const TutorAside = ({
   // const { upcomingSessionFromNow, upcomingSession, inMins, currentSession } =
   //   useSelector((state) => state.studentSessions);
 
-  console.log(
-    openedSessionTimeRemainingToStart,
-    parseInt(openedSessionTimeRemainingToStart / 60),
-    "time to start!"
-  );
-  console.log(
-    timeRemainingToEndCurrentSession,
-    parseInt(timeRemainingToEndCurrentSession / 60),
-    "time to end!"
-  );
+  // console.log(
+  //   openedSessionTimeRemainingToStart,
+  //   parseInt(openedSessionTimeRemainingToStart / 60),
+  //   "time to start!"
+  // );
+  // console.log(
+  //   timeRemainingToEndCurrentSession,
+  //   parseInt(timeRemainingToEndCurrentSession / 60),
+  //   "time to end!"
+  // );
 
   const [messages, setMessages] = useState([]);
   const [arrivalMsg, setArrivalMsg] = useState(null);
@@ -59,7 +59,6 @@ const TutorAside = ({
   const sessionId = queryParams.get("sessionId");
   const [volume, setVolume] = useState(50);
 
-  console.log(sessionId)
   const handleVolumeChange = (event) => {
     if (!event) return;
     const { value } = event.target;

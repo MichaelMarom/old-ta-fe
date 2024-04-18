@@ -28,8 +28,8 @@ import {
   SignedIn
 } from '@clerk/clerk-react';
 import { redirect_to_login } from "./helperFunctions/auth";
-// import { setStudentSessions } from "./redux/student_store/studentSessions";
-// import { setTutorSessions } from "./redux/tutor_store/tutorSessions";
+import { setStudentSessions } from "./redux/student_store/studentSessions";
+import { setTutorSessions } from "./redux/tutor_store/tutorSessions";
 import TutorClass from "./pages/tutor/TutorClass";
 import CallWithChatExperience from "./pages/tutor/Test1";
 
@@ -110,26 +110,44 @@ const App = () => {
 
   //sessions :nextsession, :allsessions, :time remaing for next lesson
   useEffect(() => {
-    console.log(process.env.REACT_APP_SERVER_URL)
-    if (token) {
-      // const dispatchUserSessions = async () => {
-      //   const studentSessions = student.AcademyId && dispatch(await setStudentSessions(student));
-      //   const tutorSessions = tutor.AcademyId && dispatch(await setTutorSessions(tutor));
-      //   student.AcademyId && handleExpiredToken(studentSessions)
-      //   tutor.AcademyId && handleExpiredToken(tutorSessions)
+    if (token && tutor.AcademyId) {
+      const dispatchUserSessions = async () => {
+        console.log('render inside tutor', tutor, token)
+        const tutorSessions = dispatch(await setTutorSessions(tutor));
+        handleExpiredToken(tutorSessions)
 
-      //   const intervalId = setInterval(async () => {
-      //     const studentSessions = student.AcademyId && dispatch(await setStudentSessions(student));
-      //     const tutorSessions = tutor.AcademyId && dispatch(await setTutorSessions(tutor));
-      //     student.AcademyId && handleExpiredToken(studentSessions)
-      //     tutor.AcademyId && handleExpiredToken(tutorSessions)
-      //   }, 60000);
+        const intervalId = setInterval(async () => {
+          console.log('render outside tutor', tutor, token)
+          const tutorSessions = dispatch(await setTutorSessions(tutor));
+          handleExpiredToken(tutorSessions)
+        }, 60000);
 
-      //   return () => clearInterval(intervalId);
-      // }
-      // dispatchUserSessions()
+        return () => clearInterval(intervalId);
+      }
+      dispatchUserSessions()
     }
-  }, [student, tutor, dispatch, token]);
+
+  }, [tutor.AcademyId, token])
+
+  useEffect(() => {
+    if (token && student.AcademyId) {
+      const dispatchUserSessions = async () => {
+        console.log('render inside student', student, token)
+        const studentSessions = dispatch(await setStudentSessions(student));
+        handleExpiredToken(studentSessions)
+
+        const intervalId = setInterval(async () => {
+          console.log(' render outside student', student, token)
+          const studentSessions = dispatch(await setStudentSessions(student));
+          handleExpiredToken(studentSessions)
+        }, 60000);
+
+        return () => clearInterval(intervalId);
+      }
+      dispatchUserSessions()
+    }
+
+  }, [student.AcademyId, token])
 
   const getStudentDetails = async () => {
     if (nullValues.includes(studentUserId)) {
@@ -147,7 +165,6 @@ const App = () => {
 
   useEffect(() => {
     if (userId && token && isSignedIn) {
-      console.log('render', token)
       dispatch(setTutor())
     }
   }, [dispatch, tutorUserId, userId, isSignedIn, token])
