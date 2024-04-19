@@ -279,15 +279,13 @@ export const formatted_tutor_sessions = async (tutorId) => {
     }
 }
 
-export const feedback_records = async (tutorId) => {
+export const feedback_records = async (tutorId, timeZone) => {
     try {
-        const { data } = await apiClient.get(`/tutor/feedbacks/${tutorId}`);
+        const { data } = await apiClient.get(`/tutor/feedbacks/${tutorId}`, { params: { timeZone } });
         return data;
     }
     catch (err) {
         showErrorToast(err)
-        console.log(err)
-        return err
     }
 }
 

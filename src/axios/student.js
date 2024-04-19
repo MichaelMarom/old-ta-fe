@@ -326,9 +326,9 @@ export const get_bank_details = async (id) => {
     }
 }
 
-export const get_payment_report = async (studentId) => {
+export const get_payment_report = async (studentId, timeZone) => {
     try {
-        const { data } = await apiClient.get(`/student/payment-report/${studentId}`);
+        const { data } = await apiClient.get(`/student/payment-report/${studentId}`, { params: { timeZone } });
         return data
     }
     catch (err) {

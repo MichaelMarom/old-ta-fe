@@ -337,9 +337,6 @@ const TutorClass = () => {
             }`}
         >
           <div>
-            {sessionTime === "future" && (
-              <p className="text-danger">Session is in Future</p>
-            )}
             {sessionTime === "past" && (
               <p className="text-danger">Session already Pass</p>
             )}

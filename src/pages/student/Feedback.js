@@ -5,7 +5,7 @@ import QuestionFeedback from '../../components/student/Feedback/QuestionFeedback
 import { get_all_feedback_questions, get_feedback_to_question, get_payment_report, post_feedback_to_question } from '../../axios/student';
 import { showDate } from '../../helperFunctions/timeHelperFunctions';
 import { wholeDateFormat } from '../../constants/constants';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { postStudentBookings } from '../../redux/student_store/studentBookings';
 import Actions from '../../components/common/Actions';
 import { toast } from 'react-toastify';
@@ -23,6 +23,7 @@ export const Feedback = () => {
     const [selectedEvent, setSelectedEvent] = useState({})
     const [feedbackData, setFeedbackData] = useState([])
     const studentId = localStorage.getItem('student_user_id');
+    const { student } = useSelector(state => state.student)
     const [pendingChange, setPendingChange] = useState(null);
     const [loading, setLoading] = useState(false)
     const dispatch = useDispatch()
@@ -158,7 +159,7 @@ export const Feedback = () => {
             setReservedSlots([...updatedSlots])
 
         // eslint-disable-next-line react-hooks/exhaustive-deps 
-    }, [comment,])
+    }, [comment])
 
     useEffect(() => {
         setQuestions((prevValue) => prevValue.map(question => ({ ...question, star: null })))
@@ -168,9 +169,13 @@ export const Feedback = () => {
     const transformFeedbackData = (item) => {
         let bookedSlots = JSON.parse(item.bookedSlots);
         let reservedSlots = JSON.parse(item.reservedSlots);
-        console.log(bookedSlots, reservedSlots)
+        const currentTimeInTimeZone = moment().tz(student.timeZone);
+
+
         bookedSlots = bookedSlots.map(slot => {
-            if (moment(convertToDate(slot.end)).isBefore(moment().subtract(11, 'minutes'))) {
+            const sessionEndInTimeZone = moment(slot.end).tz(student.timeZone);
+            const minutesDifference = sessionEndInTimeZone.diff(currentTimeInTimeZone, 'minutes');
+            if (minutesDifference <= 10 && minutesDifference > 0) {
                 return {
                     ...slot,
                     feedbackEligible: true
@@ -179,7 +184,9 @@ export const Feedback = () => {
             return slot
         })
         reservedSlots = reservedSlots.map(slot => {
-            if (moment(convertToDate(slot.end)).isBefore(moment().subtract(11, 'minutes'))) {
+            const sessionEndInTimeZone = moment(slot.end).tz(student.timeZone);
+            const minutesDifference = sessionEndInTimeZone.diff(currentTimeInTimeZone, 'minutes');
+            if (minutesDifference <= 10 && minutesDifference > 0) {
                 return {
                     ...slot,
                     feedbackEligible: true
@@ -194,28 +201,30 @@ export const Feedback = () => {
     };
 
     useEffect(() => {
-        const fetchPaymentReport = async () => {
-            setLoading(true)
-            const data = await get_payment_report(studentId);
-            setLoading(false)
+        if (student.AcademyId && student.timeZone) {
+            const fetchPaymentReport = async () => {
+                setLoading(true)
+                const data = await get_payment_report(student.AcademyId, student.timeZone);
+                setLoading(false)
 
-            if (!data?.response?.data) {
-                const uniqueData = data.reduce((unique, item) => {
-                    if (unique?.some(detail => detail.tutorId === item.tutorId)) {
-                        return unique
-                    }
-                    else {
-                        return [...unique, item]
-                    }
-                }, [])
-                const transformedData = uniqueData.map(item => transformFeedbackData(item))
-                    .flat().filter(slot => slot.studentId === studentId);
-                setFeedbackData(transformedData);
-            }
-        };
+                if (!data?.response?.data) {
+                    const uniqueData = data.reduce((unique, item) => {
+                        if (unique?.some(detail => detail.tutorId === item.tutorId)) {
+                            return unique
+                        }
+                        else {
+                            return [...unique, item]
+                        }
+                    }, [])
+                    const transformedData = uniqueData.map(item => transformFeedbackData(item))
+                        .flat().filter(slot => slot.studentId === student.AcademyId);
+                    setFeedbackData(transformedData);
+                }
+            };
 
-        fetchPaymentReport();
-    }, [studentId]);
+            fetchPaymentReport();
+        }
+    }, [student.AcademyId, student.timeZone]);
 
     useEffect(() => {
         if (selectedEvent.id) {

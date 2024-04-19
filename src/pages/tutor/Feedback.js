@@ -36,14 +36,16 @@ const Feedback = () => {
 
     useEffect(() => {
         const getFeedback = async () => {
-            setFetchingFeedbackSessions(true)
-            const records = tutor.AcademyId ? await feedback_records(tutor.AcademyId) : []
-            setFetchingFeedbackSessions(false)
+            if (tutor.AcademyId && tutor.timeZone) {
+                setFetchingFeedbackSessions(true)
+                const records = await feedback_records(tutor.AcademyId, tutor.timeZone)
+                setFetchingFeedbackSessions(false)
 
-            !!records?.length && setFeedbackData(records)
+                !!records?.length && setFeedbackData(records)
+            }
         }
         getFeedback()
-    }, [tutor])
+    }, [tutor.AcademyId, tutor.timeZone])
 
     const handleRowSelect = () => { }
 
@@ -149,7 +151,7 @@ const Feedback = () => {
 
         setFeedbackData(updatedSlots)
         setSelectedEvent({ ...selectedEvent, comment })
-// eslint-disable-next-line react-hooks/exhaustive-deps 
+        // eslint-disable-next-line react-hooks/exhaustive-deps 
     }, [comment])
 
     useEffect(() => {
