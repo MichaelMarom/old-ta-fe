@@ -2,35 +2,45 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { BsCameraVideo, BsCloudUpload } from "react-icons/bs";
 import { moment } from "../../config/moment";
-import { PhoneInput } from 'react-international-phone';
-import 'react-international-phone/style.css';
-import { PhoneNumberUtil } from 'google-libphonenumber';
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
+import { PhoneNumberUtil } from "google-libphonenumber";
 
-import { toast } from 'react-toastify'
+import { toast } from "react-toastify";
 import { RiRobot2Fill } from "react-icons/ri";
 
-import {
-  post_tutor_setup,
-} from "../../axios/tutor";
+import { post_tutor_setup } from "../../axios/tutor";
+import { apiClient } from "../../axios/config";
 import { useDispatch } from "react-redux";
 // import { setscreenNameTo } from "../../redux/tutor_store/ScreenName";
 import { convertGMTOffsetToLocalString } from "../../helperFunctions/timeHelperFunctions";
-import WebcamCapture from "./Recorder/VideoRecorder"
+import WebcamCapture from "./Recorder/VideoRecorder";
 import Loading from "../common/Loading";
-import ToolTip from '../common/ToolTip'
+import ToolTip from "../common/ToolTip";
 
-import Actions from '../common/Actions'
+import Actions from "../common/Actions";
 import { uploadVideo } from "../../redux/tutor_store/video";
-import { AUST_STATES, CAN_STATES, Countries, GMT, RESPONSE, UK_STATES, US_STATES } from "../../constants/constants";
+import {
+  AUST_STATES,
+  CAN_STATES,
+  Countries,
+  GMT,
+  RESPONSE,
+  UK_STATES,
+  US_STATES,
+} from "../../constants/constants";
 import { setTutor } from "../../redux/tutor_store/tutorData";
-import { capitalizeFirstLetter, unsavedChangesHelper } from "../../helperFunctions/generalHelperFunctions";
+import {
+  capitalizeFirstLetter,
+  unsavedChangesHelper,
+} from "../../helperFunctions/generalHelperFunctions";
 import ReactDatePicker from "react-datepicker";
 import { Link } from "react-router-dom";
 import Button from "../common/Button";
 import { IoPersonCircle } from "react-icons/io5";
 import { convertToDate } from "../common/Calendar/Calendar";
-import { apiClient } from "../../axios/config";
-
+import Tooltip from "../common/ToolTip";
+import { FaInfoCircle } from "react-icons/fa";
 
 const phoneUtil = PhoneNumberUtil.getInstance();
 const isPhoneValid = (phone) => {
@@ -77,7 +87,7 @@ const TutorSetup = () => {
     { grade: "11th grade" },
     { grade: "12th grade" },
     { grade: "Academic" },
-  ]
+  ];
 
   let [tutorGrades, setTutorGrades] = useState([]);
   const isValid = isPhoneValid(cell);
@@ -90,99 +100,109 @@ const TutorSetup = () => {
   let dispatch = useDispatch();
 
   let [userExist, setUserExist] = useState(false);
-  const [uploadPhotoClicked, setUploadPhotoClicked] = useState(false)
-  const [uploadVideoClicked, setUploadVideoClicked] = useState(false)
-  const [userId, setUserId] = useState(user.SID)
+  const [uploadPhotoClicked, setUploadPhotoClicked] = useState(false);
+  const [uploadVideoClicked, setUploadVideoClicked] = useState(false);
+  const [userId, setUserId] = useState(user.SID);
   const [picUploading, setPicUploading] = useState(false);
   const [savingRecord, setSavingRecord] = useState(false);
 
-  const [vacation_mode, set_vacation_mode] = useState(false)
+  const [vacation_mode, set_vacation_mode] = useState(false);
   const [start, setStart] = useState(moment(new Date()).toDate());
-  const [end, setEnd] = useState((moment(new Date()).endOf('day')).toDate())
+  const [end, setEnd] = useState(moment(new Date()).endOf("day").toDate());
 
-  const [dbCountry, setDBCountry] = useState(null)
+  const [dbCountry, setDBCountry] = useState(null);
 
-  const { tutor, isLoading: tutorDataLoading } = useSelector(state => state.tutor)
-  const { isLoading } = useSelector(state => state.video)
+  const { tutor, isLoading: tutorDataLoading } = useSelector(
+    (state) => state.tutor
+  );
+  const { isLoading } = useSelector((state) => state.video);
   const [nameFieldsDisabled, setNameFieldsDisabled] = useState(false);
   let [isRecording, setIsRecording] = useState(false);
 
   useEffect(() => {
     tutor.AcademyId &&
-      apiClient.get('/tutor/setup/intro', { params: { user_id: tutor.AcademyId.replace(/[.\s]/g, '') } })
-        .then(res => {
-          res?.data?.url && set_video(res.data.url)
+      apiClient
+        .get("/tutor/setup/intro", {
+          params: { user_id: tutor.AcademyId.replace(/[.\s]/g, "") },
         })
-        .catch(err => console.log(err))
-  }, [tutor])
+        .then((res) => {
+          res?.data?.url && set_video(res.data.url);
+        })
+        .catch((err) => console.log(err));
+  }, [tutor]);
 
   useEffect(() => {
-    if (convertToDate(tutor.EndVacation).getTime() < new Date().getTime() && tutor.VacationMode) {
-      post_tutor_setup({ userId: tutor.userId, fname: tutor.FirstName, lname: tutor.LastName, mname: tutor.MiddleName, vacation_mode: false })
-      dispatch(setTutor())
+    if (
+      convertToDate(tutor.EndVacation).getTime() < new Date().getTime() &&
+      tutor.VacationMode
+    ) {
+      post_tutor_setup({
+        userId: tutor.userId,
+        fname: tutor.FirstName,
+        lname: tutor.LastName,
+        mname: tutor.MiddleName,
+        vacation_mode: false,
+      });
+      dispatch(setTutor());
     }
-  }, [tutor, userId, dispatch])
+  }, [tutor, userId]);
 
   const options = {
-    "Australia": AUST_STATES,
-    "USA": US_STATES,
-    "Canada": CAN_STATES,
-    "UnitedKingdom": UK_STATES
-  }
+    Australia: AUST_STATES,
+    USA: US_STATES,
+    Canada: CAN_STATES,
+    UnitedKingdom: UK_STATES,
+  };
 
   useEffect(() => {
     if (tutor.AcademyId) {
-      setEditMode(false)
-      setNameFieldsDisabled(true)
+      setEditMode(false);
+      setNameFieldsDisabled(true);
+    } else {
+      setEditMode(true);
+      setNameFieldsDisabled(false);
     }
-    else {
-      setEditMode(true)
-      setNameFieldsDisabled(false)
-    }
-  }, [tutor])
+  }, [tutor]);
 
   useEffect(() => {
-    set_email(user?.email)
-  }, [user])
+    set_email(user?.email);
+  }, [user]);
 
   //reset state on country change
   useEffect(() => {
     if (country !== dbCountry) {
-      set_state('')
+      set_state("");
     }
-  }, [country, dbCountry])
+  }, [country, dbCountry]);
 
   const [selectedVideoOption, setSelectedVideoOption] = useState(null);
 
   const handleOptionClick = (option) => {
     setUploadVideoClicked(true);
     setSelectedVideoOption(option);
-  }
+  };
 
   let handleTutorGrade = (grade) => {
-
-    if (tutorGrades.some(item => item === grade)) {
-      const removedGrades = tutorGrades.filter(item => item !== grade)
+    if (tutorGrades.some((item) => item === grade)) {
+      const removedGrades = tutorGrades.filter((item) => item !== grade);
       setTutorGrades(removedGrades);
-    }
-    else
-      setTutorGrades([...tutorGrades, grade]);
+    } else setTutorGrades([...tutorGrades, grade]);
   };
 
   //upload photo
   useEffect(() => {
     const postImage = async () => {
       if (uploadPhotoClicked && userExist) {
-        setPicUploading(true)
-        await post_tutor_setup({ photo, fname, lname, mname, userId })
-        setPicUploading(false)
+        setPicUploading(true);
+        await post_tutor_setup({ photo, fname, lname, mname, userId });
+        setPicUploading(false);
 
-        setUploadPhotoClicked(false)
-        dispatch(setTutor())
+        setUploadPhotoClicked(false);
+        dispatch(setTutor());
       }
-    }
-    postImage()
-  }, [photo, userExist, dispatch, fname, lname, mname, userId, uploadPhotoClicked])
+    };
+    postImage();
+  }, [photo, userExist, fname, lname, mname, userId, uploadPhotoClicked]);
 
   const handleEditClick = () => {
     setEditMode(!editMode);
@@ -192,30 +212,41 @@ const TutorSetup = () => {
   useEffect(() => {
     const upload_video = async () => {
       if (uploadVideoClicked && userExist) {
-        if (tutor.FirstName && video !== tutor.Video) dispatch(uploadVideo({ video, fname, lname, mname, userId }))
+        if (tutor.FirstName && video !== tutor.Video)
+          dispatch(uploadVideo({ video, fname, lname, mname, userId }));
         // dispatch(setTutor())
       }
-    }
-    upload_video()
-  }, [video, tutor, dispatch, fname, lname, photo, mname, userExist,userId, uploadVideoClicked])
+    };
+    upload_video();
+  }, [
+    video,
+    tutor,
+    fname,
+    lname,
+    photo,
+    mname,
+    userExist,
+    userId,
+    uploadVideoClicked,
+  ]);
 
   useEffect(() => {
     const fetchTutorSetup = async () => {
       if (tutor.AcademyId) {
         let data = tutor;
 
-        setUserId(tutor.userId)
-        setUserExist(true)
+        setUserId(tutor.userId);
+        setUserExist(true);
         set_fname(data.FirstName);
         set_sname(data.LastName);
         set_mname(data.MiddleName);
         set_photo(data.Photo);
         set_cell(data.CellPhone);
         set_state(data.StateProvince);
-        set_email(data.email)
+        set_email(data.email);
         set_city(data.CityTown);
         set_country(data.Country);
-        setDBCountry(data.Country)
+        setDBCountry(data.Country);
         set_response_zone(data.ResponseHrs);
         set_intro(data.Introduction);
         set_motivation(data.Motivate);
@@ -224,15 +255,15 @@ const TutorSetup = () => {
         set_headline(data.HeadLine);
         set_add1(data.Address1);
         set_add2(data.Address2);
-        setTutorGrades(JSON.parse((data?.Grades ?? '[]')));
+        setTutorGrades(JSON.parse(data?.Grades ?? "[]"));
 
         set_video(data.Video);
         setSelectedVideoOption("upload");
-        set_vacation_mode(data.VacationMode)
-        setStart(data.StartVacation)
-        setEnd(data.EndVacation)
+        set_vacation_mode(data.VacationMode);
+        setStart(data.StartVacation);
+        setEnd(data.EndVacation);
       }
-      setUploadPhotoClicked(false)
+      setUploadPhotoClicked(false);
     };
     fetchTutorSetup();
   }, [tutor]);
@@ -242,24 +273,24 @@ const TutorSetup = () => {
     let newTutor;
     if (!tutor.AcademyId) {
       newTutor = {
-        FirstName: '',
-        MiddleName: '',
-        LastName: '',
-        CellPhone: '+1',
-        Address1: '',
-        Address2: '',
-        CityTown: '',
-        StateProvince: '',
-        ZipCode: '',
-        Country: '',
-        GMT: '',
-        ResponseHrs: '',
-        Introduction: '',
-        Motivate: '',
-        HeadLine: '',
+        FirstName: "",
+        MiddleName: "",
+        LastName: "",
+        CellPhone: "+1",
+        Address1: "",
+        Address2: "",
+        CityTown: "",
+        StateProvince: "",
+        ZipCode: "",
+        Country: "",
+        GMT: "",
+        ResponseHrs: "",
+        Introduction: "",
+        Motivate: "",
+        HeadLine: "",
         Grades: `[]`,
         VacationMode: false,
-      }
+      };
     }
     let formValues = {
       fname,
@@ -279,41 +310,61 @@ const TutorSetup = () => {
       headline,
       tutorGrades,
       vacation_mode,
-    }
-    setUnsavedChanges(unsavedChangesHelper(formValues, tutor.AcademyId ? tutor : newTutor))
-  }, [fname, mname, lname, cell, add1, add2, city, state, zipCode, country, timeZone, dateTime,
-    response_zone, intro, motivation, headline, tutorGrades, tutor, vacation_mode])
+    };
+    setUnsavedChanges(
+      unsavedChangesHelper(formValues, tutor.AcademyId ? tutor : newTutor)
+    );
+  }, [
+    fname,
+    mname,
+    lname,
+    cell,
+    add1,
+    add2,
+    city,
+    state,
+    zipCode,
+    country,
+    timeZone,
+    dateTime,
+    response_zone,
+    intro,
+    motivation,
+    headline,
+    tutorGrades,
+    tutor,
+    vacation_mode,
+  ]);
 
   const saveTutorSetup = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (!isValid) {
       return toast.warning("Please enter the correct phone number");
     }
     if (!video || !photo)
       toast.warning(`You did not upload your Photo or Video, therefore 
-    your Profile remains in 'Pending' status, until you upload the missing items!`)
+    your Profile remains in 'Pending' status, until you upload the missing items!`);
     if (!tutorGrades?.length > 0) {
       return toast.warning("Please select at least one School grade");
     }
 
-    setSavingRecord(true)
+    setSavingRecord(true);
     let response = await saver();
-    setSavingRecord(false)
+    setSavingRecord(false);
     if (response.status === 200) {
-      dispatch(setTutor())
+      dispatch(setTutor());
       window.localStorage.setItem(
         "tutor_screen_name",
         response.data?.[0]?.TutorScreenname
       );
-      localStorage.setItem('tutor_user_id', response.data?.[0]?.AcademyId)
+      localStorage.setItem("tutor_user_id", response.data?.[0]?.AcademyId);
       // dispatch(setscreenNameTo(response.data?.[0]?.TutorScreenname));
       setEditMode(false);
       toast.success("Data saved successfully");
+    } else {
+      toast.error("Error saving the Data ");
     }
-    else {
-      toast.error("Error saving the Data ")
-    }
-  }
+  };
 
   let saver = async () => {
     const body = {
@@ -337,8 +388,8 @@ const TutorSetup = () => {
       grades: tutorGrades,
       start: vacation_mode ? start : moment().toDate(),
       end: vacation_mode ? end : moment().endOf().toDate(),
-      vacation_mode
-    }
+      vacation_mode,
+    };
     if (!tutor.FirstName) body.video = video;
     if (!tutor.FirstName) body.photo = photo;
     if (!tutor.AcademyId) body.Step = 2;
@@ -348,7 +399,9 @@ const TutorSetup = () => {
   };
 
   useEffect(() => {
-    const sortedCountries = Countries.sort((a, b) => a.Country.localeCompare(b.Country));
+    const sortedCountries = Countries.sort((a, b) =>
+      a.Country.localeCompare(b.Country)
+    );
     let countries = sortedCountries.map((item) => (
       <option
         key={item.Country}
@@ -368,7 +421,7 @@ const TutorSetup = () => {
     let countries_select_head = (
       <option
         key="null"
-        value={''}
+        value={""}
         style={{
           height: "50px",
           width: "100%",
@@ -454,11 +507,10 @@ const TutorSetup = () => {
 
     response_list.unshift(response_head);
     set_response_list(response_list);
-
   }, []);
 
   let handleImage = () => {
-    setUploadPhotoClicked(true)
+    setUploadPhotoClicked(true);
 
     let f = document.querySelector("#photo");
 
@@ -517,28 +569,44 @@ const TutorSetup = () => {
     setDateTime(localTime);
   }, [timeZone]);
 
-
   useEffect(() => {
     if (vacation_mode) {
-      setStart(moment().toDate())
-      setEnd(moment().endOf('day').toDate())
+      setStart(moment().toDate());
+      setEnd(moment().endOf("day").toDate());
     }
-  }, [vacation_mode])
+  }, [vacation_mode]);
 
   const gmtInInt = timeZone ? parseInt(timeZone) : 0;
   // for reactdatepicker because it opertae on new Date() not on moment.
   // getting getLocalGMT and then multiple it with -1 to add (-5:00) or subtract (+5:00)
-  const getLocalGMT = parseInt((offset => (offset < 0 ? '+' : '-') + ('00' + Math.abs(offset / 60 | 0)).slice(-2) + ':' + ('00' + Math.abs(offset % 60)).slice(-2))(new Date().getTimezoneOffset())) * -1;
+  const getLocalGMT =
+    parseInt(
+      ((offset) =>
+        (offset < 0 ? "+" : "-") +
+        ("00" + Math.abs((offset / 60) | 0)).slice(-2) +
+        ":" +
+        ("00" + Math.abs(offset % 60)).slice(-2))(
+        new Date().getTimezoneOffset()
+      )
+    ) * -1;
 
-  if (tutorDataLoading)
-    return <Loading height="80vh" />
+  if (tutorDataLoading) return <Loading height="80vh" />;
   return (
     <form onSubmit={saveTutorSetup}>
       <div style={{ overflowY: "auto", height: "76vh" }}>
-
-        <div className="d-flex justify-content-between" style={{ gap: "25px", marginLeft: "20px", marginRight: "20px", marginTop: "0" }}>
+        <div
+          className="d-flex justify-content-between"
+          style={{
+            gap: "25px",
+            marginLeft: "20px",
+            marginRight: "20px",
+            marginTop: "0",
+          }}
+        >
           <div className="profile-photo-cnt " style={{ width: "15%" }}>
-            <h6 className="text-start m-0" style={{ whiteSpace: "nowrap" }}>Profile Photo</h6 >
+            <h6 className="text-start m-0" style={{ whiteSpace: "nowrap" }}>
+              Profile Photo
+            </h6>
             {/* <input
               type="file"
               data-type="file"
@@ -548,13 +616,25 @@ const TutorSetup = () => {
               id="photo"
             /> */}
             <div className="mb-2 w-100 h-100">
-              {picUploading && <Loading height="10px" iconSize="20px" loadingText="uploading picture ..." />}
+              {picUploading && (
+                <Loading
+                  height="10px"
+                  iconSize="20px"
+                  loadingText="uploading picture ..."
+                />
+              )}
             </div>
             <div className=" h-100 border shadow">
-              {photo ? <img src={photo} style={{ height: '230px', width: '230px' }} alt='profile-pic' /> :
+              {photo ? (
+                <img
+                  src={photo}
+                  style={{ height: "230px", width: "230px" }}
+                  alt="profile-pic"
+                />
+              ) : (
                 `You must upload your picture, and video on this tab.  
                   You are permitted to move to next tabs without validating that, but your account will not be activated until it’s done`
-              }
+              )}
             </div>
 
             <input
@@ -566,13 +646,23 @@ const TutorSetup = () => {
               id="photo"
               disabled={!editMode}
             />
-            <label id="btn"
-              onClick={() => !editMode && toast.info('Please click the "Edit" button to activate the "Upload" Photo button!')}
+            <label
+              id="btn"
+              onClick={() =>
+                !editMode &&
+                toast.info(
+                  'Please click the "Edit" button to activate the "Upload" Photo button!'
+                )
+              }
               style={{
                 // pointerEvents: !editMode ? "none" : "auto",
-                width: "50%"
+                width: "50%",
               }}
-              type="label" disabled={!editMode} htmlFor="photo" className="action-btn btn mt-4">
+              type="label"
+              disabled={!editMode}
+              htmlFor="photo"
+              className="action-btn btn mt-4"
+            >
               <div className="button__content">
                 <div className="button__icon">
                   <IoPersonCircle size={20} />
@@ -659,15 +749,21 @@ const TutorSetup = () => {
                 className="form-control m-0"
                 onBlur={() => {
                   if (fname.length && lname.length) {
-                    const screenName = `${capitalizeFirstLetter(fname)} ${mname.length ? `${capitalizeFirstLetter(mname?.[0])}.` : ``} ${capitalizeFirstLetter(lname?.[0])}.`
-                    toast(`You screen name is; ${screenName} which we use online. We do not disclose your private information online. 
+                    const screenName = `${capitalizeFirstLetter(fname)} ${
+                      mname.length
+                        ? `${capitalizeFirstLetter(mname?.[0])}.`
+                        : ``
+                    } ${capitalizeFirstLetter(lname?.[0])}.`;
+                    toast(
+                      `You screen name is; ${screenName} which we use online. We do not disclose your private information online. 
                     We use your cellphone only for verification to withdraw your funds, or for events notifications like
                     students booking/postponding/cancelling lessons, etc'. `,
                       {
                         closeButton: true,
                         autoClose: false,
-                        className: "setup-private-info"
-                      })
+                        className: "setup-private-info",
+                      }
+                    );
                   }
                 }}
                 ref={lastNameInputRef}
@@ -720,7 +816,6 @@ const TutorSetup = () => {
                 disabled={nameFieldsDisabled}
                 style={{ width: "66%" }}
               />
-
             </div>
 
             <div
@@ -734,8 +829,16 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <label className="input-group-text w-50" htmlFor="" style={{ fontSize: "14px" }}>
-                <ToolTip width="200px" text="Select your response time answering the student during business time in your time zone. Please take notice that the student take this fact as one of the considurations of selecting you as tutor." /> Response Time
+              <label
+                className="input-group-text w-50"
+                htmlFor=""
+                style={{ fontSize: "14px" }}
+              >
+                <ToolTip
+                  width="200px"
+                  text="Select your response time answering the student during business time in your time zone. Please take notice that the student take this fact as one of the considurations of selecting you as tutor."
+                />{" "}
+                Response Time
               </label>
               <select
                 className="form-select m-0"
@@ -747,7 +850,6 @@ const TutorSetup = () => {
               >
                 {response_list}
               </select>
-
             </div>
 
             <div
@@ -761,7 +863,13 @@ const TutorSetup = () => {
               }}
             >
               <label className="input-group-text w-50" htmlFor="">
-                <ToolTip width="200px" text={"Select the Greenwich Mean Time (GMT) zone where you reside. It will let the student configure his time availability conducting lessons with you, when in a different time zone. "} />  Time Zone
+                <ToolTip
+                  width="200px"
+                  text={
+                    "Select the Greenwich Mean Time (GMT) zone where you reside. It will let the student configure his time availability conducting lessons with you, when in a different time zone. "
+                  }
+                />{" "}
+                Time Zone
               </label>
               <select
                 className="form-select m-0"
@@ -773,13 +881,10 @@ const TutorSetup = () => {
               >
                 {GMTList}
               </select>
-
-
             </div>
           </div>
 
-          <div className="mt-4" style={{ width: "25%" }}
-          >
+          <div className="mt-4" style={{ width: "25%" }}>
             <div
               style={{
                 display: "flex",
@@ -791,7 +896,11 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <label className="input-group-text w-50" htmlFor="" style={{ fontSize: "14px" }}>
+              <label
+                className="input-group-text w-50"
+                htmlFor=""
+                style={{ fontSize: "14px" }}
+              >
                 Address 1
               </label>
               <input
@@ -845,7 +954,6 @@ const TutorSetup = () => {
               </label>
               <input
                 className="form-control m-0"
-
                 onInput={(e) => set_city(e.target.value)}
                 placeholder="City"
                 type="text"
@@ -856,7 +964,14 @@ const TutorSetup = () => {
               />
             </div>
             <div
-              style={{ display: "flex", width: "100%", alignItems: "center", margin: "0 0 10px 0", whiteSpace: "nowrap" }}>
+              style={{
+                display: "flex",
+                width: "100%",
+                alignItems: "center",
+                margin: "0 0 10px 0",
+                whiteSpace: "nowrap",
+              }}
+            >
               <label className="input-group-text w-50" htmlFor="country">
                 Country
               </label>
@@ -871,12 +986,11 @@ const TutorSetup = () => {
                 {countryList}
               </select>
             </div>
-            {(options[country] ?? [])?.length ?
-
+            {(options[country] ?? [])?.length ? (
               <div
                 className="mb-2"
                 style={{
-                  display: (options[country] ?? [])?.length ? 'flex' : 'none',
+                  display: (options[country] ?? [])?.length ? "flex" : "none",
                   width: "100%",
 
                   alignItems: "center",
@@ -888,7 +1002,7 @@ const TutorSetup = () => {
                   State/Province
                 </label>
 
-                {(options[country] ?? [])?.length ?
+                {(options[country] ?? [])?.length ? (
                   <select
                     className="form-select "
                     onInput={(e) => set_state(e.target.value)}
@@ -897,12 +1011,28 @@ const TutorSetup = () => {
                     value={state}
                     required
                   >
-                    <option value='' disabled>Select State</option>
-                    {(options[country] ?? []).map((item) => <option key={item} value={item}>{item}</option>)}
-                  </select> :
-                  <input className="form-control m-0" disabled type="text" value={state} onChange={(e) => set_state(e.target.value)} />
-                }
-              </div> : ''}
+                    <option value="" disabled>
+                      Select State
+                    </option>
+                    {(options[country] ?? []).map((item) => (
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    className="form-control m-0"
+                    disabled
+                    type="text"
+                    value={state}
+                    onChange={(e) => set_state(e.target.value)}
+                  />
+                )}
+              </div>
+            ) : (
+              ""
+            )}
 
             <div
               style={{
@@ -930,38 +1060,56 @@ const TutorSetup = () => {
               />
             </div>
 
-            {(!!timeZone) && <div
-              style={{
-                display: "flex",
-                width: "100%",
+            {!!timeZone && (
+              <div
+                style={{
+                  display: "flex",
+                  width: "100%",
 
-                alignItems: "center",
+                  alignItems: "center",
 
-                whiteSpace: "nowrap",
-              }}
-            >
-              <label className="input-group-text w-50" htmlFor="">
-                <ToolTip width="200px"
-                  text={"Coordinated Universal Time or 'UTC' is the primary time standard by which the world regulate local time. "} /> UTC
-              </label>
-              <input
-                className="form-control m-0"
-                disabled
-                value={typeof dateTime === "object" ? "" : dateTime}
-              />
-            </div>}
-
+                  whiteSpace: "nowrap",
+                }}
+              >
+                <label className="input-group-text w-50" htmlFor="">
+                  <ToolTip
+                    width="200px"
+                    text={
+                      "Coordinated Universal Time or 'UTC' is the primary time standard by which the world regulate local time. "
+                    }
+                  />{" "}
+                  UTC
+                </label>
+                <input
+                  className="form-control m-0"
+                  disabled
+                  value={typeof dateTime === "object" ? "" : dateTime}
+                />
+              </div>
+            )}
           </div>
 
-          <div className=" "
-            style={{ float: "right", width: "30%", height: "250px", border: "1px solid dotted" }}
+          <div
+            className=" "
+            style={{
+              float: "right",
+              width: "30%",
+              height: "250px",
+              border: "1px solid dotted",
+            }}
           >
             <h6>Tutor's introduction video</h6>
             <div className="mb-2">
-              {isLoading && <Loading height="10px" iconSize="20px" loadingText="uploading video ..." />}
+              {isLoading && (
+                <Loading
+                  height="10px"
+                  iconSize="20px"
+                  loadingText="uploading video ..."
+                />
+              )}
             </div>
             {selectedVideoOption === "record" ? (
-              <div className="d-flex justify-content-center align-item-center w-100 h-100 border shadow" >
+              <div className="d-flex justify-content-center align-item-center w-100 h-100 border shadow">
                 <WebcamCapture
                   user_id={tutor.AcademyId}
                   record_duration={60000}
@@ -974,39 +1122,63 @@ const TutorSetup = () => {
                 } */}
               </div>
             ) : selectedVideoOption === "upload" && video?.length ? (
-              <div className="d-flex justify-content-center align-item-center w-100 h-100 border shadow" >
-                <video src={video} className="w-100 h-100 m-0 p-0 videoLive"
-                  controls autoPlay={false}
+              <div className="d-flex justify-content-center align-item-center w-100 h-100 border shadow">
+                <video
+                  src={video}
+                  className="w-100 h-100 m-0 p-0 videoLive"
+                  controls
+                  autoPlay={false}
                 />
               </div>
-            ) :
+            ) : (
               <div className="tutor-tab-video-frame p-2 card">
-                <div style={{ textAlign: "justify", fontSize: "12px" }}> Providing your video, is mandatory. Your registration is at the stage of 'pending' until you upload it.
-                  An introduction video is a great way to showcase your personality, skills and teaching
-                  style for potential students. It can help you stand out from other tutors and
-                  attract more atudents. Creating your video, briefly introduce yourself, your
-                  experience and your approach to tutoring. Mention what subjects and levels you can
-                  teach, and how you can help students achieve their goals. You should speak clearly,
-                  and confidently. A good introduction video can make a lasting impression and increase
-                  your chances of getting hired. View samples; <br />
-                  <Link to='https://www.youtube.com/watch?v=tZ3ndrKQXN8'>Sample 1: Intro Video</Link> <br />
-                  <Link to='https://www.youtube.com/watch?v=sxa2C6UmrNQ'>Sample 2: How to make an Introduction Video</Link> <br />
-                  <Link to='https://www.heygen.com'>Sample 3: Create your free AI Introduction Video, in 3 minutes or less.</Link>
-
+                <div style={{ textAlign: "justify", fontSize: "12px" }}>
+                  {" "}
+                  Providing your video, is mandatory. Your registration is at
+                  the stage of 'pending' until you upload it. An introduction
+                  video is a great way to showcase your personality, skills and
+                  teaching style for potential students. It can help you stand
+                  out from other tutors and attract more atudents. Creating your
+                  video, briefly introduce yourself, your experience and your
+                  approach to tutoring. Mention what subjects and levels you can
+                  teach, and how you can help students achieve their goals. You
+                  should speak clearly, and confidently. A good introduction
+                  video can make a lasting impression and increase your chances
+                  of getting hired. View samples; <br />
+                  <Link to="https://www.youtube.com/watch?v=tZ3ndrKQXN8">
+                    Sample 1: Intro Video
+                  </Link>{" "}
+                  <br />
+                  <Link to="https://www.youtube.com/watch?v=sxa2C6UmrNQ">
+                    Sample 2: How to make an Introduction Video
+                  </Link>{" "}
+                  <br />
+                  <Link to="https://www.heygen.com">
+                    Sample 3: Create your free AI Introduction Video, in 3
+                    minutes or less.
+                  </Link>
                 </div>
               </div>
-            }
+            )}
 
             <div className=" mt-2">
-              <div className="row justify-content-center align-items-center" onClick={() => !editMode &&
-                toast.info('Please click the "Edit" button to activate the "Upload", or "Record" video buttons!')
-              }>
+              <div
+                className="row justify-content-center align-items-center"
+                onClick={() =>
+                  !editMode &&
+                  toast.info(
+                    'Please click the "Edit" button to activate the "Upload", or "Record" video buttons!'
+                  )
+                }
+              >
                 <div className="col-md-4">
                   <div className="">
-
-                    <Button className="action-btn btn btn-sm "
-                      style={{ width: "100%", fontSize: "12px" }} disabled={!editMode}
-                      onClick={() => window.open('https://www.heygen.com')}>
+                    <Button
+                      className="action-btn btn btn-sm "
+                      style={{ width: "100%", fontSize: "12px" }}
+                      disabled={!editMode}
+                      onClick={() => window.open("https://www.heygen.com")}
+                    >
                       <div className="button__content">
                         <div className="button__icon">
                           <RiRobot2Fill size={18} />
@@ -1021,13 +1193,14 @@ const TutorSetup = () => {
                     <button
                       style={{ width: "100%", fontSize: "10px" }}
                       type="button"
-                      className={`action-btn btn small ${selectedVideoOption === "record" ? "active" : ""
-                        }`}
+                      className={`action-btn btn small ${
+                        selectedVideoOption === "record" ? "active" : ""
+                      }`}
                       disabled={!editMode}
                       onClick={() => {
                         set_video("");
                         handleOptionClick("record");
-                        setIsRecording(!isRecording)
+                        setIsRecording(!isRecording);
                       }}
                     >
                       <div className="button__content">
@@ -1043,7 +1216,7 @@ const TutorSetup = () => {
                   <div className="">
                     <input
                       data-type="file"
-                      defaultValue={''}
+                      defaultValue={""}
                       onChange={handleVideo}
                       type="file"
                       name="video"
@@ -1059,9 +1232,11 @@ const TutorSetup = () => {
                       style={{
                         width: "100%",
                         // pointerEvents: !editMode ? "none" : "auto",
-                        fontSize: "10px"
+                        fontSize: "10px",
                       }}
-                      className={`action-btn btn ${selectedVideoOption === "upload" ? "active" : ""}`}
+                      className={`action-btn btn ${
+                        selectedVideoOption === "upload" ? "active" : ""
+                      }`}
                     >
                       <div className="button__content">
                         <div className="button__icon">
@@ -1072,26 +1247,26 @@ const TutorSetup = () => {
                     </label>
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
         </div>
 
         <div className="mt-4 ">
-          <div className="d-flex justify-content-center" style={{ gap: "10px", width: "86%" }}>
+          <div
+            className="d-flex justify-content-center"
+            style={{ gap: "10px", width: "86%" }}
+          >
             <div
               className="border rounded p-2 shadow d-flex flex-column justify-content-between"
               style={{
                 fontWeight: "bold",
                 textAlign: "center",
                 width: "40%",
-                height: "120px"
+                height: "120px",
               }}
             >
-              <label >
-                Grades I teach
-              </label>
+              <label>Grades I teach</label>
               <div className="tutor-grades">
                 <ul className="grades-sec">
                   {grades.map((item, index) => {
@@ -1121,20 +1296,23 @@ const TutorSetup = () => {
                             onChange={() => handleTutorGrade(item.grade)}
                             className=" grades"
                           />
-
                           &nbsp;
                           <label htmlFor={item.grade}>{item.grade}</label>
                         </div>
                       </li>
                     );
-
                   })}
                 </ul>
               </div>
-
             </div>
-            <div className="border p-2 shadow rounded" style={{ width: "40%", height: "120px" }}>
-              <div className="form-check form-switch d-flex gap-3" style={{ fontSize: "16px " }}>
+            <div
+              className="border p-2 shadow rounded"
+              style={{ width: "40%", height: "120px" }}
+            >
+              <div
+                className="form-check form-switch d-flex gap-3"
+                style={{ fontSize: "16px " }}
+              >
                 <input
                   disabled={!editMode}
                   className="form-check-input "
@@ -1142,34 +1320,52 @@ const TutorSetup = () => {
                   role="switch"
                   style={{
                     width: "30px",
-                    height: "15px"
+                    height: "15px",
                   }}
                   onChange={() => set_vacation_mode(!vacation_mode)}
                   checked={vacation_mode}
                 />
-                <label className="form-check-label mr-3" htmlFor="flexSwitchCheckChecked" >
+                <label
+                  className="form-check-label mr-3"
+                  htmlFor="flexSwitchCheckChecked"
+                >
                   Vacation Mode
                 </label>
-                <ToolTip text="Turn the switch to 'On' to block the period of time you do not want to tutor. A light green color will indicate your selected period on your calendar. 
+                <ToolTip
+                  text="Turn the switch to 'On' to block the period of time you do not want to tutor. A light green color will indicate your selected period on your calendar. 
                 Then students will not be able to book lessons with you for that period. 
-                By the end date, the switch will turn to 'Off' automatically." width="200px" />
+                By the end date, the switch will turn to 'Off' automatically."
+                  width="200px"
+                />
               </div>
-              {vacation_mode &&
+              {vacation_mode && (
                 <div>
                   <h6 className="text-start">Enter Start and end Date</h6>
-                  <div className="d-flex align-items-center" style={{ gap: '10px' }}>
+                  <div
+                    className="d-flex align-items-center"
+                    style={{ gap: "10px" }}
+                  >
                     <ReactDatePicker
                       disabled={!editMode}
-                      selected={new Date(start ? start : moment(new Date()).toDate().getTime() + (gmtInInt + getLocalGMT) * 60 * 60 * 1000)}
-                      onChange={date => {
+                      selected={
+                        new Date(
+                          start
+                            ? start
+                            : moment(new Date()).toDate().getTime() +
+                              (gmtInInt + getLocalGMT) * 60 * 60 * 1000
+                        )
+                      }
+                      onChange={(date) => {
                         date.setHours(0);
                         date.setMinutes(0);
                         date.setSeconds(0);
-                        const originalMoment = moment.tz(date, tutor.timeZone).startOf('day');
+                        const originalMoment = moment
+                          .tz(date, tutor.timeZone)
+                          .startOf("day");
                         const utcMomentStartDate = originalMoment.clone();
                         // utcMomentStartDate.utc()
                         // console.log(originalMoment.get('hour'), utcMomentStartDate.get('hour'), originalMoment.get('date'), date.getDate(), date.getHours())
-                        setStart(utcMomentStartDate)
+                        setStart(utcMomentStartDate);
                       }}
                       minDate={new Date()}
                       dateFormat="MMM d, yyyy"
@@ -1181,25 +1377,26 @@ const TutorSetup = () => {
                       disabled={!editMode}
                       minDate={new Date(start)}
                       selected={moment(end ? end : new Date()).toDate()}
-                      onChange={date => {
+                      onChange={(date) => {
                         date.setHours(0);
-                        date.setMinutes(0)
-                        date.setSeconds(0)
-                        const originalMoment = moment(date).endOf('day').utc();
-                        setEnd(originalMoment.toISOString())
+                        date.setMinutes(0);
+                        date.setSeconds(0);
+                        const originalMoment = moment(date).endOf("day").utc();
+                        setEnd(originalMoment.toISOString());
                       }}
                       dateFormat="MMM d, yyyy"
                       className="form-control"
                     />
                   </div>
                 </div>
-              }
+              )}
             </div>
           </div>
 
           <div style={{ width: "86%" }}>
 
-            <div className="mt-2"
+            <div
+              className="mt-2"
               style={{
                 fontWeight: "bold",
                 margin: "auto",
@@ -1208,9 +1405,7 @@ const TutorSetup = () => {
                 width: "60%",
               }}
             >
-              <label htmlFor="headline">
-                Headline
-              </label>
+              <label htmlFor="headline">Headline</label>
               <br />
               <input
                 className="form-control m-0 shadow w-100"
@@ -1229,8 +1424,10 @@ const TutorSetup = () => {
               </div>
             </div>
 
-            <div className="tutor-setup-bottom-field d-flex justify-content-between"
-              style={{ gap: "20px" }}>
+            <div
+              className="tutor-setup-bottom-field d-flex justify-content-between"
+              style={{ gap: "20px" }}
+            >
               <div
                 className="profile-headline"
                 style={{ textAlign: "center", float: "left" }}

@@ -56,7 +56,6 @@ const App = () => {
     const isExpired = result?.response?.data?.message?.includes('expired');
     const isMalformed = result?.response?.data?.message?.includes('malformed');
     const missingToken = result?.response?.data?.reason?.includes('attached');
-    console.log('handle expiration', isExpired, isMalformed, missingToken)
     if ((isExpired || isMalformed) && !missingToken) {
       return redirect_to_login(navigate, signOut)
     }
@@ -87,7 +86,7 @@ const App = () => {
       fetch()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps 
-  }, [userId, token, isSignedIn, dispatch, navigate])
+  }, [userId, token, isSignedIn])
 
   useEffect(() => {
     if (user && user.role !== 'admin' && user.SID && isSignedIn && token)
@@ -161,13 +160,13 @@ const App = () => {
   useEffect(() => {
     if (userId && token && isSignedIn) getStudentDetails()
     // eslint-disable-next-line react-hooks/exhaustive-deps 
-  }, [dispatch, studentUserId, userId, isSignedIn, token])
+  }, [ studentUserId, userId, isSignedIn, token])
 
   useEffect(() => {
     if (userId && token && isSignedIn) {
       dispatch(setTutor())
     }
-  }, [dispatch, tutorUserId, userId, isSignedIn, token])
+  }, [tutorUserId, userId, isSignedIn, token])
 
   useEffect(() => {
     if (userId && token && isSignedIn) {
@@ -180,7 +179,7 @@ const App = () => {
       fetchData();
     }
 
-  }, [dispatch, loggedInUserDetail.AcademyId, role, userId, isSignedIn, token])
+  }, [loggedInUserDetail.AcademyId, role, userId, isSignedIn, token])
 
   //routes
   const generateRoutes = (role) => {
@@ -217,14 +216,13 @@ const App = () => {
 
   useEffect(() => {
     if (localStorage.getItem("access_token")) {
-      console.log(isExpired(localStorage.getItem("access_token")))
       if (isExpired(localStorage.getItem("access_token"))) {
         navigate('/login')
         localStorage.clear()
       }
     }
     else { navigate('/login') }
-  }, [navigate])
+  }, [])
 
   return (
     <Routes>

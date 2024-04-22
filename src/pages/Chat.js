@@ -101,7 +101,7 @@ function Chat() {
                 loggedInUserDetail.AcademyId && dispatch(setChats(loggedInUserDetail.AcademyId, loggedInRole))
             })
         }
-    }, [loggedInUserDetail, dispatch, loggedInRole]);
+    }, [loggedInUserDetail, loggedInRole]);
 
     useEffect(() => {
         setFetchingMessages(true);

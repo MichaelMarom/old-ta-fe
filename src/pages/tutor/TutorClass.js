@@ -14,9 +14,15 @@ import Switch from "../../components/common/Switch";
 import Tooltip from "../../components/common/ToolTip";
 import _ from "lodash";
 import { toast } from "react-toastify";
-import { getSessionDetail } from "../../axios/tutor";
+import {
+  get_tutor_rates,
+  get_tutor_setup,
+  getSessionDetail,
+} from "../../axios/tutor";
+import { get_my_data } from "../../axios/student";
 import logo from "../../assets/images/tutoring Logo.png";
 import Loading from "../../components/common/Loading";
+import { FaInfoCircle } from "react-icons/fa";
 
 const TutorClass = () => {
   const { user } = useSelector((state) => state.user);
@@ -49,6 +55,9 @@ const TutorClass = () => {
     timeRemainingToEndCurrentSession,
     setTimeRemainingToEndCurrentSession,
   ] = useState(null);
+
+  const [tutorVideoConsent, setTutorVideoConsent] = useState(null);
+  const [studentVideoConsent, setStudentVideoConsent] = useState(null);
 
   const setCollboratorsInState = (tutorId, studentId) => {
     const collaborators = new Map();
@@ -110,7 +119,7 @@ const TutorClass = () => {
         }
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     sessionId,
     student,
@@ -128,7 +137,13 @@ const TutorClass = () => {
     ) {
       navigate(`/${user.role}/feedback`);
     }
-  }, [timeRemainingToEndCurrentSession, currentSession, tutorCurrentSession, navigate, user]);
+  }, [
+    timeRemainingToEndCurrentSession,
+    currentSession,
+    tutorCurrentSession,
+    navigate,
+    user,
+  ]);
 
   useEffect(() => {
     if (openedSession.start) {
@@ -236,15 +251,25 @@ const TutorClass = () => {
         }
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps 
-  }, [sessionId, excalidrawAPI, sessionTime, timeRemainingToEndCurrentSession, user, openedSession, hasAuth]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    sessionId,
+    excalidrawAPI,
+    sessionTime,
+    timeRemainingToEndCurrentSession,
+    user,
+    openedSession,
+    hasAuth,
+  ]);
 
   useEffect(() => {
     if (user.role === "student") {
-      hasAuth && sessionId &&
+      hasAuth &&
+        sessionId &&
         toast.success("Tutor has given you access to access the canvas tools.");
 
-      !hasAuth && sessionId &&
+      !hasAuth &&
+        sessionId &&
         toast.warning("Tutor has removed your access to the canvas tools!");
     }
   }, [hasAuth, user, sessionId]);
@@ -306,7 +331,13 @@ const TutorClass = () => {
         hasAuthorization: isChecked,
       });
     }
-  }, [isChecked, sessionId, sessionTime, timeRemainingToEndCurrentSession, student]);
+  }, [
+    isChecked,
+    sessionId,
+    sessionTime,
+    timeRemainingToEndCurrentSession,
+    student,
+  ]);
 
   useEffect(() => {
     excalidrawAPI &&
@@ -324,6 +355,29 @@ const TutorClass = () => {
     }
   }, [excalidrawAPI, sessionId, sessionTime]);
 
+  useEffect(() => {
+    console.log(
+      openedSession.studentId,
+      openedSession.tutorId,
+      student.AcademyId,
+      tutor.AcademyId
+    );
+    if (!student.AcademyId) {
+      get_tutor_rates("Daniel. G. D7206af").then((result) => {
+        setTutorVideoConsent(result?.[0]?.ConsentRecordingLesson === "true");
+      });
+      get_my_data("Naomi. C. M8bc074").then((result) => {
+        setStudentVideoConsent(result?.[1]?.[0]?.[0]?.ParentConsent === "true");
+      });
+    }
+    if (!tutor.AcademyId) {
+      setStudentVideoConsent(student.ParentConsent === "true");
+      get_tutor_rates("Daniel. G. D7206af").then((result) => {
+        setTutorVideoConsent(result?.[0]?.ConsentRecordingLesson === "true");
+      });
+    }
+  }, [student.AcademyId, tutor.AcademyId, openedSession]);
+
   if (openedSessionFetching)
     return <Loading loadingText={"Fetching Session!"} />;
   return (
@@ -331,10 +385,11 @@ const TutorClass = () => {
       {openedSession.subject && (
         <div
           style={{ width: "70%" }}
-          className={`d-flex ${openedSession.subject
-            ? "justify-content-between"
-            : "justify-content-center"
-            }`}
+          className={`d-flex ${
+            openedSession.subject
+              ? "justify-content-between"
+              : "justify-content-center"
+          }`}
         >
           <div>
             {sessionTime === "past" && (
@@ -428,19 +483,135 @@ const TutorClass = () => {
             />
             {sessionTime === "current" &&
               timeRemainingToEndCurrentSession > 620 && (
-                <div className="d-flex align-items-center justify-content-center">
-                  <Tooltip text={"switch text goes here"} iconSize="25" />
-                  <Switch
-                    isChecked={isChecked}
-                    setIsChecked={setIsChecked}
-                    authorized={
-                      user.role === "tutor" && sessionTime === "current"
-                    }
-                  />
-                </div>
+                <>
+                  <div className="d-flex align-items-center justify-content-center">
+                    <Tooltip text={"switch text goes here"} iconSize="25" />
+                    <Switch
+                      isChecked={isChecked}
+                      setIsChecked={setIsChecked}
+                      authorized={
+                        user.role === "tutor" && sessionTime === "current"
+                      }
+                    />
+                  </div>
+                  <div>
+                    <div
+                      className="form-check form-switch d-flex gap-3"
+                      style={{ fontSize: "16px " }}
+                    >
+                      <input
+                        className="form-check-input m-1"
+                        disabled={true}
+                        type="checkbox"
+                        role="switch"
+                        style={{
+                          width: "30px",
+                          height: "15px",
+                        }}
+                        checked={true}
+                      />
+                      <label
+                        className="form-check-label mr-3"
+                        htmlFor="flexSwitchCheckChecked"
+                      >
+                        video recording consent
+                      </label>
+                      <Tooltip
+                        text="Enable this switch to consent video recording for ensuring quality of service. The video clip stored for 30 days, then be deleted from The academy servers."
+                        width="200px"
+                      >
+                        <FaInfoCircle size={18} color="#0096ff" />
+                      </Tooltip>
+                    </div>
+                    <div
+                      className="form-check form-switch d-flex gap-3"
+                      style={{ fontSize: "16px " }}
+                    >
+                      <input
+                        className="form-check-input m-1"
+                        disabled={true}
+                        type="checkbox"
+                        role="switch"
+                        style={{
+                          width: "30px",
+                          height: "15px",
+                        }}
+                        checked={false}
+                      />
+                      <label
+                        className="form-check-label mr-3"
+                        htmlFor="flexSwitchCheckChecked"
+                      >
+                        video recording consent
+                      </label>
+                      <Tooltip
+                        text="Enable this switch to consent video recording for ensuring quality of service. The video clip stored for 30 days, then be deleted from The academy servers."
+                        width="200px"
+                      >
+                        <FaInfoCircle size={18} color="#0096ff" />
+                      </Tooltip>
+                    </div>
+                  </div>
+                </>
               )}
           </div>
         }
+        <div
+          className="form-check form-switch d-flex gap-3"
+          style={{ fontSize: "16px " }}
+        >
+          <input
+            className="form-check-input m-1"
+            disabled={true}
+            type="checkbox"
+            role="switch"
+            style={{
+              width: "30px",
+              height: "15px",
+            }}
+            checked={tutorVideoConsent}
+          />
+          <label
+            className="form-check-label mr-3"
+            htmlFor="flexSwitchCheckChecked"
+          >
+            tutor video recording consent
+          </label>
+          <Tooltip
+            text="Enable this switch to consent video recording for ensuring quality of service. The video clip stored for 30 days, then be deleted from The academy servers."
+            width="200px"
+          >
+            <FaInfoCircle size={18} color="#0096ff" />
+          </Tooltip>
+        </div>
+        <div
+          className="form-check form-switch d-flex gap-3"
+          style={{ fontSize: "16px " }}
+        >
+          <input
+            className="form-check-input m-1"
+            disabled={true}
+            type="checkbox"
+            role="switch"
+            style={{
+              width: "30px",
+              height: "15px",
+            }}
+            checked={studentVideoConsent}
+          />
+          <label
+            className="form-check-label mr-3"
+            htmlFor="flexSwitchCheckChecked"
+          >
+            student video recording consent
+          </label>
+          <Tooltip
+            text="Enable this switch to consent video recording for ensuring quality of service. The video clip stored for 30 days, then be deleted from The academy servers."
+            width="200px"
+          >
+            <FaInfoCircle size={18} color="#0096ff" />
+          </Tooltip>
+        </div>
         {/* <div style={{ position: "fixed", bottom: "10%", right: "3%" }}>
           <div onClick={() => setIsChatOpen(!isChatOpen)}>
             <BiChat size={32} />

@@ -25,8 +25,8 @@ const StudentCalenderScheduling = () => {
 
   useEffect(() => {
     if (!selectedTutor.academyId) {
-      toast.warning("Please click 'Book Lesson' button to view tutor's schedule!")
-      navigate('/student/short-list')
+      toast.warning("Please select subject and then tutor to open tutor schedule!")
+      navigate('/student/faculties')
     };
   }, [selectedTutor, navigate])
 
@@ -62,7 +62,7 @@ const StudentCalenderScheduling = () => {
       !res?.response?.data?.message && dispatch(setStudent(res[1][0][0]))
     }
     getStudentDetails()
-  }, [dispatch])
+  }, [])
 
   const getTimeDifferenceClass = (difference) => {
     if (difference >= -3 && difference <= 3) {
