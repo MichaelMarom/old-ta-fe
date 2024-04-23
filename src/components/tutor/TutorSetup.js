@@ -39,8 +39,6 @@ import { Link } from "react-router-dom";
 import Button from "../common/Button";
 import { IoPersonCircle } from "react-icons/io5";
 import { convertToDate } from "../common/Calendar/Calendar";
-import Tooltip from "../common/ToolTip";
-import { FaInfoCircle } from "react-icons/fa";
 
 const phoneUtil = PhoneNumberUtil.getInstance();
 const isPhoneValid = (phone) => {
@@ -145,6 +143,7 @@ const TutorSetup = () => {
       });
       dispatch(setTutor());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tutor, userId]);
 
   const options = {
@@ -202,6 +201,7 @@ const TutorSetup = () => {
       }
     };
     postImage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [photo, userExist, fname, lname, mname, userId, uploadPhotoClicked]);
 
   const handleEditClick = () => {
@@ -218,6 +218,7 @@ const TutorSetup = () => {
       }
     };
     upload_video();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     video,
     tutor,
@@ -1394,7 +1395,6 @@ const TutorSetup = () => {
           </div>
 
           <div style={{ width: "86%" }}>
-
             <div
               className="mt-2"
               style={{

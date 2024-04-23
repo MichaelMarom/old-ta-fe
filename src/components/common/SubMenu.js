@@ -54,6 +54,7 @@ const SubMenu = ({ faculty, selectedFaculty, setSelectedFaculty }) => {
         {faculty.map((item, index) => {
           return (
             <li
+              key={index}
               className="tutor-tab-subject-data-menu"
               style={{
                 background: item.Id === selectedFaculty ? "#2471A3" : "",

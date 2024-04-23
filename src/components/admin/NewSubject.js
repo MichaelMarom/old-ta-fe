@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import 'react-loading-skeleton/dist/skeleton.css'
 import { delete_new_subject, get_tutor_new_subject, post_new_subject } from '../../axios/admin';
 import Loading from '../common/Loading';
 import { toast } from 'react-toastify';

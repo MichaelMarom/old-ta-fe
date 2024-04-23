@@ -16,7 +16,6 @@ import _ from "lodash";
 import { toast } from "react-toastify";
 import {
   get_tutor_rates,
-  get_tutor_setup,
   getSessionDetail,
 } from "../../axios/tutor";
 import { get_my_data } from "../../axios/student";
@@ -356,27 +355,37 @@ const TutorClass = () => {
   }, [excalidrawAPI, sessionId, sessionTime]);
 
   useEffect(() => {
-    console.log(
-      openedSession.studentId,
-      openedSession.tutorId,
-      student.AcademyId,
-      tutor.AcademyId
-    );
-    if (!student.AcademyId) {
-      get_tutor_rates("Daniel. G. D7206af").then((result) => {
-        setTutorVideoConsent(result?.[0]?.ConsentRecordingLesson === "true");
-      });
-      get_my_data("Naomi. C. M8bc074").then((result) => {
-        setStudentVideoConsent(result?.[1]?.[0]?.[0]?.ParentConsent === "true");
-      });
+    if (openedSession.studentId && openedSession.tutorId) {
+      if (!student.AcademyId) {
+        get_tutor_rates(openedSession.tutorId).then((result) => {
+          !result?.response?.data &&
+            setTutorVideoConsent(
+              result?.[0]?.ConsentRecordingLesson === "true"
+            );
+        });
+        get_my_data(openedSession.studentId).then((result) => {
+          setStudentVideoConsent(
+            !result?.response?.data &&
+              result?.[1]?.[0]?.[0]?.ParentConsent === "true"
+          );
+        });
+      }
+      if (!tutor.AcademyId) {
+        setStudentVideoConsent(student.ParentConsent === "true");
+        get_tutor_rates(openedSession.tutorId).then((result) => {
+          !result?.response?.data &&
+            setTutorVideoConsent(
+              result?.[0]?.ConsentRecordingLesson === "true"
+            );
+        });
+      }
     }
-    if (!tutor.AcademyId) {
-      setStudentVideoConsent(student.ParentConsent === "true");
-      get_tutor_rates("Daniel. G. D7206af").then((result) => {
-        setTutorVideoConsent(result?.[0]?.ConsentRecordingLesson === "true");
-      });
-    }
-  }, [student.AcademyId, tutor.AcademyId, openedSession]);
+  }, [
+    student.AcademyId,
+    tutor.AcademyId,
+    openedSession,
+    student.ParentConsent,
+  ]);
 
   if (openedSessionFetching)
     return <Loading loadingText={"Fetching Session!"} />;
@@ -508,13 +517,13 @@ const TutorClass = () => {
                           width: "30px",
                           height: "15px",
                         }}
-                        checked={true}
+                        checked={tutorVideoConsent}
                       />
                       <label
                         className="form-check-label mr-3"
                         htmlFor="flexSwitchCheckChecked"
                       >
-                        video recording consent
+                        tutor video recording consent
                       </label>
                       <Tooltip
                         text="Enable this switch to consent video recording for ensuring quality of service. The video clip stored for 30 days, then be deleted from The academy servers."
@@ -536,13 +545,13 @@ const TutorClass = () => {
                           width: "30px",
                           height: "15px",
                         }}
-                        checked={false}
+                        checked={studentVideoConsent}
                       />
                       <label
                         className="form-check-label mr-3"
                         htmlFor="flexSwitchCheckChecked"
                       >
-                        video recording consent
+                        student video recording consent
                       </label>
                       <Tooltip
                         text="Enable this switch to consent video recording for ensuring quality of service. The video clip stored for 30 days, then be deleted from The academy servers."
@@ -556,62 +565,7 @@ const TutorClass = () => {
               )}
           </div>
         }
-        <div
-          className="form-check form-switch d-flex gap-3"
-          style={{ fontSize: "16px " }}
-        >
-          <input
-            className="form-check-input m-1"
-            disabled={true}
-            type="checkbox"
-            role="switch"
-            style={{
-              width: "30px",
-              height: "15px",
-            }}
-            checked={tutorVideoConsent}
-          />
-          <label
-            className="form-check-label mr-3"
-            htmlFor="flexSwitchCheckChecked"
-          >
-            tutor video recording consent
-          </label>
-          <Tooltip
-            text="Enable this switch to consent video recording for ensuring quality of service. The video clip stored for 30 days, then be deleted from The academy servers."
-            width="200px"
-          >
-            <FaInfoCircle size={18} color="#0096ff" />
-          </Tooltip>
-        </div>
-        <div
-          className="form-check form-switch d-flex gap-3"
-          style={{ fontSize: "16px " }}
-        >
-          <input
-            className="form-check-input m-1"
-            disabled={true}
-            type="checkbox"
-            role="switch"
-            style={{
-              width: "30px",
-              height: "15px",
-            }}
-            checked={studentVideoConsent}
-          />
-          <label
-            className="form-check-label mr-3"
-            htmlFor="flexSwitchCheckChecked"
-          >
-            student video recording consent
-          </label>
-          <Tooltip
-            text="Enable this switch to consent video recording for ensuring quality of service. The video clip stored for 30 days, then be deleted from The academy servers."
-            width="200px"
-          >
-            <FaInfoCircle size={18} color="#0096ff" />
-          </Tooltip>
-        </div>
+
         {/* <div style={{ position: "fixed", bottom: "10%", right: "3%" }}>
           <div onClick={() => setIsChatOpen(!isChatOpen)}>
             <BiChat size={32} />
