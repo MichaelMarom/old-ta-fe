@@ -267,6 +267,7 @@ export const Feedback = () => {
 
       fetchPaymentReport();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [student.AcademyId, student.timeZone]);
 
   useEffect(() => {

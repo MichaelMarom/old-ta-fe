@@ -49,7 +49,7 @@ const Actions = ({
         { next: "chat", current: "term-of-use", back: "my-students", withRolePrefix: true },
         { next: "market-place", current: "chat", back: "term-of-use", withRolePrefix: true },
         { next: "/collab", current: "market-place", back: "chat", withRolePrefix: true },
-        { next: `tutor-profile/${tutor.AcademyId}`, current: "/collab", back: "market-place", withRolePrefix: false },
+        { next: `tutor-profile`, current: "/collab", back: "market-place", withRolePrefix: false },
         { next: null, current: `tutor-profile`, back: "/collab", withRolePrefix: true },
     ]
 

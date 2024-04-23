@@ -32,7 +32,7 @@ const ShortlistCard = ({ photo, name, adText, id, setAdDeleted, studentId, subje
                     <h6 className='mr-2'>{name}</h6>
                     <img
                         src={`https://flagcdn.com/w20/${code}.png`}
-                        srcset={`https://flagcdn.com/w40/${code}.png 2x, https://flagcdn.com/48x36/${code}.png 3x`}
+                        srcSet={`https://flagcdn.com/w40/${code}.png 2x, https://flagcdn.com/48x36/${code}.png 3x`}
                         width="30"
                         height="20"
                         alt={country} />

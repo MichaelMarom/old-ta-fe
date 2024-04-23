@@ -104,6 +104,7 @@ export const ForgetPasswordModal = ({ modalOpen, setOpenModel }) => {
       };
       fetchUser();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, isLoaded, token, isSignedIn]);
 
   return (

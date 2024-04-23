@@ -73,7 +73,7 @@ const Marketplace = () => {
                                     </div>
                                     <div>
                                         <h5>{convertTutorIdToName(item.AcademyId)}</h5>
-                                        <div className='d-flex'><h6>Lamnguages:</h6> <Pill label={JSON.parse(item.Languages).value} width='150px' />
+                                        <div className='d-flex'><h6>Languages:</h6> <Pill label={JSON.parse(item.Languages).value} width='150px' />
                                         </div>
                                         <div className='d-flex'><h6>Grades:</h6>
                                             {

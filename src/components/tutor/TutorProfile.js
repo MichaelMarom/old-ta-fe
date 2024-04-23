@@ -266,7 +266,8 @@ const TutorProfile = () => {
                       className="form-check-input"
                       type="checkbox"
                       role="switch"
-                      checked={data.IntroSessionDiscount === "1"}
+                      disabled={true}
+                      defaultChecked={data.IntroSessionDiscount === "1"}
                     />
                   </div>
                 </div>
@@ -359,7 +360,10 @@ const TutorProfile = () => {
                       - Native
                     </div>
                     {data.OtherLang.map((lang) => (
-                      <div className="d-flex align-items-center" key={lang}>
+                      <div
+                        className="d-flex align-items-center"
+                        key={lang.value}
+                      >
                         <GradePills
                           grades={[]}
                           grade={lang.value}
@@ -378,9 +382,8 @@ const TutorProfile = () => {
                       style={{ gap: "5px" }}
                     >
                       {sortedGrades.map((grade, index) => (
-                        <div style={{ width: "30%" }}>
+                        <div key={index} style={{ width: "30%" }}>
                           <GradePills
-                            key={index}
                             grade={grade}
                             editable={false}
                             grades={[]}
@@ -888,7 +891,6 @@ const TutorProfile = () => {
                               {subjectGrades.map((option) => (
                                 <GradePills
                                   key={option}
-                                  o
                                   editable={false}
                                   grade={option}
                                   grades={[]}

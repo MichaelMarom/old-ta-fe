@@ -324,6 +324,7 @@ const StudentFaculties = () => {
               >
                 {subjects.map((subj) => (
                   <div
+                    key={subj.Id}
                     className="form-check col-3 border m-0 "
                     style={{ height: "45px" }}
                   >
@@ -345,233 +346,250 @@ const StudentFaculties = () => {
 
             {selectedSubject.SubjectName && !fetchingTutorsRate ? (
               <>
-                <div
-                  className="d-flex rounded justify-content-between  align-items-center "
-                  style={{ color: "white", background: "#2471A3" }}
-                >
-                  {multi_student_cols.map((item) => (
+                {tutorsWithRates.length ? (
+                  <>
                     <div
-                      className="text-center d-flex flex-column"
-                      style={{ width: item.width }}
+                      className="d-flex rounded justify-content-between  align-items-center "
+                      style={{ color: "white", background: "#2471A3" }}
                     >
-                      <p className="m-0" key={item.Header}>
-                        {" "}
-                        {item.Header}
-                      </p>
-                      <div style={{ float: "right" }}>{item.tooltip}</div>
+                      {multi_student_cols.map((item) => (
+                        <div
+                          key={item.Header}
+                          className="text-center d-flex flex-column"
+                          style={{ width: item.width }}
+                        >
+                          <p className="m-0" key={item.Header}>
+                            {item.Header}
+                          </p>
+                          <div style={{ float: "right" }}>{item.tooltip}</div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
 
-                <div
-                  className="tables"
-                  style={{ height: "53vh", width: "100%", overflowY: "auto" }}
-                >
-                  <table>
-                    {tutorsWithRates.length ? (
-                      <thead className="d-none">
-                        <tr>
-                          {multi_student_cols.map((item) => (
-                            <th key={item.Header} className="">
-                              {item.Header}
-                              {item.tooltip}
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                    ) : (
-                      <div className="text-danger p-4 m-2">
-                        No tutors found that is offering that Subject{" "}
-                      </div>
-                    )}
-                    <tbody>
-                      {tutorsWithRates.map((item, index) => {
-                        const rate = item.rate;
-                        return (
-                          <tr key={index}>
-                            <td
-                              style={{
-                                width: multi_student_cols[0].width,
-                                border: "1px solid lightgray",
-                              }}
-                            >
-                              <div className="d-flex flex-column">
-                                <Avatar
-                                  size="50"
-                                  avatarSrc={item?.Photo}
-                                  online={item.Online}
-                                  showOnlineStatus={false}
-                                />
-                                {item.CodeApplied && (
-                                  <div
-                                    className="blinking-button"
-                                    style={{ color: "black" }}
-                                  >
-                                    <Pill
-                                      fontColor="black"
-                                      label={"connected"}
-                                      customColor
-                                      color="limegreen"
-                                      editable={false}
-                                      hasIcon={false}
-                                    />
-                                  </div>
-                                )}
-                              </div>
-                            </td>
-                            <td
-                              style={{
-                                width: multi_student_cols[9].width,
-                                border: "1px solid lightgray",
-                              }}
-                            >
-                              {rate}
-                            </td>{" "}
-                            <td
-                              style={{
-                                width: multi_student_cols[0].width,
-                                border: "1px solid lightgray",
-                              }}
-                            >
-                              <input
-                                type="checkbox"
-                                style={{ height: "20px", width: "20px" }}
-                                checked={item?.IntroSessionDiscount || false}
-                              />
-                            </td>
-                            <td
-                              style={{
-                                width: multi_student_cols[2].width,
-                                border: "1px solid lightgray",
-                              }}
-                              className=""
-                            >
-                              {convertTutorIdToName(item?.AcademyId)}
-                            </td>
-                            <td
-                              style={{
-                                width: multi_student_cols[3].width,
-                                border: "1px solid lightgray",
-                              }}
-                            >
-                              {item?.Country}
-                            </td>
-                            <td
-                              style={{
-                                width: multi_student_cols[4].width,
-                                border: "1px solid lightgray",
-                              }}
-                              className="text-center"
-                            >
-                              {showDate(
-                                convertGMTToLocalTime(item?.GMT),
-                                wholeDateFormat
-                              )}{" "}
-                              <br />
-                            </td>
-                            <td
-                              style={{
-                                width: multi_student_cols[5].width,
-                                border: "1px solid lightgray",
-                              }}
-                              className=""
-                            >
-                              <div
-                                className={`d-inline card px-1 m-auto ${classByDifference(
-                                  calculateTimeDifference(item?.GMT)
-                                )}`}
-                                style={{ fontSize: "18px" }}
-                              >
-                                {calculateTimeDifference(item?.GMT) > 0
-                                  ? `+${calculateTimeDifference(item?.GMT)}`
-                                  : calculateTimeDifference(item?.GMT)}
-                              </div>
-                            </td>
-                            <td
-                              style={{
-                                width: multi_student_cols[6].width,
-                                border: "1px solid lightgray",
-                              }}
-                            >
-                              <button
-                                className="action-btn-square"
-                                onClick={() => handleNavigateToSchedule(item)}
-                              >
-                                <div className="button__content">
-                                  <div className="button__icon">
-                                    <img src={BTN_ICON} alt={"btn__icon"} />
-                                  </div>
-                                  <div className="button__text  text-sm">
-                                    Book Lesson
-                                  </div>
-                                </div>
-                              </button>
-                            </td>
-                            <td
-                              style={{
-                                width: multi_student_cols[7].width,
-                                border: "1px solid lightgray",
-                              }}
-                            >
-                              <button
-                                className="action-btn-square"
-                                onClick={() =>
-                                  handleNavigateToFeedback(item.AcademyId)
-                                }
-                              >
-                                <div className="button__content">
-                                  <div className="button__icon">
-                                    <img src={BTN_ICON} alt={"btn__icon"} />
-                                  </div>
-                                  <div className="button__text"> Feedbacks</div>
-                                </div>
-                              </button>
-                            </td>
-                            <td
-                              style={{
-                                width: multi_student_cols[8].width,
-                                border: "1px solid lightgray",
-                              }}
-                            >
-                              <button
-                                className="action-btn-square"
-                                onClick={() =>
-                                  redirect_to_tutor_profile(item?.AcademyId)
-                                }
-                              >
-                                <div className="button__content">
-                                  <div className="button__icon">
-                                    <img src={BTN_ICON} alt={"btn__icon"} />
-                                  </div>
-                                  <div className="button__text">
-                                    {" "}
-                                    View Profile
-                                  </div>
-                                </div>
-                              </button>
-                            </td>
-                            <td
-                              style={{
-                                width: multi_student_cols[10].width,
-                                border: "1px solid lightgray",
-                              }}
-                            >
-                              {item.CancellationPolicy} Hrs
-                            </td>
-                            <td
-                              style={{
-                                width: multi_student_cols[11].width,
-                                border: "1px solid lightgray",
-                              }}
-                            >
-                              {item.ResponseHrs.replace("Hours", "Hrs")}
-                            </td>
+                    <div
+                      className="tables"
+                      style={{
+                        height: "53vh",
+                        width: "100%",
+                        overflowY: "auto",
+                      }}
+                    >
+                      <table>
+                        <thead className="d-none">
+                          <tr>
+                            {multi_student_cols.map((item) => (
+                              <th key={item.Header} className="">
+                                {item.Header}
+                                {item.tooltip}
+                              </th>
+                            ))}
                           </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
+                        </thead>
+
+                        <tbody>
+                          {tutorsWithRates.map((item, index) => {
+                            const rate = item.rate;
+                            return (
+                              <tr key={index}>
+                                <td
+                                  style={{
+                                    width: multi_student_cols[0].width,
+                                    border: "1px solid lightgray",
+                                  }}
+                                >
+                                  <div className="d-flex flex-column">
+                                    <Avatar
+                                      size="50"
+                                      avatarSrc={item?.Photo}
+                                      online={item.Online}
+                                      showOnlineStatus={false}
+                                    />
+                                    {item.CodeApplied && (
+                                      <div
+                                        className="blinking-button"
+                                        style={{ color: "black" }}
+                                      >
+                                        <Pill
+                                          fontColor="black"
+                                          label={"connected"}
+                                          customColor
+                                          color="limegreen"
+                                          editable={false}
+                                          hasIcon={false}
+                                        />
+                                      </div>
+                                    )}
+                                  </div>
+                                </td>
+                                <td
+                                  style={{
+                                    width: multi_student_cols[9].width,
+                                    border: "1px solid lightgray",
+                                  }}
+                                >
+                                  {rate}
+                                </td>
+                                <td
+                                  style={{
+                                    width: multi_student_cols[0].width,
+                                    border: "1px solid lightgray",
+                                  }}
+                                >
+                                  <input
+                                    type="checkbox"
+                                    style={{
+                                      height: "20px",
+                                      width: "20px",
+                                      cursor: "pointer",
+                                    }}
+                                    defaultChecked={
+                                      item?.IntroSessionDiscount || false
+                                    }
+                                  />
+                                </td>
+                                <td
+                                  style={{
+                                    width: multi_student_cols[2].width,
+                                    border: "1px solid lightgray",
+                                  }}
+                                  className=""
+                                >
+                                  {convertTutorIdToName(item?.AcademyId)}
+                                </td>
+                                <td
+                                  style={{
+                                    width: multi_student_cols[3].width,
+                                    border: "1px solid lightgray",
+                                  }}
+                                >
+                                  {item?.Country}
+                                </td>
+                                <td
+                                  style={{
+                                    width: multi_student_cols[4].width,
+                                    border: "1px solid lightgray",
+                                  }}
+                                  className="text-center"
+                                >
+                                  {showDate(
+                                    convertGMTToLocalTime(item?.GMT),
+                                    wholeDateFormat
+                                  )}{" "}
+                                  <br />
+                                </td>
+                                <td
+                                  style={{
+                                    width: multi_student_cols[5].width,
+                                    border: "1px solid lightgray",
+                                  }}
+                                  className=""
+                                >
+                                  <div
+                                    className={`d-inline card px-1 m-auto ${classByDifference(
+                                      calculateTimeDifference(item?.GMT)
+                                    )}`}
+                                    style={{ fontSize: "18px" }}
+                                  >
+                                    {calculateTimeDifference(item?.GMT) > 0
+                                      ? `+${calculateTimeDifference(item?.GMT)}`
+                                      : calculateTimeDifference(item?.GMT)}
+                                  </div>
+                                </td>
+                                <td
+                                  style={{
+                                    width: multi_student_cols[6].width,
+                                    border: "1px solid lightgray",
+                                  }}
+                                >
+                                  <button
+                                    className="action-btn-square"
+                                    onClick={() =>
+                                      handleNavigateToSchedule(item)
+                                    }
+                                  >
+                                    <div className="button__content">
+                                      <div className="button__icon">
+                                        <img src={BTN_ICON} alt={"btn__icon"} />
+                                      </div>
+                                      <div className="button__text  text-sm">
+                                        Book Lesson
+                                      </div>
+                                    </div>
+                                  </button>
+                                </td>
+                                <td
+                                  style={{
+                                    width: multi_student_cols[7].width,
+                                    border: "1px solid lightgray",
+                                  }}
+                                >
+                                  <button
+                                    className="action-btn-square"
+                                    onClick={() =>
+                                      handleNavigateToFeedback(item.AcademyId)
+                                    }
+                                  >
+                                    <div className="button__content">
+                                      <div className="button__icon">
+                                        <img src={BTN_ICON} alt={"btn__icon"} />
+                                      </div>
+                                      <div className="button__text">
+                                        {" "}
+                                        Feedbacks
+                                      </div>
+                                    </div>
+                                  </button>
+                                </td>
+                                <td
+                                  style={{
+                                    width: multi_student_cols[8].width,
+                                    border: "1px solid lightgray",
+                                  }}
+                                >
+                                  <button
+                                    className="action-btn-square"
+                                    onClick={() =>
+                                      redirect_to_tutor_profile(item?.AcademyId)
+                                    }
+                                  >
+                                    <div className="button__content">
+                                      <div className="button__icon">
+                                        <img src={BTN_ICON} alt={"btn__icon"} />
+                                      </div>
+                                      <div className="button__text">
+                                        View Profile
+                                      </div>
+                                    </div>
+                                  </button>
+                                </td>
+                                <td
+                                  style={{
+                                    width: multi_student_cols[10].width,
+                                    border: "1px solid lightgray",
+                                  }}
+                                >
+                                  {item.CancellationPolicy} Hrs
+                                </td>
+                                <td
+                                  style={{
+                                    width: multi_student_cols[11].width,
+                                    border: "1px solid lightgray",
+                                  }}
+                                >
+                                  {item.ResponseHrs.replace("Hours", "Hrs")}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </>
+                ) : (
+                  <p className="text-danger p-4 m-2">
+                    No tutors found that is offering that Subject
+                  </p>
+                )}
               </>
             ) : (
               selectedSubject.SubjectName && <Loading height="30vh" />
