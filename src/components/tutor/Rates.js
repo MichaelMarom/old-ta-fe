@@ -251,13 +251,6 @@ const Rates = () => {
     }
   }, [dbState.CodeStatus]);
 
-  console.log(
-    IntroSessionDiscount,
-    classTeaching,
-    discountEnabled,
-    ConsentRecordingLesson
-  );
-
   return (
     <div className="tutor-tab-rates">
       <div
