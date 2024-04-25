@@ -36,7 +36,7 @@ export function setTutor(data) {
         const nullValues = ['null', 'undefined']
         if (nullValues.includes(localStorage.getItem('tutor_user_id')) ||
             !localStorage.getItem('tutor_user_id')) {
-            const user = JSON.parse(localStorage.getItem('user'))
+            const user = JSON.parse(localStorage.getItem('user') || '{}')
             if (!user?.SID) return {}
             result = await tutorApis.get_tutor_setup({ userId: user?.SID })
         }
