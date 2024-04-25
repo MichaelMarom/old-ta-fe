@@ -30,7 +30,6 @@ const StudentFaculties = () => {
   const navigate = useNavigate();
 
   const handleNavigateToSchedule = async (item) => {
-    console.log(item);
     dispatch(
       setTutor({
         id: item.SID,
@@ -92,12 +91,13 @@ const StudentFaculties = () => {
   }, [selectedSubject]);
 
   let multi_student_cols = [
-    { Header: "Photo", width: "8.33%" },
-    { Header: "Rate", width: "8.33%" },
+    { Header: "Photo", width: "7.69%" },
+    { Header: "Rate", width: "7.69%" },
+    { Header: "Grades", width: "7.69%" },
 
     {
       Header: "Demo @50%",
-      width: "8.33%",
+      width: "7.69%",
       tooltip: (
         <Tooltip
           color="white"
@@ -111,11 +111,11 @@ const StudentFaculties = () => {
         />
       ),
     },
-    { Header: "Name", width: "8.33%" },
-    { Header: "Country", width: "8.33%" },
+    { Header: "Name", width: "7.69%" },
+    { Header: "Country", width: "7.69%" },
     {
       Header: "Time (UTC).",
-      width: "8.33%",
+      width: "7.69%",
       tooltip: (
         <Tooltip
           width="200px"
@@ -127,7 +127,7 @@ const StudentFaculties = () => {
     },
     {
       Header: "Time Diff",
-      width: "8.33%",
+      width: "7.69%",
       tooltip: (
         <Tooltip
           color="white"
@@ -139,7 +139,7 @@ const StudentFaculties = () => {
     },
     {
       Header: "View Schedule",
-      width: "8.33%",
+      width: "7.69%",
       tooltip: (
         <Tooltip
           width="200px"
@@ -151,7 +151,7 @@ const StudentFaculties = () => {
     },
     {
       Header: "FeedBack",
-      width: "8.33%",
+      width: "7.69%",
       tooltip: (
         <Tooltip
           width="200px"
@@ -163,7 +163,7 @@ const StudentFaculties = () => {
     },
     {
       Header: "Profile",
-      width: "8.33%",
+      width: "7.69%",
       tooltip: (
         <Tooltip
           color="white"
@@ -175,7 +175,7 @@ const StudentFaculties = () => {
     },
     {
       Header: "Policy",
-      width: "8.33%",
+      width: "7.69%",
       tooltip: (
         <Tooltip
           color="white"
@@ -187,7 +187,7 @@ const StudentFaculties = () => {
     },
     {
       Header: "Response Time",
-      width: "8.33%",
+      width: "7.69%",
       tooltip: (
         <Tooltip
           width="200px"
@@ -331,9 +331,10 @@ const StudentFaculties = () => {
                     <input
                       className="form-check-input"
                       type="radio"
+                      disabled={!subj.tutor_count}
                       name="options"
                       checked={selectedSubject.Id === subj.Id}
-                      onChange={() => setSelectedSubject(subj)}
+                      onChange={() => subj.tutor_count && setSelectedSubject(subj)}
                     />
                     <label className="form-check-label" htmlFor="option1">
                       {subj.SubjectName}
@@ -376,14 +377,7 @@ const StudentFaculties = () => {
                     >
                       <table>
                         <thead className="d-none">
-                          <tr>
-                            {multi_student_cols.map((item) => (
-                              <th key={item.Header} className="">
-                                {item.Header}
-                                {item.tooltip}
-                              </th>
-                            ))}
-                          </tr>
+
                         </thead>
 
                         <tbody>
@@ -428,6 +422,18 @@ const StudentFaculties = () => {
                                   }}
                                 >
                                   {rate}
+                                </td>
+                                <td
+                                  style={{
+                                    width: multi_student_cols[11].width,
+                                    border: "1px solid lightgray",
+                                  }}
+                                >
+                                  <div style={{ overflowY: "auto", height: "100%" }}>
+                                    {JSON.parse(item.grades).map(grade =>
+                                      <Pill label={grade} />
+                                    )}
+                                  </div>
                                 </td>
                                 <td
                                   style={{
@@ -578,6 +584,7 @@ const StudentFaculties = () => {
                                 >
                                   {item.ResponseHrs.replace("Hours", "Hrs")}
                                 </td>
+
                               </tr>
                             );
                           })}
