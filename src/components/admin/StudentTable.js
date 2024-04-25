@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { get_student_data } from '../../axios/admin';
-import { COLUMNS } from '../../Tables/Admin/column_0';
 import { convertGMTOffsetToLocalString } from '../../helperFunctions/timeHelperFunctions'
 import Loading from '../common/Loading'
 
@@ -9,6 +8,54 @@ const StudentTable = () => {
     let [data, set_data] = useState([]);
     const [loading, setLoading] = useState(false)
     const [fetched, setFetched] = useState(false)
+    const COLUMNS = [
+    
+        {
+            Header: 'Status',
+            accessor: 'Status',
+        },
+        {
+            Header: 'Photo',
+            accessor: 'Photo',
+        },
+        {
+            Header: 'Screen ID',
+            accessor: 'Screen ID',
+        },
+        {
+            Header: 'Student Name',
+            accessor: 'Student Name',
+        },
+        {
+            Header: 'Email',
+            accessor: 'Email',
+        },
+        {
+            Header: 'Phone',
+            accessor: 'Phone',
+        },
+        {
+            Header: 'GMT',
+            accessor: 'GMT',
+        },
+        {
+            Header: 'Tot. Hours',
+            accessor: 'Tot. Hours',
+        },
+        {
+            Header: 'Tot. $ Paid',
+            accessor: 'Tot. $ Paid',
+        },
+        {
+            Header: 'Last Active',
+            accessor: 'Last Active',
+        },
+        {
+            Header: 'ID Verified',
+            accessor: 'ID Verified',
+        },
+       
+    ];
     useEffect(() => {
         setLoading(true)
         get_student_data()
