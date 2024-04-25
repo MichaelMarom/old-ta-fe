@@ -534,6 +534,7 @@ export let upload_tutor_bank = (email, acct_name, acct_type, bank_name, acct, ro
     })
 }
 
+
 export let get_tutor_setup = async (idObject) => {
     try {
         const { data } = await apiClient.get('/tutor/tutor-setup', {
