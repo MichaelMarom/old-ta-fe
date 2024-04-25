@@ -22,6 +22,8 @@ import { get_my_data } from "../../axios/student";
 import logo from "../../assets/images/tutoring Logo.png";
 import Loading from "../../components/common/Loading";
 import { FaInfoCircle } from "react-icons/fa";
+import VIDEO from '../../assets/videos/collaboration.mp4'
+import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
 
 const TutorClass = () => {
   const { user } = useSelector((state) => state.user);
@@ -366,7 +368,7 @@ const TutorClass = () => {
         get_my_data(openedSession.studentId).then((result) => {
           setStudentVideoConsent(
             !result?.response?.data &&
-              result?.[1]?.[0]?.[0]?.ParentConsent === "true"
+            result?.[1]?.[0]?.[0]?.ParentConsent === "true"
           );
         });
       }
@@ -391,14 +393,15 @@ const TutorClass = () => {
     return <Loading loadingText={"Fetching Session!"} />;
   return (
     <CommonLayout role={user.role}>
+      <TabInfoVideoToast video={VIDEO} />
+
       {openedSession.subject && (
         <div
           style={{ width: "70%" }}
-          className={`d-flex ${
-            openedSession.subject
+          className={`d-flex ${openedSession.subject
               ? "justify-content-between"
               : "justify-content-center"
-          }`}
+            }`}
         >
           <div>
             {sessionTime === "past" && (
