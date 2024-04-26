@@ -108,7 +108,7 @@ function EventModal({
 
   useEffect(() => {
     const existIntroSession = reservedSlots?.some(slot => slot.type === 'intro' &&
-     selectedTutor.subject === slot.subject && (!isStudentLoggedIn || slot.studentId === student.AcademyId))
+      selectedTutor.subject === slot.subject && (!isStudentLoggedIn || slot.studentId === student.AcademyId))
     if (existIntroSession && selectedType === 'intro' && selectedSlots[0]?.start) {
       toast.warning('Cannot add more than 1 Intro Session!')
       setCanPostEvents(false)
@@ -124,7 +124,7 @@ function EventModal({
     else {
       setCanPostEvents(true)
     }
-  }, [selectedSlots, selectedType, reservedSlots, isStudentLoggedIn, selectedTutor, student, ])
+  }, [selectedSlots, selectedType, reservedSlots, isStudentLoggedIn, selectedTutor, student,])
 
   return (
     <LeftSideBar
@@ -156,15 +156,16 @@ function EventModal({
             </div>
           }
           <div className="form-group d-flex flex-column">
-            <button type="button" className={`action-btn btn btn-sm `}
+            <button type="button" className={` btn btn-sm btn-primary`}
               disabled={clickedSlot.start}
               onClick={() => setSelectedType("intro")} >Mark as Intro Session</button>
-            <button type="button" className="action-btn btn btn-sm"
+
+            <button type="button" className=" btn btn-sm btn-success"
               onClick={() => setSelectedType("booked")}>Mark as Booking Session</button>
-            <button type="button" className="btn  btn-sm" style={{ background: "yellow" }}
+            <button type="button" className="btn  btn-sm btn-warning" style={{ background: "yellow" }}
               disabled={clickedSlot.start}
               onClick={() => setSelectedType("reserved")}>Mark as Reserved Session</button>
-            <button type="button" className="action-btn btn btn-sm"
+            <button type="button" className=" btn btn-sm btn-danger"
               onClick={() => setSelectedType("delete")}>Delete</button>
             {clickedSlot.request === 'postpone' &&
               <div className='d-flex justify-content-between align-items-center h-100'>

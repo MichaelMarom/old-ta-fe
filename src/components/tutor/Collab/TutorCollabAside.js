@@ -19,6 +19,8 @@ const TutorAside = ({
   sessionTime,
   openedSessionTimeRemainingToStart,
   timeRemainingToEndCurrentSession,
+  studentRecordingConsent,
+  tutorRecordingConsent
 }) => {
 
   // const {
@@ -269,7 +271,7 @@ const TutorAside = ({
     const seconds = remainingTime % 60;
 
     return (
-      <div>
+      <div className="text-light">
         {minutes <= 49 && (
           <p className="m-0" style={{ fontSize: "12px" }}>
             Lesson
@@ -303,7 +305,7 @@ const TutorAside = ({
     const seconds = remainingTime % 60;
 
     return (
-      <div>
+      <div className="text-light">
         {minutes <= 49 && (
           <p className="m-0" style={{ fontSize: "12px" }}>
             Lesson
@@ -321,13 +323,28 @@ const TutorAside = ({
   };
 
   return (
-    <div className="shadow-sm" style={{ width: "100%", height: "78vh" }}>
-      {openedSession.subject &&
-        sessionTime === "current" &&
-        // timeRemainingToEndCurrentSession < 3420 &&
-        !!timeRemainingToEndCurrentSession &&
-        !_.isNaN(timeRemainingToEndCurrentSession) && (
-          <div className="text-center countdown p-1 m-0">
+    <div className="shadow-sm text-bg-dark" style={{ width: "100%", height: "85vh" }}>
+
+      <div className="text-center countdown p-1 m-0 d-flex">
+        <div>
+          <h6 className="text-start">Recording Consent</h6>
+          <div className="d-flex align-items-center">
+            <div className="rounded-circle" style={{ height: "10px", width: "10px", background: tutorRecordingConsent ? "limegreen" : "#eb4b4b", marginRight: "10px" }}></div>
+            <p className="m-0">Tutor
+            </p>
+          </div>
+          <div className="d-flex align-items-center">
+            <div className="rounded-circle" style={{ height: "10px", width: "10px", background: studentRecordingConsent ? "limegreen" : "#eb4b4b", marginRight: "10px" }}></div>
+            <p className="m-0">Student
+            </p>
+          </div>
+
+        </div>
+        {openedSession.subject &&
+          sessionTime === "current" &&
+          // timeRemainingToEndCurrentSession < 3420 &&
+          !!timeRemainingToEndCurrentSession &&
+          !_.isNaN(timeRemainingToEndCurrentSession) && (
             <CountdownCircleTimer
               isPlaying
               initialRemainingTime={timeRemainingToEndCurrentSession - 10 * 60}
@@ -340,13 +357,11 @@ const TutorAside = ({
             >
               {children}
             </CountdownCircleTimer>
-          </div>
-        )}
+          )}
 
-      {openedSessionTimeRemainingToStart < 180 &&
-        !!openedSessionTimeRemainingToStart &&
-        !_.isNaN(openedSessionTimeRemainingToStart) && (
-          <div className="text-center countdown p-1 m-0">
+        {openedSessionTimeRemainingToStart < 180 &&
+          !!openedSessionTimeRemainingToStart &&
+          !_.isNaN(openedSessionTimeRemainingToStart) && (
             <CountdownCircleTimer
               isPlaying
               initialRemainingTime={openedSessionTimeRemainingToStart}
@@ -358,10 +373,8 @@ const TutorAside = ({
             >
               {startingClockChildren}
             </CountdownCircleTimer>
-          </div>
-        )}
-      {!sessionId &&
-        <div className="text-center countdown p-1 m-0">
+          )}
+        {!sessionId &&
           <CountdownCircleTimer
             isPlaying
             initialRemainingTime={openedSessionTimeRemainingToStart}
@@ -371,28 +384,11 @@ const TutorAside = ({
             isSmoothColorTransition={false}
             strokeWidth={13}
           >
-            {() => '00:00'}
+            {() => <div className="text-bg-dark  rounded-circle d-flex justify-content-center align-items-center"
+              style={{ width: "80%", height: "80%" }}>00:00</div>}
           </CountdownCircleTimer>
-        </div>
-      }
-
-      {/* {!sessionId ||
-        (openedSessionTimeRemainingToStart > 180 &&
-          !_.isNaN(openedSessionTimeRemainingToStart)) && (
-          <div className="text-center countdown p-1 m-0">
-            <CountdownCircleTimer
-              isPlaying
-              initialRemainingTime={openedSessionTimeRemainingToStart}
-              duration={0}
-              colors="#FFA500"
-              size={90}
-              isSmoothColorTransition={false}
-              strokeWidth={13}
-            >
-              00:00
-            </CountdownCircleTimer>
-          </div>
-        )} */}
+        }
+      </div>
 
       <div className="TutorAsideVideoCnt">
         {videoLoader}
@@ -444,7 +440,7 @@ const TutorAside = ({
       </div>
       {/* Can update design later :) */}
       <div>
-        <label htmlFor="volume-slider">Volume:</label>
+        <label htmlFor="volume-slider text-light" style={{ color: "lightgray" }}>Volume:</label>
         <input
           type="range"
           id="volume-slider"

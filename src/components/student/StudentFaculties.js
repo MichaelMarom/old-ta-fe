@@ -114,7 +114,7 @@ const StudentFaculties = () => {
     { Header: "Name", width: "7.69%" },
     { Header: "Country", width: "7.69%" },
     {
-      Header: "Time (UTC).",
+      Header: "Tutor time",
       width: "7.69%",
       tooltip: (
         <Tooltip
@@ -138,7 +138,7 @@ const StudentFaculties = () => {
       ),
     },
     {
-      Header: "View Schedule",
+      Header: "Tutor's Calendar",
       width: "7.69%",
       tooltip: (
         <Tooltip

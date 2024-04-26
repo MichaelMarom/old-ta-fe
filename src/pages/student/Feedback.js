@@ -16,9 +16,11 @@ import Actions from "../../components/common/Actions";
 import { toast } from "react-toastify";
 import Loading from "../../components/common/Loading";
 import { moment } from "../../config/moment";
+import _ from "lodash";
 
 export const Feedback = () => {
   const [questions, setQuestions] = useState([]);
+  const [tutors, setTutors] = useState([])
   const [comment, setComment] = useState("");
   const [reservedSlots, setReservedSlots] = useState([]);
   const [bookedSlots, setBookedSlots] = useState([]);
@@ -30,6 +32,7 @@ export const Feedback = () => {
   const [pendingChange, setPendingChange] = useState(null);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+
 
   useEffect(() => {
     const getAllFeedbackQuestion = async () => {
@@ -209,7 +212,7 @@ export const Feedback = () => {
         currentTimeInTimeZone,
         "minutes"
       );
-      if (minutesDifference <= 10 && minutesDifference > 0) {
+      if (minutesDifference <= 10) {
         return {
           ...slot,
           feedbackEligible: true,
@@ -223,7 +226,7 @@ export const Feedback = () => {
         currentTimeInTimeZone,
         "minutes"
       );
-      if (minutesDifference <= 10 && minutesDifference > 0) {
+      if (minutesDifference <= 10) {
         return {
           ...slot,
           feedbackEligible: true,
@@ -240,6 +243,7 @@ export const Feedback = () => {
   };
 
   useEffect(() => {
+    console.log(student.AcademyId, student.timeZone)
     if (student.AcademyId && student.timeZone) {
       const fetchPaymentReport = async () => {
         setLoading(true);
@@ -248,8 +252,8 @@ export const Feedback = () => {
           student.timeZone
         );
         setLoading(false);
-
         if (!data?.response?.data) {
+          setTutors(_.uniqBy(data.map(rec => ({ id: rec.tutorId, photo: rec.Photo })), 'id'))
           const uniqueData = data.reduce((unique, item) => {
             if (unique?.some((detail) => detail.tutorId === item.tutorId)) {
               return unique;
@@ -270,6 +274,7 @@ export const Feedback = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [student.AcademyId, student.timeZone]);
 
+  console.log(tutors)
   useEffect(() => {
     if (selectedEvent.id) {
       setQuestionLoading(true);
@@ -354,7 +359,7 @@ export const Feedback = () => {
                   tutor as soon as posible.
                 </div>
                 <BookedLessons
-                  setEvents={setFeedbackData}
+                  tutors={tutors}
                   events={feedbackData}
                   handleRowSelect={handleRowSelect}
                   setSelectedEvent={setSelectedEvent}

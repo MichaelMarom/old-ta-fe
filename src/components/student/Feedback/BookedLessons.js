@@ -8,8 +8,9 @@ import { useSelector } from "react-redux";
 import Tooltip from "../../common/ToolTip";
 import TAButton from "../../common/TAButton";
 import { convertTutorIdToName } from "../../../helperFunctions/generalHelperFunctions";
+import Avatar from "../../common/Avatar";
 
-function BookedLessons({ events, handleRowSelect, selectedEvent, setEvents }) {
+function BookedLessons({ events, handleRowSelect, selectedEvent, tutors }) {
   const { shortlist } = useSelector((state) => state.shortlist);
   const [sortedEvents, setSortedEvents] = useState([]);
 
@@ -122,14 +123,7 @@ function BookedLessons({ events, handleRowSelect, selectedEvent, setEvents }) {
                 style={{ color: event.type === "intro" ? "blue" : "inherit" }}
               >
                 <td style={{ width: Header[0].width }}>
-                  <Tooltip text={event.tutorId}>
-                    <img
-                      src={event.photo}
-                      alt={event.tutorId}
-                      height={60}
-                      width={60}
-                    />
-                  </Tooltip>
+                  <Avatar showOnlineStatus={false} avatarSrc={tutors.find(tutor => tutor.id === event.tutorId).photo} />
                 </td>
                 <td style={{ width: Header[0].width }}>
                   {convertTutorIdToName(event.tutorId)}

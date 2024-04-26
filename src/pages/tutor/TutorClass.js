@@ -399,8 +399,8 @@ const TutorClass = () => {
         <div
           style={{ width: "70%" }}
           className={`d-flex ${openedSession.subject
-              ? "justify-content-between"
-              : "justify-content-center"
+            ? "justify-content-between"
+            : "justify-content-center"
             }`}
         >
           <div>
@@ -484,6 +484,8 @@ const TutorClass = () => {
             {/* <div onClick={() => setIsChatOpen(false)} className="cursor-pointer">
            <MdCancel size={24} /> </div> */}
             <TutorAside
+              studentRecordingConsent={studentVideoConsent}
+              tutorRecordingConsent={tutorVideoConsent}
               openedSession={openedSession}
               sessionTime={sessionTime}
               timeRemainingToEndCurrentSession={
@@ -496,7 +498,7 @@ const TutorClass = () => {
             {sessionTime === "current" &&
               timeRemainingToEndCurrentSession > 620 && (
                 <>
-                  <div className="d-flex align-items-center justify-content-center">
+                  <div className="d-flex align-items-center justify-content-center m-2">
                     <Tooltip text={"switch text goes here"} iconSize="25" />
                     <Switch
                       isChecked={isChecked}
@@ -505,64 +507,6 @@ const TutorClass = () => {
                         user.role === "tutor" && sessionTime === "current"
                       }
                     />
-                  </div>
-                  <div>
-                    <div
-                      className="form-check form-switch d-flex gap-3"
-                      style={{ fontSize: "16px " }}
-                    >
-                      <input
-                        className="form-check-input m-1"
-                        disabled={true}
-                        type="checkbox"
-                        role="switch"
-                        style={{
-                          width: "30px",
-                          height: "15px",
-                        }}
-                        checked={tutorVideoConsent}
-                      />
-                      <label
-                        className="form-check-label mr-3"
-                        htmlFor="flexSwitchCheckChecked"
-                      >
-                        tutor video recording consent
-                      </label>
-                      <Tooltip
-                        text="Enable this switch to consent video recording for ensuring quality of service. The video clip stored for 30 days, then be deleted from The academy servers."
-                        width="200px"
-                      >
-                        <FaInfoCircle size={18} color="#0096ff" />
-                      </Tooltip>
-                    </div>
-                    <div
-                      className="form-check form-switch d-flex gap-3"
-                      style={{ fontSize: "16px " }}
-                    >
-                      <input
-                        className="form-check-input m-1"
-                        disabled={true}
-                        type="checkbox"
-                        role="switch"
-                        style={{
-                          width: "30px",
-                          height: "15px",
-                        }}
-                        checked={studentVideoConsent}
-                      />
-                      <label
-                        className="form-check-label mr-3"
-                        htmlFor="flexSwitchCheckChecked"
-                      >
-                        student video recording consent
-                      </label>
-                      <Tooltip
-                        text="Enable this switch to consent video recording for ensuring quality of service. The video clip stored for 30 days, then be deleted from The academy servers."
-                        width="200px"
-                      >
-                        <FaInfoCircle size={18} color="#0096ff" />
-                      </Tooltip>
-                    </div>
                   </div>
                 </>
               )}
