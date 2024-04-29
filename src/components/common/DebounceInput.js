@@ -1,4 +1,4 @@
-import React, {  useEffect } from 'react';
+import React, { useEffect } from 'react';
 import UserRichTextEditor from './RichTextEditor/UserRichTextEditor';
 import RichTextEditor from './RichTextEditor/RichTextEditor';
 
@@ -21,6 +21,9 @@ const DebounceInput = ({ delay, value, setInputValue, onChange, debouceCallback,
     };
     if (element === 'input')
         return <input className="form-control" type="text" value={value}
+            onChange={handleInputChange}  {...rest} />;
+    if (element === 'textarea')
+        return <textarea className="form-control" type="text" value={value}
             onChange={handleInputChange}  {...rest} />;
 
     if (element === 'user-rich-editor')

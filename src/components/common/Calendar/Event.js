@@ -46,7 +46,7 @@ function CustomEvent({
                 handleSetReservedSlots(reservedSlots.filter(slot => {
                     if (slot.type === "reserved") console.log(event, slot)
                     return event.id !== slot.id
-                }));
+                }), reservedSlots[0].studentId);
                 setExtraFiveMinStart(false)
             }
         };

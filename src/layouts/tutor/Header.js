@@ -8,12 +8,15 @@ import { FaSignOutAlt } from "react-icons/fa";
 import { setUser } from "../../redux/auth_state/auth";
 import { setTutor } from "../../redux/tutor_store/tutorData";
 import { setStudent } from "../../redux/student_store/studentData";
+import { moment } from '../../config/moment'
 
 const Header = () => {
   const { signOut } = useClerk();
   let nav = useNavigate();
   let location = useLocation();
   const [activeTab, setActiveTab] = useState("intro");
+  const [filteredSessions, setFilteredSessions] = useState([])
+
   const dispatch = useDispatch();
   let [screen_name, set_screen_name] = useState(
     window.localStorage.getItem("tutor_screen_name")
@@ -22,6 +25,7 @@ const Header = () => {
   let [tutorState, setTutorState] = useState("Pending");
   const { tutor } = useSelector((state) => state.tutor);
   const screenname = localStorage.getItem("tutor_screen_name");
+  const { sessions } = useSelector(state => state.tutorSessions)
   const handleSignOut = () => {
     localStorage.clear();
     dispatch(setUser({}));
@@ -115,6 +119,18 @@ const Header = () => {
     scroll_elem.scrollLeft = -w;
   };
 
+  useEffect(() => {
+
+    const currentTime = moment();
+
+    const filteredSessions = sessions.filter(session => {
+      const sessionEndDate = moment(session.end);
+      const diffMinutes = sessionEndDate.diff(currentTime, 'minutes');
+      return diffMinutes <= 10 && !session.tutorRating;
+    });
+    setFilteredSessions(filteredSessions)
+  }, [sessions])
+
   return (
     <>
       <div
@@ -195,15 +211,22 @@ const Header = () => {
                 onClick={handleTabClick}
                 id={
                   activeTab === tab.url.replace(/ /g, "%20") ||
-                  (activeTab.split("/").length > 3 &&
-                    activeTab.split("/").slice(0, -1).join() ===
+                    (activeTab.split("/").length > 3 &&
+                      activeTab.split("/").slice(0, -1).join() ===
                       tab.url.split("/").slice(0, -1).join())
                     ? "tutor-tab-header-list-active"
                     : ""
                 }
               >
                 <p className="m-0" style={{ transform: "skew(44deg, 0deg)" }}>
-                  {tab.name}{" "}
+                  {tab.name}{!!filteredSessions.length && tab.url === '/tutor/feedback' && <span className=" text-bg-danger p-1 rounded-circle" style={{
+                    display: "inline-flex",
+                    width: "24px",
+                    height: "24px",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}>{filteredSessions.length}</span>}
                 </p>
               </li>
             );

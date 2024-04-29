@@ -19,6 +19,7 @@ import { toast } from "react-toastify";
 import Actions from "../../components/common/Actions";
 import Tooltip from "../../components/common/ToolTip";
 import Loading from "../../components/common/Loading";
+import DebounceInput from "../../components/common/DebounceInput";
 
 const Feedback = () => {
   const dispatch = useDispatch();
@@ -53,7 +54,7 @@ const Feedback = () => {
     getFeedback();
   }, [tutor.AcademyId, tutor.timeZone]);
 
-  const handleRowSelect = () => {};
+  const handleRowSelect = () => { };
 
   const handleEmojiClick = async (id, star) => {
     const updatedQuestions = [...questions];
@@ -120,13 +121,7 @@ const Feedback = () => {
     }
   };
 
-  const handleDynamicSave = async (value) => {
-    const updatedSlots = feedbackData.map((slot) => {
-      if (slot.id === selectedEvent.id) {
-        slot.tutorComment = value;
-      }
-      return slot;
-    });
+  const handleDynamicSave = async (updatedSlots) => {
     const removedPhotoSessions = updatedSlots.map((sessions) => {
       const { photo, ...rest } = sessions;
       return rest;
@@ -153,21 +148,20 @@ const Feedback = () => {
       toast.error("Error while saving the data");
   };
 
+
   useEffect(() => {
     // Show loading toast when loadingState is true
     if (isLoading) {
       toast.info("Loading...", {
-        autoClose: false,
         closeOnClick: false,
         closeButton: false,
         draggable: false,
-        pauseOnHover: false,
-        progress: undefined,
         bodyClassName: "loading-toast-body",
+        autoClose: 500
       });
     } else {
       // Hide the loading toast when isLoading is false
-      toast.dismiss();
+      // toast.dismiss();
     }
   }, [isLoading]);
 
@@ -186,18 +180,19 @@ const Feedback = () => {
     setPendingChange(timeout);
   };
 
-  useEffect(() => {
-    const updatedSlots = feedbackData.map((slot) => {
-      if (slot.id === selectedEvent.id) {
-        slot.tutorComment = comment;
-      }
-      return slot;
-    });
+  // useEffect(() => {
+  //   console.log(comment)
+  //   const updatedSlots = feedbackData.map((slot) => {
+  //     if (slot.id === selectedEvent.id) {
+  //       slot.tutorComment = comment;
+  //     }
+  //     return slot;
+  //   });
 
-    setFeedbackData(updatedSlots);
-    setSelectedEvent({ ...selectedEvent, comment });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [comment]);
+  //   setFeedbackData(updatedSlots);
+  //   setSelectedEvent({ ...selectedEvent, comment });
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [comment]);
 
   useEffect(() => {
     if (selectedEvent.id) {
@@ -218,7 +213,7 @@ const Feedback = () => {
     setQuestions((prevValue) =>
       prevValue.map((question) => ({ ...question, star: null }))
     );
-  }, [selectedEvent.id, selectedEvent, tutor]);
+  }, [selectedEvent.id, selectedEvent.tutorComment, tutor]);
 
   if (fetchingSessions) return <Loading />;
   return (
@@ -271,14 +266,37 @@ const Feedback = () => {
                       text={"Instructions how to grade freehand notes."}
                     />
                   </label>
+                  <DebounceInput
+                    placeholder=""
+                    required
+                    element="textarea"
+                    className="form-control m-0"
+                    delay={1000}
+                    value={comment}
+                    style={{ height: "150px" }}
+                    setInputValue={setComment}
+                    debouceCallback={(val) => {
+                      const updatedSlots = feedbackData.map((slot) => {
+                        if (slot.id === selectedEvent.id) {
+                          slot.tutorComment = comment;
+                        }
+                        return slot;
+                      });
 
-                  <textarea
+                      setFeedbackData(updatedSlots);
+                      setSelectedEvent({ ...selectedEvent, comment });
+                      handleDynamicSave(updatedSlots)
+                    }}
+                    onChange={(e) => setComment(e.target.value)}
+                  />
+                  {/* <TAButton buttonText="Save" handleClick={() => ()} /> */}
+                  {/* <textarea
                     className="form-control"
                     id="exampleTextarea"
                     rows="4"
                     value={comment}
                     onChange={handleTextChange}
-                  />
+                  /> */}
                 </div>
               </div>
             </div>

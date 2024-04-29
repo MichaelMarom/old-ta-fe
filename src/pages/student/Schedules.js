@@ -115,6 +115,9 @@ export const Schedules = () => {
                         }}
                         eventPropGetter={eventPropGetter}
                         startAccessor="start"
+                        selectable={true}
+                        onDoubleClickEvent={(s)=>console.log(s)}
+                        // onSelectSlot={(sloty) => console.log(sloty)}
                         endAccessor="end"
                         style={{ minHeight: "100%" }}
                     />

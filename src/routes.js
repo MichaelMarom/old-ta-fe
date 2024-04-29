@@ -110,12 +110,10 @@ const App = () => {
   useEffect(() => {
     if (token && tutor.AcademyId) {
       const dispatchUserSessions = async () => {
-        console.log("render inside tutor", tutor, token);
         const tutorSessions = dispatch(await setTutorSessions(tutor));
         handleExpiredToken(tutorSessions);
 
         const intervalId = setInterval(async () => {
-          console.log("render outside tutor", tutor, token);
           const tutorSessions = dispatch(await setTutorSessions(tutor));
           handleExpiredToken(tutorSessions);
         }, 60000);
@@ -130,12 +128,10 @@ const App = () => {
   useEffect(() => {
     if (token && student.AcademyId) {
       const dispatchUserSessions = async () => {
-        console.log("render inside student", student, token);
         const studentSessions = dispatch(await setStudentSessions(student));
         handleExpiredToken(studentSessions);
 
         const intervalId = setInterval(async () => {
-          console.log(" render outside student", student, token);
           const studentSessions = dispatch(await setStudentSessions(student));
           handleExpiredToken(studentSessions);
         }, 60000);

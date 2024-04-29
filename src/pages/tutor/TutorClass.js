@@ -461,7 +461,7 @@ const TutorClass = () => {
                       (!!openedSessionTimeRemainingToStart &&
                         openedSessionTimeRemainingToStart < 180)) && (
                       <div className="fs-3 text-dark">
-                        You can start using the canvas tools now.
+                        You can start using the canvas tools as soon as the lesson starts.
                       </div>
                     )}
                 </WelcomeScreen.Center.Heading>
@@ -499,7 +499,7 @@ const TutorClass = () => {
               timeRemainingToEndCurrentSession > 620 && (
                 <>
                   <div className="d-flex align-items-center justify-content-center m-2">
-                    <Tooltip text={"switch text goes here"} iconSize="25" />
+                    <Tooltip text={"You can transfer the canvas tools to the student by moving the switch to the right"} iconSize="25" />
                     <Switch
                       isChecked={isChecked}
                       setIsChecked={setIsChecked}

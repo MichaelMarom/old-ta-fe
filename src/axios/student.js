@@ -256,7 +256,10 @@ export let get_student_short_list_data = async (id) => {
 }
 
 export const save_student_events = async (body) => {
-    await apiClient.post('/student/booking', body);
+    try { await apiClient.post('/student/booking', body); }
+    catch (e) {
+        showErrorToast(e)
+    }
 }
 
 export const get_student_tutor_events = async (studentId, tutorId) => {
@@ -276,8 +279,6 @@ export const get_student_events = async (studentId) => {
     }
     catch (err) {
         showErrorToast(err)
-        console.log(err)
-        return err
     }
 }
 
