@@ -5,42 +5,22 @@ import Comment from "./Comment";
 import StarRating from "../../common/StarRating";
 import { convertToDate } from "../../common/Calendar/Calendar";
 import { useSelector } from "react-redux";
-import Tooltip from "../../common/ToolTip";
 import TAButton from "../../common/TAButton";
 import { convertTutorIdToName } from "../../../helperFunctions/generalHelperFunctions";
 import Avatar from "../../common/Avatar";
 
 function BookedLessons({ events, handleRowSelect, selectedEvent, tutors }) {
-  const { shortlist } = useSelector((state) => state.shortlist);
   const [sortedEvents, setSortedEvents] = useState([]);
 
   useEffect(() => {
-    const updatedEvents = events.map((event) => {
-      const matchingTutor = shortlist.find((tutor) => {
-        return (
-          tutor.AcademyId[0] === event.tutor ||
-          tutor.AcademyId[0] === event.tutorId
-        );
-      });
-
-      if (matchingTutor) {
-        return {
-          ...event,
-          photo: matchingTutor.Photo,
-        };
-      }
-
-      return event;
-    });
-
-    const sortedEvents = updatedEvents.sort((a, b) => {
+    const sortedEvents = events.sort((a, b) => {
       const startDateA = new Date(a.start);
       const startDateB = new Date(b.start);
 
       return startDateB - startDateA;
     });
     setSortedEvents(sortedEvents);
-  }, [events, shortlist]);
+  }, [events]);
 
   const Header = [
     {
@@ -72,6 +52,7 @@ function BookedLessons({ events, handleRowSelect, selectedEvent, tutors }) {
       title: "Action",
     },
   ];
+  console.log(events)
 
   return (
     <>
@@ -123,7 +104,7 @@ function BookedLessons({ events, handleRowSelect, selectedEvent, tutors }) {
                 style={{ color: event.type === "intro" ? "blue" : "inherit" }}
               >
                 <td style={{ width: Header[0].width }}>
-                  <Avatar showOnlineStatus={false} avatarSrc={tutors.find(tutor => tutor.id === event.tutorId).photo} />
+                  <Avatar showOnlineStatus={false} avatarSrc={event.photo} />
                 </td>
                 <td style={{ width: Header[0].width }}>
                   {convertTutorIdToName(event.tutorId)}
@@ -154,9 +135,9 @@ function BookedLessons({ events, handleRowSelect, selectedEvent, tutors }) {
                           : "none",
                     }}
                     onClick={() => handleRowSelect(event)}
-                    disabled={
-                      !event.feedbackEligible || selectedEvent.id === event.id
-                    }
+                    // disabled={
+                    //   !event.feedbackEligible || selectedEvent.id === event.id
+                    // }
                   />
                   {/* <button className={`btn ${selectedEvent.id === event.id ? 'btn-success' : 'btn-primary'} `}
                 style={{ animation: (event.feedbackEligible && !event.rating) ? 'blinking 1s infinite' : 'none' }}

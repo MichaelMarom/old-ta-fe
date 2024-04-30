@@ -241,7 +241,7 @@ const Subjects = () => {
               setInputValue={setNewSubjectData}
               onChange={(e) => setNewSubjectData(e.target.value)}
               type="text"
-              debouceCallback={handleSearch}
+              debounceCallback={handleSearch}
               placeholder="Type your subject here"
               className="form-control"
               required

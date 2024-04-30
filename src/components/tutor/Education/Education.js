@@ -820,7 +820,7 @@ const Education = () => {
                         delay={2000}
                         value={uni_bach}
                         setInputValue={set_uni_bach}
-                        debouceCallback={() =>
+                        debounceCallback={() =>
                           dynamicSave("Bach_College", uni_bach)
                         }
                         onChange={(e) => set_uni_bach(e.target.value)}
@@ -940,7 +940,7 @@ const Education = () => {
                           delay={2000}
                           value={uni_mast}
                           setInputValue={set_mast_uni}
-                          debouceCallback={() =>
+                          debounceCallback={() =>
                             dynamicSave("Mast_College", uni_mast)
                           }
                           onChange={(e) => set_mast_uni(e.target.value)}
@@ -1058,7 +1058,7 @@ const Education = () => {
                           placeholder="College/University 3"
                           required
                           disabled={!editMode}
-                          debouceCallback={() =>
+                          debounceCallback={() =>
                             dynamicSave("DoctorateCollege", doc_uni)
                           }
                         />
@@ -1507,7 +1507,7 @@ const Education = () => {
                   value={references}
                   setInputValue={setReferences}
                   readOnly={!editMode}
-                  debouceCallback={() =>
+                  debounceCallback={() =>
                     dynamicSave("ThingsReferences", references)
                   }
                   placeholder={`Tutoring academy recommends using a digital pen made by Wacom for the collaboration tab whiteboard. Basic models are CTL-4100 & 6100. Check their official website www.wacom.com
@@ -1538,7 +1538,7 @@ const Education = () => {
                 placeholder="Enter Your Work Experience"
                 height="800px"
                 required
-                debouceCallback={() =>
+                debounceCallback={() =>
                   dynamicSave("WorkExperience", workExperience)
                 }
                 element="user-rich-editor"

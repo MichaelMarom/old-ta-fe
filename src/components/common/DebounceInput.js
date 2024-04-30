@@ -2,14 +2,14 @@ import React, { useEffect } from 'react';
 import UserRichTextEditor from './RichTextEditor/UserRichTextEditor';
 import RichTextEditor from './RichTextEditor/RichTextEditor';
 
-const DebounceInput = ({ delay, value, setInputValue, onChange, debouceCallback, element = 'input', ...rest }) => {
+const DebounceInput = ({ delay, value, setInputValue, onChange, debounceCallback, element = 'input', ...rest }) => {
     // const [inputValue, setInputValue] = useState(value);
     // const [debouncedValue, setDebouncedValue] = useState(value);
 
     useEffect(() => {
         const delayInputTimeoutId = setTimeout(() => {
             // setDebouncedValue(value);
-            debouceCallback()
+            debounceCallback()
         }, delay);
         return () => clearTimeout(delayInputTimeoutId);
 

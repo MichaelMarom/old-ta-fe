@@ -275,7 +275,7 @@ const Feedback = () => {
                     value={comment}
                     style={{ height: "150px" }}
                     setInputValue={setComment}
-                    debouceCallback={(val) => {
+                    debounceCallback={(val) => {
                       const updatedSlots = feedbackData.map((slot) => {
                         if (slot.id === selectedEvent.id) {
                           slot.tutorComment = comment;
