@@ -8,6 +8,7 @@ import { useClerk } from "@clerk/clerk-react";
 import { setUser } from "../../redux/auth_state/auth";
 import { setTutor } from "../../redux/tutor_store/tutorData";
 import { setStudent } from "../../redux/student_store/studentData";
+import { moment } from "../../config/moment";
 
 const Header = () => {
   const { signOut } = useClerk();
@@ -15,6 +16,8 @@ const Header = () => {
   const [activeTab, setActiveTab] = useState("");
 
   const dispatch = useDispatch();
+  const [filteredSessions, setFilteredSessions] = useState([]);
+  const { sessions } = useSelector((state) => state.studentSessions);
   let location = useLocation();
   const { student } = useSelector((state) => state.student);
   const tabs = [
@@ -97,6 +100,17 @@ const Header = () => {
     nav(`${e.currentTarget.dataset.url}`);
   };
 
+  useEffect(() => {
+    const currentTime = moment();
+
+    const filteredSessions = sessions.filter((session) => {
+      const sessionEndDate = moment(session.end);
+      const diffMinutes = sessionEndDate.diff(currentTime, "minutes");
+      return diffMinutes <= 10 && !session.tutorRating;
+    });
+    setFilteredSessions(filteredSessions);
+  }, [sessions]);
+
   return (
     <>
       <div
@@ -171,7 +185,22 @@ const Header = () => {
               }
             >
               <p className="m-0" style={{ transform: "skew(41deg, 0deg)" }}>
-                {tab.name}{" "}
+                {tab.name}
+                {!!filteredSessions.length && tab.url === "/student/feedback" && (
+                  <span
+                    className=" text-bg-danger p-1 rounded-circle"
+                    style={{
+                      display: "inline-flex",
+                      width: "24px",
+                      height: "24px",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    {filteredSessions.length}
+                  </span>
+                )}
               </p>
             </li>
           ))}

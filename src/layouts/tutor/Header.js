@@ -16,6 +16,7 @@ const Header = () => {
   let location = useLocation();
   const [activeTab, setActiveTab] = useState("intro");
   const [filteredSessions, setFilteredSessions] = useState([])
+  const { sessions } = useSelector(state => state.tutorSessions)
 
   const dispatch = useDispatch();
   let [screen_name, set_screen_name] = useState(
@@ -25,7 +26,6 @@ const Header = () => {
   let [tutorState, setTutorState] = useState("Pending");
   const { tutor } = useSelector((state) => state.tutor);
   const screenname = localStorage.getItem("tutor_screen_name");
-  const { sessions } = useSelector(state => state.tutorSessions)
   const handleSignOut = () => {
     localStorage.clear();
     dispatch(setUser({}));

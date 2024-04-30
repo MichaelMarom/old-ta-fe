@@ -8,10 +8,11 @@ import { useSelector } from "react-redux";
 import TAButton from "../../common/TAButton";
 import { convertTutorIdToName } from "../../../helperFunctions/generalHelperFunctions";
 import Avatar from "../../common/Avatar";
+import { moment } from "../../../config/moment";
 
 function BookedLessons({ events, handleRowSelect }) {
   const [sortedEvents, setSortedEvents] = useState([]);
-
+  const { student } = useSelector((state) => state.student);
   useEffect(() => {
     const sortedEvents = events.sort((a, b) => {
       const startDateA = new Date(a.start);
@@ -52,7 +53,20 @@ function BookedLessons({ events, handleRowSelect }) {
       title: "Action",
     },
   ];
-  console.log(events)
+  const checkedEligibility = (session) => {
+    const currentTimeInTimeZone = moment().tz(student.timeZone);
+
+    const sessionEndInTimeZone = moment(session.end).tz(student.timeZone);
+    const minutesDifference = sessionEndInTimeZone.diff(
+      currentTimeInTimeZone,
+      "minutes"
+    );
+    console.log(minutesDifference);
+    if (minutesDifference <= 10) {
+      return false;
+    }
+    return true;
+  };
 
   return (
     <>
@@ -135,9 +149,7 @@ function BookedLessons({ events, handleRowSelect }) {
                           : "none",
                     }}
                     onClick={() => handleRowSelect(event)}
-                    // disabled={
-                    //   !event.feedbackEligible || selectedEvent.id === event.id
-                    // }
+                    disabled={checkedEligibility(event)}
                   />
                   {/* <button className={`btn ${selectedEvent.id === event.id ? 'btn-success' : 'btn-primary'} `}
                 style={{ animation: (event.feedbackEligible && !event.rating) ? 'blinking 1s infinite' : 'none' }}
