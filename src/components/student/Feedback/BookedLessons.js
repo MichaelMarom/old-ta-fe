@@ -54,16 +54,17 @@ function BookedLessons({ events, handleRowSelect }) {
     },
   ];
   const checkedEligibility = (session) => {
-    const currentTimeInTimeZone = moment().tz(student.timeZone);
+    if (session?.end) {
+      const currentTimeInTimeZone = moment().tz(student.timeZone);
 
-    const sessionEndInTimeZone = moment(session.end).tz(student.timeZone);
-    const minutesDifference = sessionEndInTimeZone.diff(
-      currentTimeInTimeZone,
-      "minutes"
-    );
-    console.log(minutesDifference);
-    if (minutesDifference <= 10) {
-      return false;
+      const sessionEndInTimeZone = moment(session.end).tz(student.timeZone);
+      const minutesDifference = sessionEndInTimeZone?.diff(
+        currentTimeInTimeZone,
+        "minutes"
+      );
+      if (minutesDifference <= 10) {
+        return false;
+      }
     }
     return true;
   };

@@ -52,7 +52,6 @@ export const Schedules = () => {
     const handleEventClick = (event) => {
         setClickedSlot(event)
         const pastEvent = convertToDate(event.end).getTime() < (new Date()).getTime();
-        console.log(event, student, isStudentLoggedIn && !pastEvent)
         if (isStudentLoggedIn && pastEvent) {
             setIsModalOpen(true);
         }

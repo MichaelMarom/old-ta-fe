@@ -37,7 +37,7 @@ export const setTutorSessions = async (tutor) => {
         try {
             dispatch(slice.actions.isLoading())
             const result = await formatted_tutor_sessions(tutor.AcademyId)
-            !result?.response?.dat && dispatch(slice.actions.setTutorSession(result));
+            !result?.response?.data && dispatch(slice.actions.setTutorSession(result));
             return result;
         }
         catch (err) {

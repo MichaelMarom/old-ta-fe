@@ -112,7 +112,7 @@ const TutorClass = () => {
         user.role === "student" ? student.timeZone : tutor.timeZone
       ).then((res) => {
         setOpenedSessionFetching(false);
-
+        console.log(res)
         if (!res?.response?.data) {
           setCollboratorsInState(res.session.tutorId, res.session.studentId);
           setOpenedSession(res.session);
@@ -447,7 +447,7 @@ const TutorClass = () => {
                     {!!openedSessionTimeRemainingToStart &&
                       openedSessionTimeRemainingToStart < 180 && (
                         <div className="fs-1 text-dark">
-                          {openedSession.subject} will start in 3 minutes
+                          {openedSession.subject} lesson will start in 3 minutes
                         </div>
                       )}
                   </WelcomeScreen.Center.Heading>
