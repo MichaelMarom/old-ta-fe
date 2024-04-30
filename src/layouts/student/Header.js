@@ -170,7 +170,7 @@ const Header = () => {
                   : ""
               }
             >
-              <p className="m-0" style={{ transform: "skew(44deg, 0deg)" }}>
+              <p className="m-0" style={{ transform: "skew(41deg, 0deg)" }}>
                 {tab.name}{" "}
               </p>
             </li>

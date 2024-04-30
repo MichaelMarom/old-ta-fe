@@ -218,7 +218,7 @@ const Header = () => {
                     : ""
                 }
               >
-                <p className="m-0" style={{ transform: "skew(44deg, 0deg)" }}>
+                <p className="m-0" style={{ transform: "skew(41deg, 0deg)" }}>
                   {tab.name}{!!filteredSessions.length && tab.url === '/tutor/feedback' && <span className=" text-bg-danger p-1 rounded-circle" style={{
                     display: "inline-flex",
                     width: "24px",
