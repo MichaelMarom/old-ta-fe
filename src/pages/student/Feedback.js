@@ -44,7 +44,6 @@ export const Feedback = () => {
         );
       });
   }, [ sessions]);
-  console.log(feedbackData );
 
   useEffect(() => {
     let fetchSession = async () =>
@@ -237,8 +236,6 @@ export const Feedback = () => {
                 <BookedLessons
                   events={feedbackData}
                   handleRowSelect={handleRowSelect}
-                  setSelectedEvent={setSelectedEvent}
-                  selectedEvent={selectedEvent}
                 />
               </>
             ) : (

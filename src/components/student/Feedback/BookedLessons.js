@@ -9,7 +9,7 @@ import TAButton from "../../common/TAButton";
 import { convertTutorIdToName } from "../../../helperFunctions/generalHelperFunctions";
 import Avatar from "../../common/Avatar";
 
-function BookedLessons({ events, handleRowSelect, selectedEvent, tutors }) {
+function BookedLessons({ events, handleRowSelect }) {
   const [sortedEvents, setSortedEvents] = useState([]);
 
   useEffect(() => {

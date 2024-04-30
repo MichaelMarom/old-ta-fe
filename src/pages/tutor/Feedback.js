@@ -20,6 +20,7 @@ import Actions from "../../components/common/Actions";
 import Tooltip from "../../components/common/ToolTip";
 import Loading from "../../components/common/Loading";
 import DebounceInput from "../../components/common/DebounceInput";
+import _ from "lodash";
 
 const Feedback = () => {
   const dispatch = useDispatch();
@@ -28,6 +29,8 @@ const Feedback = () => {
   const [feedbackData, setFeedbackData] = useState([]);
   const [comment, setComment] = useState("");
   const [questions, setQuestions] = useState([]);
+  const [rawQuestions, setRawQuestions] = useState([]);
+
   const [pendingChange, setPendingChange] = useState(null);
   const { tutor } = useSelector((state) => state.tutor);
   const { isLoading } = useSelector((state) => state.bookings);
@@ -36,7 +39,10 @@ const Feedback = () => {
   useEffect(() => {
     const getAllFeedbackQuestion = async () => {
       const data = await get_tutor_feedback_questions();
-      !!data?.length && setQuestions(data);
+      if (!!data?.length) {
+        setRawQuestions(data);
+        setQuestions(data);
+      }
     };
     getAllFeedbackQuestion();
   }, []);
@@ -54,7 +60,7 @@ const Feedback = () => {
     getFeedback();
   }, [tutor.AcademyId, tutor.timeZone]);
 
-  const handleRowSelect = () => { };
+  const handleRowSelect = () => {};
 
   const handleEmojiClick = async (id, star) => {
     const updatedQuestions = [...questions];
@@ -148,7 +154,6 @@ const Feedback = () => {
       toast.error("Error while saving the data");
   };
 
-
   useEffect(() => {
     // Show loading toast when loadingState is true
     if (isLoading) {
@@ -157,42 +162,13 @@ const Feedback = () => {
         closeButton: false,
         draggable: false,
         bodyClassName: "loading-toast-body",
-        autoClose: 500
+        autoClose: 500,
       });
     } else {
       // Hide the loading toast when isLoading is false
       // toast.dismiss();
     }
   }, [isLoading]);
-
-  const handleTextChange = (event) => {
-    const updatedValue = event.target.value;
-    setComment(updatedValue);
-
-    if (pendingChange) {
-      clearTimeout(pendingChange);
-    }
-
-    const timeout = setTimeout(() => {
-      handleDynamicSave(updatedValue);
-    }, 2000);
-
-    setPendingChange(timeout);
-  };
-
-  // useEffect(() => {
-  //   console.log(comment)
-  //   const updatedSlots = feedbackData.map((slot) => {
-  //     if (slot.id === selectedEvent.id) {
-  //       slot.tutorComment = comment;
-  //     }
-  //     return slot;
-  //   });
-
-  //   setFeedbackData(updatedSlots);
-  //   setSelectedEvent({ ...selectedEvent, comment });
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [comment]);
 
   useEffect(() => {
     if (selectedEvent.id) {
@@ -204,7 +180,25 @@ const Feedback = () => {
           selectedEvent.studentId,
           0
         );
-        if (!!data?.length) setQuestions(data);
+        if (!!data?.length) {
+          const combinedArray = _.mergeWith(
+            [],
+            data,
+            rawQuestions,
+            (objValue, srcValue) => {
+              if (
+                objValue &&
+                objValue.star === null &&
+                srcValue &&
+                srcValue.star !== null
+              ) {
+                return srcValue;
+              }
+            }
+          );
+
+          setQuestions(combinedArray);
+        }
         setQuestionLoading(false);
       };
       fetchFeedbackToQuestion();
@@ -285,7 +279,7 @@ const Feedback = () => {
 
                       setFeedbackData(updatedSlots);
                       setSelectedEvent({ ...selectedEvent, comment });
-                      handleDynamicSave(updatedSlots)
+                      handleDynamicSave(updatedSlots);
                     }}
                     onChange={(e) => setComment(e.target.value)}
                   />
