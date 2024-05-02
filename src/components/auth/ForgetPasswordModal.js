@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { get_user_detail } from "../../axios/auth";
 import Modal from "../common/Modal";
 import { useAuth, useSignIn } from "@clerk/clerk-react";
-import { setUser } from "../../redux/auth_state/auth";
+import { setUser } from "../../redux/auth/auth";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import TAButton from "../common/TAButton";

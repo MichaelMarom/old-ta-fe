@@ -18,14 +18,14 @@ import {
   postStudentBookings,
   setBookedSlots,
   setReservedSlots,
-} from "../../../redux/student_store/studentBookings";
+} from "../../../redux/student/studentBookings";
 import { isEqualTwoObjectsRoot } from "../../../helperFunctions/generalHelperFunctions";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import "../../../styles/common.css";
 import useDebouncedEffect from "../../../hooks/DebouceWithDeps";
 import { TutorEventModal } from "../EventModal/TutorEventModal/TutorEventModal";
-import { setStudentSessions } from "../../../redux/student_store/studentSessions";
+import { setStudentSessions } from "../../../redux/student/studentSessions";
 import { FeedbackMissing } from "./ToastMessages";
 
 const views = {

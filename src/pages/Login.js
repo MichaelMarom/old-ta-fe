@@ -6,7 +6,7 @@ import {
 } from "../axios/auth";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "../redux/auth_state/auth";
+import { setUser } from "../redux/auth/auth";
 import { ForgetPasswordModal } from "../components/auth/ForgetPasswordModal";
 import "../styles/auth.css";
 import {

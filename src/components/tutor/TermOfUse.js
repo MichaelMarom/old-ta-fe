@@ -4,7 +4,7 @@ import Actions from "../common/Actions";
 import { get_adminConstants, post_termsOfUse } from "../../axios/admin";
 import { post_tutor_setup, setAgreementDateToNullForAll } from "../../axios/tutor";
 import Loading from "../common/Loading";
-import { setTutor } from "../../redux/tutor_store/tutorData";
+import { setTutor } from "../../redux/tutor/tutorData";
 import { useDispatch, useSelector } from "react-redux";
 import { showDate } from "../../helperFunctions/timeHelperFunctions";
 import { convertToDate } from "../common/Calendar/Calendar";

@@ -10,7 +10,7 @@ import "./styles/admin.css";
 import "./styles/collab.css";
 import "./styles/tutor.css";
 import "./styles/Collaboration_Styles/LargeScreen.css";
-import { setUser } from "./redux/auth_state/auth";
+import { setUser } from "./redux/auth/auth";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import rolePermissions from "./config/permissions";
@@ -19,16 +19,17 @@ import { get_tutor_setup } from "./axios/tutor";
 import { get_my_data, get_student_setup_by_userId } from "./axios/student";
 import { get_user_detail } from "./axios/auth";
 
-import { setStudent } from "./redux/student_store/studentData";
-import { setTutor } from "./redux/tutor_store/tutorData";
+import { setStudent } from "./redux/student/studentData";
+import { setTutor } from "./redux/tutor/tutorData";
 import { setChats } from "./redux/chat/chat";
 import { moment } from "./config/moment";
 import { useClerk, useAuth, SignedIn } from "@clerk/clerk-react";
 import { redirect_to_login } from "./helperFunctions/auth";
-import { setStudentSessions } from "./redux/student_store/studentSessions";
-import { setTutorSessions } from "./redux/tutor_store/tutorSessions";
+import { setStudentSessions } from "./redux/student/studentSessions";
+import { setTutorSessions } from "./redux/tutor/tutorSessions";
 import TutorClass from "./pages/tutor/TutorClass";
 import CallWithChatExperience from "./pages/tutor/Test1";
+import { setNewSubjCount } from "./redux/admin/newSubj";
 
 const App = () => {
   let location = useLocation();
@@ -96,6 +97,12 @@ const App = () => {
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, isSignedIn, token]);
+
+  useEffect(() => {
+    if (user && user.role === "admin" && isSignedIn && token) {
+     dispatch(setNewSubjCount())
+    }
+  }, [user, isSignedIn, token])
 
   //dispatch
   useEffect(() => {

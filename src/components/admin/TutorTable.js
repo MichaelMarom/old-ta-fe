@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { get_tutor_data, set_tutor_status } from "../../axios/admin";
+import { get_tutor_data, get_user_list, set_tutor_status } from "../../axios/admin";
 import { convertGMTOffsetToLocalString } from "../../helperFunctions/timeHelperFunctions";
 import Loading from "../common/Loading";
 import ToolTip from "../common/ToolTip";
@@ -90,6 +90,10 @@ const TutorTable = () => {
         console.log(err);
       });
   }, [status]);
+
+  useEffect(() => {
+    get_user_list().then(data => console.log(data))
+  }, [])
 
   let handleStatusChange = async (id, status, currentStatus) => {
     if (currentStatus === "pending")
@@ -184,9 +188,9 @@ const TutorTable = () => {
           onClick={() => setStatus("active")}
           className="p-2 rounded cursor-pointer m-1 d-flex justify-content-center align-items-center"
           style={{
-            color: statesColours["under-review"].color,
-            background: statesColours["under-review"].bg,
-            border: status === "under-review" ? "2px solid #268daf" : "none",
+            color: statesColours["active"].color,
+            background: statesColours["active"].bg,
+            border: status === "active" ? "2px solid #268daf" : "none",
           }}
         >
           active{" "}

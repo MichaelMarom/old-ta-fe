@@ -14,7 +14,7 @@ import {
 } from "../../axios/student";
 
 import { useDispatch, useSelector } from "react-redux";
-import { postStudentBookings } from "../../redux/student_store/studentBookings";
+import { postStudentBookings } from "../../redux/student/studentBookings";
 import { toast } from "react-toastify";
 import Actions from "../../components/common/Actions";
 import Tooltip from "../../components/common/ToolTip";

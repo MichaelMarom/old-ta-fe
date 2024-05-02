@@ -1,16 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import userReducer from './auth_state/auth';
-import selectedTutorReducer from './student_store/selectedTutor';
-import studentBookingsReducer from './student_store/studentBookings';
-import studentReducer from './student_store/studentData'
-import shortlistReducer from './student_store/shortlist'
+import userReducer from './auth/auth';
+import selectedTutorReducer from './student/selectedTutor';
+import studentBookingsReducer from './student/studentBookings';
+import studentReducer from './student/studentData'
+import shortlistReducer from './student/shortlist'
 
-import tutorReducer from './tutor_store/tutorData'
-import videoReducer from './tutor_store/video'
+import tutorReducer from './tutor/tutorData'
+import videoReducer from './tutor/video'
 import chatReducer from './chat/chat';
-import studentSessionsReducer from './student_store/studentSessions.js';
-import tutorSessionsReducer from './tutor_store/tutorSessions.js';
+import studentSessionsReducer from './student/studentSessions.js';
+import tutorSessionsReducer from './tutor/tutorSessions.js';
+import newSubj from './admin/newSubj.js';
 
 let store = configureStore({
   reducer: {
@@ -26,6 +27,8 @@ let store = configureStore({
     video: videoReducer,
     
     tutorSessions: tutorSessionsReducer,
+
+    newSubj
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 })

@@ -13,7 +13,7 @@ import { convertTutorIdToName } from "../../helperFunctions/generalHelperFunctio
 import Avatar from "../common/Avatar";
 import { showDate } from "../../helperFunctions/timeHelperFunctions";
 import { useNavigate } from "react-router-dom";
-import { setTutor } from "../../redux/student_store/selectedTutor";
+import { setTutor } from "../../redux/student/selectedTutor";
 import BTN_ICON from "../../assets/images/button__icon.png";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
 

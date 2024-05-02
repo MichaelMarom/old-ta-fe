@@ -10,13 +10,13 @@ import {
 import { showDate } from "../../helperFunctions/timeHelperFunctions";
 import { wholeDateFormat } from "../../constants/constants";
 import { useDispatch, useSelector } from "react-redux";
-import { postStudentBookings } from "../../redux/student_store/studentBookings";
+import { postStudentBookings } from "../../redux/student/studentBookings";
 import Actions from "../../components/common/Actions";
 import { toast } from "react-toastify";
 import Loading from "../../components/common/Loading";
 import _ from "lodash";
 import DebounceInput from "../../components/common/DebounceInput";
-import { setStudentSessions } from "../../redux/student_store/studentSessions";
+import { setStudentSessions } from "../../redux/student/studentSessions";
 import { fetch_tutors_photos } from "../../axios/tutor";
 
 export const Feedback = () => {

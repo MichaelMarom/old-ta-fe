@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 import { showDate } from '../../helperFunctions/timeHelperFunctions'
 import { convertToDate } from '../../components/common/Calendar/Calendar'
 import { post_student_agreement } from '../../axios/student'
-import { setStudent } from '../../redux/student_store/studentData'
+import { setStudent } from '../../redux/student/studentData'
 
 const StudentIntro = () => {
     const { user } = useSelector(state => state.user)

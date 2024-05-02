@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTutor } from '../../redux/student_store/selectedTutor';
+import { setTutor } from '../../redux/student/selectedTutor';
 import Loading from '../common/Loading';
 import { convertTutorIdToName } from '../../helperFunctions/generalHelperFunctions';
 import { showDate } from '../../helperFunctions/timeHelperFunctions';

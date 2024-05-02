@@ -28,7 +28,7 @@ import Button from "../../common/Button";
 import Tooltip from "../../common/ToolTip";
 import ReactDatePicker from "react-datepicker";
 import { useDispatch, useSelector } from "react-redux";
-import { setTutor } from "../../../redux/tutor_store/tutorData";
+import { setTutor } from "../../../redux/tutor/tutorData";
 import DebounceInput from "../../common/DebounceInput";
 
 const languageOptions = languages.map((language) => ({

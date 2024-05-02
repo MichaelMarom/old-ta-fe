@@ -17,7 +17,7 @@ import Actions from "../common/Actions";
 import "../../styles/common.css";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { setTutor } from "../../redux/tutor_store/tutorData";
+import { setTutor } from "../../redux/tutor/tutorData";
 
 const generateDiscountCode = () => {
   const length = 8;

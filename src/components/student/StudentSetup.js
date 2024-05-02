@@ -8,7 +8,7 @@ import {
 import { get_tutor_against_code } from "../../axios/tutor";
 import { convertGMTOffsetToLocalString } from "../../helperFunctions/timeHelperFunctions";
 import { useDispatch } from "react-redux";
-import { setStudent } from "../../redux/student_store/studentData";
+import { setStudent } from "../../redux/student/studentData";
 import Tooltip from "../common/ToolTip";
 import { FaInfoCircle } from "react-icons/fa";
 import {

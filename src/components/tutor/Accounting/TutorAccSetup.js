@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux'
 import { COMMISSION_DATA, monthFormatWithYYYY } from '../../../constants/constants';
 import { compareStates } from '../../../helperFunctions/generalHelperFunctions';
-import { setTutor } from '../../../redux/tutor_store/tutorData';
+import { setTutor } from '../../../redux/tutor/tutorData';
 import Tooltip from '../../common/ToolTip';
 
 const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, previousYearEarning }) => {

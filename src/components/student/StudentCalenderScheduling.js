@@ -8,7 +8,7 @@ import {
 import { convertGMTOffsetToLocalString } from "../../helperFunctions/timeHelperFunctions";
 import { get_my_data, update_student_shortlist } from "../../axios/student";
 import { useDispatch } from "react-redux";
-import { setStudent } from "../../redux/student_store/studentData";
+import { setStudent } from "../../redux/student/studentData";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import moment from "moment";

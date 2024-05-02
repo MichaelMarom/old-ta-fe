@@ -25,6 +25,15 @@ export let post_new_subject = async (id, subject, AcademyId) => {
   }
 };
 
+export let get_new_subj_count = async () => {
+  try {
+    const { data } = await apiClient.get("/admin/tutor/new-subject/count");
+    return data;
+  } catch (err) {
+    showErrorToast(err);
+  }
+};
+
 export let get_tutor_new_subject = async () => {
   try {
     const { data } = await apiClient.get("/admin/tutor-new-subject", {});
@@ -49,9 +58,17 @@ export let get_tutor_data = (status) => {
 
 export let get_tutor_count_by_status = async (status) => {
   try {
-    const { data } = await apiClient.get("/admin/tutor/status/count", {
-      params: { status },
-    });
+    const { data } = await apiClient.get("/admin/tutor/status/count");
+    return data;
+  } catch (err) {
+    showErrorToast(err);
+  }
+};
+
+
+export let get_user_list = async (status) => {
+  try {
+    const { data } = await apiClient.get("/admin/user/list");
     return data;
   } catch (err) {
     showErrorToast(err);

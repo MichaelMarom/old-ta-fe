@@ -4,15 +4,16 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Tooltip from "../../components/common/ToolTip";
 import { FaSignOutAlt } from "react-icons/fa";
 import { useClerk } from "@clerk/clerk-react";
-import { useDispatch } from "react-redux";
-import { setUser } from "../../redux/auth_state/auth";
-import { setTutor } from "../../redux/tutor_store/tutorData";
-import { setStudent } from "../../redux/student_store/studentData";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../../redux/auth/auth";
+import { setTutor } from "../../redux/tutor/tutorData";
+import { setStudent } from "../../redux/student/studentData";
 
 
 const Header = () => {
     const { signOut } = useClerk();
 
+    const { count } = useSelector(state => state.newSubj)
 
     let nav = useNavigate();
     const location = useLocation();
@@ -69,8 +70,24 @@ const Header = () => {
                     {tabs.map((tab) => (
                         <li key={tab.id} data-url={tab.id} onClick={handleTabClick}
                             id={`${activeTab === tab.id ? 'admin-tab-header-list-active' : ''}`}
-                        >
-                            {tab.label}
+                        > <p className="m-0" style={{ transform: "skew(41deg, 0deg)" }}>
+                                {tab.label}
+                                {tab.label === 'New Subject' && <span
+                                    className=" text-bg-danger p-1 rounded-circle"
+                                    style={{
+                                        display: "inline-flex",
+                                        width: "20px",
+                                        height: "20px",
+                                        flexDirection: "row",
+                                        fontSize: "12px",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        marginLeft: "8px"
+                                    }}
+                                >
+                                    {count}
+                                </span>
+                                }</p>
                         </li>
                     ))}
                 </ul>

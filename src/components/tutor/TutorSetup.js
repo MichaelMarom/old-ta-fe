@@ -12,14 +12,14 @@ import { RiRobot2Fill } from "react-icons/ri";
 import { post_tutor_setup } from "../../axios/tutor";
 import { apiClient } from "../../axios/config";
 import { useDispatch } from "react-redux";
-// import { setscreenNameTo } from "../../redux/tutor_store/ScreenName";
+// import { setscreenNameTo } from "../../redux/tutor/ScreenName";
 import { convertGMTOffsetToLocalString } from "../../helperFunctions/timeHelperFunctions";
 import WebcamCapture from "./Recorder/VideoRecorder";
 import Loading from "../common/Loading";
 import ToolTip from "../common/ToolTip";
 
 import Actions from "../common/Actions";
-import { uploadVideo } from "../../redux/tutor_store/video";
+import { uploadVideo } from "../../redux/tutor/video";
 import {
   AUST_STATES,
   CAN_STATES,
@@ -29,7 +29,7 @@ import {
   UK_STATES,
   US_STATES,
 } from "../../constants/constants";
-import { setTutor } from "../../redux/tutor_store/tutorData";
+import { setTutor } from "../../redux/tutor/tutorData";
 import {
   capitalizeFirstLetter,
   unsavedChangesHelper,

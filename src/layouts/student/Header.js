@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { FaSignOutAlt } from "react-icons/fa";
 import Tooltip from "../../components/common/ToolTip";
 import { useClerk } from "@clerk/clerk-react";
-import { setUser } from "../../redux/auth_state/auth";
-import { setTutor } from "../../redux/tutor_store/tutorData";
-import { setStudent } from "../../redux/student_store/studentData";
+import { setUser } from "../../redux/auth/auth";
+import { setTutor } from "../../redux/tutor/tutorData";
+import { setStudent } from "../../redux/student/studentData";
 import { moment } from "../../config/moment";
 
 const Header = () => {

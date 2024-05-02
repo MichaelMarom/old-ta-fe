@@ -69,11 +69,11 @@ const TutorTable = () => {
             toast.error("Failed to Update the Record")
         }
     }
+
     if (loading)
         return <Loading />
     return (
-
-        <div className="tables" style={{ height: '100%', width: '100%', overflow: 'auto', padding: '5px' }}>
+        <div className="tables" style={{ height: '90vh', width: '100%', overflow: 'auto', padding: '5px' }}>
 
             {
                 data.length ?
