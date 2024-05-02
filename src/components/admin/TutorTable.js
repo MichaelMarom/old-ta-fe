@@ -169,6 +169,17 @@ const TutorTable = () => {
           suspended
         </div>
         <div
+          onClick={() => setStatus("disapproved")}
+          className="p-2 rounded cursor-pointer m-1"
+          style={{
+            color: statesColours["disapproved"].color,
+            background: statesColours["disapproved"].bg,
+            border: status === "disapproved" ? "2px solid #268daf" : "none",
+          }}
+        >
+          disapproved
+        </div>
+        <div
           onClick={() => setStatus("closed")}
           className="p-2 rounded cursor-pointer m-1"
           style={{

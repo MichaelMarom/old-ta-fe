@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Tooltip from "../common/ToolTip";
+import Tooltip from "../../components/common/ToolTip";
 import { FaSignOutAlt } from "react-icons/fa";
 import { useClerk } from "@clerk/clerk-react";
 import { useDispatch } from "react-redux";

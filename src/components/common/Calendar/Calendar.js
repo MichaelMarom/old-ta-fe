@@ -38,11 +38,11 @@ export const convertToDate = (date) =>
   date instanceof Date ? date : new Date(date);
 
 const ShowCalendar = ({
-  setIsModalOpen = () => { }, //FOR STUDENT
+  setIsModalOpen = () => {}, //FOR STUDENT
   isModalOpen = false, //FOR STUDENT
   timeDifference = null, //FOR STUDENT
-  setActiveTab = () => { }, //FOR Tutor
-  setDisableColor = () => { }, //FOR Tutor
+  setActiveTab = () => {}, //FOR Tutor
+  setDisableColor = () => {}, //FOR Tutor
   disableColor = "", //FOR Tutor
   activeTab,
   disableWeekDays,
@@ -64,8 +64,8 @@ const ShowCalendar = ({
     user.role === "student"
       ? true
       : user.role === "admin" && isStudentRoute
-        ? true
-        : false;
+      ? true
+      : false;
   const [timeZone, setTimeZone] = useState();
 
   const [enabledDays, setEnabledDays] = useState([]);
@@ -87,7 +87,7 @@ const ShowCalendar = ({
   const { student } = useSelector((state) => state.student);
   const tutorId = selectedTutor.academyId;
   const studentId = student?.AcademyId;
-  console.log(studentId, selectedTutor)
+  console.log(studentId, selectedTutor);
   const subjectName = selectedTutor?.subject;
   const [weekDaysTimeSlots, setWeekDaysTimeSlots] = useState([]);
 
@@ -271,7 +271,7 @@ const ShowCalendar = ({
       tutor.AcademyId,
       clickedSlot.studentId
     );
-    handleDisableSlot(clickedSlot.start);
+    handleDisableSlot(convertToDate(clickedSlot.start));
     if (clickedSlot.type === "booked") {
       dispatch(
         postStudentBookings({
@@ -503,8 +503,8 @@ const ShowCalendar = ({
           type === "reserved"
             ? "Reserved"
             : type === "intro"
-              ? "Intro"
-              : "Booked",
+            ? "Intro"
+            : "Booked",
         studentName: student.FirstName,
         studentId: student.AcademyId,
         createdAt: new Date(),
@@ -606,9 +606,9 @@ const ShowCalendar = ({
     const dayName = moment(clickedDate).format("dddd");
     const formattedTime = moment(clickedDate).format("h:00 a");
 
-    const secSlot = moment(slotInfo.start).minutes() === 30;
+    const secSlot = moment(convertToDate(slotInfo.start)).minutes() === 30;
     let endTime = secSlot
-      ? moment(slotInfo.start).subtract(30, "minutes").toDate()
+      ? moment(convertToDate(slotInfo.start)).subtract(30, "minutes").toDate()
       : slotInfo.end;
     //student
     const momentStartTime = moment(clickedDate);
@@ -617,18 +617,22 @@ const ShowCalendar = ({
 
     //some error handling
     let clickedUpperSlot =
-      moment(slotInfo.end).diff(moment(slotInfo.start), "days") === 1;
+      moment(convertToDate(slotInfo.end)).diff(
+        moment(convertToDate(slotInfo.start)),
+        "days"
+      ) === 1;
     const isEventAlreadyExist = reservedSlots
       .concat(bookedSlots)
       ?.some(
         (event) =>
-          convertToDate(event.start).getTime() === clickedDate.getTime() ||
-          convertToDate(event.end).getTime() === slotInfo.end.getTime()
+          convertToDate(convertToDate(event.start)).getTime() ===
+            clickedDate.getTime() ||
+          convertToDate(convertToDate(event.end)).getTime() ===
+            slotInfo.end.getTime()
       );
 
     if (!isStudentRoute && !disableColor) {
       return toast.warning("Please select color before disabling slots!");
-
     }
     if (isEventAlreadyExist && slotInfo.action === "doubleClick") {
       toast.warning(
@@ -642,7 +646,8 @@ const ShowCalendar = ({
       slotInfo.action === "doubleClick"
     ) {
       return toast.warning(
-        `Cannot ${!isStudentLoggedIn ? "Disable/Enable " : "Book/Reserve"
+        `Cannot ${
+          !isStudentLoggedIn ? "Disable/Enable " : "Book/Reserve"
         } Older Slots`
       );
     }
@@ -694,7 +699,9 @@ const ShowCalendar = ({
                 convertToDate(date).getTime() === slotInfo.start.getTime()
             );
             const reservedSlotPresentInClickedDate = reservedSlots?.some(
-              (slot) => moment(slot.start).date() === moment(clickedDate).date()
+              (slot) =>
+                moment(convertToDate(slot.start)).date() ===
+                moment(clickedDate).date()
             );
 
             //disbaleDateRange
@@ -709,7 +716,7 @@ const ShowCalendar = ({
             else {
               const removeDisableDateRange = disableDateRange.filter(
                 (date) =>
-                  convertToDate(date.start).getTime() !==
+                  convertToDate(convertToDate(date.start)).getTime() !==
                   slotInfo.start.getTime()
               );
               setDisableDateRange(removeDisableDateRange);
@@ -727,7 +734,7 @@ const ShowCalendar = ({
             }
           } else {
             const existInDisabledDate = disableDates?.some((storedDate) => {
-              const slotDateMoment = moment(slotInfo.start);
+              const slotDateMoment = moment(convertToDate(slotInfo.start));
               const storedMomentDate = moment(storedDate);
               return storedMomentDate.isSame(slotDateMoment, "day");
             });
@@ -758,7 +765,7 @@ const ShowCalendar = ({
                   const removeEnableHourSlots = enableHourSlots.filter(
                     (date) =>
                       convertToDate(date).getTime() !==
-                      slotInfo.start.getTime() &&
+                        slotInfo.start.getTime() &&
                       endTime.getTime() !== convertToDate(date).getTime()
                   );
                   setEnableHourSlots(removeEnableHourSlots);
@@ -769,14 +776,14 @@ const ShowCalendar = ({
                 disableHourSlots?.some(
                   (date) =>
                     convertToDate(date).getTime() ===
-                    slotInfo.start.getTime() ||
+                      slotInfo.start.getTime() ||
                     endTime.getTime() === convertToDate(date).getTime()
                 )
               ) {
                 const removeDisableHourSlots = disableHourSlots.filter(
                   (date) =>
                     convertToDate(date).getTime() !==
-                    slotInfo.start.getTime() &&
+                      slotInfo.start.getTime() &&
                     endTime.getTime() !== convertToDate(date).getTime()
                 );
                 setDisableHourSlots(removeDisableHourSlots);
@@ -791,13 +798,15 @@ const ShowCalendar = ({
               const reservedSlotsHaveClickedSlot = reservedSlots?.some(
                 (slot) =>
                   slot.start.getTime() ===
-                  moment(slotInfo.start).startOf("hour").valueOf()
+                  moment(convertToDate(slotInfo.start))
+                    .startOf("hour")
+                    .valueOf()
               );
               if (
                 !disableHourSlots?.some(
                   (date) =>
                     convertToDate(date).getTime() ===
-                    slotInfo.start.getTime() ||
+                      slotInfo.start.getTime() ||
                     endTime.getTime() === convertToDate(date).getTime()
                 )
               ) {
@@ -812,7 +821,7 @@ const ShowCalendar = ({
                 const removeDisableHourSlots = disableHourSlots.filter(
                   (date) =>
                     convertToDate(date).getTime() !==
-                    slotInfo.start.getTime() &&
+                      slotInfo.start.getTime() &&
                     endTime.getTime() !== convertToDate(date).getTime()
                 );
                 setDisableHourSlots(removeDisableHourSlots);
@@ -904,7 +913,8 @@ const ShowCalendar = ({
       return;
     }
     setClickedSlot(event);
-    const pastEvent = convertToDate(event.end).getTime() < new Date().getTime();
+    const pastEvent =
+      convertToDate(convertToDate(event.end)).getTime() < new Date().getTime();
     if (isStudentLoggedIn && !pastEvent) {
       setIsModalOpen(true);
       setIsTutorSideSessionModalOpen(false);
@@ -950,7 +960,10 @@ const ShowCalendar = ({
           return slotTimeZoneMoment.isSame(dateMoment);
         });
         const existsinReservedSlots = reservedSlots?.some((slot) => {
-          return convertToDate(slot.start).getTime() === date.getTime();
+          return (
+            convertToDate(convertToDate(slot.start)).getTime() ===
+            date.getTime()
+          );
         });
         const existInSelectedSlotStart = selectedSlots?.some(
           (slot) => slot.start.getTime() === date.getTime()
@@ -959,7 +972,10 @@ const ShowCalendar = ({
         const existInSelectedSlotEnd = selectedSlots?.some(
           (slot) =>
             date.getTime() ===
-            moment(slot.end).subtract(30, "minutes").toDate().getTime()
+            moment(convertToDate(slot.end))
+              .subtract(30, "minutes")
+              .toDate()
+              .getTime()
         );
         // tutor checks
         const existInEnableSlots = enableHourSlots?.some((dateTime) => {
@@ -1144,15 +1160,18 @@ const ShowCalendar = ({
     );
     const otherStudentSession = isStudentLoggedIn
       ? reservedSlots
-        .concat(bookedSlots)
-        ?.some(
-          (slot) =>
-            slot.studentName !== student.FirstName && event.id === slot.id
-        )
+          .concat(bookedSlots)
+          ?.some(
+            (slot) =>
+              slot.studentName !== student.FirstName && event.id === slot.id
+          )
       : false;
     const deletedSession = reservedSlots
       .concat(bookedSlots)
-      ?.some((slot) => slot.request === "delete" && slot.start === event.start);
+      ?.some(
+        (slot) =>
+          slot.request === "delete" && slot.start === convertToDate(event.start)
+      );
 
     if (deletedSession)
       return {
@@ -1284,12 +1303,15 @@ const ShowCalendar = ({
   function updateDayEndSlotEndTime() {
     const updatedEvents = bookedSlots.concat(reservedSlots).map((event) => {
       if (
-        moment(event.start).hours() === 23 &&
-        moment(event.start).minutes() === 0
+        moment(convertToDate(event.start)).hours() === 23 &&
+        moment(convertToDate(event.start)).minutes() === 0
       ) {
         return {
           ...event,
-          end: moment(event.start).set({ hours: 23, minutes: 59 }),
+          end: moment(convertToDate(event.start)).set({
+            hours: 23,
+            minutes: 59,
+          }),
         };
       }
       return event;
@@ -1312,8 +1334,8 @@ const ShowCalendar = ({
         defaultView={activeView}
         events={updateDayEndSlotEndTime()?.map((event) => ({
           ...event,
-          start: convertToGmt(event.start),
-          end: convertToGmt(event.end),
+          start: convertToGmt(convertToDate(event.start)),
+          end: convertToGmt(convertToDate(event.end)),
         }))}
         eventPropGetter={eventPropGetter}
         components={{
