@@ -8,12 +8,14 @@ import { FcApprove } from "react-icons/fc";
 import { FcDisapprove } from "react-icons/fc";
 import { toast } from "react-toastify";
 import { statesColours } from "../../constants/constants";
+import { get_tutor_count_by_status } from "../../axios/admin";
 
 const TutorTable = () => {
   let [data, set_data] = useState([]);
   const [fetching, setFetching] = useState(false);
   const [updatingStatus, setUpdatingStatus] = useState(false);
   const [status, setStatus] = useState("pending");
+  const [statusCount, setStatusCount] = useState([]);
   const COLUMNS = [
     {
       Header: "Status",
@@ -68,6 +70,12 @@ const TutorTable = () => {
       accessor: "Action",
     },
   ];
+
+  useEffect(() => {
+    get_tutor_count_by_status().then(
+      (data) => !data?.response?.data && setStatusCount(data)
+    );
+  }, []);
 
   useEffect(() => {
     setFetching(true);
@@ -126,69 +134,147 @@ const TutorTable = () => {
       <div className="d-flex justify-content-center mt-4">
         <div
           onClick={() => setStatus("pending")}
-          className="p-2 rounded cursor-pointer m-1"
+          className="p-2 rounded cursor-pointer m-1 d-flex justify-content-center align-items-center"
           style={{
             color: statesColours["pending"].color,
             background: statesColours["pending"].bg,
             border: status === "pending" ? "2px solid #268daf" : "none",
           }}
         >
-          Pending
+          Pending{" "}
+          {statusCount.find((rec) => rec.Status === "pending")?.count && (
+            <span
+              className="rounded-circle text-bg-danger p-1 d-flex justify-content-center align-items-center"
+              style={{
+                width: "20px",
+                fontSize: "12px",
+                height: "20px",
+                marginLeft: "8px",
+              }}
+            >
+              {statusCount.find((rec) => rec.Status === "pending")?.count}
+            </span>
+          )}
         </div>
         <div
           onClick={() => setStatus("under-review")}
-          className="p-2 rounded cursor-pointer m-1"
+          className="p-2 rounded cursor-pointer m-1 d-flex justify-content-center align-items-center"
           style={{
             color: statesColours["under-review"].color,
             background: statesColours["under-review"].bg,
             border: status === "under-review" ? "2px solid #268daf" : "none",
           }}
         >
-          under-review
+          under-review{" "}
+          {statusCount.find((rec) => rec.Status === "under-review")?.count && (
+            <span
+              className="rounded-circle text-bg-danger p-1 d-flex justify-content-center align-items-center"
+              style={{
+                width: "20px",
+                fontSize: "12px",
+                height: "20px",
+                marginLeft: "8px",
+              }}
+            >
+              {statusCount.find((rec) => rec.Status === "under-review")?.count}
+            </span>
+          )}
         </div>
         <div
           onClick={() => setStatus("active")}
-          className="p-2 rounded cursor-pointer m-1"
+          className="p-2 rounded cursor-pointer m-1 d-flex justify-content-center align-items-center"
           style={{
-            color: statesColours["active"].color,
-            background: statesColours["active"].bg,
-            border: status === "active" ? "2px solid #268daf" : "none",
+            color: statesColours["under-review"].color,
+            background: statesColours["under-review"].bg,
+            border: status === "under-review" ? "2px solid #268daf" : "none",
           }}
         >
-          active
+          active{" "}
+          {statusCount.find((rec) => rec.Status === "active")?.count && (
+            <span
+              className="rounded-circle text-bg-danger p-1 d-flex justify-content-center align-items-center d-flex justify-content-center align-items-center"
+              style={{
+                width: "20px",
+                fontSize: "12px",
+                height: "20px",
+                marginLeft: "8px",
+              }}
+            >
+              {statusCount.find((rec) => rec.Status === "active")?.count}
+            </span>
+          )}
         </div>
         <div
           onClick={() => setStatus("suspended")}
-          className="p-2 rounded cursor-pointer m-1"
+          className="p-2 rounded cursor-pointer m-1 d-flex justify-content-center align-items-center"
           style={{
             color: statesColours["suspended"].color,
             background: statesColours["suspended"].bg,
             border: status === "suspended" ? "2px solid #268daf" : "none",
           }}
         >
-          suspended
+          suspended{" "}
+          {statusCount.find((rec) => rec.Status === "suspended")?.count && (
+            <span
+              className="rounded-circle text-bg-danger p-1 d-flex justify-content-center align-items-center"
+              style={{
+                width: "20px",
+                fontSize: "12px",
+                height: "20px",
+                marginLeft: "8px",
+              }}
+            >
+              {statusCount.find((rec) => rec.Status === "suspended")?.count}
+            </span>
+          )}
         </div>
         <div
           onClick={() => setStatus("disapproved")}
-          className="p-2 rounded cursor-pointer m-1"
+          className="p-2 rounded cursor-pointer m-1 d-flex justify-content-center align-items-center"
           style={{
             color: statesColours["disapproved"].color,
             background: statesColours["disapproved"].bg,
             border: status === "disapproved" ? "2px solid #268daf" : "none",
           }}
         >
-          disapproved
+          disapproved{" "}
+          {statusCount.find((rec) => rec.Status === "disapproved")?.count && (
+            <span
+              className="rounded-circle text-bg-danger p-1 d-flex justify-content-center align-items-center border"
+              style={{
+                width: "20px",
+                fontSize: "12px",
+                height: "20px",
+                marginLeft: "8px",
+              }}
+            >
+              {statusCount.find((rec) => rec.Status === "disapproved")?.count}
+            </span>
+          )}
         </div>
         <div
           onClick={() => setStatus("closed")}
-          className="p-2 rounded cursor-pointer m-1"
+          className="p-2 rounded cursor-pointer m-1 d-flex justify-content-center align-items-center"
           style={{
             color: statesColours["closed"].color,
             background: statesColours["closed"].bg,
             border: status === "closed" ? "2px solid #268daf" : "none",
           }}
         >
-          closed
+          closed{" "}
+          {statusCount.find((rec) => rec.Status === "closed")?.count && (
+            <span
+              className="rounded-circle text-bg-danger p-1 d-flex justify-content-center align-items-center"
+              style={{
+                width: "20px",
+                fontSize: "12px",
+                height: "20px",
+                marginLeft: "8px",
+              }}
+            >
+              {statusCount.find((rec) => rec.Status === "closed")?.count}
+            </span>
+          )}
         </div>
       </div>
       {!!fetching || !!updatingStatus ? (

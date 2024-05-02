@@ -47,6 +47,17 @@ export let get_tutor_data = (status) => {
   });
 };
 
+export let get_tutor_count_by_status = async (status) => {
+  try {
+    const { data } = await apiClient.get("/admin/tutor/status/count", {
+      params: { status },
+    });
+    return data;
+  } catch (err) {
+    showErrorToast(err);
+  }
+};
+
 export let set_tutor_status = async (Id, Status) => {
   try {
     const { data } = await apiClient.post("/admin/set-tutor-status", {
