@@ -1,10 +1,16 @@
-import React, {  useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { signup } from '../axios/auth';
+import { get_user_detail, signup } from '../axios/auth';
 import { toast } from 'react-toastify';
 import { useSignUp, useAuth } from "@clerk/clerk-react";
 
 import TAButton from '../components/common/TAButton'
+import { setUser } from '../redux/auth/auth';
+import { setTutor } from '../redux/tutor/tutorData';
+import { get_student_setup_by_userId } from '../axios/student';
+import { setStudent } from '../redux/student/studentData';
+import { useDispatch } from 'react-redux';
+
 const Signup = () => {
   const [signupFormValues, setSignupFormValues] = useState({
     email: '',
@@ -12,8 +18,9 @@ const Signup = () => {
     role: ''
   });
   const [loading, setLoading] = useState(false);
-  const [verifying, setVerifying]=useState(false)
+  const [verifying, setVerifying] = useState(false)
   const { isLoaded, signUp, setActive } = useSignUp();
+  const dispatch = useDispatch()
 
   const { getToken } = useAuth();
   const [pendingVerification, setPendingVerification] = useState(false);
@@ -55,12 +62,27 @@ const Signup = () => {
         await setActive({ session: completeSignUp.createdSessionId });
         const token = await getToken({ template: "tutoring-academy-jwt-template" });
         if (token) {
-          localStorage.setItem("access_token", token);
+          // localStorage.setItem("access_token", token);
           const result = await signup({
             email: signupFormValues.email,
             SID: completeSignUp.createdUserId,
             role: signupFormValues.role
           })
+
+          const data = await get_user_detail(completeSignUp.createdUserId)
+          if (data) {
+            dispatch(setUser(data));
+            localStorage.setItem("user", JSON.stringify(data));
+
+            // data.SID && data.role === "tutor" && dispatch(setTutor());
+            // if (data.role === "student") {
+            //   const result = await get_student_setup_by_userId(data.SID);
+            //   if (result?.[0] && result[0].AcademyId) {
+            //     dispatch(setStudent(result[0]));
+            //     localStorage.setItem("student_user_id", result[0].AcademyId);
+            //   }
+            // }
+          }
           if (result.status === 200) {
             setSignupFormValues({ role: '', email: '', password: '' })
             toast.success('Registration Succesfull')
@@ -113,7 +135,7 @@ const Signup = () => {
             <div className="col-lg-6 mb-5 mb-lg-0">
               <div className="card">
                 <div className="card-body py-5 px-md-5">
-                  <form onSubmit={handleSignup}>
+                  {!pendingVerification ? <form onSubmit={handleSignup}>
 
                     <div className='row'>
                       <div className="form-outline mb-4 col-md-6">
@@ -179,16 +201,15 @@ const Signup = () => {
                         <FaGithub />
                       </button>
                     </div> */}
-                  </form>
-                  {pendingVerification && (
+                  </form> :
                     <div>
-                      <form className='d-flex justify-content-between'>
-                        <input type='text' onBlur={() => { }} 
-                        onChange={(e) => setCode(e.target.value)} className='form-control' />
+                      <form className='d-flex justify-content-between flex-column'>
+                        <input type='text' onBlur={() => { }}
+                          onChange={(e) => setCode(e.target.value)} className='form-control' placeholder='Enter Verification Code here' />
                         <TAButton buttonText={"Verify Email"} loading={verifying} handleClick={handleVerification} />
                       </form>
                     </div>
-                  )}
+                  }
                 </div>
               </div>
             </div>

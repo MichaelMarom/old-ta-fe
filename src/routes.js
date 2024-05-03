@@ -100,7 +100,7 @@ const App = () => {
 
   useEffect(() => {
     if (user && user.role === "admin" && isSignedIn && token) {
-     dispatch(setNewSubjCount())
+      dispatch(setNewSubjCount())
     }
   }, [user, isSignedIn, token])
 
@@ -157,7 +157,8 @@ const App = () => {
     const res = await get_my_data(studentUserId);
     if (res?.response?.data?.message?.includes("expired"))
       return redirect_to_login(navigate, signOut);
-    !res?.response?.data?.message && dispatch(setStudent(res[1][0][0]));
+
+    res && !res?.response?.data?.message && dispatch(setStudent(res[1][0][0]));
   };
 
   useEffect(() => {
@@ -223,7 +224,12 @@ const App = () => {
     if (localStorage.getItem("access_token")) {
       if (isExpired(localStorage.getItem("access_token"))) {
         navigate("/login");
-        localStorage.clear();
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('student_user_id')
+        localStorage.removeItem('tutor_user_id')
+        localStorage.removeItem('user')
+
+        // localStorage.clear()();
       }
     } else {
       navigate("/login");

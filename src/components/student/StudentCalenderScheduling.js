@@ -107,106 +107,107 @@ const StudentCalenderScheduling = () => {
   return (
     <div className={`${studentModalOpen ? "w-75 float-end" : "w-100"} px-5`}>
       <div
-        className={`d-flex ${
-          selectedTutor.activateSubscriptionOption ? "justify-content-end" : ""
-        }`}
+        className={`d-flex ${selectedTutor.activateSubscriptionOption ? "justify-content-end" : ""
+          }`}
       >
-        <div
-          className={`${
-            selectedTutor.activateSubscriptionOption ? "w-75 " : "w-100"
-          } align-items-center justify-content-between mt-3 d-flex row flex-row m-2`}
-        >
-          <div className="d-flex col-3 card m-2">
-            <div className="card-body d-flex flex-column">
-              <h4 className="d-inline mr-2 card-title">
-                Tutor:{" "}
-                {capitalizeFirstLetter(
-                  formatName(selectedTutor.firstName, selectedTutor.lastName)
-                )}
-              </h4>
-              <div className="card-subtitle d-inline ml-2 card-text">
-                {tutorTime}
+        <div className="d-flex ">
+          {selectedTutor.activateSubscriptionOption && (
+            <div className="px-2 col-3 mt-3">
+              <h4 className="text-center ">Subscription Discount</h4>
+              <div className="rate-table">
+                <table>
+                  <thead>
+                    <tr>
+                      {subscription_cols.map((item) => (
+                        <th key={item.Header}>{item.Header}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {subscription_discount.map((item, index) => (
+                      <tr key={index}>
+                        <td>{item.hours}</td>
+                        <td>
+                          <input
+                            onChange={() =>
+                              setActiveSubscriptionHours(item.value)
+                            }
+                            type="radio"
+                            checked={item.value === subscriptionHours}
+                            name="student-subscription"
+                            id="student-subscription"
+                            style={{
+                              height: "20px",
+                              width: "20px",
+                            }}
+                          />
+                        </td>
+
+                        <td>{item.discount}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
-          </div>
-
-          <div className="col-4 text-center">
-            <h5
-              className={`d-inline mr-2 card ${getTimeDifferenceClass(
-                calculateTimeDifference()
-              )} px-1`}
+          )}
+          <div className="d-flex flex-column">
+            <div
+              className={`w-100 align-items-center justify-content-between mt-3 d-flex row flex-row m-2 border`}
             >
-              Time zones Difference:{" "}
-              {calculateTimeDifference() > 0
-                ? `+${calculateTimeDifference()}`
-                : calculateTimeDifference()}
-            </h5>
-            <h6>Greenwich UTC: {moment().utc().format("hh:mm a")}</h6>
-          </div>
-          <div className="d-flex col-3 card m-2">
-            <div className="card-body">
-              <h4 className="d-inline mr-2 card-title">My Time:</h4>
-              <h6 className="card-subtitle text-start">
-                {convertGMTOffsetToLocalString(student.GMT)}
-              </h6>
+              <div className="d-flex col-3 card m-2">
+                <div className="card-body d-flex flex-column">
+                  <h4 className="d-inline mr-2 card-title">
+                    Tutor:{" "}
+                    {capitalizeFirstLetter(
+                      formatName(selectedTutor.firstName, selectedTutor.lastName)
+                    )}
+                  </h4>
+                  <div className="card-subtitle d-inline ml-2 card-text">
+                    {tutorTime}
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-4 text-center">
+                <h5
+                  className={`d-inline mr-2 card ${getTimeDifferenceClass(
+                    calculateTimeDifference()
+                  )} px-1`}
+                >
+                  Time zones Difference:{" "}
+                  {calculateTimeDifference() > 0
+                    ? `+${calculateTimeDifference()}`
+                    : calculateTimeDifference()}
+                </h5>
+                <h6>Greenwich UTC: {moment().utc().format("hh:mm a")}</h6>
+              </div>
+              <div className="d-flex col-3 card m-2">
+                <div className="card-body">
+                  <h4 className="d-inline mr-2 card-title">My Time:</h4>
+                  <h6 className="card-subtitle text-start">
+                    {convertGMTOffsetToLocalString(student.GMT)}
+                  </h6>
+                </div>
+              </div>
+            </div>
+            <div className="highlight small lh-sm mb-3">
+              Double click on an aviable (unblocked) slots. You must first book an
+              introduction lesson. Most tutors will discount the 'intro' by 50%. You
+              must conduct the "Introductionary" (Intro) lesson, and provide feedback
+              before you can "Book" the next lesson with that tutor. You can book
+              multiple lessons for a discount. For that reason you can "Reserve" up to
+              6 time slots for 60 minutes until you make your final decision.
             </div>
           </div>
         </div>
       </div>
 
-      <div className="highlight small lh-sm mb-3">
-        Double click on an aviable (unblocked) slots. You must first book an
-        introduction lesson. Most tutors will discount the 'intro' by 50%. You
-        must conduct the "Introductionary" (Intro) lesson, and provide feedback
-        before you can "Book" the next lesson with that tutor. You can book
-        multiple lessons for a discount. For that reason you can "Reserve" up to
-        6 time slots for 60 minutes until you make your final decision.
-      </div>
-      <div className="d-flex" style={{ height: "57vh" }}>
-        {selectedTutor.activateSubscriptionOption && (
-          <div className="px-2 col-3 mt-3">
-            <h4 className="text-center ">Subscription Discount</h4>
-            <div className="rate-table">
-              <table>
-                <thead>
-                  <tr>
-                    {subscription_cols.map((item) => (
-                      <th key={item.Header}>{item.Header}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {subscription_discount.map((item, index) => (
-                    <tr key={index}>
-                      <td>{item.hours}</td>
-                      <td>
-                        <input
-                          onChange={() =>
-                            setActiveSubscriptionHours(item.value)
-                          }
-                          type="radio"
-                          checked={item.value === subscriptionHours}
-                          name="student-subscription"
-                          id="student-subscription"
-                          style={{
-                            height: "20px",
-                            width: "20px",
-                          }}
-                        />
-                      </td>
 
-                      <td>{item.discount}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
+      <div className="d-flex justify-content-end" style={{ height: "57vh" }}>
         <div
-          className={` ${
-            selectedTutor.activateSubscriptionOption ? "col-9" : "col-12"
-          } `}
+          className={` ${selectedTutor.activateSubscriptionOption ? "col-9" : "col-12"
+            } `}
         >
           <ShowCalendar
             setIsModalOpen={setStudentModalOpen}

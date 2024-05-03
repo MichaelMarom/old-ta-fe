@@ -868,88 +868,88 @@ const StudentSetup = () => {
               {!["Freshman", "Junior", "Senior", "Sophmore"].includes(
                 grade
               ) && (
-                <>
-                  <h6 className="mb-3">Parent Info</h6>
-                  <div className="d-flex" style={{ gap: "2%" }}>
-                    <div className="input-group mb-2 ">
-                      <label
-                        className="input-group-text"
-                        style={{ width: "35%" }}
-                        htmlFor="inputGroupSelect01"
-                      >
-                        Parent A Email
-                      </label>
-                      <input
-                        disabled={!editMode}
-                        required={is_18 === "no"}
-                        className="form-control"
-                        onChange={(e) => setParentAEmail(e.target.value)}
-                        placeholder="Parent A Email"
-                        type="email"
-                        value={parentAEmail}
-                      />
-                    </div>
+                  <>
+                    <h6 className="mb-3">Parent Info</h6>
+                    <div className="d-flex" style={{ gap: "2%" }}>
+                      <div className="input-group mb-2 ">
+                        <label
+                          className="input-group-text"
+                          style={{ width: "35%" }}
+                          htmlFor="inputGroupSelect01"
+                        >
+                          Parent A Email
+                        </label>
+                        <input
+                          disabled={!editMode}
+                          required={is_18 === "no"}
+                          className="form-control"
+                          onChange={(e) => setParentAEmail(e.target.value)}
+                          placeholder="Parent A Email"
+                          type="email"
+                          value={parentAEmail}
+                        />
+                      </div>
 
-                    <div className="input-group mb-2 ">
-                      <label
-                        className="input-group-text"
-                        style={{ width: "35%" }}
-                        htmlFor="inputGroupSelect01"
-                      >
-                        Parent A Name
-                      </label>
-                      <input
-                        disabled={!editMode}
-                        required={is_18 === "no"}
-                        className="form-control"
-                        onChange={(e) => setParentAName(e.target.value)}
-                        placeholder="Parent A Name"
-                        type="text"
-                        value={parentAName}
-                      />
+                      <div className="input-group mb-2 ">
+                        <label
+                          className="input-group-text"
+                          style={{ width: "35%" }}
+                          htmlFor="inputGroupSelect01"
+                        >
+                          Parent A Name
+                        </label>
+                        <input
+                          disabled={!editMode}
+                          required={is_18 === "no"}
+                          className="form-control"
+                          onChange={(e) => setParentAName(e.target.value)}
+                          placeholder="Parent A Name"
+                          type="text"
+                          value={parentAName}
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className="d-flex" style={{ gap: "2%" }}>
-                    <div className="input-group mb-2">
-                      <label
-                        className="input-group-text"
-                        style={{ width: "35%" }}
-                        htmlFor="inputGroupSelect01"
-                      >
-                        Parent B Email
-                      </label>
-                      <input
-                        disabled={!editMode}
-                        className="form-control"
-                        onChange={(e) => setParentBEmail(e.target.value)}
-                        placeholder="Parent B Email"
-                        type="email"
-                        value={parentBEmail}
-                        required={is_18 === "no"}
-                      />
-                    </div>
+                    <div className="d-flex" style={{ gap: "2%" }}>
+                      <div className="input-group mb-2">
+                        <label
+                          className="input-group-text"
+                          style={{ width: "35%" }}
+                          htmlFor="inputGroupSelect01"
+                        >
+                          Parent B Email
+                        </label>
+                        <input
+                          disabled={!editMode}
+                          className="form-control"
+                          onChange={(e) => setParentBEmail(e.target.value)}
+                          placeholder="Parent B Email"
+                          type="email"
+                          value={parentBEmail}
+                          required={is_18 === "no"}
+                        />
+                      </div>
 
-                    <div className="input-group mb-2 ">
-                      <label
-                        className="input-group-text"
-                        style={{ width: "35%" }}
-                        htmlFor="inputGroupSelect01"
-                      >
-                        Parent B Name
-                      </label>
-                      <input
-                        disabled={!editMode}
-                        className="form-control"
-                        onChange={(e) => setParentBName(e.target.value)}
-                        placeholder="Parent B Name"
-                        type="text"
-                        value={parentBName}
-                        required={is_18 === "no"}
-                      />
+                      <div className="input-group mb-2 ">
+                        <label
+                          className="input-group-text"
+                          style={{ width: "35%" }}
+                          htmlFor="inputGroupSelect01"
+                        >
+                          Parent B Name
+                        </label>
+                        <input
+                          disabled={!editMode}
+                          className="form-control"
+                          onChange={(e) => setParentBName(e.target.value)}
+                          placeholder="Parent B Name"
+                          type="text"
+                          value={parentBName}
+                          required={is_18 === "no"}
+                        />
+                      </div>
                     </div>
-                  </div>
-                </>
-              )}
+                  </>
+                )}
               {is_18 === "no" && (
                 <div
                   style={{

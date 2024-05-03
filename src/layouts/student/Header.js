@@ -86,7 +86,11 @@ const Header = () => {
     scroll_elem.scrollLeft = -w;
   };
   const handleSignOut = () => {
-    localStorage.clear();
+    localStorage.removeItem('access_token')
+    localStorage.removeItem('student_user_id')
+    localStorage.removeItem('tutor_user_id')
+    localStorage.removeItem('user')
+    // localStorage.clear()();
     dispatch(setUser({}));
 
     dispatch(setTutor({}));
@@ -178,8 +182,8 @@ const Header = () => {
               onClick={handleTabClick}
               id={
                 activeTab.includes(tab.url) ||
-                (activeTab.split("/").length > 3 &&
-                  activeTab.split("/")[2] === tab.url)
+                  (activeTab.split("/").length > 3 &&
+                    activeTab.split("/")[2] === tab.url)
                   ? "tutor-tab-header-list-active"
                   : ""
               }

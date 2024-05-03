@@ -96,7 +96,7 @@ const StudentTable = () => {
 
     return (
         <>
-            <div className="tables" style={{ width: '100%', overflow: 'auto', padding: '5px' }}>
+            <div className="tables" style={{ width: '100%', overflowY: 'auto', height:"90vh",padding: '5px' }}>
 
                 {!loading ?
                     fetched && !data.length ?

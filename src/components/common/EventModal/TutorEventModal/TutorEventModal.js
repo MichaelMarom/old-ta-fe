@@ -32,7 +32,8 @@ export const TutorEventModal = ({ isOpen, onClose, clickedSlot, handlePostpone, 
 
     return (
         <LeftSideBar
-            top={"165px"}
+            height='56vh'
+            top={"300px"}
             isOpen={isOpen}
             onClose={handleClose}
         >

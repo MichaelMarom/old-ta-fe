@@ -8,6 +8,11 @@ import { socket } from "../../../config/socket";
 import { Peer } from "peerjs";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import CameraOn from '../../../assets/images/videoallowed.jpeg'
+import AudioOn from '../../../assets/images/microphoneallowed.jpeg'
+import CameraOff from '../../../assets/images/videoblock.jpeg'
+import AudioOff from '../../../assets/images/microphoneblock.jpeg'
+
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import { FaCamera, FaMicrophone } from "react-icons/fa";
 import { RiCameraOffFill } from "react-icons/ri";
@@ -414,26 +419,35 @@ const TutorAside = ({
           <li
             onClick={(e) => handleVidActions(e)}
             style={{
+              padding:"4px",
               borderRadius: "50%",
               backgroundColor: "white",
               opacity: "0.7",
             }}
           >
-            {videoEnabled ? <FaCamera color="black" /> : <RiCameraOffFill />}
+            {/* {videoEnabled ? <FaCamera color="black" /> : <RiCameraOffFill />} */}
+            {videoEnabled ? <img src={CameraOn}  width={27} height={27}/> : <img src={CameraOff}   width={27} height={27}/>}
+            
           </li>
 
           <li
             onClick={(e) => handleAudioActions(e)}
             style={{
+              padding:"4px",
               borderRadius: "50%",
               backgroundColor: "white",
               opacity: "0.7",
             }}
           >
-            {audioEnabled ? (
+            {/* {audioEnabled ? (
               <FaMicrophone color="black" />
             ) : (
               <PiMicrophoneSlashFill />
+            )} */}
+            {audioEnabled ? (
+              <img src={AudioOn} width={27} height={27} />
+            ) : (
+              <img src={AudioOff}  width={27} height={27}/>
             )}
           </li>
         </ul>

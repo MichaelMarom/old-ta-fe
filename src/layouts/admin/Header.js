@@ -50,7 +50,11 @@ const Header = () => {
     }, []);
 
     const handleSignOut = () => {
-        localStorage.clear()
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('student_user_id')
+        localStorage.removeItem('tutor_user_id')
+        localStorage.removeItem('user')
+        // localStorage.clear()()
         dispatch(setUser({}))
 
         dispatch(setTutor({}))

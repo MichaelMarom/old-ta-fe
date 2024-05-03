@@ -8,7 +8,11 @@ const AuthVerify = () => {
         console.log(isExpired(localStorage.getItem("access_token")))
         if (isExpired(localStorage.getItem("access_token"))) {
             navigate('/login')
-            localStorage.clear()
+            localStorage.removeItem('access_token')
+            localStorage.removeItem('student_user_id')
+            localStorage.removeItem('tutor_user_id')
+            localStorage.removeItem('user')
+            // localStorage.clear()()
         }
     }
     return <div></div>;

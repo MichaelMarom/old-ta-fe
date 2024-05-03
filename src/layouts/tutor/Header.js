@@ -27,7 +27,11 @@ const Header = () => {
   const { tutor } = useSelector((state) => state.tutor);
   const screenname = localStorage.getItem("tutor_screen_name");
   const handleSignOut = () => {
-    localStorage.clear();
+    localStorage.removeItem('access_token')
+    localStorage.removeItem('student_user_id')
+    localStorage.removeItem('tutor_user_id')
+    localStorage.removeItem('user')
+    // localStorage.clear()();
     dispatch(setUser({}));
     dispatch(setTutor({}));
     dispatch(setStudent({}));

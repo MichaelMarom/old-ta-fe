@@ -24,7 +24,7 @@ apiClient.interceptors.request.use(
         const accessToken = localStorage.getItem('access_token');
         if (!config.headers['Authorization'])
             config.headers["Authorization"] = `Bearer ${accessToken}`;
-        if (config.url === '/auth/signup' || config.url === '/auth/login')
+        if (config.url === '/auth/signup' || config.url === '/auth/login' || config.url === '/admin/user/list')
             delete config?.headers?.Authorization
         return config;
     },

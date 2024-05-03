@@ -200,7 +200,7 @@ const Education = () => {
   }, []);
 
   let AcademyId = window.localStorage.getItem("tutor_user_id");
-  const jsonFields = ["NativeLang", "NativeLangOtherLang"];
+  const jsonFields = ["NativeLang", "NativeLangOtherLang", 'expiration'];
   const dynamicSave = async (key, value) => {
     if (jsonFields.includes(key)) value = JSON.stringify(value);
     if (key && value && tutor.AcademyId) {
@@ -319,15 +319,15 @@ const Education = () => {
     };
     let flag = { value: null, valid: 1 };
 
-    Object.keys(fieldsForThirdStep).map((fields) => {
-      if (fieldsForThirdStep[fields].validate) {
-        const validated = jsonFields.includes(fields)
-          ? !!Object.keys(fieldsForThirdStep[fields].value)?.length
-          : !!fieldsForThirdStep[fields].value?.length;
+    Object.keys(fieldsForThirdStep).map((field) => {
+      if (fieldsForThirdStep[field].validate) {
+        const validated = jsonFields.includes(field)
+          ? !!Object.keys(fieldsForThirdStep[field].value)?.length
+          : !!fieldsForThirdStep[field].value?.length;
 
         if (!validated) {
           flag.valid = 0;
-          flag.value = fields;
+          flag.value = field;
         }
       }
       return flag;
@@ -696,7 +696,7 @@ const Education = () => {
 
     if (!markSecondEduStepCompleted().valid)
       return toast.warning(
-        `Please fill required fields ${markSecondEduStepCompleted().value}`
+        `Please fill required field ${markSecondEduStepCompleted().value}`
       );
 
     if (!cert_file_name || !deg_file_name)
@@ -789,7 +789,7 @@ const Education = () => {
                   {
                     <h6 className="border-bottom">
                       {level === "Associate Degree" ||
-                      level === "Undergraduate Student"
+                        level === "Undergraduate Student"
                         ? "College"
                         : "Bachelor Degree"}
                     </h6>
@@ -798,7 +798,7 @@ const Education = () => {
                     <div className="col-md-4">
                       <label className="text-secondary" htmlFor="uni_bach">
                         {level === "Associate Degree" ||
-                        level === "Undergraduate Student"
+                          level === "Undergraduate Student"
                           ? "College Name"
                           : "Bachelor Degree Institute:"}
                       </label>
@@ -831,11 +831,10 @@ const Education = () => {
                       <div>
                         <label className="text-secondary">
                           Country for{" "}
-                          {`${
-                            level === "Associate Degree"
-                              ? "Associate degree"
-                              : "Bachelor"
-                          }`}
+                          {`${level === "Associate Degree"
+                            ? "Associate degree"
+                            : "Bachelor"
+                            }`}
                         </label>
                         <select
                           className="form-select"
@@ -913,8 +912,8 @@ const Education = () => {
                   </div>
                 </div>
                 {level !== "Bachelor Degree" &&
-                level !== "Undergraduate Student" &&
-                level !== "Associate Degree" ? (
+                  level !== "Undergraduate Student" &&
+                  level !== "Associate Degree" ? (
                   <div className="row mt-3 border p-3 shadow ">
                     <h6 className="border-bottom">Master Degree</h6>
                     <div className="d-flex justify-content-between">
@@ -1030,9 +1029,9 @@ const Education = () => {
                   </div>
                 ) : null}
                 {level !== "Undergraduate Student" &&
-                level !== "Bachelor Degree" &&
-                level !== "Master Degree" &&
-                level !== "Associate Degree" ? (
+                  level !== "Bachelor Degree" &&
+                  level !== "Master Degree" &&
+                  level !== "Associate Degree" ? (
                   <div className="row mt-3 border p-3 shadow ">
                     <h6 className="border-bottom">Doctorate Degree</h6>
                     <div className="d-flex justify-content-between">
@@ -1307,8 +1306,8 @@ const Education = () => {
                     {certificate_list}
                   </select>
                   {certificate &&
-                  certificate.length &&
-                  certificate !== "Not Certified" ? (
+                    certificate.length &&
+                    certificate !== "Not Certified" ? (
                     <div className="d-flex justify-content-center align-items-center">
                       {cert_file_name?.length ? (
                         <div className="d-flex w-100 justify-content-between border rounded p-2">
@@ -1339,8 +1338,8 @@ const Education = () => {
                   ) : null}
                 </div>
                 {certificate &&
-                certificate.length &&
-                certificate !== "Not Certified" ? (
+                  certificate.length &&
+                  certificate !== "Not Certified" ? (
                   <>
                     <div className="col-md-3">
                       <div>
@@ -1560,7 +1559,7 @@ const Education = () => {
 
           <Actions
             editDisabled={editMode}
-            saveDisabled={!editMode}
+            // saveDisabled={!editMode}
             onEdit={handleEditClick}
             unSavedChanges={unSavedChanges}
             loading={saving}

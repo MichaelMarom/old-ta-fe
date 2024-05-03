@@ -90,18 +90,21 @@ const Actions = ({
             navigate(`${currentTabInfo.back}`)
     }
 
+    console.log(!saveDisabled, unSavedChanges, loading
+        , !isNextTabExist, nextDisabled,
+        currentTab, STEPS[tutor.Step], !isStudentSide)
     return (
         <div style={actionsStyle}>
             <div className="container">
                 <div className="row justify-content-center">
                     <div className="" style={{ width: "10%" }}>
                         <button type='button' onClick={onBack} className="back-btn action-btn btn"
-                            disabled={!saveDisabled && (unSavedChanges || loading || backDisabled || !isBackTabExist)}>
+                            disabled={!saveDisabled && (loading || backDisabled || !isBackTabExist)}>
                             <div className="button__content">
                                 <div className="button__icon">
                                     <img src={BTN_ICON} alt={"btn__icon"} />
                                 </div>
-                                <p className="button__text"><FaChevronLeft />  Back</p>
+                                <p className="button__text"><FaChevronLeft />Back</p>
                             </div>
                         </button>
                     </div>
@@ -132,7 +135,7 @@ const Actions = ({
                     </div>
                     <div className="" style={{ width: "10%" }}>
                         <button onClick={onNext}
-                            disabled={((!saveDisabled && (unSavedChanges || loading))
+                            disabled={((!saveDisabled && ( loading))
                                 || !isNextTabExist || nextDisabled ||
                                 currentTab === STEPS[tutor.Step]) && !isStudentSide}
                             type='button' className="next-btn action-btn btn">

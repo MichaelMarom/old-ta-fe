@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaTimes } from 'react-icons/fa';
 
-const LeftSideBar = ({ isOpen, onClose, children, top = '0' }) => {
+const LeftSideBar = ({ isOpen, onClose, children, top = '0' , height="100%"}) => {
   return (
     <div
       className={`sidebar ${isOpen ? 'open' : ''} border-end`}
@@ -13,7 +13,7 @@ const LeftSideBar = ({ isOpen, onClose, children, top = '0' }) => {
         position: 'fixed',
         top,
         left: '0',
-        height: '100%',
+        height,
         zIndex: '1000',
         overflowY: "auto"
       }}

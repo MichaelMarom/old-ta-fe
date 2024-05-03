@@ -141,7 +141,6 @@ const TutorProfile = () => {
                     </h2>
                   </div>
 
-                  <p className="m-0">{data.HeadLine}</p>
                 </div>
 
                 <div
@@ -340,6 +339,13 @@ const TutorProfile = () => {
                 />
               </div>
             </div>
+          </div>
+          <div className="p-2 " style={{margin:"10px 0", background:"white"}}>
+          <div>
+                  <h5 className="">Headline</h5>
+                  <p className="border p-2">{data.HeadLine}</p>
+                </div>
+
           </div>
           <div className="d-flex mt-4" style={{ gap: "20px" }}>
             <div className="col-4">
