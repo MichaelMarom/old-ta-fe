@@ -6,9 +6,13 @@ import ToolTip from "../common/ToolTip";
 import Pill from "../common/Pill";
 import { FcApprove } from "react-icons/fc";
 import { FcDisapprove } from "react-icons/fc";
+import { FaUserCheck } from "react-icons/fa6";
+import { FaUserTimes } from "react-icons/fa";
+
 import { toast } from "react-toastify";
 import { statesColours } from "../../constants/constants";
 import { get_tutor_count_by_status } from "../../axios/admin";
+import Avatar from "../common/Avatar";
 
 const TutorTable = () => {
   let [data, set_data] = useState([]);
@@ -65,10 +69,6 @@ const TutorTable = () => {
       Header: "BG Verified",
       accessor: "BG Verified",
     },
-    {
-      Header: "Action",
-      accessor: "Action",
-    },
   ];
 
   useEffect(() => {
@@ -92,13 +92,13 @@ const TutorTable = () => {
   }, [status]);
 
   useEffect(() => {
-    get_user_list().then(data => console.log(data))
+    // get_user_list().then(data => console.log(data))
   }, [])
 
   let handleStatusChange = async (id, status, currentStatus) => {
-    if (currentStatus === "pending")
+    if (currentStatus === "pending" || currentStatus === 'closed')
       return toast.warning(
-        'You can only change  Status of "Under-Review" Tutors!'
+        `You cannot change status of "${currentStatus}" users!`
       );
     if (currentStatus === status)
       return toast.warning(`You already on "${status}" Status`);
@@ -107,6 +107,9 @@ const TutorTable = () => {
 
     if (response.bool) {
       const result = await get_tutor_data();
+      get_tutor_count_by_status().then(
+        (data) => !data?.response?.data && setStatusCount(data)
+      );
       if (!result?.response?.data) {
         set_data(result);
         setUpdatingStatus(false);
@@ -285,30 +288,46 @@ const TutorTable = () => {
         <Loading height="60vh" />
       ) : data.length > 0 ? (
         <table style={{ position: "relative" }}>
-          <thead>
+          <thead >
             <tr>
               {COLUMNS.map((item) => (
-                <th key={item.Header}>{item.Header}</th>
+                <th style={{
+                  background: statesColours[status].bg,
+                  color: statesColours[status].color
+                }} key={item.Header}>{item.Header}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {data.map((item) => (
               <tr key={item.SID}>
-                <td data-src={null} className="col-1">
+                <td data-src={null} className="col-2">
                   <div className="col-10 m-auto">
-                    <Pill
+                    <select value={item.Status}
+                      onChange={(e) =>
+                        handleStatusChange(
+                          item.AcademyId,
+                          e.target.value,
+                          item.Status
+                        )} className="form-select"
+                      style={{ fontSize: "12px", padding: "5px", height: "25px" }}>
+                      <option value={"active"}>Active</option>
+                      <option value={"suspended"}>Suspend</option>
+                      <option value={"disapproved"}>Disapprove</option>
+                      <option value={"closed"}>Close</option>
+
+                    </select>
+                    {/* <Pill
                       customColor={true}
                       label={item.Status}
                       fontColor={statesColours[item.Status].color}
                       color={statesColours[item.Status].bg}
                       hasIcon={false}
-                    />
+                    /> */}
                   </div>
                 </td>
 
                 <td
-                  data-src={null}
                   className="col-1"
                   onDoubleClick={() => {
                     // item.Status === PROFILE_STATUS.CLOSED ?
@@ -319,11 +338,7 @@ const TutorTable = () => {
                     );
                   }}
                 >
-                  <img
-                    src={item.Photo}
-                    alt="profile=pic"
-                    style={{ height: "80px", width: "100px" }}
-                  />
+                  <Avatar avatarSrc={item.Photo} showOnlineStatus={false} />
                 </td>
                 <td data-src={item.TutorScreenname}>{item.TutorScreenname}</td>
                 <td data-src={item.FirstName + " " + item.LastName}>
@@ -343,36 +358,7 @@ const TutorTable = () => {
                 <td data-src={item.BackgroundVerified}>
                   {item.BackgroundVerified}
                 </td>
-                <td>
-                  <div>
-                    <ToolTip text="Mark Inactive">
-                      <FcDisapprove
-                        size={40}
-                        style={{ cursor: "pointer" }}
-                        onClick={() =>
-                          handleStatusChange(
-                            item.AcademyId,
-                            "disapproved",
-                            item.Status
-                          )
-                        }
-                      />
-                    </ToolTip>
-                    <ToolTip text="Mark Active" direction="bottomleft">
-                      <FcApprove
-                        size={40}
-                        style={{ cursor: "pointer" }}
-                        onClick={() =>
-                          handleStatusChange(
-                            item.AcademyId,
-                            "active",
-                            item.Status
-                          )
-                        }
-                      />
-                    </ToolTip>
-                  </div>
-                </td>
+
               </tr>
             ))}
           </tbody>

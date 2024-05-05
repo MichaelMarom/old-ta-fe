@@ -214,6 +214,8 @@ const WebcamCapture = ({ user_id, record_duration }) => {
         const userId = user_id.replace(/[\s\.\-]/g, '')
         formData.append('file', video)
         formData.append('user_id', userId)
+        formData.append('AcademyId', user_id)
+
 
         await fileUploadClient.post('/tutor/setup/record', formData)
         setVideoUploaded(true)

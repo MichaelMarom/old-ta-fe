@@ -70,6 +70,7 @@ const TutorSetup = () => {
   let [photo, set_photo] = useState("");
   const lastNameInputRef = useRef(null);
   let [video, set_video] = useState("");
+  const [videoError, setVideoError] = useState(false)
 
   let grades = [
     { grade: "1st grade" },
@@ -124,7 +125,7 @@ const TutorSetup = () => {
           params: { user_id: tutor.AcademyId.replace(/[.\s]/g, "") },
         })
         .then((res) => {
-          res?.data?.url && set_video(res.data.url);
+          // res?.data?.url && set_video(res.data.url);
         })
         .catch((err) => console.log(err));
   }, [tutor]);
@@ -212,7 +213,7 @@ const TutorSetup = () => {
   useEffect(() => {
     const upload_video = async () => {
       if (uploadVideoClicked && userExist) {
-        if (tutor.FirstName && video !== tutor.Video)
+        if (tutor.FirstName && video !== tutor.Video && !!video.length)
           dispatch(uploadVideo({ video, fname, lname, mname, userId }));
         // dispatch(setTutor())
       }
@@ -587,8 +588,8 @@ const TutorSetup = () => {
         ("00" + Math.abs((offset / 60) | 0)).slice(-2) +
         ":" +
         ("00" + Math.abs(offset % 60)).slice(-2))(
-        new Date().getTimezoneOffset()
-      )
+          new Date().getTimezoneOffset()
+        )
     ) * -1;
 
   if (tutorDataLoading) return <Loading height="80vh" />;
@@ -633,8 +634,11 @@ const TutorSetup = () => {
                   alt="profile-pic"
                 />
               ) : (
-                `You must upload your picture, and video on this tab.  
-                  You are permitted to move to next tabs without validating that, but your account will not be activated until it’s done`
+                <div style={{ textAlign: "justify", fontSize: "12px" }}>
+                  You must upload your picture, and video on this tab.
+                  You are permitted to move to next tabs without validating that,
+                  but your account will not be activated until it’s done
+                </div>
               )}
             </div>
 
@@ -750,11 +754,10 @@ const TutorSetup = () => {
                 className="form-control m-0"
                 onBlur={() => {
                   if (fname.length && lname.length) {
-                    const screenName = `${capitalizeFirstLetter(fname)} ${
-                      mname.length
-                        ? `${capitalizeFirstLetter(mname?.[0])}.`
-                        : ``
-                    } ${capitalizeFirstLetter(lname?.[0])}.`;
+                    const screenName = `${capitalizeFirstLetter(fname)} ${mname.length
+                      ? `${capitalizeFirstLetter(mname?.[0])}.`
+                      : ``
+                      } ${capitalizeFirstLetter(lname?.[0])}.`;
                     toast(
                       `You screen name is; ${screenName} which we use online. We do not disclose your private information online. 
                     We use your cellphone only for verification to withdraw your funds, or for events notifications like
@@ -1122,10 +1125,11 @@ const TutorSetup = () => {
                   </video>
                 } */}
               </div>
-            ) : selectedVideoOption === "upload" && video?.length ? (
+            ) : selectedVideoOption === "upload" && video?.length && !videoError ? (
               <div className="d-flex justify-content-center align-item-center w-100 h-100 border shadow">
                 <video
                   src={video}
+                  onError={() => setVideoError(true)}
                   className="w-100 h-100 m-0 p-0 videoLive"
                   controls
                   autoPlay={false}
@@ -1146,15 +1150,15 @@ const TutorSetup = () => {
                   should speak clearly, and confidently. A good introduction
                   video can make a lasting impression and increase your chances
                   of getting hired. View samples; <br />
-                  <Link to="https://www.youtube.com/watch?v=tZ3ndrKQXN8">
+                  <Link to="https://www.youtube.com/watch?v=tZ3ndrKQXN8" target="_blank">
                     Sample 1: Intro Video
                   </Link>{" "}
                   <br />
-                  <Link to="https://www.youtube.com/watch?v=sxa2C6UmrNQ">
+                  <Link to="https://www.youtube.com/watch?v=sxa2C6UmrNQ" target="_blank">
                     Sample 2: How to make an Introduction Video
                   </Link>{" "}
                   <br />
-                  <Link to="https://www.heygen.com">
+                  <Link to="https://www.heygen.com" target="_blank">
                     Sample 3: Create your free AI Introduction Video, in 3
                     minutes or less.
                   </Link>
@@ -1194,9 +1198,8 @@ const TutorSetup = () => {
                     <button
                       style={{ width: "100%", fontSize: "10px" }}
                       type="button"
-                      className={`action-btn btn small ${
-                        selectedVideoOption === "record" ? "active" : ""
-                      }`}
+                      className={`action-btn btn small ${selectedVideoOption === "record" ? "active" : ""
+                        }`}
                       disabled={!editMode}
                       onClick={() => {
                         set_video("");
@@ -1235,9 +1238,8 @@ const TutorSetup = () => {
                         // pointerEvents: !editMode ? "none" : "auto",
                         fontSize: "10px",
                       }}
-                      className={`action-btn btn ${
-                        selectedVideoOption === "upload" ? "active" : ""
-                      }`}
+                      className={`action-btn btn ${selectedVideoOption === "upload" ? "active" : ""
+                        }`}
                     >
                       <div className="button__content">
                         <div className="button__icon">
@@ -1353,7 +1355,7 @@ const TutorSetup = () => {
                           start
                             ? start
                             : moment(new Date()).toDate().getTime() +
-                              (gmtInInt + getLocalGMT) * 60 * 60 * 1000
+                            (gmtInInt + getLocalGMT) * 60 * 60 * 1000
                         )
                       }
                       onChange={(date) => {

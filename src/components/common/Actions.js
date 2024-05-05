@@ -90,9 +90,6 @@ const Actions = ({
             navigate(`${currentTabInfo.back}`)
     }
 
-    console.log(!saveDisabled, unSavedChanges, loading
-        , !isNextTabExist, nextDisabled,
-        currentTab, STEPS[tutor.Step], !isStudentSide)
     return (
         <div style={actionsStyle}>
             <div className="container">
@@ -135,7 +132,7 @@ const Actions = ({
                     </div>
                     <div className="" style={{ width: "10%" }}>
                         <button onClick={onNext}
-                            disabled={((!saveDisabled && ( loading))
+                            disabled={((!saveDisabled && (loading))
                                 || !isNextTabExist || nextDisabled ||
                                 currentTab === STEPS[tutor.Step]) && !isStudentSide}
                             type='button' className="next-btn action-btn btn">
