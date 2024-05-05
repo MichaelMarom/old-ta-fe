@@ -11,7 +11,7 @@ import { FaUserTimes } from "react-icons/fa";
 
 import { toast } from "react-toastify";
 import { statesColours } from "../../constants/constants";
-import { get_tutor_count_by_status } from "../../axios/admin";
+import { get_role_count_by_status } from "../../axios/admin";
 import Avatar from "../common/Avatar";
 
 const TutorTable = () => {
@@ -72,7 +72,7 @@ const TutorTable = () => {
   ];
 
   useEffect(() => {
-    get_tutor_count_by_status().then(
+    get_role_count_by_status('tutor').then(
       (data) => !data?.response?.data && setStatusCount(data)
     );
   }, []);
@@ -106,8 +106,9 @@ const TutorTable = () => {
     let response = await set_tutor_status(id, status);
 
     if (response.bool) {
-      const result = await get_tutor_data();
-      get_tutor_count_by_status().then(
+      setStatus(status)
+      const result = await get_tutor_data(status);
+      get_role_count_by_status().then(
         (data) => !data?.response?.data && setStatusCount(data)
       );
       if (!result?.response?.data) {

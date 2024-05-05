@@ -56,15 +56,14 @@ export let get_tutor_data = (status) => {
   });
 };
 
-export let get_tutor_count_by_status = async (status) => {
+export let get_role_count_by_status = async (role) => {
   try {
-    const { data } = await apiClient.get("/admin/tutor/status/count");
+    const { data } = await apiClient.get(`/admin/${role}/status/count`);
     return data;
   } catch (err) {
     showErrorToast(err);
   }
 };
-
 
 export let get_user_list = async (status) => {
   try {
@@ -87,9 +86,9 @@ export let set_tutor_status = async (Id, Status) => {
   }
 };
 
-export let get_student_data = async () => {
+export let get_student_data = async (status) => {
   try {
-    const { data } = await apiClient.get("/admin/student-data", {});
+    const { data } = await apiClient.get("/admin/student-data", { params: { status } });
     return data;
   } catch (err) {
     showErrorToast(err);
@@ -98,7 +97,7 @@ export let get_student_data = async () => {
 
 export let set_student_status = (Id, Status) => {
   try {
-    const { data } = apiClient.post("/admin/set-student-status", {
+    const data = apiClient.post("/admin/set-student-status", {
       Id,
       Status,
     });

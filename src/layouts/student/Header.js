@@ -9,6 +9,7 @@ import { setUser } from "../../redux/auth/auth";
 import { setTutor } from "../../redux/tutor/tutorData";
 import { setStudent } from "../../redux/student/studentData";
 import { moment } from "../../config/moment";
+import { statesColours } from "../../constants/constants";
 
 const Header = () => {
   const { signOut } = useClerk();
@@ -33,33 +34,14 @@ const Header = () => {
     { name: "Collaboration", url: "/collab" },
     { name: "Profile", url: "/student/profile" },
   ];
-
-  // useEffect(() => {
-  //     getBookedSlot(window.localStorage.getItem('student_user_id'))
-  //         .then(({ data }) => {
-  //             data.map(item => {
-  //                 let result = JSON.parse(item.bookedSlots)[0]?.start;
-  //                 let setDate = new Date(result).getTime() / 1000
-  //                 let newDate = new Date().getTime() / 1000
-
-  //                 let sec = (newDate - setDate)
-  //                 let min = sec / 60;
-
-  //                 if (min <= 3 && min !== 0) {
-
-  //                     if (location.pathname.split('/').splice(-1)[0] !== 'collaboration') {
-  //                         // navigate('/student/collaboration')
-  //                         // alert(`You are beeing redirected to your lesson which will begin soon`)
-  //                     }
-  //                 }
-  //                 return;
-  //             })
-
-  //         })
-  //         .catch(err => {
-  //             console.log(err)
-  //         })
-  // }, [location.pathname])
+  const StatusValues = {
+    "under-review": "Under Review",
+    pending: "Pending",
+    suspended: "Suspended",
+    active: "Active",
+    disapproved: "Disapproved",
+    closed: "Closed",
+  };
 
   useEffect(() => {
     const element = document.getElementById("tutor-tab-header-list-active");
@@ -118,17 +100,22 @@ const Header = () => {
   return (
     <>
       <div
-        className={`screen-name btn-success rounded  p-1 flex-column`}
+        className={`screen-name btn-success rounded  p-1 flex-column align-items-center`}
         style={{
           fontSize: "14px",
-          display: "flex",
+          display: !student.ScreenName ? "none" : "flex",
           position: "fixed",
           top: "1px",
           zIndex: "999",
           left: "3%",
+          background: statesColours[student.Status]?.bg,
+          color: statesColours[student.Status]?.color,
         }}
       >
         <div style={{ fontWeight: "bold" }}>{student.ScreenName}</div>
+        <div style={{ fontSize: "12px", fontWeight: "700" }}>
+          {StatusValues[student.Status]}
+        </div>
       </div>
 
       <div className="tutor-tab-header shadow-sm">

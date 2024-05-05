@@ -75,14 +75,7 @@ const StudentIntro = () => {
         e.preventDefault()
         setLoading(true)
 
-        console.log(student.FirstName, student.MiddleName, student.LastName, student.Email,
-            student.Language, student.SecLan, student.ParentAEmail, student.ParentAName,
-            student.ParentBEmail, student.parentBName, student.AgeGrade,
-            'random', student.Cell, student.Grade, student.Address1, student.Address2,
-            student.City, student.State, student.ZipCode, student.Country,
-            student.GMT, student.Photo, student.AcademyId, student.userId
-        )
-        const data = await post_student_agreement(user.SID, { AgreementDate: new Date() })
+        const data = await post_student_agreement(user.SID, { AgreementDate: new Date(), Status: 'under-review' })
         if (data?.[0]) {
             dispatch(setStudent(data[0]))
         }

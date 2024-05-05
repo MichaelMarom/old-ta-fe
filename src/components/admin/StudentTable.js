@@ -1,17 +1,19 @@
 import { useEffect, useState } from 'react';
-import { get_student_data } from '../../axios/admin';
+import { get_role_count_by_status, get_student_data, set_student_status } from '../../axios/admin';
 import { convertGMTOffsetToLocalString } from '../../helperFunctions/timeHelperFunctions'
 import Loading from '../common/Loading'
 import { statesColours } from '../../constants/constants';
+import { toast } from 'react-toastify';
+import Avatar from '../common/Avatar';
 
 const StudentTable = () => {
 
     let [data, set_data] = useState([]);
     const [loading, setLoading] = useState(false)
     const [fetched, setFetched] = useState(false)
-    const [status, setStatus]=useState('pending')
-    console.log(data)
-    const [statusCount, setStatusCount]=useState([])
+    const [status, setStatus] = useState('pending')
+    const [updatingStatus, setUpdatingStatus] = useState(false)
+    const [statusCount, setStatusCount] = useState([])
     const COLUMNS = [
 
         {
@@ -60,36 +62,59 @@ const StudentTable = () => {
         },
 
     ];
+
     useEffect(() => {
         setLoading(true)
-        get_student_data()
+        get_student_data(status)
             .then((result) => {
-                if (!result?.response?.data) {
+                if (result && !result?.response?.data) {
                     set_data(result)
                 }
             }).finally(() => {
                 setFetched(true)
                 setLoading(false)
             })
-    }, [])
+    }, [status])
 
-    let set_status = async (e, Id, Status) => {
-        e.preventDefault();
-        // let response = await set_student_status(Id, Status)
-        // if (response.bool) {
-        //     alert(response.mssg)
-        //     get_student_data()
-        //         .then((result) => {
-        //             console.log(result)
-        //             set_data(result)
-        //         })
-        //         .catch((err) => {
-        //             console.log(err)
-        //         })
-        // } else {
-        //     alert(response.mssg)
-        // }
-    }
+    useEffect(() => {
+        get_role_count_by_status('student').then(
+            (data) => !data?.response?.data && setStatusCount(data)
+        );
+    }, []);
+
+    let handleStatusChange = async (id, status, currentStatus) => {
+        if (currentStatus === 'closed')
+            return toast.warning(
+                `You cannot change status of "${currentStatus}" users!`
+            );
+        if (currentStatus === status)
+            return toast.warning(`You already on "${status}" Status`);
+
+        setUpdatingStatus(true);
+        let response = await set_student_status(id, status);
+        console.log(response, response.data, "Data")
+        if (response.data.bool) {
+            setStatus(status)
+            get_student_data(status)
+                .then((result) => {
+                    if (result && !result?.response?.data) {
+                        set_data(result)
+                        setUpdatingStatus(false);
+                    }
+                }).finally(() => {
+                    setFetched(true)
+                    setLoading(false)
+                })
+
+            get_role_count_by_status('student').then(
+                (data) => !data?.response?.data && setStatusCount(data)
+            );
+
+        } else {
+            toast.error(response.mssg);
+            setUpdatingStatus(false);
+        }
+    };
 
     let redirect_to_student_setup = (student_id, screenName) => {
         window.localStorage.setItem('student_user_id', student_id);
@@ -112,7 +137,7 @@ const StudentTable = () => {
                         }}
                     >
                         Pending{" "}
-                        {statusCount.find((rec) => rec.Status === "pending")?.count && (
+                        {statusCount?.find((rec) => rec.Status === "pending")?.count && (
                             <span
                                 className="rounded-circle text-bg-danger p-1 d-flex justify-content-center align-items-center"
                                 style={{
@@ -122,7 +147,7 @@ const StudentTable = () => {
                                     marginLeft: "8px",
                                 }}
                             >
-                                {statusCount.find((rec) => rec.Status === "pending")?.count}
+                                {statusCount?.find((rec) => rec.Status === "pending")?.count}
                             </span>
                         )}
                     </div>
@@ -136,7 +161,7 @@ const StudentTable = () => {
                         }}
                     >
                         under-review{" "}
-                        {statusCount.find((rec) => rec.Status === "under-review")?.count && (
+                        {statusCount?.find((rec) => rec.Status === "under-review")?.count && (
                             <span
                                 className="rounded-circle text-bg-danger p-1 d-flex justify-content-center align-items-center"
                                 style={{
@@ -146,7 +171,7 @@ const StudentTable = () => {
                                     marginLeft: "8px",
                                 }}
                             >
-                                {statusCount.find((rec) => rec.Status === "under-review")?.count}
+                                {statusCount?.find((rec) => rec.Status === "under-review")?.count}
                             </span>
                         )}
                     </div>
@@ -160,7 +185,7 @@ const StudentTable = () => {
                         }}
                     >
                         active{" "}
-                        {statusCount.find((rec) => rec.Status === "active")?.count && (
+                        {statusCount?.find((rec) => rec.Status === "active")?.count && (
                             <span
                                 className="rounded-circle text-bg-danger p-1 d-flex justify-content-center align-items-center d-flex justify-content-center align-items-center"
                                 style={{
@@ -170,7 +195,7 @@ const StudentTable = () => {
                                     marginLeft: "8px",
                                 }}
                             >
-                                {statusCount.find((rec) => rec.Status === "active")?.count}
+                                {statusCount?.find((rec) => rec.Status === "active")?.count}
                             </span>
                         )}
                     </div>
@@ -184,7 +209,7 @@ const StudentTable = () => {
                         }}
                     >
                         suspended{" "}
-                        {statusCount.find((rec) => rec.Status === "suspended")?.count && (
+                        {statusCount?.find((rec) => rec.Status === "suspended")?.count && (
                             <span
                                 className="rounded-circle text-bg-danger p-1 d-flex justify-content-center align-items-center"
                                 style={{
@@ -194,7 +219,7 @@ const StudentTable = () => {
                                     marginLeft: "8px",
                                 }}
                             >
-                                {statusCount.find((rec) => rec.Status === "suspended")?.count}
+                                {statusCount?.find((rec) => rec.Status === "suspended")?.count}
                             </span>
                         )}
                     </div>
@@ -208,7 +233,7 @@ const StudentTable = () => {
                         }}
                     >
                         disapproved{" "}
-                        {statusCount.find((rec) => rec.Status === "disapproved")?.count && (
+                        {statusCount?.find((rec) => rec.Status === "disapproved")?.count && (
                             <span
                                 className="rounded-circle text-bg-danger p-1 d-flex justify-content-center align-items-center border"
                                 style={{
@@ -218,7 +243,7 @@ const StudentTable = () => {
                                     marginLeft: "8px",
                                 }}
                             >
-                                {statusCount.find((rec) => rec.Status === "disapproved")?.count}
+                                {statusCount?.find((rec) => rec.Status === "disapproved")?.count}
                             </span>
                         )}
                     </div>
@@ -232,7 +257,7 @@ const StudentTable = () => {
                         }}
                     >
                         closed{" "}
-                        {statusCount.find((rec) => rec.Status === "closed")?.count && (
+                        {statusCount?.find((rec) => rec.Status === "closed")?.count && (
                             <span
                                 className="rounded-circle text-bg-danger p-1 d-flex justify-content-center align-items-center"
                                 style={{
@@ -242,12 +267,12 @@ const StudentTable = () => {
                                     marginLeft: "8px",
                                 }}
                             >
-                                {statusCount.find((rec) => rec.Status === "closed")?.count}
+                                {statusCount?.find((rec) => rec.Status === "closed")?.count}
                             </span>
                         )}
                     </div>
                 </div>
-                {!loading ?
+                {!loading && !updatingStatus ?
                     fetched && !data.length ?
                         <p className='text-danger'>
                             No Students Found!
@@ -255,7 +280,10 @@ const StudentTable = () => {
                         : <table style={{ position: 'relative' }}>
                             <thead>
                                 <tr>
-                                    {COLUMNS.map(item => <th key={item.Header}>{item.Header}</th>)}
+                                    {COLUMNS.map(item => <th style={{
+                                        background: statesColours[status].bg,
+                                        color: statesColours[status].color
+                                    }} key={item.Header}>{item.Header}</th>)}
                                 </tr>
                             </thead>
                             <tbody>
@@ -265,23 +293,31 @@ const StudentTable = () => {
 
                                         <tr key={item.SID} onDoubleClick={e =>
                                             redirect_to_student_setup(item.AcademyId, item.ScreenName)}>
-                                            <td data-src={null}>
-                                                <div className="dropdown">
-                                                    <button style={{ background: '#f6f6f6', border: 'none', outline: 'none', color: '#000' }} className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1 status-btn" data-bs-toggle="dropdown" aria-expanded="false">
-                                                        {item.Status}
-                                                    </button>
-                                                    <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                                        <li style={{ width: '100%' }}><div data-status='pending'
-                                                            onClick={e => set_status(e, item.AcademyId, e.target.innerHTML)}
-                                                            style={{ width: '100%' }} className="dropdown-item" >Pending</div></li>
-                                                        <li style={{ width: '100%' }}><div data-status='active' onClick={e => set_status(e, item.AcademyId, e.target.innerHTML)} style={{ width: '100%' }} className="dropdown-item">Active</div></li>
-                                                        <li style={{ width: '100%' }}><div data-status='suspended' onClick={e => set_status(e, item.AcademyId, e.target.innerHTML)} style={{ width: '100%' }} className="dropdown-item">Suspended</div></li>
-                                                    </ul>
+                                            <td data-src={null} className="col-2">
+                                                <div className="col-10 m-auto">
+                                                    <select value={item.Status}
+                                                        onChange={(e) =>
+                                                            handleStatusChange(
+                                                                item.AcademyId,
+                                                                e.target.value,
+                                                                item.Status
+                                                            )} className="form-select"
+                                                        style={{ fontSize: "12px", padding: "5px", height: "25px" }}>
+                                                        <option value={"pending"} disabled >Pending</option>
+                                                        <option value={"under-review"} disabled >Under Review</option>
+
+                                                        <option value={"active"}>Active</option>
+                                                        <option value={"suspended"}>Suspend</option>
+                                                        <option value={"disapproved"}>Disapprove</option>
+                                                        <option value={"closed"}>Close</option>
+
+                                                    </select>
+
                                                 </div>
                                             </td>
 
                                             <td data-src={null}>
-                                                <img src={item.Photo} alt="profile=pic" style={{ height: '80px', width: '100px' }} />
+                                                <Avatar showOnlineStatus={false} avatarSrc={item.Photo} />
                                             </td>
                                             <td data-src={item.AcademyId}>{item.AcademyId}</td>
                                             <td data-src={item.FirstName + ' ' + item.LastName}>{item.FirstName + ' ' + item.LastName}</td>
