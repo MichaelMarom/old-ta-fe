@@ -2,14 +2,18 @@ import { useEffect, useState } from 'react';
 import { get_student_data } from '../../axios/admin';
 import { convertGMTOffsetToLocalString } from '../../helperFunctions/timeHelperFunctions'
 import Loading from '../common/Loading'
+import { statesColours } from '../../constants/constants';
 
 const StudentTable = () => {
 
     let [data, set_data] = useState([]);
     const [loading, setLoading] = useState(false)
     const [fetched, setFetched] = useState(false)
+    const [status, setStatus]=useState('pending')
+    console.log(data)
+    const [statusCount, setStatusCount]=useState([])
     const COLUMNS = [
-    
+
         {
             Header: 'Status',
             accessor: 'Status',
@@ -54,7 +58,7 @@ const StudentTable = () => {
             Header: 'ID Verified',
             accessor: 'ID Verified',
         },
-       
+
     ];
     useEffect(() => {
         setLoading(true)
@@ -96,8 +100,153 @@ const StudentTable = () => {
 
     return (
         <>
-            <div className="tables" style={{ width: '100%', overflowY: 'auto', height:"90vh",padding: '5px' }}>
-
+            <div className="tables" style={{ width: '100%', overflowY: 'auto', height: "90vh", padding: '5px' }}>
+                <div className="d-flex justify-content-center mt-4">
+                    <div
+                        onClick={() => setStatus("pending")}
+                        className="p-2 rounded cursor-pointer m-1 d-flex justify-content-center align-items-center"
+                        style={{
+                            color: statesColours["pending"].color,
+                            background: statesColours["pending"].bg,
+                            border: status === "pending" ? "2px solid #268daf" : "none",
+                        }}
+                    >
+                        Pending{" "}
+                        {statusCount.find((rec) => rec.Status === "pending")?.count && (
+                            <span
+                                className="rounded-circle text-bg-danger p-1 d-flex justify-content-center align-items-center"
+                                style={{
+                                    width: "20px",
+                                    fontSize: "12px",
+                                    height: "20px",
+                                    marginLeft: "8px",
+                                }}
+                            >
+                                {statusCount.find((rec) => rec.Status === "pending")?.count}
+                            </span>
+                        )}
+                    </div>
+                    <div
+                        onClick={() => setStatus("under-review")}
+                        className="p-2 rounded cursor-pointer m-1 d-flex justify-content-center align-items-center"
+                        style={{
+                            color: statesColours["under-review"].color,
+                            background: statesColours["under-review"].bg,
+                            border: status === "under-review" ? "2px solid #268daf" : "none",
+                        }}
+                    >
+                        under-review{" "}
+                        {statusCount.find((rec) => rec.Status === "under-review")?.count && (
+                            <span
+                                className="rounded-circle text-bg-danger p-1 d-flex justify-content-center align-items-center"
+                                style={{
+                                    width: "20px",
+                                    fontSize: "12px",
+                                    height: "20px",
+                                    marginLeft: "8px",
+                                }}
+                            >
+                                {statusCount.find((rec) => rec.Status === "under-review")?.count}
+                            </span>
+                        )}
+                    </div>
+                    <div
+                        onClick={() => setStatus("active")}
+                        className="p-2 rounded cursor-pointer m-1 d-flex justify-content-center align-items-center"
+                        style={{
+                            color: statesColours["active"].color,
+                            background: statesColours["active"].bg,
+                            border: status === "active" ? "2px solid #268daf" : "none",
+                        }}
+                    >
+                        active{" "}
+                        {statusCount.find((rec) => rec.Status === "active")?.count && (
+                            <span
+                                className="rounded-circle text-bg-danger p-1 d-flex justify-content-center align-items-center d-flex justify-content-center align-items-center"
+                                style={{
+                                    width: "20px",
+                                    fontSize: "12px",
+                                    height: "20px",
+                                    marginLeft: "8px",
+                                }}
+                            >
+                                {statusCount.find((rec) => rec.Status === "active")?.count}
+                            </span>
+                        )}
+                    </div>
+                    <div
+                        onClick={() => setStatus("suspended")}
+                        className="p-2 rounded cursor-pointer m-1 d-flex justify-content-center align-items-center"
+                        style={{
+                            color: statesColours["suspended"].color,
+                            background: statesColours["suspended"].bg,
+                            border: status === "suspended" ? "2px solid #268daf" : "none",
+                        }}
+                    >
+                        suspended{" "}
+                        {statusCount.find((rec) => rec.Status === "suspended")?.count && (
+                            <span
+                                className="rounded-circle text-bg-danger p-1 d-flex justify-content-center align-items-center"
+                                style={{
+                                    width: "20px",
+                                    fontSize: "12px",
+                                    height: "20px",
+                                    marginLeft: "8px",
+                                }}
+                            >
+                                {statusCount.find((rec) => rec.Status === "suspended")?.count}
+                            </span>
+                        )}
+                    </div>
+                    <div
+                        onClick={() => setStatus("disapproved")}
+                        className="p-2 rounded cursor-pointer m-1 d-flex justify-content-center align-items-center"
+                        style={{
+                            color: statesColours["disapproved"].color,
+                            background: statesColours["disapproved"].bg,
+                            border: status === "disapproved" ? "2px solid #268daf" : "none",
+                        }}
+                    >
+                        disapproved{" "}
+                        {statusCount.find((rec) => rec.Status === "disapproved")?.count && (
+                            <span
+                                className="rounded-circle text-bg-danger p-1 d-flex justify-content-center align-items-center border"
+                                style={{
+                                    width: "20px",
+                                    fontSize: "12px",
+                                    height: "20px",
+                                    marginLeft: "8px",
+                                }}
+                            >
+                                {statusCount.find((rec) => rec.Status === "disapproved")?.count}
+                            </span>
+                        )}
+                    </div>
+                    <div
+                        onClick={() => setStatus("closed")}
+                        className="p-2 rounded cursor-pointer m-1 d-flex justify-content-center align-items-center"
+                        style={{
+                            color: statesColours["closed"].color,
+                            background: statesColours["closed"].bg,
+                            border: status === "closed" ? "2px solid #268daf" : "none",
+                        }}
+                    >
+                        closed{" "}
+                        {statusCount.find((rec) => rec.Status === "closed")?.count && (
+                            <span
+                                className="rounded-circle text-bg-danger p-1 d-flex justify-content-center align-items-center"
+                                style={{
+                                    width: "20px",
+                                    fontSize: "12px",
+                                    height: "20px",
+                                    marginLeft: "8px",
+                                }}
+                            >
+                                {statusCount.find((rec) => rec.Status === "closed")?.count}
+                            </span>
+                        )}
+                    </div>
+                </div>
                 {!loading ?
                     fetched && !data.length ?
                         <p className='text-danger'>
@@ -140,11 +289,9 @@ const StudentTable = () => {
                                             <td data-src={item.Cell}>{item.Cell}</td>
                                             <td data-src={item.GMT}>{convertGMTOffsetToLocalString(item.GMT)}</td>
                                             <td data-src={item.ResponseHrs}>{item.ResponseHrs}</td>
-                                            <td data-src={null}>{null}</td>
-                                            <td data-src={null}>{null}</td>
+                                            <td ></td>
+                                            <td ></td>
                                             <td data-src={item.IdVerified}>{item.IdVerified}</td>
-                                            <td data-src={item.BackgroundVerified}>{item.BackgroundVerified}</td>
-
                                         </tr>
                                     )
                                 }

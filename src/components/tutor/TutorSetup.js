@@ -19,7 +19,6 @@ import Loading from "../common/Loading";
 import ToolTip from "../common/ToolTip";
 
 import Actions from "../common/Actions";
-import { uploadVideo } from "../../redux/tutor/video";
 import {
   AUST_STATES,
   CAN_STATES,
@@ -39,6 +38,7 @@ import { Link } from "react-router-dom";
 import Button from "../common/Button";
 import { IoPersonCircle } from "react-icons/io5";
 import { convertToDate } from "../common/Calendar/Calendar";
+import { uploadVideoToAzure } from "../../helperFunctions/uploadVideo";
 
 const phoneUtil = PhoneNumberUtil.getInstance();
 const isPhoneValid = (phone) => {
@@ -104,6 +104,7 @@ const TutorSetup = () => {
   const [userId, setUserId] = useState(user.SID);
   const [picUploading, setPicUploading] = useState(false);
   const [savingRecord, setSavingRecord] = useState(false);
+  const [videoUploading, setVideoUploading] = useState(false)
 
   const [vacation_mode, set_vacation_mode] = useState(false);
   const [start, setStart] = useState(moment(new Date()).toDate());
@@ -114,7 +115,6 @@ const TutorSetup = () => {
   const { tutor, isLoading: tutorDataLoading } = useSelector(
     (state) => state.tutor
   );
-  const { isLoading } = useSelector((state) => state.video);
   const [nameFieldsDisabled, setNameFieldsDisabled] = useState(false);
   let [isRecording, setIsRecording] = useState(false);
 
@@ -125,7 +125,7 @@ const TutorSetup = () => {
           params: { user_id: tutor.AcademyId.replace(/[.\s]/g, "") },
         })
         .then((res) => {
-          // res?.data?.url && set_video(res.data.url);
+          res?.data?.url && set_video(res.data.url);
         })
         .catch((err) => console.log(err));
   }, [tutor]);
@@ -209,29 +209,6 @@ const TutorSetup = () => {
     setEditMode(!editMode);
   };
 
-  //upload video
-  useEffect(() => {
-    const upload_video = async () => {
-      if (uploadVideoClicked && userExist) {
-        if (tutor.FirstName && video !== tutor.Video && !!video.length)
-          dispatch(uploadVideo({ video, fname, lname, mname, userId }));
-        // dispatch(setTutor())
-      }
-    };
-    upload_video();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    video,
-    tutor,
-    fname,
-    lname,
-    photo,
-    mname,
-    userExist,
-    userId,
-    uploadVideoClicked,
-  ]);
-
   useEffect(() => {
     const fetchTutorSetup = async () => {
       if (tutor.AcademyId) {
@@ -259,7 +236,7 @@ const TutorSetup = () => {
         set_add2(data.Address2);
         setTutorGrades(JSON.parse(data?.Grades ?? "[]"));
 
-        set_video(data.Video);
+        // set_video(data.Video);
         setSelectedVideoOption("upload");
         set_vacation_mode(data.VacationMode);
         setStart(data.StartVacation);
@@ -536,20 +513,22 @@ const TutorSetup = () => {
     }
   };
 
-  let handleVideo = () => {
-    let f = document.querySelector("#video");
+  let handleVideo = async (e) => {
+    const file = e.target.files[0]
 
-    let type = [...f.files]?.[0]?.type;
-
-    if (type.split("/")?.[0] !== "video") {
+    if (file.type.split("/")?.[0] !== "video") {
       alert("Only Video Can Be Uploaded To This Field");
     } else {
+      setVideoUploading(true)
       let reader = new FileReader({});
 
       reader.onload = (result) => {
-        set_video(reader.result);
+        set_video(reader.result)
       };
-      reader.readAsDataURL([...f.files]?.[0]);
+      reader.readAsDataURL(file);
+
+      tutor?.AcademyId && await uploadVideoToAzure(file, tutor.AcademyId)
+      setVideoUploading(false)
     }
   };
 
@@ -1104,7 +1083,7 @@ const TutorSetup = () => {
           >
             <h6>Tutor's introduction video</h6>
             <div className="mb-2">
-              {isLoading && (
+              {videoUploading && (
                 <Loading
                   height="10px"
                   iconSize="20px"

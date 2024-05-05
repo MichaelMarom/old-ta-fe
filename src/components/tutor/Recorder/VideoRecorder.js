@@ -9,6 +9,7 @@ import { IoTrash } from 'react-icons/io5'
 import Tooltip from '../../common/ToolTip'
 import { FaRegCirclePlay } from 'react-icons/fa6'
 import { FaRegStopCircle } from 'react-icons/fa'
+import { uploadVideoToAzure } from '../../../helperFunctions/uploadVideo'
 
 const WebcamCapture = ({ user_id, record_duration }) => {
   const webcamRef = useRef(null)
@@ -208,20 +209,11 @@ const WebcamCapture = ({ user_id, record_duration }) => {
         const video = new File([blob], 'video.webm', {
           type: 'video/webm',
         })
+        await uploadVideoToAzure(video, user_id)
 
-        const formData = new FormData()
-        // eslint-disable-next-line
-        const userId = user_id.replace(/[\s\.\-]/g, '')
-        formData.append('file', video)
-        formData.append('user_id', userId)
-        formData.append('AcademyId', user_id)
-
-
-        await fileUploadClient.post('/tutor/setup/record', formData)
         setVideoUploaded(true)
-        toast.success('Video Succesfully Uploaded!')
 
-        handleCleanup()
+        // handleCleanup()
       } else {
         throw new Error('No video to upload')
       }
@@ -369,7 +361,7 @@ const WebcamCapture = ({ user_id, record_duration }) => {
       )}
 
       <div className={`preview h-100 ${blob ? 'show' : 'hide'}`}>
-        <video ref={previewRef} playsInline onClick={handlePreviewPlayPause} controls />
+        <video ref={previewRef} playsInline onClick={handlePreviewPlayPause} controls loop />
       </div>
     </div>
   )
