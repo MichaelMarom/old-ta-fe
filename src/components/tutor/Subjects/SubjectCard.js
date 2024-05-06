@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Input from '../../common/Input'
+import Input from '../Recorder/SubjectCardInput'
 import GradePills from './../GradePills'
 import Button from '../../common/Button'
 import {  remove_subject_rates, upload_tutor_rates } from '../../../axios/tutor'

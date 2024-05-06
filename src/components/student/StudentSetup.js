@@ -28,6 +28,9 @@ import Button from "../common/Button";
 import BTN_ICON from "../../assets/images/button__icon.png";
 import { compareStates } from "../../helperFunctions/generalHelperFunctions";
 import { useNavigate } from "react-router-dom";
+import Avatar from "../common/Avatar";
+import Input from "../common/Input";
+import Select from "../common/Select";
 
 const StudentSetup = () => {
   const dispatch = useDispatch();
@@ -404,14 +407,15 @@ const StudentSetup = () => {
             id="photo"
           />
           <div
-            className="m-auto border shadow"
+            className="m-auto border shadow rounded-circle"
             style={{ width: "200px", height: "200px" }}
           >
-            <img
+            <Avatar avatarSrc={photo} showOnlineStatus={false} size="180" />
+            {/* <img
               src={photo}
               style={{ height: "100%", width: "100%" }}
               alt="profile-pic"
-            />
+            /> */}
           </div>
           <label id="btn" className="action-btn mt-4" htmlFor="photo">
             <div className="button__content">
@@ -425,14 +429,8 @@ const StudentSetup = () => {
               className="mb-2 d-flex align-items-center justify-content-center"
               style={{ gap: "2%" }}
             >
-              <input
-                className="form-control "
-                style={{ width: "65%" }}
-                onChange={(e) => set_code(e.target.value)}
-                placeholder="Code"
-                type="text"
-                value={code}
-              />
+              <Input setValue={set_code} value={code} label={"Enter Code"} />
+
               <Button className="action-btn" handleClick={handleConnectClick}>
                 <div className="button__content">
                   <div className="button__icon">
@@ -454,7 +452,14 @@ const StudentSetup = () => {
           <div className="d-flex" style={{ width: "100%", gap: "3%" }}>
             <div className="profile-details-cnt" style={{ width: "48%" }}>
               <div className="input-group mb-2 ">
-                <label
+                <Input
+                  setValue={set_fname}
+                  value={fname}
+                  label={"First Name"}
+                  editMode={!nameFieldsDisabled}
+                />
+
+                {/* <label
                   className="input-group-text"
                   style={{ width: "35%" }}
                   htmlFor="inputGroupSelect01"
@@ -470,118 +475,80 @@ const StudentSetup = () => {
                   value={fname}
                   type="text"
                   id="fname"
-                />
+                /> */}
               </div>
 
               <div className="input-group mb-2 ">
-                <label
-                  className="input-group-text"
-                  style={{ width: "35%" }}
-                  htmlFor="inputGroupSelect01"
-                >
-                  Middle Name
-                </label>
-                <input
-                  required
-                  disabled={nameFieldsDisabled}
-                  className="form-control"
-                  onChange={(e) => set_mname(e.target.value)}
-                  placeholder="Middle Name"
+                <Input
+                  setValue={set_mname}
                   value={mname}
-                  type="text"
-                  id="mname"
+                  label={" Middle Name"}
+                  editMode={!nameFieldsDisabled}
                 />
               </div>
 
               <div className="input-group mb-2 ">
-                <label
-                  className="input-group-text"
-                  style={{ width: "35%" }}
-                  htmlFor="inputGroupSelect01"
-                >
-                  Last Name
-                </label>
-                <input
-                  required
-                  disabled={nameFieldsDisabled}
-                  className="form-control"
-                  onChange={(e) => set_sname(e.target.value)}
-                  placeholder="Last Name"
+                <Input
+                  setValue={set_sname}
                   value={sname}
-                  type="text"
-                  id="sname"
+                  label={"Last Name"}
+                  editMode={!nameFieldsDisabled}
                 />
               </div>
 
               <div className="input-group mb-2 ">
-                <label
-                  className="input-group-text"
-                  style={{ width: "35%" }}
-                  htmlFor="inputGroupSelect01"
-                >
-                  Email
-                </label>
-                <div className="form-control">
-                  {user.role === "student" ? user.email : email}
+                <Input
+                  setValue={set_sname}
+                  value={user.role === "student" ? user.email : email}
+                  label={"Email"}
+                  editMode={false}
+                />
+              </div>
+
+              <div className="input-group mb-2 ">
+                <div className="input w-100">
+                  <PhoneInput
+                    disabled={!editMode}
+                    defaultCountry="us"
+                    value={cell}
+                    onChange={(cell) => set_cell(cell)}
+                    required
+                  />
+                  <span
+                    className="input__label"
+                    style={{
+                      top: "-3px",
+                      left: "5px",
+                      zIndex: "99",
+                      padding: "2px",
+                      color: "rgb(133, 138, 133)",
+                      transform: " translate(0.25rem, -65%) scale(0.8)",
+                    }}
+                  >
+                    {" "}
+                    phone
+                  </span>
                 </div>
               </div>
 
               <div className="input-group mb-2 ">
-                <label
-                  className="input-group-text"
-                  style={{ width: "35%" }}
-                  htmlFor="inputGroupSelect01"
-                >
-                  CellPhone
-                </label>
-                <PhoneInput
-                  disabled={!editMode}
-                  defaultCountry="us"
-                  value={cell}
-                  onChange={(cell) => set_cell(cell)}
-                  required
-                  style={{ width: "65%" }}
-                />
-              </div>
-
-              <div className="input-group mb-2 ">
-                <label
-                  className="input-group-text"
-                  style={{ width: "35%" }}
-                  htmlFor="inputGroupSelect01"
-                >
-                  Are you over 18?
-                </label>
-                <select
-                  required
-                  disabled={!editMode}
-                  className="form-select"
-                  dname=""
-                  id=""
-                  onChange={(e) => set_is_18(e.target.value)}
+                <Select
+                  editMode={editMode}
+                  label={"Are You Over 18 ?"}
+                  setValue={set_is_18}
                   value={is_18}
                 >
                   <option value="">Are You Over 18 ?</option>
                   <option value="yes">Yes</option>
                   <option value="no">No</option>
-                </select>
+                </Select>
               </div>
 
               <div className="input-group mb-2">
-                <label
-                  className="input-group-text"
-                  style={{ width: "35%" }}
-                  htmlFor="inputGroupSelect01"
-                >
-                  GMT
-                </label>
-
-                <select
-                  required
-                  disabled={!editMode}
-                  className="form-select "
-                  onChange={(e) => set_timeZone(e.target.value)}
-                  id="timeZone"
+                <Select
+                  editMode={editMode}
+                  label={"GMT"}
+                  setValue={set_timeZone}
                   value={timeZone}
                 >
                   <option
@@ -612,43 +579,25 @@ const StudentSetup = () => {
                       {item.GMT}
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
 
               <div className="input-group mb-2 ">
-                <label
-                  className="input-group-text"
-                  style={{ width: "35%" }}
-                  htmlFor="inputGroupSelect01"
-                >
-                  Grade
-                </label>
-                <select
-                  disabled={!editMode}
-                  required
-                  className="form-select "
-                  onChange={(e) => set_grade(e.target.value)}
-                  id="state"
+                <Select
+                  editMode={editMode}
+                  label={"Grade"}
+                  setValue={set_grade}
                   value={grade}
                 >
                   {GradeList}
-                </select>
+                </Select>
               </div>
 
               <div className="input-group mb-2 ">
-                <label
-                  className="input-group-text"
-                  style={{ width: "35%" }}
-                  htmlFor="inputGroupSelect01"
-                >
-                  Native Language
-                </label>
-                <select
-                  disabled={!editMode}
-                  required
-                  className="form-select "
-                  onChange={(e) => set_lang(e.target.value)}
-                  id="state"
+                <Select
+                  editMode={editMode}
+                  label={" Native Language"}
+                  setValue={set_lang}
                   value={lang}
                 >
                   <option value="">Select Language</option>
@@ -657,88 +606,45 @@ const StudentSetup = () => {
                       {item}
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
             </div>
 
             <div className="profile-details-cnt" style={{ width: "48%" }}>
               <div className="input-group mb-2 ">
-                <label
-                  className="input-group-text"
-                  style={{ width: "35%" }}
-                  htmlFor="inputGroupSelect01"
-                >
-                  Address1
-                </label>
-
-                <input
-                  required
-                  disabled={!editMode}
-                  className="form-control "
-                  onChange={(e) => set_add1(e.target.value)}
-                  placeholder="Address 1"
+                <Input
+                  setValue={set_add1}
                   value={add1}
-                  type="text"
-                  id="add1"
+                  label={"       Address1"}
+                  editMode={editMode}
                 />
               </div>
 
               <div className="input-group mb-2 ">
-                <label
-                  className="input-group-text"
-                  style={{ width: "35%" }}
-                  htmlFor="inputGroupSelect01"
-                >
-                  Address2
-                </label>
-                <input
-                  disabled={!editMode}
-                  className="form-control"
-                  onChange={(e) => set_add2(e.target.value)}
-                  placeholder="Optional"
+                <Input
+                  setValue={set_add2}
                   value={add2}
-                  type="text"
-                  id="add2"
+                  label={" Address2"}
+                  required={false}
+                  editMode={editMode}
                 />
               </div>
 
               <div className="input-group mb-2 ">
-                <label
-                  className="input-group-text"
-                  style={{ width: "35%" }}
-                  htmlFor="inputGroupSelect01"
-                >
-                  City
-                </label>
-                <input
-                  required
-                  disabled={!editMode}
-                  className="form-control"
-                  onChange={(e) => set_city(e.target.value)}
-                  placeholder="City/Town"
-                  type="text"
+                <Input
+                  setValue={set_city}
                   value={city}
-                  id="city"
+                  label={" City"}
+                  editMode={editMode}
                 />
               </div>
               <div className="input-group mb-2 ">
-                <label
-                  className="input-group-text"
-                  style={{ width: "35%" }}
-                  htmlFor="inputGroupSelect01"
-                >
-                  Country
-                </label>
-
-                <select
-                  required
-                  className="form-select "
-                  disabled={!editMode}
-                  onChange={(e) => set_country(e.target.value)}
-                  id="country"
+                <Select
+                  editMode={editMode}
+                  label={" Country"}
+                  setValue={set_country}
                   value={country}
                 >
-                  {" "}
                   <option
                     style={{
                       height: "50px",
@@ -767,24 +673,15 @@ const StudentSetup = () => {
                       {item.Country}
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
 
               {options[country] && (
                 <div className="input-group mb-2 ">
-                  <label
-                    className="input-group-text"
-                    style={{ width: "35%" }}
-                    htmlFor="inputGroupSelect01"
-                  >
-                    State
-                  </label>
-                  <select
-                    required
-                    className="form-select "
-                    disabled={!editMode}
-                    onChange={(e) => set_state(e.target.value)}
-                    id="state"
+                  <Select
+                    editMode={editMode}
+                    label={" State"}
+                    setValue={set_state}
                     value={state}
                   >
                     <option value="">Select State</option>
@@ -794,60 +691,26 @@ const StudentSetup = () => {
                         {item}
                       </option>
                     ))}
-                  </select>
+                  </Select>
                 </div>
               )}
 
               <div className="input-group mb-2 ">
-                <label
-                  className="input-group-text"
-                  style={{ width: "35%" }}
-                  htmlFor="inputGroupSelect01"
-                >
-                  Zip
-                </label>
-                <input
-                  required
-                  className="form-control"
-                  disabled={!editMode}
-                  onChange={(e) => set_zipCode(e.target.value)}
+                <Input
+                  setValue={set_zipCode}
                   value={zipCode}
-                  placeholder="Zip-Code"
-                  type="text"
-                  id="zip"
+                  label={" Zip"}
+                  editMode={editMode}
                 />
               </div>
               <div className="input-group mb-2">
-                <label
-                  className="input-group-text"
-                  style={{ width: "35%" }}
-                  htmlFor="inputGroupSelect01"
-                >
-                  UTC
-                </label>
-
-                <div
-                  className="form-control"
-                  disabled={!editMode}
-                  style={{ backgroundColor: "#e9ecef" }}
-                >
-                  {dateTime}
-                </div>
+                <Input value={dateTime} label={" UTC"} editMode={editMode} />
               </div>
               <div className="input-group mb-2 ">
-                <label
-                  className="input-group-text small"
-                  style={{ width: "35%" }}
-                  htmlFor="inputGroupSelect01"
-                >
-                  Other Language(s)
-                </label>
-                <select
-                  className="form-select "
-                  disabled={!editMode}
-                  placeholder="Optional"
-                  onChange={(e) => setSecLang(e.target.value)}
-                  id="state"
+                <Select
+                  editMode={editMode}
+                  label={"Select Secondary Language(s)"}
+                  setValue={setSecLang}
                   value={secLan}
                 >
                   <option value="null">Select Language</option>
@@ -856,7 +719,7 @@ const StudentSetup = () => {
                       {item}
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
             </div>
           </div>
@@ -868,88 +731,52 @@ const StudentSetup = () => {
               {!["Freshman", "Junior", "Senior", "Sophmore"].includes(
                 grade
               ) && (
-                  <>
-                    <h6 className="mb-3">Parent Info</h6>
-                    <div className="d-flex" style={{ gap: "2%" }}>
-                      <div className="input-group mb-2 ">
-                        <label
-                          className="input-group-text"
-                          style={{ width: "35%" }}
-                          htmlFor="inputGroupSelect01"
-                        >
-                          Parent A Email
-                        </label>
-                        <input
-                          disabled={!editMode}
-                          required={is_18 === "no"}
-                          className="form-control"
-                          onChange={(e) => setParentAEmail(e.target.value)}
-                          placeholder="Parent A Email"
-                          type="email"
-                          value={parentAEmail}
-                        />
-                      </div>
-
-                      <div className="input-group mb-2 ">
-                        <label
-                          className="input-group-text"
-                          style={{ width: "35%" }}
-                          htmlFor="inputGroupSelect01"
-                        >
-                          Parent A Name
-                        </label>
-                        <input
-                          disabled={!editMode}
-                          required={is_18 === "no"}
-                          className="form-control"
-                          onChange={(e) => setParentAName(e.target.value)}
-                          placeholder="Parent A Name"
-                          type="text"
-                          value={parentAName}
-                        />
-                      </div>
+                <>
+                  <h6 className="mb-3">Parent Info</h6>
+                  <div className="d-flex" style={{ gap: "2%" }}>
+                    <div className="input-group mb-2 ">
+                      <Input
+                        value={parentAEmail}
+                        label={"  Parent A Email"}
+                        editMode={editMode}
+                        setValue={setParentAEmail}
+                        required={is_18 === "no"}
+                      />
                     </div>
-                    <div className="d-flex" style={{ gap: "2%" }}>
-                      <div className="input-group mb-2">
-                        <label
-                          className="input-group-text"
-                          style={{ width: "35%" }}
-                          htmlFor="inputGroupSelect01"
-                        >
-                          Parent B Email
-                        </label>
-                        <input
-                          disabled={!editMode}
-                          className="form-control"
-                          onChange={(e) => setParentBEmail(e.target.value)}
-                          placeholder="Parent B Email"
-                          type="email"
-                          value={parentBEmail}
-                          required={is_18 === "no"}
-                        />
-                      </div>
 
-                      <div className="input-group mb-2 ">
-                        <label
-                          className="input-group-text"
-                          style={{ width: "35%" }}
-                          htmlFor="inputGroupSelect01"
-                        >
-                          Parent B Name
-                        </label>
-                        <input
-                          disabled={!editMode}
-                          className="form-control"
-                          onChange={(e) => setParentBName(e.target.value)}
-                          placeholder="Parent B Name"
-                          type="text"
-                          value={parentBName}
-                          required={is_18 === "no"}
-                        />
-                      </div>
+                    <div className="input-group mb-2 ">
+                      <Input
+                        value={parentAName}
+                        label={" Parent A Name"}
+                        editMode={editMode}
+                        setValue={setParentAName}
+                        required={is_18 === "no"}
+                      />
                     </div>
-                  </>
-                )}
+                  </div>
+                  <div className="d-flex" style={{ gap: "2%" }}>
+                    <div className="input-group mb-2">
+                      <Input
+                        value={parentBEmail}
+                        label={"Parent B Email"}
+                        editMode={editMode}
+                        setValue={setParentBEmail}
+                        required={is_18 === "no"}
+                      />
+                    </div>
+
+                    <div className="input-group mb-2 ">
+                      <Input
+                        value={parentBName}
+                        label={"Parent B Name"}
+                        editMode={editMode}
+                        setValue={setParentBName}
+                        required={is_18 === "no"}
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
               {is_18 === "no" && (
                 <div
                   style={{
