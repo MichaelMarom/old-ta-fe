@@ -39,6 +39,7 @@ import Button from "../common/Button";
 import { IoPersonCircle } from "react-icons/io5";
 import { convertToDate } from "../common/Calendar/Calendar";
 import { uploadVideoToAzure } from "../../helperFunctions/uploadVideo";
+import Avatar from "../common/Avatar";
 
 const phoneUtil = PhoneNumberUtil.getInstance();
 const isPhoneValid = (phone) => {
@@ -70,7 +71,7 @@ const TutorSetup = () => {
   let [photo, set_photo] = useState("");
   const lastNameInputRef = useRef(null);
   let [video, set_video] = useState("");
-  const [videoError, setVideoError] = useState(false)
+  const [videoError, setVideoError] = useState(false);
 
   let grades = [
     { grade: "1st grade" },
@@ -104,7 +105,7 @@ const TutorSetup = () => {
   const [userId, setUserId] = useState(user.SID);
   const [picUploading, setPicUploading] = useState(false);
   const [savingRecord, setSavingRecord] = useState(false);
-  const [videoUploading, setVideoUploading] = useState(false)
+  const [videoUploading, setVideoUploading] = useState(false);
 
   const [vacation_mode, set_vacation_mode] = useState(false);
   const [start, setStart] = useState(moment(new Date()).toDate());
@@ -498,37 +499,31 @@ const TutorSetup = () => {
     if (type.split("/")?.[0] !== "image") {
       alert("Only Image Can Be Uploaded To This Field");
     } else {
-      // frame.innerHTML = "";
-
       let reader = new FileReader();
 
       reader.onload = (result) => {
-        // let img = `<img src='${reader.result}' style='height: 100%; width: 100%; '}} alt='photo' />`;
-
         set_photo(reader.result);
-
-        // frame?.insertAdjacentHTML("afterbegin", img);
       };
       reader.readAsDataURL([...f.files]?.[0]);
     }
   };
 
   let handleVideo = async (e) => {
-    const file = e.target.files[0]
+    const file = e.target.files[0];
 
     if (file.type.split("/")?.[0] !== "video") {
       alert("Only Video Can Be Uploaded To This Field");
     } else {
-      setVideoUploading(true)
+      setVideoUploading(true);
       let reader = new FileReader({});
 
       reader.onload = (result) => {
-        set_video(reader.result)
+        set_video(reader.result);
       };
       reader.readAsDataURL(file);
 
-      tutor?.AcademyId && await uploadVideoToAzure(file, tutor.AcademyId)
-      setVideoUploading(false)
+      tutor?.AcademyId && (await uploadVideoToAzure(file, tutor.AcademyId));
+      setVideoUploading(false);
     }
   };
 
@@ -605,18 +600,14 @@ const TutorSetup = () => {
                 />
               )}
             </div>
-            <div className=" h-100 border shadow">
+            <div className=" h-100 border rounded-circle shadow">
               {photo ? (
-                <img
-                  src={photo}
-                  style={{ height: "230px", width: "230px" }}
-                  alt="profile-pic"
-                />
+                <Avatar avatarSrc={photo} showOnlineStatus={false} size="200" />
               ) : (
                 <div style={{ textAlign: "justify", fontSize: "12px" }}>
-                  You must upload your picture, and video on this tab.
-                  You are permitted to move to next tabs without validating that,
-                  but your account will not be activated until it’s done
+                  You must upload your picture, and video on this tab. You are
+                  permitted to move to next tabs without validating that, but
+                  your account will not be activated until it’s done
                 </div>
               )}
             </div>
@@ -668,19 +659,18 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <label className="input-group-text w-50" htmlFor="">
-                First Name
+              <label className="input w-100">
+                <input
+                  className="input__field"
+                  type="text"
+                  required
+                  disabled={nameFieldsDisabled}
+                  onChange={(e) => set_fname(e.target.value)}
+                  value={fname}
+                  id="fname"
+                />
+                <span className="input__label">First Name</span>
               </label>
-              <input
-                required
-                disabled={nameFieldsDisabled}
-                onChange={(e) => set_fname(e.target.value)}
-                placeholder="First Name"
-                value={fname}
-                type="text"
-                id="fname"
-                className="form-control m-0"
-              />
             </div>
 
             <div
@@ -694,18 +684,16 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <label className="input-group-text w-50" htmlFor="">
-                Middle
+              <label className="input w-100">
+                <input
+                  className="input__field"
+                  disabled={nameFieldsDisabled}
+                  onChange={(e) => set_mname(e.target.value)}
+                  value={mname}
+                  type="text"
+                />
+                <span className="input__label">Middle Name</span>
               </label>
-              <input
-                disabled={nameFieldsDisabled}
-                onInput={(e) => set_mname(e.target.value)}
-                placeholder="Optional"
-                value={mname}
-                className="form-control m-0"
-                type="text"
-                id="mname"
-              />
             </div>
 
             <div
@@ -719,38 +707,37 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <label className="input-group-text w-50" htmlFor="">
-                Last Name
-              </label>
-              <input
-                required
-                disabled={nameFieldsDisabled}
-                onInput={(e) => set_sname(e.target.value)}
-                placeholder="Last Name"
-                value={lname}
-                type="text"
-                id="lname"
-                className="form-control m-0"
-                onBlur={() => {
-                  if (fname.length && lname.length) {
-                    const screenName = `${capitalizeFirstLetter(fname)} ${mname.length
-                      ? `${capitalizeFirstLetter(mname?.[0])}.`
-                      : ``
-                      } ${capitalizeFirstLetter(lname?.[0])}.`;
-                    toast(
-                      `You screen name is; ${screenName} which we use online. We do not disclose your private information online. 
+              <label className="input w-100">
+                <input
+                  className="input__field"
+                  required
+                  disabled={nameFieldsDisabled}
+                  onInput={(e) => set_sname(e.target.value)}
+                  placeholder="Last Name"
+                  value={lname}
+                  type="text"
+                  onBlur={() => {
+                    if (fname.length && lname.length) {
+                      const screenName = `${capitalizeFirstLetter(fname)} ${mname.length
+                        ? `${capitalizeFirstLetter(mname?.[0])}.`
+                        : ``
+                        } ${capitalizeFirstLetter(lname?.[0])}.`;
+                      toast(
+                        `You screen name is; ${screenName} which we use online. We do not disclose your private information online. 
                     We use your cellphone only for verification to withdraw your funds, or for events notifications like
                     students booking/postponding/cancelling lessons, etc'. `,
-                      {
-                        closeButton: true,
-                        autoClose: false,
-                        className: "setup-private-info",
-                      }
-                    );
-                  }
-                }}
-                ref={lastNameInputRef}
-              />
+                        {
+                          closeButton: true,
+                          autoClose: false,
+                          className: "setup-private-info",
+                        }
+                      );
+                    }
+                  }}
+                  ref={lastNameInputRef}
+                />
+                <span className="input__label">Last Name</span>
+              </label>
             </div>
 
             <div
@@ -764,16 +751,16 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <label className="input-group-text w-50" htmlFor="">
-                Email
+              <label className="input w-100">
+                <input
+                  className="input__field"
+                  placeholder="Email"
+                  value={email}
+                  type="text"
+                  disabled
+                />
+                <span className="input__label">Email</span>
               </label>
-              <input
-                className="form-control m-0"
-                placeholder="Email"
-                value={email}
-                type="text"
-                disabled
-              />
             </div>
 
             <div
@@ -787,18 +774,27 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <label className="w-50 input-group-text" htmlFor="">
-                Cell Phone
-              </label>
+              <div className="input w-100">
 
-              <PhoneInput
-                defaultCountry="us"
-                value={cell}
-                onChange={(cell) => set_cell(cell)}
-                required
-                disabled={nameFieldsDisabled}
-                style={{ width: "66%" }}
-              />
+
+                <PhoneInput
+                  defaultCountry="us"
+                  value={cell}
+                  onChange={(cell) => set_cell(cell)}
+                  required
+                  disabled={nameFieldsDisabled}
+                  style={{ width: "100%" }}
+                />
+                <span
+                  className="input__label"
+                  style={{
+                    top: "-3px", left: "5px", zIndex: "99", padding: "2px",
+                    color: "rgb(133, 138, 133)",
+                    transform: " translate(0.25rem, -65%) scale(0.8)"
+                  }}
+                >  phone
+                </span>
+              </div>
             </div>
 
             <div
@@ -812,29 +808,27 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <label
-                className="input-group-text w-50"
-                htmlFor=""
-                style={{ fontSize: "14px" }}
-              >
-                <ToolTip
-                  width="200px"
-                  text="Select your response time answering the student during business time in your time zone. Please take notice that the student take this fact as one of the considurations of selecting you as tutor."
-                />{" "}
-                Response Time
+              <label className="input w-100">
+                <select
+                  className="input__field"
+                  style={{ height: "50px" }}
+                  onInput={(e) => set_response_zone(e.target.value)}
+                  value={response_zone}
+                  disabled={!editMode}
+                  required
+                >
+                  {response_list}
+                </select>
+                <span className="input__label" style={{ top: "2px" }}>
+                  <ToolTip
+                    width="200px"
+                    text="Select your response time answering the student during business time in your time zone. Please take notice that the student take this fact as one of the considurations of selecting you as tutor."
+                  />{" "}
+                  Response Time
+                </span>
               </label>
-              <select
-                className="form-select m-0"
-                onInput={(e) => set_response_zone(e.target.value)}
-                value={response_zone}
-                id="resZone"
-                disabled={!editMode}
-                required
-              >
-                {response_list}
-              </select>
             </div>
-           
+
             <div>
               <div
                 style={{
@@ -846,28 +840,39 @@ const TutorSetup = () => {
                   whiteSpace: "nowrap",
                 }}
               >
-                <label className="input-group-text w-50" htmlFor="">
-                  <ToolTip
-                    width="200px"
-                    text={
-                      "Select the Greenwich Mean Time (GMT) zone where you reside. It will let the student configure his time availability conducting lessons with you, when in a different time zone. "
-                    }
-                  />{" "}
-                  Time Zone
+                <label className="input w-100">
+                  <select
+                    style={{ height: "50px" }}
+                    className="input__field"
+                    onInput={(e) => set_timeZone(e.target.value)}
+                    id="timeZone"
+                    disabled={!editMode}
+                    value={timeZone}
+                    required
+                  >
+                    {GMTList}
+                  </select>
+
+                  <span className="input__label">
+                    {" "}
+                    <ToolTip
+                      width="200px"
+                      text={
+                        "Select the Greenwich Mean Time (GMT) zone where you reside. It will let the student configure his time availability conducting lessons with you, when in a different time zone. "
+                      }
+                    />{" "}
+                    Time Zone
+                  </span>
                 </label>
-                <select
-                  className="form-select m-0"
-                  onInput={(e) => set_timeZone(e.target.value)}
-                  id="timeZone"
-                  disabled={!editMode}
-                  value={timeZone}
-                  required
-                >
-                  {GMTList}
-                </select>
               </div>
-              <Link className="m-0" style={{fontSize:"12px"}} target="_blank" 
-              to={'https://24timezones.com/timezone-map'}  >See your timezone from map.</Link>
+              <Link
+                className="m-0"
+                style={{ fontSize: "12px" }}
+                target="_blank"
+                to={"https://24timezones.com/timezone-map"}
+              >
+                See your timezone from map.
+              </Link>
             </div>
           </div>
 
@@ -883,23 +888,18 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <label
-                className="input-group-text w-50"
-                htmlFor=""
-                style={{ fontSize: "14px" }}
-              >
-                Address 1
+              <label className="input w-100">
+                <input
+                  className="input__field"
+                  onInput={(e) => set_add1(e.target.value)}
+                  placeholder="Address 1"
+                  value={add1}
+                  type="text"
+                  required
+                  disabled={!editMode}
+                />
+                <span className="input__label"> Address 1</span>
               </label>
-              <input
-                className="form-control m-0"
-                onInput={(e) => set_add1(e.target.value)}
-                placeholder="Address 1"
-                value={add1}
-                type="text"
-                id="add1"
-                required
-                disabled={!editMode}
-              />
             </div>
             <div
               style={{
@@ -912,18 +912,17 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <label className="input-group-text w-50" htmlFor="">
-                Address 2
+              <label className="input w-100">
+                <input
+                  className="input__field"
+                  onInput={(e) => set_add2(e.target.value)}
+                  placeholder="Optional"
+                  value={add2}
+                  disabled={!editMode}
+                  type="text"
+                />
+                <span className="input__label"> Address 2</span>
               </label>
-              <input
-                className="form-control m-0"
-                onInput={(e) => set_add2(e.target.value)}
-                placeholder="Optional"
-                value={add2}
-                disabled={!editMode}
-                type="text"
-                id="add2"
-              />
             </div>
 
             <div
@@ -936,19 +935,18 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <label className="input-group-text w-50" htmlFor="">
-                City/Town
+              <label className="input w-100">
+                <input
+                  className="input__field"
+                  onInput={(e) => set_city(e.target.value)}
+                  placeholder="City"
+                  type="text"
+                  required
+                  value={city}
+                  disabled={!editMode}
+                />
+                <span className="input__label"> City/Town</span>
               </label>
-              <input
-                className="form-control m-0"
-                onInput={(e) => set_city(e.target.value)}
-                placeholder="City"
-                type="text"
-                required
-                value={city}
-                id="city"
-                disabled={!editMode}
-              />
             </div>
             <div
               style={{
@@ -959,41 +957,40 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <label className="input-group-text w-50" htmlFor="country">
-                Country
+              <label className="input w-100">
+                <select
+                  className="input__field"
+                  style={{ height: "50px" }}
+                  required
+                  onInput={(e) => set_country(e.target.value)}
+                  value={country}
+                  disabled={!editMode}
+                >
+                  {countryList}
+                </select>
+                <span className="input__label" style={{ top: "2px" }}>
+                  Country
+                </span>
               </label>
-              <select
-                required
-                className="form-select m-0"
-                onInput={(e) => set_country(e.target.value)}
-                id="country"
-                value={country}
-                disabled={!editMode}
-              >
-                {countryList}
-              </select>
             </div>
             {(options[country] ?? [])?.length ? (
               <div
                 className="mb-2"
                 style={{
-                  display: (options[country] ?? [])?.length ? "flex" : "none",
+                  display: "flex",
                   width: "100%",
-
                   alignItems: "center",
-
                   whiteSpace: "nowrap",
                 }}
               >
-                <label className="input-group-text w-50" htmlFor="">
-                  State/Province
-                </label>
-
-                {(options[country] ?? [])?.length ? (
+                <label className="input w-100">
                   <select
-                    className="form-select "
-                    onInput={(e) => set_state(e.target.value)}
-                    id="state"
+                    className="input__field"
+                    style={{ height: "50px" }}
+                    onChange={(e) => {
+                      console.log(e.target.value);
+                      set_state(e.target.value);
+                    }}
                     disabled={!editMode}
                     value={state}
                     required
@@ -1007,15 +1004,10 @@ const TutorSetup = () => {
                       </option>
                     ))}
                   </select>
-                ) : (
-                  <input
-                    className="form-control m-0"
-                    disabled
-                    type="text"
-                    value={state}
-                    onChange={(e) => set_state(e.target.value)}
-                  />
-                )}
+                  <span className="input__label" style={{ top: "2px" }}>
+                    State/Province
+                  </span>
+                </label>
               </div>
             ) : (
               ""
@@ -1032,19 +1024,18 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <span className="input-group-text w-50" htmlFor="">
-                Zip Code
-              </span>
-              <input
-                className="form-control m-0"
-                onInput={(e) => set_zipCode(e.target.value)}
-                value={zipCode}
-                disabled={!editMode}
-                placeholder="Zip Code"
-                type="text"
-                required
-                id="zip"
-              />
+              <label className="input w-100">
+                <input
+                  className="input__field"
+                  onInput={(e) => set_zipCode(e.target.value)}
+                  value={zipCode}
+                  disabled={!editMode}
+                  placeholder="Zip Code"
+                  type="text"
+                  required
+                />
+                <span className="input__label"> Zip Code</span>
+              </label>
             </div>
 
             {!!timeZone && (
@@ -1058,20 +1049,22 @@ const TutorSetup = () => {
                   whiteSpace: "nowrap",
                 }}
               >
-                <label className="input-group-text w-50" htmlFor="">
-                  <ToolTip
-                    width="200px"
-                    text={
-                      "Coordinated Universal Time or 'UTC' is the primary time standard by which the world regulate local time. "
-                    }
-                  />{" "}
-                  UTC
+                <label className="input w-100">
+                  <input
+                    className="input__field"
+                    disabled
+                    value={typeof dateTime === "object" ? "" : dateTime}
+                  />
+                  <span className="input__label">
+                    <ToolTip
+                      width="200px"
+                      text={
+                        "Coordinated Universal Time or 'UTC' is the primary time standard by which the world regulate local time. "
+                      }
+                    />
+                    UTC
+                  </span>
                 </label>
-                <input
-                  className="form-control m-0"
-                  disabled
-                  value={typeof dateTime === "object" ? "" : dateTime}
-                />
               </div>
             )}
           </div>
@@ -1108,7 +1101,9 @@ const TutorSetup = () => {
                   </video>
                 } */}
               </div>
-            ) : selectedVideoOption === "upload" && video?.length && !videoError ? (
+            ) : selectedVideoOption === "upload" &&
+              video?.length &&
+              !videoError ? (
               <div className="d-flex justify-content-center align-item-center w-100 h-100 border shadow">
                 <video
                   src={video}
@@ -1133,11 +1128,17 @@ const TutorSetup = () => {
                   should speak clearly, and confidently. A good introduction
                   video can make a lasting impression and increase your chances
                   of getting hired. View samples; <br />
-                  <Link to="https://www.youtube.com/watch?v=tZ3ndrKQXN8" target="_blank">
+                  <Link
+                    to="https://www.youtube.com/watch?v=tZ3ndrKQXN8"
+                    target="_blank"
+                  >
                     Sample 1: Intro Video
                   </Link>{" "}
                   <br />
-                  <Link to="https://www.youtube.com/watch?v=sxa2C6UmrNQ" target="_blank">
+                  <Link
+                    to="https://www.youtube.com/watch?v=sxa2C6UmrNQ"
+                    target="_blank"
+                  >
                     Sample 2: How to make an Introduction Video
                   </Link>{" "}
                   <br />
@@ -1497,7 +1498,7 @@ const TutorSetup = () => {
         unSavedChanges={unSavedChanges}
         loading={savingRecord}
       />
-    </form>
+    </form >
   );
 };
 

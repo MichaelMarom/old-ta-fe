@@ -124,7 +124,7 @@ const Marketing = () => {
                 <div className='d-flex ' style={{ gap: "5px" }}>
 
                   <div>
-                    <label style={{marginRight:"20px"}}>
+                    <label style={{ marginRight: "20px" }}>
                       <input
                         type="radio"
                         name="messageType"
@@ -152,7 +152,8 @@ const Marketing = () => {
                 </div>
                 <textarea className='form-control' value={message} placeholder='Type message that you need to send to student or tutor' style={{ height: "200px", width: "100%" }}
                   onChange={(e) => e.target.value.length < 145 && setMessage(e.target.value)} />
-                {message.length > 143 && <p className='text-danger w-100 text-end' style={{ fontSize: "12px" }}>Maximum limit 144 characters</p>}
+                {message.length > 143 && <p className='text-danger w-100 text-end' style={{ fontSize: "12px" }}>
+                  Maximum limit 144 characters</p>}
                 <TAButton buttonText={'Send'} type='submit' />
               </form>
             </div>

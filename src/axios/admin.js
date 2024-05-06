@@ -135,6 +135,6 @@ export const send_sms = async (body) => {
     const data = await apiClient.post("/send-message", body);
     return data;
   } catch (err) {
-    return err;
+    showErrorToast(err)
   }
 };

@@ -204,7 +204,7 @@ const Header = () => {
                 ? "none"
                 : "auto",
             width: "calc(100% - 300px)",
-            margin: "0 200px ",
+            margin: "0 150px ",
           }}
         >
           {tabs.map((tab) => {

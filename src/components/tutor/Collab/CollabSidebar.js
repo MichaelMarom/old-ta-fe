@@ -19,7 +19,7 @@ import { RiCameraOffFill } from "react-icons/ri";
 import { PiMicrophoneSlashFill } from "react-icons/pi";
 import _ from "lodash";
 
-const TutorAside = ({
+const CollabSidebar = ({
   openedSession,
   sessionTime,
   openedSessionTimeRemainingToStart,
@@ -65,6 +65,7 @@ const TutorAside = ({
   const queryParams = new URLSearchParams(location.search);
   const sessionId = queryParams.get("sessionId");
   const [volume, setVolume] = useState(50);
+  const [allowStreaming, setAllowStreaming] = useState(false)
 
   const handleVolumeChange = (event) => {
     if (!event) return;
@@ -163,15 +164,15 @@ const TutorAside = ({
   const initStreamAndSocket = useCallback(
     (retryOnFail = true) => {
       let myVideo = document.querySelector(".tutor-video-tab");
-      let room_id = "1234567890asdfghjkl";
+      let room_id = sessionId;
       let peer = new Peer(undefined, {});
 
-      peer && peer.on("open", (id) => {
+      room_id && sessionTime === 'current' && peer && peer.on("open", (id) => {
         socket.emit("join-room", room_id, id);
       });
-
+      console.log(allowStreaming, 'iommedl')
       const peers = {};
-      navigator.mediaDevices
+      allowStreaming && navigator.mediaDevices
         .getUserMedia({
           video: true,
           audio: {
@@ -219,7 +220,7 @@ const TutorAside = ({
           if (peers[user_id]) peers[user_id].close();
         });
 
-      peer && peer.on("open", (id) => {
+      room_id && sessionTime === 'current' && peer && peer.on("open", (id) => {
         socket.emit("join-room", room_id, id);
       });
       function connectToNewUser(userId, stream) {
@@ -263,13 +264,12 @@ const TutorAside = ({
         }
       };
     },
-    [visuals]
-  );
+    [visuals, allowStreaming]);
 
   useEffect(() => {
     initStreamAndSocket();
     // eslint-disable-next-line react-hooks/exhaustive-deps 
-  }, []);
+  }, [allowStreaming]);
 
   const children = ({ remainingTime }) => {
     const minutes = Math.floor(remainingTime / 60);
@@ -398,59 +398,74 @@ const TutorAside = ({
       <div className="TutorAsideVideoCnt">
         {videoLoader}
 
-        <video className="tutor-video-tab"></video>
-        <ul>
-          <li
-            className="video-size"
-            style={{
-              background: "#efefef",
-              opacity: ".4",
-              padding: "5px",
-              borderRadius: "8px",
-            }}
-            onClick={handleVideoResize}
-          >
-            <img
-              src={screenType}
-              style={{ height: "20px", width: "20px" }}
-              alt="..."
-            />
-          </li>
-          <li
-            onClick={(e) => handleVidActions(e)}
-            style={{
-              padding:"4px",
-              borderRadius: "50%",
-              backgroundColor: "white",
-              opacity: "0.7",
-            }}
-          >
-            {/* {videoEnabled ? <FaCamera color="black" /> : <RiCameraOffFill />} */}
-            {videoEnabled ? <img src={CameraOn}  width={27} height={27}/> : <img src={CameraOff}   width={27} height={27}/>}
-            
-          </li>
+        {allowStreaming ?
+          <>
+            <video className="tutor-video-tab"></video>
+            <ul>
+              <li
+                className="video-size"
+                style={{
+                  background: "#efefef",
+                  opacity: ".4",
+                  padding: "5px",
+                  borderRadius: "8px",
+                }}
+                onClick={handleVideoResize}
+              >
+                <img
+                  src={screenType}
+                  style={{ height: "20px", width: "20px" }}
+                  alt="..."
+                />
+              </li>
+              <li
+                onClick={(e) => handleVidActions(e)}
+                style={{
+                  padding: "4px",
+                  borderRadius: "50%",
+                  backgroundColor: "white",
+                  opacity: "0.7",
+                }}
+              >
+                {/* {videoEnabled ? <FaCamera color="black" /> : <RiCameraOffFill />} */}
+                {videoEnabled ? <img src={CameraOn} width={27} height={27} /> : <img src={CameraOff} width={27} height={27} />}
 
-          <li
-            onClick={(e) => handleAudioActions(e)}
-            style={{
-              padding:"4px",
-              borderRadius: "50%",
-              backgroundColor: "white",
-              opacity: "0.7",
-            }}
-          >
-            {/* {audioEnabled ? (
+              </li>
+
+              <li
+                onClick={(e) => handleAudioActions(e)}
+                style={{
+                  padding: "4px",
+                  borderRadius: "50%",
+                  backgroundColor: "white",
+                  opacity: "0.7",
+                }}
+              >
+                {/* {audioEnabled ? (
               <FaMicrophone color="black" />
             ) : (
               <PiMicrophoneSlashFill />
             )} */}
-            {audioEnabled ? (
-              <img src={AudioOn} width={27} height={27} />
-            ) : (
-              <img src={AudioOff}  width={27} height={27}/>
-            )}
-          </li>
-        </ul>
+                {audioEnabled ? (
+                  <img src={AudioOn} width={27} height={27} />
+                ) : (
+                  <img src={AudioOff} width={27} height={27} />
+                )}
+              </li>
+            </ul>
+          </> :
+          <div>
+            <div>
+              Allow User to access camera and microphone
+            </div>
+            <div>
+              <button className="btn btn-primary btn-sm"
+                onClick={() => {
+                  setAllowStreaming(true)
+                }}>Allow</button>
+            </div>
+          </div>
+        }
       </div>
       {/* Can update design later :) */}
       <div>
@@ -574,4 +589,4 @@ const TutorAside = ({
   );
 };
 
-export default TutorAside;
+export default CollabSidebar;

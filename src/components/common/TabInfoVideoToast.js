@@ -23,8 +23,8 @@ const TabInfoVideoToast = ({ video }) => {
 
     return (
         <>
-            <div className='d-flex justify-content-center align-items-center borer p-1 border-light'
-                style={{ position: "fixed", top: '0', right: "12%", zIndex: "999" }}
+            <div className='d-flex justify-content-center align-items-center border border-light rounded'
+                style={{ position: "fixed", top: '5px', right: "14%", zIndex: "999", height:"40px" }}
             >
                 <div className='text-light text-sm' style={{fontSize:"12px"}}>View Tutorial</div>
                 <Button

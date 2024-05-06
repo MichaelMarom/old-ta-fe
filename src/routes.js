@@ -27,7 +27,7 @@ import { useClerk, useAuth, SignedIn } from "@clerk/clerk-react";
 import { redirect_to_login } from "./helperFunctions/auth";
 import { setStudentSessions } from "./redux/student/studentSessions";
 import { setTutorSessions } from "./redux/tutor/tutorSessions";
-import TutorClass from "./pages/tutor/TutorClass";
+import Collaboration from "./pages/tutor/Collaboration";
 import CallWithChatExperience from "./pages/tutor/Test1";
 import { setNewSubjCount } from "./redux/admin/newSubj";
 
@@ -239,7 +239,7 @@ const App = () => {
 
   return (
     <Routes>
-      <Route path={`/collab`} element={<TutorClass />} />
+      <Route path={`/collab`} element={<Collaboration />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/chat-call" element={<CallWithChatExperience />} />

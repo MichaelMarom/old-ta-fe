@@ -9,7 +9,7 @@ import CommonLayout from "../../layouts/CommonLayout";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import TutorAside from "../../components/tutor/Collab/TutorCollabAside";
+import TutorAside from "../../components/tutor/Collab/CollabSidebar";
 import Switch from "../../components/common/Switch";
 import Tooltip from "../../components/common/ToolTip";
 import _ from "lodash";
@@ -21,11 +21,10 @@ import {
 import { get_my_data } from "../../axios/student";
 import logo from "../../assets/images/tutoring Logo.png";
 import Loading from "../../components/common/Loading";
-import { FaInfoCircle } from "react-icons/fa";
 import VIDEO from '../../assets/videos/collaboration.mp4'
 import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
 
-const TutorClass = () => {
+const Collaboration = () => {
   const { user } = useSelector((state) => state.user);
   const { student } = useSelector((state) => state.student);
   const { tutor } = useSelector((state) => state.tutor);
@@ -523,4 +522,4 @@ const TutorClass = () => {
   );
 };
 
-export default TutorClass;
+export default Collaboration;
