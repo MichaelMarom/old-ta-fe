@@ -12,17 +12,16 @@ const TutorLayout = ({ children }) => {
     const navigate = useNavigate()
     const [remainingTime, setTimeRemaining] = useState(0)
 
-
     //todo
     //when currentsession timeRemaing is 7 minutes then move to feedback
     //shuould not depend on upcoming session, upcomingsession can be null
     useEffect(() => {
         const extractRemainingtimeInInteger = parseInt(upcomingSessionFromNow.split(' ')[0]);
         if (inMins && upcomingSession?.id && extractRemainingtimeInInteger < 4) {
-            navigate(`/collab?sessionId=${upcomingSession.id}`)
+            // navigate(`/collab?sessionId=${upcomingSession.id}`)
         }
         else if (currentSession?.id && remainingTime > 10 * 60) {
-            navigate(`/collab?sessionId=${currentSession.id}`)
+            // navigate(`/collab?sessionId=${currentSession.id}`)
         }
     }, [currentSession.id, inMins, navigate, upcomingSession, upcomingSessionFromNow, remainingTime])
 

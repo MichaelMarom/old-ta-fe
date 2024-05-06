@@ -74,32 +74,30 @@ const Marketing = () => {
 
   return (
     <AdminLayout>
-      <div>
+      <div className='container m-auto w-100'>
         <input type="file" onChange={handleFileChange} />
-        {file && (
-          <div className='d-flex'>
-            <div className='d-flex flex-column ' style={{ width: "60%" }}>
-             <div> <h3>Data:</h3> 
-             <div></div>
-             </div>
+        {true && (
+          <div className='d-flex w-100'>
+            <div className='d-flex flex-column' style={{ width: "60%" }}>
+              <div> <h3>Data:</h3>
+                <div></div>
+              </div>
               <div style={{ overflow: "auto", height: "70vh" }}>
                 <table className='' style={{ overflow: "auto" }}>
                   <thead>
                     <tr>
                       <th>Sr#</th>
+                      <th>Action</th>
                       {headers.map((header, index) => (
                         <th key={index}>{header}</th>
                       ))}
-                      <th>Action</th>
+
                     </tr>
                   </thead>
                   <tbody>
                     {data.map((row, rowIndex) => (
                       <tr key={rowIndex}>
-                        <td>{rowIndex + 1}</td>
-                        {headers.map((header, columnIndex) => (
-                          <td key={columnIndex}>{row[header]}</td>
-                        ))}
+                        <td className='col-1'>{rowIndex + 1}</td>
                         <td>
                           <input
                             type="checkbox"
@@ -107,6 +105,10 @@ const Marketing = () => {
                             onChange={() => toggleRowSelection(row)}
                           />
                         </td>
+                        {headers.map((header, columnIndex) => (
+                          <td key={columnIndex}>{row[header]}</td>
+                        ))}
+
                         {/* <td>
                         <TAButton handleClick={() => setSelectedRows([...selectedRows, row])} buttonText={"Select"} />
                       </td> */}
@@ -117,21 +119,12 @@ const Marketing = () => {
                 </table>
               </div>
             </div>
-            <div className='rounded border p-2 m-2 shadow w-100'>
+            <div className='rounded border p-2 m-2 shadow ' style={{ width: "40%" }}>
               <form onSubmit={handleSubmit}>
                 <div className='d-flex ' style={{ gap: "5px" }}>
-                  {/* <div><label>Type</label>
-
-                  <select type='text' placeholder='Select' className='form-select' >
-                    <option value={''}>Select</option>
-                    <option value={'studebt'}>Student</option>
-                    <option value={'tutor'}>Tutor</option>
-                  </select>
-
-                </div> */}
 
                   <div>
-                    <label>
+                    <label style={{marginRight:"20px"}}>
                       <input
                         type="radio"
                         name="messageType"

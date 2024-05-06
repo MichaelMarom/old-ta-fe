@@ -15,7 +15,6 @@ const StudentTable = () => {
     const [updatingStatus, setUpdatingStatus] = useState(false)
     const [statusCount, setStatusCount] = useState([])
     const COLUMNS = [
-
         {
             Header: 'Status',
             accessor: 'Status',

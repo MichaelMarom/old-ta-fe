@@ -834,36 +834,40 @@ const TutorSetup = () => {
                 {response_list}
               </select>
             </div>
+           
+            <div>
+              <div
+                style={{
+                  display: "flex",
+                  width: "100%",
 
-            <div
-              style={{
-                display: "flex",
-                width: "100%",
+                  alignItems: "center",
 
-                alignItems: "center",
-
-                whiteSpace: "nowrap",
-              }}
-            >
-              <label className="input-group-text w-50" htmlFor="">
-                <ToolTip
-                  width="200px"
-                  text={
-                    "Select the Greenwich Mean Time (GMT) zone where you reside. It will let the student configure his time availability conducting lessons with you, when in a different time zone. "
-                  }
-                />{" "}
-                Time Zone
-              </label>
-              <select
-                className="form-select m-0"
-                onInput={(e) => set_timeZone(e.target.value)}
-                id="timeZone"
-                disabled={!editMode}
-                value={timeZone}
-                required
+                  whiteSpace: "nowrap",
+                }}
               >
-                {GMTList}
-              </select>
+                <label className="input-group-text w-50" htmlFor="">
+                  <ToolTip
+                    width="200px"
+                    text={
+                      "Select the Greenwich Mean Time (GMT) zone where you reside. It will let the student configure his time availability conducting lessons with you, when in a different time zone. "
+                    }
+                  />{" "}
+                  Time Zone
+                </label>
+                <select
+                  className="form-select m-0"
+                  onInput={(e) => set_timeZone(e.target.value)}
+                  id="timeZone"
+                  disabled={!editMode}
+                  value={timeZone}
+                  required
+                >
+                  {GMTList}
+                </select>
+              </div>
+              <Link className="m-0" style={{fontSize:"12px"}} target="_blank" 
+              to={'https://24timezones.com/timezone-map'}  >See your timezone from map.</Link>
             </div>
           </div>
 

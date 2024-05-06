@@ -312,6 +312,9 @@ const TutorTable = () => {
                           item.Status
                         )} className="form-select"
                       style={{ fontSize: "12px", padding: "5px", height: "25px" }}>
+                      <option value={"pending"} disabled >Pending</option>
+                      <option value={"under-review"} disabled >Under Review</option>
+
                       <option value={"active"}>Active</option>
                       <option value={"suspended"}>Suspend</option>
                       <option value={"disapproved"}>Disapprove</option>
