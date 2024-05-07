@@ -96,6 +96,9 @@ label {
     height:50px !important
 
 }
+.react-international-phone-input-container .react-international-phone-input--disabled{
+    background: #e1e1e1 !important;
+}
 
 ul.vertical-tabs .nav-link :hover {
     background: aliceblue !important;

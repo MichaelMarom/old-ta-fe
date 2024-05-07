@@ -14,7 +14,7 @@ const Select = ({
     <label className="input w-100">
       <select
         className="input__field"
-        style={{ height: "50px" }}
+        style={{ height: "50px", background: editMode ? "white" : "#e1e1e1" }}
         onInput={(e) => setValue(e.target.value)}
         value={value}
         disabled={!editMode}

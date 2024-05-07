@@ -15,6 +15,7 @@ const Input = ({
         value={value}
         type="text"
         required={required}
+        style={{ background: editMode ? "white" : "#e1e1e1" }}
         disabled={!editMode}
       />
       <span className="input__label"> {label}</span>

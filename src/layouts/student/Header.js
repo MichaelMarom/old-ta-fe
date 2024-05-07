@@ -159,7 +159,7 @@ const Header = () => {
             background: "inherit",
             pointerEvents: "auto",
             width: "calc(100% - 300px)",
-            margin: "0 200px 0 200px",
+            margin: "0 150px 0 150px",
           }}
         >
           {tabs.map((tab) => (

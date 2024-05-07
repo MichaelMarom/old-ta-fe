@@ -121,15 +121,14 @@ const Signup = () => {
         <div className="container m-auto h-100">
           <div className="row m-auto h-100 gx-lg-5 align-items-center">
             <div className="col-lg-6 mb-5 mb-lg-0">
-              <h1 className="my-5 display-3 fw-bold ls-tight">
-                The best offer <br />
-                <span className="text-primary">for your business</span>
+              <h1 className="my-5  fw-bold ls-tight">
+                Start your tutoring <br/>business, join <br />
+                <span className="text-primary"> Tutoring Academy</span>
               </h1>
               <p style={{ color: 'hsl(217, 10%, 50.8%)' }}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Eveniet, itaque accusantium odio, soluta, corrupti aliquam
-                quibusdam tempora at cupiditate quis eum maiores libero
-                veritatis? Dicta facilis sint aliquid ipsum atque?
+                Welcome to Tutoring Academy, where knowledge knows no bounds! 
+                Our platform is designed to ignite the flames of curiosity, empower minds, and pave the way for academic triumph. 
+                With a diverse array of subjects and dedicated tutors, we're here to guide you on your journey to greatness.
               </p>
             </div>
             <div className="col-lg-6 mb-5 mb-lg-0">

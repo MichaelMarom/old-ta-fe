@@ -145,7 +145,7 @@ function BookedLessons({ events, handleRowSelect }) {
                     buttonText={"Select"}
                     style={{
                       animation:
-                        event.feedbackEligible && !event.rating
+                        !checkedEligibility(event)
                           ? "blinking 1s infinite"
                           : "none",
                     }}

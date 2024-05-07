@@ -31,7 +31,6 @@ const Feedback = () => {
   const [questions, setQuestions] = useState([]);
   const [rawQuestions, setRawQuestions] = useState([]);
 
-  const [pendingChange, setPendingChange] = useState(null);
   const { tutor } = useSelector((state) => state.tutor);
   const { isLoading } = useSelector((state) => state.bookings);
   const [fetchingSessions, setFetchingFeedbackSessions] = useState(false);
