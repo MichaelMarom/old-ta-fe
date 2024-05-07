@@ -40,6 +40,8 @@ import { IoPersonCircle } from "react-icons/io5";
 import { convertToDate } from "../common/Calendar/Calendar";
 import { uploadVideoToAzure } from "../../helperFunctions/uploadVideo";
 import Avatar from "../common/Avatar";
+import Input from "../common/Input";
+import Select from "../common/Select";
 
 const phoneUtil = PhoneNumberUtil.getInstance();
 const isPhoneValid = (phone) => {
@@ -659,18 +661,12 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <label className="input w-100">
-                <input
-                  className="input__field"
-                  type="text"
-                  required
-                  disabled={nameFieldsDisabled}
-                  onChange={(e) => set_fname(e.target.value)}
-                  value={fname}
-                  id="fname"
-                />
-                <span className="input__label">First Name</span>
-              </label>
+              <Input
+                label={"First Name"}
+                setValue={set_fname}
+                value={fname}
+                editMode={!nameFieldsDisabled}
+              />
             </div>
 
             <div
@@ -684,16 +680,13 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <label className="input w-100">
-                <input
-                  className="input__field"
-                  disabled={nameFieldsDisabled}
-                  onChange={(e) => set_mname(e.target.value)}
-                  value={mname}
-                  type="text"
-                />
-                <span className="input__label">Middle Name</span>
-              </label>
+              <Input
+                label={"Middle Name"}
+                setValue={set_mname}
+                value={mname}
+                editMode={!nameFieldsDisabled}
+              />
+
             </div>
 
             <div
@@ -707,37 +700,30 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <label className="input w-100">
-                <input
-                  className="input__field"
-                  required
-                  disabled={nameFieldsDisabled}
-                  onInput={(e) => set_sname(e.target.value)}
-                  placeholder="Last Name"
-                  value={lname}
-                  type="text"
-                  onBlur={() => {
-                    if (fname.length && lname.length) {
-                      const screenName = `${capitalizeFirstLetter(fname)} ${mname.length
-                        ? `${capitalizeFirstLetter(mname?.[0])}.`
-                        : ``
-                        } ${capitalizeFirstLetter(lname?.[0])}.`;
-                      toast(
-                        `You screen name is; ${screenName} which we use online. We do not disclose your private information online. 
-                    We use your cellphone only for verification to withdraw your funds, or for events notifications like
-                    students booking/postponding/cancelling lessons, etc'. `,
-                        {
-                          closeButton: true,
-                          autoClose: false,
-                          className: "setup-private-info",
-                        }
-                      );
-                    }
-                  }}
-                  ref={lastNameInputRef}
-                />
-                <span className="input__label">Last Name</span>
-              </label>
+              <Input
+                label={"Last Name"}
+                setValue={set_sname}
+                value={lname}
+                editMode={!nameFieldsDisabled}
+                onBlur={() => {
+                  if (fname.length && lname.length) {
+                    const screenName = `${capitalizeFirstLetter(fname)} ${mname.length
+                      ? `${capitalizeFirstLetter(mname?.[0])}.`
+                      : ``
+                      } ${capitalizeFirstLetter(lname?.[0])}.`;
+                    toast(
+                      `You screen name is; ${screenName} which we use online. We do not disclose your private information online. 
+                We use your cellphone only for verification to withdraw your funds, or for events notifications like
+                students booking/postponding/cancelling lessons, etc'. `,
+                      {
+                        closeButton: true,
+                        autoClose: false,
+                        className: "setup-private-info",
+                      }
+                    );
+                  }
+                }}
+              />
             </div>
 
             <div
@@ -751,16 +737,12 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <label className="input w-100">
-                <input
-                  className="input__field"
-                  placeholder="Email"
-                  value={email}
-                  type="text"
-                  disabled
-                />
-                <span className="input__label">Email</span>
-              </label>
+              <Input
+                label={"Email"}
+                value={email}
+                editMode={false}
+              />
+
             </div>
 
             <div
@@ -808,25 +790,18 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <label className="input w-100">
-                <select
-                  className="input__field"
-                  style={{ height: "50px" }}
-                  onInput={(e) => set_response_zone(e.target.value)}
-                  value={response_zone}
-                  disabled={!editMode}
-                  required
-                >
+              <Select 
+              setValue={set_response_zone}
+              value={response_zone}
+              editMode={editMode}
+              label={"Response Time"}
+              TooltipText={
+                "Select your response time answering the student during business time in your time zone. Please take notice that the student take this fact as one of the considurations of selecting you as tutor."
+              }
+              >
                   {response_list}
-                </select>
-                <span className="input__label" style={{ top: "2px" }}>
-                  <ToolTip
-                    width="200px"
-                    text="Select your response time answering the student during business time in your time zone. Please take notice that the student take this fact as one of the considurations of selecting you as tutor."
-                  />{" "}
-                  Response Time
-                </span>
-              </label>
+              </Select>
+             
             </div>
 
             <div>
@@ -840,31 +815,20 @@ const TutorSetup = () => {
                   whiteSpace: "nowrap",
                 }}
               >
-                <label className="input w-100">
-                  <select
-                    style={{ height: "50px" }}
-                    className="input__field"
-                    onInput={(e) => set_timeZone(e.target.value)}
-                    id="timeZone"
-                    disabled={!editMode}
-                    value={timeZone}
-                    required
-                  >
+                 <Select 
+              setValue={set_timeZone}
+              value={timeZone}
+              editMode={editMode}
+              label={"Timezone"}
+              TooltipText={
+                "Select the Greenwich Mean Time (GMT) zone where you reside. It will let the student configure his time availability conducting lessons with you, when in a different time zone. "
+              }
+             
+              >
                     {GMTList}
-                  </select>
 
-                  <span className="input__label">
-                    {" "}
-                    <ToolTip
-                      width="200px"
-                      text={
-                        "Select the Greenwich Mean Time (GMT) zone where you reside. It will let the student configure his time availability conducting lessons with you, when in a different time zone. "
-                      }
-                    />{" "}
-                    Time Zone
-                  </span>
-                </label>
-              </div>
+              </Select>
+               </div>
               <Link
                 className="m-0"
                 style={{ fontSize: "12px" }}
@@ -888,18 +852,13 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <label className="input w-100">
-                <input
-                  className="input__field"
-                  onInput={(e) => set_add1(e.target.value)}
-                  placeholder="Address 1"
-                  value={add1}
-                  type="text"
-                  required
-                  disabled={!editMode}
-                />
-                <span className="input__label"> Address 1</span>
-              </label>
+              <Input
+                label={"Address 1"}
+                value={add1}
+                setValue={set_add1}
+                editMode={editMode}
+              />
+
             </div>
             <div
               style={{
@@ -912,17 +871,14 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <label className="input w-100">
-                <input
-                  className="input__field"
-                  onInput={(e) => set_add2(e.target.value)}
-                  placeholder="Optional"
-                  value={add2}
-                  disabled={!editMode}
-                  type="text"
-                />
-                <span className="input__label"> Address 2</span>
-              </label>
+              <Input
+                label={"Address 2"}
+                value={add2}
+                required={false}
+                setValue={set_add2}
+                editMode={editMode}
+              />
+
             </div>
 
             <div
@@ -935,20 +891,15 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <label className="input w-100">
-                <input
-                  className="input__field"
-                  onInput={(e) => set_city(e.target.value)}
-                  placeholder="City"
-                  type="text"
-                  required
-                  value={city}
-                  disabled={!editMode}
-                />
-                <span className="input__label"> City/Town</span>
-              </label>
+              <Input
+                label={"Ci City/Townty"}
+                value={city}
+                setValue={set_city}
+                editMode={editMode}
+              />
+
             </div>
-            <div
+            <div className="w-100"
               style={{
                 display: "flex",
                 width: "100%",
@@ -957,21 +908,16 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <label className="input w-100">
-                <select
-                  className="input__field"
-                  style={{ height: "50px" }}
-                  required
-                  onInput={(e) => set_country(e.target.value)}
-                  value={country}
-                  disabled={!editMode}
-                >
-                  {countryList}
-                </select>
-                <span className="input__label" style={{ top: "2px" }}>
-                  Country
-                </span>
-              </label>
+              
+              <Select 
+              setValue={set_country}
+              value={country}
+              editMode={editMode}
+              label={"Country"}
+              >
+                                   {countryList}
+              </Select>
+              
             </div>
             {(options[country] ?? [])?.length ? (
               <div
@@ -983,19 +929,13 @@ const TutorSetup = () => {
                   whiteSpace: "nowrap",
                 }}
               >
-                <label className="input w-100">
-                  <select
-                    className="input__field"
-                    style={{ height: "50px" }}
-                    onChange={(e) => {
-                      console.log(e.target.value);
-                      set_state(e.target.value);
-                    }}
-                    disabled={!editMode}
-                    value={state}
-                    required
-                  >
-                    <option value="" disabled>
+                 <Select 
+              setValue={set_state}
+              value={state}
+              editMode={editMode}
+              label={"State/Province"}
+              >
+                              <option value="" disabled>
                       Select State
                     </option>
                     {(options[country] ?? []).map((item) => (
@@ -1003,11 +943,9 @@ const TutorSetup = () => {
                         {item}
                       </option>
                     ))}
-                  </select>
-                  <span className="input__label" style={{ top: "2px" }}>
-                    State/Province
-                  </span>
-                </label>
+                  
+              </Select>
+                
               </div>
             ) : (
               ""
@@ -1024,18 +962,13 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <label className="input w-100">
-                <input
-                  className="input__field"
-                  onInput={(e) => set_zipCode(e.target.value)}
-                  value={zipCode}
-                  disabled={!editMode}
-                  placeholder="Zip Code"
-                  type="text"
-                  required
-                />
-                <span className="input__label"> Zip Code</span>
-              </label>
+              <Input
+                label={"Zip Code"}
+                value={zipCode}
+                setValue={set_zipCode}
+                editMode={editMode}
+              />
+
             </div>
 
             {!!timeZone && (
@@ -1049,22 +982,17 @@ const TutorSetup = () => {
                   whiteSpace: "nowrap",
                 }}
               >
-                <label className="input w-100">
-                  <input
-                    className="input__field"
-                    disabled
-                    value={typeof dateTime === "object" ? "" : dateTime}
-                  />
-                  <span className="input__label">
+                <Input
+                  label={<>
                     <ToolTip
                       width="200px"
                       text={
                         "Coordinated Universal Time or 'UTC' is the primary time standard by which the world regulate local time. "
                       }
-                    />
-                    UTC
-                  </span>
-                </label>
+                    /><div>UTC</div></>}
+                  value={typeof dateTime === "object" ? "" : dateTime}
+                  editMode={false}
+                />
               </div>
             )}
           </div>
@@ -1094,12 +1022,6 @@ const TutorSetup = () => {
                   user_id={tutor.AcademyId}
                   record_duration={60000}
                 />
-
-                {/* {newVideo &&
-                  <video width="320" height="240" autoplay controls>
-                    <source id="video_path" src={newVideo} type="video/mp4" />
-                  </video>
-                } */}
               </div>
             ) : selectedVideoOption === "upload" &&
               video?.length &&

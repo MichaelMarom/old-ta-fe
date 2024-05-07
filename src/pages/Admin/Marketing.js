@@ -4,8 +4,9 @@ import * as XLSX from 'xlsx';
 import TAButton from '../../components/common/TAButton'
 import AdminLayout from '../../layouts/AdminLayout'
 import _ from 'lodash';
-import { send_sms } from '../../axios/admin';
+import { send_email, send_sms } from '../../axios/admin';
 import { toast } from 'react-toastify';
+import RichTextEditor from '../../components/common/RichTextEditor/RichTextEditor';
 
 const Marketing = () => {
   const [file, setFile] = useState(null);
@@ -60,16 +61,23 @@ const Marketing = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const numbers = selectedRows.map(row => {
-      if (row.phone.startsWith('"') && row.phone.endsWith('"') && row.phone.length >= 2) {
-        row.phone = row.phone.slice(1, -1);
-      }
-      return row.phone
+    // const numbers = selectedRows.map(row => {
+    //   if (row?.phone && row?.phone?.startsWith('"') && row?.phone?.endsWith('"') && row?.phone?.length >= 2) {
+    //     row.phone = row.phone.slice(1, -1);
+    //   }
+    //   return row.phone
+    // })
+    const emails = selectedRows.map(row => {
+      return row.email
     })
-    console.log(numbers)
-    if (!numbers.length) toast.warning('Please select phone number to send sms')
-    if (!message.length) toast.warning('Please type your message to SMS')
-    if (messageType === 'sms') { await send_sms({ numbers, message }); }
+    // console.log(numbers, emails, message)
+    // if (!numbers.length) return toast.warning('Please select phone number to send sms');
+    if (!emails.length) return toast.warning('Please select email(s)');
+
+    if (!message.length) return toast.warning('Please type your message to send')
+    // if (messageType === 'sms') { await send_sms({ numbers, message }); }
+    if (messageType === 'email') { await send_email({ emails, message }); }
+
   }
 
   return (
@@ -150,10 +158,21 @@ const Marketing = () => {
                   <label className='d-inline'>Message</label>
                   <p className='text-sm text-secondary text-end d-inline w-75' style={{ fontSize: "12px", color: "gray" }}> {message.length} </p>
                 </div>
-                <textarea className='form-control' value={message} placeholder='Type message that you need to send to student or tutor' style={{ height: "200px", width: "100%" }}
-                  onChange={(e) => e.target.value.length < 145 && setMessage(e.target.value)} />
-                {message.length > 143 && <p className='text-danger w-100 text-end' style={{ fontSize: "12px" }}>
-                  Maximum limit 144 characters</p>}
+
+                <RichTextEditor
+                  onChange={(text) => {console.log(text); setMessage( text)}}
+                  value={message}
+                  height="70vh"
+                  placeholder='Type message that you need to send to student 
+                or tutor'
+                />
+                {/* {message.length > 143 && <p className='text-danger w-100 text-end' style={{ fontSize: "12px" }}>
+                  Maximum limit 144 characters</p>} */}
+                {/* <textarea className='form-control' value={message} placeholder='Type message that you need to send to student 
+                or tutor' style={{ height: "200px", width: "100%" }}
+                  onChange={(e) => e.target.value.length < 145 && setMessage(e.target.value)} /> */}
+
+
                 <TAButton buttonText={'Send'} type='submit' />
               </form>
             </div>

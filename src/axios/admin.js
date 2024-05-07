@@ -127,12 +127,28 @@ export const get_adminConstants = async (id = 1) => {
 
 /**
  *
- * @param {Array} body array of emails
+ * @param {Array} body array of numbers and message
  * @returns
  */
 export const send_sms = async (body) => {
   try {
     const data = await apiClient.post("/send-message", body);
+    return data;
+  } catch (err) {
+    showErrorToast(err)
+  }
+};
+
+
+
+/**
+ *
+ * @param {Array} body array of emails and message
+ * @returns
+ */
+export const send_email = async (body) => {
+  try {
+    const data = await apiClient.post("/send-email", body);
     return data;
   } catch (err) {
     showErrorToast(err)

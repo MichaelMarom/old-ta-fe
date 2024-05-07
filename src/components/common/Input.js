@@ -6,6 +6,7 @@ const Input = ({
   editMode = true,
   label,
   required = true,
+  ...rest
 }) => {
   return (
     <label className="input w-100">
@@ -17,6 +18,7 @@ const Input = ({
         required={required}
         style={{ background: editMode ? "white" : "#e1e1e1" }}
         disabled={!editMode}
+        {...rest}
       />
       <span className="input__label"> {label}</span>
     </label>
