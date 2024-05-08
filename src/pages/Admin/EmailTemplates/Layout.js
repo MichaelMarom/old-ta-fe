@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import Tabs from '../../../components/common/Tabs'
-import List from '../../../components/tutor/Ads/ListComponent'
-import StudentLayout from '../../../layouts/StudentLayout'
 import AdminLayout from '../../../layouts/AdminLayout'
-import Marketplace from './Marketplace'
-import Ad from './Ad'
-import Bids from './Bids'
-import StudentAdList from './StudentAdList'
+import List from './List'
+import Create from './Create'
 
 const Layout = ({ children }) => {
   let [activeTab, setActiveTab] = useState('')
@@ -19,18 +15,10 @@ const Layout = ({ children }) => {
   }, [])
 
   const tabs = [
-    { label: `MarketPlace`, component: <Marketplace />, link: '/student/market-place' },
+    { label: `List`, component: <List />, link: '/admin/email-templates' },
     {
-      label: 'Saved Ads', component: <StudentAdList />,
-      link: '/student/market-place/list'
-    },
-    {
-      label: 'Advertise', component: <Ad />,
-      link: '/student/market-place/ad'
-    },
-    {
-      label: 'Shortlist', component: <Bids />,
-      link: '/student/market-place/bid'
+      label: 'Create', component: <Create />,
+      link: '/admin/email-templates/create'
     },
   ];
 

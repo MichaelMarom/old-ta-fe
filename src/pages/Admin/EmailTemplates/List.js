@@ -1,13 +1,12 @@
 import React from 'react'
 import AdminLayout from '../../../layouts/AdminLayout'
+import Layout from './Layout'
 
 const EmailTemplates = () => {
   return (
-    <AdminLayout>
+    <Layout>
 
-
-
-    </AdminLayout>
+    </Layout>
   )
 }
 
