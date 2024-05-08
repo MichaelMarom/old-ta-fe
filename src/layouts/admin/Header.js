@@ -25,6 +25,8 @@ const Header = () => {
         { id: 'tutor-data', label: 'Tutor' },
         { id: 'student-data', label: 'Student' },
         { id: 'marketing', label: 'Marketing' },
+        { id: 'email-templates', label: 'Email-Templates' },
+
         { id: 'new-subject', label: 'New Subject' },
         { id: 'accounting', label: 'Accounting' },
         { id: 'chat', label: 'Communications' },

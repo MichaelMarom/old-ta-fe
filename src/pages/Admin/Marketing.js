@@ -7,6 +7,7 @@ import _ from 'lodash';
 import { send_email, send_sms } from '../../axios/admin';
 import { toast } from 'react-toastify';
 import RichTextEditor from '../../components/common/RichTextEditor/RichTextEditor';
+import Input from '../../components/common/Input'
 
 const Marketing = () => {
   const [file, setFile] = useState(null);
@@ -15,6 +16,7 @@ const Marketing = () => {
   const [selectedRows, setSelectedRows] = useState([])
   const [messageType, setMessageType] = useState('sms');
   const [message, setMessage] = useState('')
+  const [subject, setSubject] = useState('');
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -73,10 +75,12 @@ const Marketing = () => {
     // console.log(numbers, emails, message)
     // if (!numbers.length) return toast.warning('Please select phone number to send sms');
     if (!emails.length) return toast.warning('Please select email(s)');
+    if (messageType === 'email' && !subject.length) return toast.warning('Please Enter Subject');
+
 
     if (!message.length) return toast.warning('Please type your message to send')
     // if (messageType === 'sms') { await send_sms({ numbers, message }); }
-    if (messageType === 'email') { await send_email({ emails, message }); }
+    if (messageType === 'email') { await send_email({ emails, message, subject }); }
 
   }
 
@@ -159,18 +163,26 @@ const Marketing = () => {
                   <p className='text-sm text-secondary text-end d-inline w-75' style={{ fontSize: "12px", color: "gray" }}> {message.length} </p>
                 </div>
 
-                <RichTextEditor
-                  onChange={(text) => {console.log(text); setMessage( text)}}
-                  value={message}
-                  height="70vh"
-                  placeholder='Type message that you need to send to student 
-                or tutor'
-                />
-                {/* {message.length > 143 && <p className='text-danger w-100 text-end' style={{ fontSize: "12px" }}>
-                  Maximum limit 144 characters</p>} */}
-                {/* <textarea className='form-control' value={message} placeholder='Type message that you need to send to student 
-                or tutor' style={{ height: "200px", width: "100%" }}
-                  onChange={(e) => e.target.value.length < 145 && setMessage(e.target.value)} /> */}
+                {messageType === 'email' ?
+                  <>
+                    <Input label={"Subject"} setValue={setSubject} value={subject} />
+                    <RichTextEditor
+                      onChange={(text) => { console.log(text); setMessage(text) }}
+                      value={message}
+                      height="60vh"
+                      required
+                      placeholder='Type message that you need to send to student or tutor'
+                    />
+                  </> :
+                  <>
+                    <textarea className='form-control' value={message}
+                      placeholder='Type message that you need to send to student or tutor'
+                      style={{ height: "200px", width: "100%" }}
+                      onChange={(e) => e.target.value.length < 145 && setMessage(e.target.value)} />
+                    {message.length > 143 && <p className='text-danger w-100 text-end' style={{ fontSize: "12px" }}>
+                      Maximum limit 144 characters</p>}
+                  </>
+                }
 
 
                 <TAButton buttonText={'Send'} type='submit' />

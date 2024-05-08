@@ -100,7 +100,7 @@ const LoginPage = () => {
   };
 
   let fetchUser = async (userId) => {
-    if (isLoaded) {
+    if (isLoaded && userId) {
       const user = await get_user_detail(userId);
       if (user?.role) {
         dispatch(setUser(user));

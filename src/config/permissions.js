@@ -45,6 +45,7 @@ import Bids from "../pages/student/MarketPlace/Bids";
 import Ads from "../pages/student/MarketPlace/Ad";
 import StudentAdList from "../pages/student/MarketPlace/StudentAdList";
 import EditAd from "../pages/student/MarketPlace/EditAd";
+import EmailTemplates from "../pages/Admin/EmailTemaplates/EmailTemplates";
 
 
 const rolePermissions = {
@@ -99,6 +100,8 @@ const rolePermissions = {
     { path: "/admin/new-subject", component: <TutorNewSubject /> },
     { path: "/admin/marketing", component: <Marketing /> },
     { path: "/admin/chat", component: <AdminChat /> },
+    { path: "/admin/email-templates", component: <EmailTemplates /> },
+
     { path: "/admin/accounting", component: null },
   ],
   common: [
