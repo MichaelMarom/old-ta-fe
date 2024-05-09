@@ -154,3 +154,64 @@ export const send_email = async (body) => {
     showErrorToast(err)
   }
 };
+
+
+/**
+ * 
+ * @param {Object} body it will contain name, text and created_by
+ * @returns created data
+ */
+export const save_email_temp = async (body) => {
+  try {
+    const { data } = await apiClient.post('/admin/email-template', body)
+    return data
+  }
+  catch (err) {
+    showErrorToast(err)
+  }
+}
+
+/**
+ * 
+ * @returns 
+ */
+export const get_email_temp_list = async () => {
+  try {
+    const { data } = await apiClient.get('/admin/email-template/list')
+    return data
+  }
+  catch (err) {
+    showErrorToast(err)
+  }
+}
+
+/**
+ * 
+ * @param {Object} body it will contain name, text and created_by
+ * @param {UUID} id it will contain id
+ * @returns
+ */
+export const update_email_temp = async (body, id) => {
+  try {
+    const { data } = await apiClient.put(`/admin/email-template/${id}`, body)
+    return data
+  }
+  catch (err) {
+    showErrorToast(err)
+  }
+}
+
+/**
+ * 
+ * @param {UUID} id 
+ * @returns 
+ */
+export const get_email_temp = async (id) => {
+  try {
+    const { data } = await apiClient.get(`/admin/email-template/${id}`)
+    return data
+  }
+  catch (err) {
+    showErrorToast(err)
+  }
+}

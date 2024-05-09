@@ -15,6 +15,10 @@
     height: 80% !important
 }
 
+.email-temp .ql-container {
+    height: 60% !important
+}
+
 .student-intro .ql-container {
     height: 88%;
 }

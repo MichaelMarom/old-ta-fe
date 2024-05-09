@@ -4,7 +4,7 @@ import * as XLSX from 'xlsx';
 import TAButton from '../../components/common/TAButton'
 import AdminLayout from '../../layouts/AdminLayout'
 import _ from 'lodash';
-import { send_email, send_sms } from '../../axios/admin';
+import { get_email_temp_list, send_email, send_sms } from '../../axios/admin';
 import { toast } from 'react-toastify';
 import RichTextEditor from '../../components/common/RichTextEditor/RichTextEditor';
 import Input from '../../components/common/Input'
@@ -17,6 +17,12 @@ const Marketing = () => {
   const [messageType, setMessageType] = useState('sms');
   const [message, setMessage] = useState('')
   const [subject, setSubject] = useState('');
+  const [list, setList] = useState([])
+  const [selectedTemplate, setSelectedTemplate] = useState({})
+
+  useEffect(() => {
+    get_email_temp_list().then(result => !result?.response?.data && setList(result))
+  }, [])
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -59,7 +65,6 @@ const Marketing = () => {
   useEffect(() => {
     setSelectedRows(data)
   }, [data])
-  console.log(selectedRows)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -75,12 +80,15 @@ const Marketing = () => {
     // console.log(numbers, emails, message)
     // if (!numbers.length) return toast.warning('Please select phone number to send sms');
     if (!emails.length) return toast.warning('Please select email(s)');
-    if (messageType === 'email' && !subject.length) return toast.warning('Please Enter Subject');
 
 
-    if (!message.length) return toast.warning('Please type your message to send')
+    if (messageType === 'sms' && !message.length)
+      return toast.warning('Please type your message to send')
+
+    if (messageType === 'email' && !selectedTemplate.id)
+      return toast.warning('Pleaseselect email template to send')
     // if (messageType === 'sms') { await send_sms({ numbers, message }); }
-    if (messageType === 'email') { await send_email({ emails, message, subject }); }
+    if (messageType === 'email') { await send_email({ emails, message: selectedTemplate.text, subject: selectedTemplate.name }); }
 
   }
 
@@ -158,23 +166,40 @@ const Marketing = () => {
                     </label>
                   </div>
                 </div>
-                <div className='d-flex justify-content-between'>
-                  <label className='d-inline'>Message</label>
-                  <p className='text-sm text-secondary text-end d-inline w-75' style={{ fontSize: "12px", color: "gray" }}> {message.length} </p>
-                </div>
+
 
                 {messageType === 'email' ?
+                  <div>
+                    {list.map((item) => (
+                      <div
+                        key={item.id}
+                        onClick={() => setSelectedTemplate(item)}
+                        className="click-effect-elem rounded shadow-sm p-2 
+                        justify-content-between border m-1 d-flex border-primary"
+                      >
+
+                        <h5 className="click-elem m-0 text-decoration-underline d-inline-block">
+                          {item.name}
+                        </h5>
+
+                        <input
+                          type="checkbox"
+                          style={{
+                            height: "20px",
+                            width: "20px",
+                            cursor: "pointer",
+                          }}
+                          checked={item.id === selectedTemplate.id}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  :
                   <>
-                    <Input label={"Subject"} setValue={setSubject} value={subject} />
-                    <RichTextEditor
-                      onChange={(text) => { console.log(text); setMessage(text) }}
-                      value={message}
-                      height="60vh"
-                      required
-                      placeholder='Type message that you need to send to student or tutor'
-                    />
-                  </> :
-                  <>
+                    <div className='d-flex justify-content-between'>
+                      <label className='d-inline'>Message</label>
+                      <p className='text-sm text-secondary text-end d-inline w-75' style={{ fontSize: "12px", color: "gray" }}> {message.length} </p>
+                    </div>
                     <textarea className='form-control' value={message}
                       placeholder='Type message that you need to send to student or tutor'
                       style={{ height: "200px", width: "100%" }}

@@ -37,6 +37,7 @@ import Marketing from "../pages/Admin/Marketing";
 import AdminChat from '../pages/Admin/Chat'
 import EmailList from "../pages/Admin/EmailTemplates/List";
 import EmailTempCreate from '../pages/Admin/EmailTemplates/Create'
+import EmailTempEdit from '../pages/Admin/EmailTemplates/Edit'
 
 //common
 import Login from "../pages/Login";
@@ -103,6 +104,7 @@ const rolePermissions = {
     { path: "/admin/chat", component: <AdminChat /> },
     { path: "/admin/email-templates", component: <EmailList /> },
     { path: "/admin/email-templates/create", component: <EmailTempCreate /> },
+    { path: "/admin/email-templates/:id", component: <EmailTempEdit /> },
 
     { path: "/admin/accounting", component: null },
   ],
