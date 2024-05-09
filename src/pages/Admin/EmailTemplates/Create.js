@@ -35,9 +35,10 @@ const Create = () => {
     <Layout>
       <div className='container m-auto'>
         <div className='my-4 h-100 email-temp d-flex justify-content-center align-items-center'>
-          <form className='w-75' onSubmit={handleSave}>
+          <form className='w-75 border' onSubmit={handleSave}>
             <div className='d-flex flex-column m-4 justify-content-center align-items-center'
               style={{ gap: "5px" }}>
+                <h5> Create Email Template</h5>
               <Input value={subject} setValue={setSubject} label={"Enter Subject"} />
 
               <UserRichTextEditor

@@ -41,7 +41,7 @@ const Header = () => {
 
     useEffect(() => {
         const currentTab = location.pathname.split('/').pop();
-        setActiveTab(currentTab)
+        setActiveTab(location.pathname)
     }, [location])
 
     let [screen_name, set_screen_name] = useState('')
@@ -68,12 +68,13 @@ const Header = () => {
 
     return (
         <>
-
             <div className="admin-tab-header shadow-sm">
-                <ul>
+                <ul style={{ overflowX: "auto", width:"600px" }}>
                     {tabs.map((tab) => (
                         <li key={tab.id} data-url={tab.id} onClick={handleTabClick}
-                            id={`${activeTab === tab.id ? 'admin-tab-header-list-active' : ''}`}
+                            className="px-4  py-0" style={{ fontSize: "14px" }}
+                            id={`${activeTab.split('/')[2] === tab.id ?
+                                'admin-tab-header-list-active' : ''}`}
                         > <p className="m-0" style={{ transform: "skew(41deg, 0deg)" }}>
                                 {tab.label}
                                 {tab.label === 'New Subject' && <span
@@ -101,10 +102,12 @@ const Header = () => {
                     </Tooltip>
                 </div>
             </div>
-            <div className="screen-name btn-success rounded" 
-            style={{ display: screen_name === 'null' ? 'none' : 'flex',
-             position: 'fixed', top: '15px', zIndex: '999', fontWeight: 'bold', 
-             color: '#fff', right: '45px', padding: '3px 5px 0', height: '30px' }}>
+            <div className="screen-name btn-success rounded"
+                style={{
+                    display: screen_name === 'null' ? 'none' : 'flex',
+                    position: 'fixed', top: '5px', zIndex: '999', fontWeight: 'bold',
+                    color: '#fff', right: '45px', padding: '3px 5px 0', height: '30px'
+                }}>
                 {JSON.parse(localStorage.getItem('user'))?.email}
             </div>
         </>

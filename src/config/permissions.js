@@ -33,11 +33,13 @@ import { SingleTutorFeedbacks } from "../pages/student/SingleTutorFeedbacks";
 import TutorNewSubject from "../pages/Admin/NewSubject";
 import TutorTable from "../pages/Admin/Tutor";
 import StudentTable from "../pages/Admin/Student";
-import Marketing from "../pages/Admin/Marketing";
 import AdminChat from '../pages/Admin/Chat'
 import EmailList from "../pages/Admin/EmailTemplates/List";
 import EmailTempCreate from '../pages/Admin/EmailTemplates/Create'
 import EmailTempEdit from '../pages/Admin/EmailTemplates/Edit'
+import Send from '../pages/Admin/Marketing/Send'
+import AddTutors from '../pages/Admin/Marketing/AddTutors'
+
 
 //common
 import Login from "../pages/Login";
@@ -100,11 +102,13 @@ const rolePermissions = {
     { path: "/admin/tutor-data", component: <TutorTable /> },
     { path: "/admin/student-data", component: <StudentTable /> },
     { path: "/admin/new-subject", component: <TutorNewSubject /> },
-    { path: "/admin/marketing", component: <Marketing /> },
     { path: "/admin/chat", component: <AdminChat /> },
     { path: "/admin/email-templates", component: <EmailList /> },
     { path: "/admin/email-templates/create", component: <EmailTempCreate /> },
     { path: "/admin/email-templates/:id", component: <EmailTempEdit /> },
+
+    { path: "/admin/marketing", component: <Send /> },
+    { path: "/admin/marketing/add", component: <AddTutors /> },
 
     { path: "/admin/accounting", component: null },
   ],

@@ -41,6 +41,8 @@ const Edit = () => {
                     <form className='w-75' onSubmit={handleSave}>
                         <div className='d-flex flex-column m-4 justify-content-center align-items-center'
                             style={{ gap: "5px" }}>
+                            <h5> Update Email Template</h5>
+
                             <Input value={subject} setValue={setSubject} label={"Enter Subject"} />
 
                             <UserRichTextEditor
@@ -50,7 +52,7 @@ const Edit = () => {
                                 value={emailText}
                                 height='300px'
                             />
-                            <TAButton buttonText={"Save"} type='submit' loading={updating} />
+                            <TAButton buttonText={"Update"} type='submit' loading={updating} />
                         </div>
                     </form>
                 </div>

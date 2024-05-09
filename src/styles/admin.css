@@ -1,7 +1,7 @@
 @media screen and (min-width: 720px) {
 
     .admin-tab-header {
-        height: 50px;
+        height: 40px;
         width: 100%;
         padding: 0;
         margin: 0;
@@ -18,7 +18,7 @@
     }
 
     #active {
-        background-color: #ffffff;
+        background-color: #070101;
     }
 
     .admin-tab-header ul {
@@ -35,8 +35,8 @@
     }
 
     .admin-tab-header ul li {
-        padding: 15px 20px 15px 20px;
         color: #fff;
+        /* padding: 0px !important; */
         display: flex;
         transform: skew(-40deg);
         font-size: large;

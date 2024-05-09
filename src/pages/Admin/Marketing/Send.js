@@ -1,13 +1,11 @@
 
 import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
-import TAButton from '../../components/common/TAButton'
-import AdminLayout from '../../layouts/AdminLayout'
+import TAButton from '../../../components/common/TAButton'
+import Layout from './Layout'
 import _ from 'lodash';
-import { get_email_temp_list, send_email, send_sms } from '../../axios/admin';
+import { get_email_temp_list, send_email, send_sms } from '../../../axios/admin';
 import { toast } from 'react-toastify';
-import RichTextEditor from '../../components/common/RichTextEditor/RichTextEditor';
-import Input from '../../components/common/Input'
 
 const Marketing = () => {
   const [file, setFile] = useState(null);
@@ -19,14 +17,33 @@ const Marketing = () => {
   const [subject, setSubject] = useState('');
   const [list, setList] = useState([])
   const [selectedTemplate, setSelectedTemplate] = useState({})
+  const [sentRecords, setSentRecords] = useState([])
 
   useEffect(() => {
     get_email_temp_list().then(result => !result?.response?.data && setList(result))
   }, [])
 
+  const updateExcelFile = () => {
+    if (!data || !sentRecords.length) return;
+
+    const updatedData = sentRecords.map(row => {
+      // Assuming the first column is the "Email" column and the second column is the "Sent" column
+      const email = row[0];
+      if (sentRecords.some(record => record.Email === email)) {
+        // If the email is in sentRecords, set the "Sent" column to 1
+        row[1] = 1;
+      }
+      return row;
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(updatedData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'updated_file.xlsx');
+  };
+
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
-
     if (selectedFile) {
       setFile(selectedFile);
 
@@ -40,6 +57,7 @@ const Marketing = () => {
 
         // Extract headers
         const headerRow = XLSX.utils.sheet_to_json(sheet, { header: 1 })[0];
+        console.log(headerRow)
         setHeaders(headerRow);
 
         // Extract data
@@ -75,7 +93,7 @@ const Marketing = () => {
     //   return row.phone
     // })
     const emails = selectedRows.map(row => {
-      return row.email
+      return row.Email
     })
     // console.log(numbers, emails, message)
     // if (!numbers.length) return toast.warning('Please select phone number to send sms');
@@ -89,18 +107,35 @@ const Marketing = () => {
       return toast.warning('Pleaseselect email template to send')
     // if (messageType === 'sms') { await send_sms({ numbers, message }); }
     if (messageType === 'email') { await send_email({ emails, message: selectedTemplate.text, subject: selectedTemplate.name }); }
-
+    setSentRecords([...sentRecords, ...selectedRows])
+    updateExcelFile()
   }
 
+  console.log(sentRecords)
+
   return (
-    <AdminLayout>
+    <Layout>
       <div className='container m-auto w-100'>
         <input type="file" onChange={handleFileChange} />
         {true && (
           <div className='d-flex w-100'>
             <div className='d-flex flex-column' style={{ width: "60%" }}>
-              <div> <h3>Data:</h3>
-                <div></div>
+              <div>
+                <h3>Data:</h3>
+                <div>
+                  <label>
+                    <input
+                      style={{ accentColor: "orange" }}
+                      type="checkbox"
+                      checked={selectedRows.length === data.length}
+                      onChange={() => selectedRows.length ?
+                        setSelectedRows([]) :
+                        setSelectedRows(data)}
+                    />
+                    <span style={{ marginLeft: "5px" }}>Select All</span>
+                  </label>
+
+                </div>
               </div>
               <div style={{ overflow: "auto", height: "70vh" }}>
                 <table className='' style={{ overflow: "auto" }}>
@@ -120,6 +155,7 @@ const Marketing = () => {
                         <td className='col-1'>{rowIndex + 1}</td>
                         <td>
                           <input
+                            style={{ accentColor: sentRecords.find(record => record.email === row.email) ? "green" : "orange" }}
                             type="checkbox"
                             checked={selectedRows.some(selectedRow => _.isEqual(selectedRow, row))}
                             onChange={() => toggleRowSelection(row)}
@@ -198,7 +234,8 @@ const Marketing = () => {
                   <>
                     <div className='d-flex justify-content-between'>
                       <label className='d-inline'>Message</label>
-                      <p className='text-sm text-secondary text-end d-inline w-75' style={{ fontSize: "12px", color: "gray" }}> {message.length} </p>
+                      <p className='text-sm text-secondary text-end d-inline w-75'
+                        style={{ fontSize: "12px", color: "gray" }}> {message.length}/144 </p>
                     </div>
                     <textarea className='form-control' value={message}
                       placeholder='Type message that you need to send to student or tutor'
@@ -216,7 +253,7 @@ const Marketing = () => {
           </div>
         )}
       </div>
-    </AdminLayout >
+    </Layout >
   );
 };
 
