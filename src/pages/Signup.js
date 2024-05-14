@@ -122,12 +122,12 @@ const Signup = () => {
           <div className="row m-auto h-100 gx-lg-5 align-items-center">
             <div className="col-lg-6 mb-5 mb-lg-0">
               <h1 className="my-5  fw-bold ls-tight">
-                Start your tutoring <br/>business, join <br />
+                Start your tutoring <br />business, join <br />
                 <span className="text-primary"> Tutoring Academy</span>
               </h1>
               <p style={{ color: 'hsl(217, 10%, 50.8%)' }}>
-                Welcome to Tutoring Academy, where knowledge knows no bounds! 
-                Our platform is designed to ignite the flames of curiosity, empower minds, and pave the way for academic triumph. 
+                Welcome to Tutoring Academy, where knowledge knows no bounds!
+                Our platform is designed to ignite the flames of curiosity, empower minds, and pave the way for academic triumph.
                 With a diverse array of subjects and dedicated tutors, we're here to guide you on your journey to greatness.
               </p>
             </div>
@@ -137,29 +137,25 @@ const Signup = () => {
                   {!pendingVerification ? <form onSubmit={handleSignup}>
 
                     <div className='row'>
-                      <div className="form-outline mb-4 col-md-6">
-                        <input
-                          type="email"
-                          id="email"
-                          name="email"
-                          className="form-control m-0"
-                          placeholder="Email"
-                          value={signupFormValues.email}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                      <div className="form-outline mb-4 col-md-6">
-                        <input
-                          type="password"
-                          id="password"
-                          name="password"
-                          className="form-control m-0"
-                          placeholder="Password"
-                          value={signupFormValues.password}
-                          onChange={handleInputChange}
-                        />
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        className="form-control m-0"
+                        placeholder="Email"
+                        value={signupFormValues.email}
+                        onChange={handleInputChange}
+                      />
+                      <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        className="form-control m-0"
+                        placeholder="Password"
+                        value={signupFormValues.password}
+                        onChange={handleInputChange}
+                      />
 
-                      </div>
                     </div>
 
                     <div className='form-outline mb-4'>
@@ -169,10 +165,10 @@ const Signup = () => {
                         aria-label="Default select example" onChange={handleInputChange}>
                         <option selected>Select Role</option>
                         <option value="tutor">Tutor</option>
-                        <option value="student">Student</option>
-                        <option value="visitor">Visitor</option>
-                        <option value="parent">Parent</option>
-                        <option value="admin">Admin</option>
+                        {/* //  <option value=""></option>
+                      //  <option value=""></option>
+                      //  <option value=""></option>
+                      //  <option value=""></option> */}
                       </select>
                     </div>
 

@@ -27,14 +27,19 @@ const Tooltip = ({ text, children, iconSize = 16, direction = "top", width = "10
 
   return (
     <div
-      className="custom-tooltip-wrapper mx-2"
+      className="custom-tooltip-wrapper mx-2" style={{
+        fontWeight: "bold",
+        lineHeight: "1.2",
+        fontSize: "14px",
+        transform: "none"
+      }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       {children ? children : <FaInfoCircle size={iconSize} color={color} />}
       {showTooltip && (
         <div className={`custom-tooltip ${direction}`}
-          style={tooltipStyle}
+          style={{ ...tooltipStyle, transform: "none" }}
         >{text}</div>
       )}
     </div>

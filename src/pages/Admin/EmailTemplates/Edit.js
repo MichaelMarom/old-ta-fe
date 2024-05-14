@@ -5,13 +5,14 @@ import { useSelector } from 'react-redux';
 import TAButton from '../../../components/common/TAButton'
 import UserRichTextEditor from '../../../components/common/RichTextEditor/UserRichTextEditor';
 import { get_email_temp, save_email_temp, update_email_temp } from '../../../axios/admin';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const Edit = () => {
     const [subject, setSubject] = useState('');
     const [emailText, setEmailText] = useState('')
-    const [updating, setUpdating] = useState(false)
+    const [updating, setUpdating] = useState(false);
+    const navigate = useNavigate()
 
     const param = useParams()
 
@@ -29,6 +30,7 @@ const Edit = () => {
         setUpdating(true)
         update_email_temp({ name: subject, text: emailText }, param.id).then(() => {
             toast.success('Updated Succesfully!')
+            navigate('/admin/email-templates')
         }).finally(() => {
             setUpdating(false)
         })

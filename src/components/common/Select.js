@@ -26,8 +26,7 @@ const Select = ({
         {TooltipText && !!TooltipText.length && (
           <Tooltip
             width="200px"
-            text="Select your response time answering the student during business time in your time zone. Please take notice that the student 
-          take this fact as one of the considerations of selecting you as tutor."
+            text={TooltipText}
           />
         )}{" "}
         {label}

@@ -790,18 +790,18 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <Select 
-              setValue={set_response_zone}
-              value={response_zone}
-              editMode={editMode}
-              label={"Response Time"}
-              TooltipText={
-                "Select your response time answering the student during business time in your time zone. Please take notice that the student take this fact as one of the considurations of selecting you as tutor."
-              }
+              <Select
+                setValue={set_response_zone}
+                value={response_zone}
+                editMode={editMode}
+                label={"Response Time"}
+                TooltipText={
+                  "Select your response time answering the student during business time in your time zone. Please take notice that the student take this fact as one of the considurations of selecting you as tutor."
+                }
               >
-                  {response_list}
+                {response_list}
               </Select>
-             
+
             </div>
 
             <div>
@@ -815,20 +815,20 @@ const TutorSetup = () => {
                   whiteSpace: "nowrap",
                 }}
               >
-                 <Select 
-              setValue={set_timeZone}
-              value={timeZone}
-              editMode={editMode}
-              label={"Timezone"}
-              TooltipText={
-                "Select the Greenwich Mean Time (GMT) zone where you reside. It will let the student configure his time availability conducting lessons with you, when in a different time zone. "
-              }
-             
-              >
-                    {GMTList}
+                <Select
+                  setValue={set_timeZone}
+                  value={timeZone}
+                  editMode={editMode}
+                  label={"Timezone"}
+                  TooltipText={
+                    "Select the Greenwich Mean Time (GMT) zone where you reside. It will let the student configure his time availability conducting lessons with you, when in a different time zone. "
+                  }
 
-              </Select>
-               </div>
+                >
+                  {GMTList}
+
+                </Select>
+              </div>
               <Link
                 className="m-0"
                 style={{ fontSize: "12px" }}
@@ -892,7 +892,7 @@ const TutorSetup = () => {
               }}
             >
               <Input
-                label={"Ci City/Townty"}
+                label={"City/Town"}
                 value={city}
                 setValue={set_city}
                 editMode={editMode}
@@ -908,16 +908,16 @@ const TutorSetup = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              
-              <Select 
-              setValue={set_country}
-              value={country}
-              editMode={editMode}
-              label={"Country"}
+
+              <Select
+                setValue={set_country}
+                value={country}
+                editMode={editMode}
+                label={"Country"}
               >
-                                   {countryList}
+                {countryList}
               </Select>
-              
+
             </div>
             {(options[country] ?? [])?.length ? (
               <div
@@ -929,23 +929,23 @@ const TutorSetup = () => {
                   whiteSpace: "nowrap",
                 }}
               >
-                 <Select 
-              setValue={set_state}
-              value={state}
-              editMode={editMode}
-              label={"State/Province"}
-              >
-                              <option value="" disabled>
-                      Select State
+                <Select
+                  setValue={set_state}
+                  value={state}
+                  editMode={editMode}
+                  label={"State/Province"}
+                >
+                  <option value="" disabled>
+                    Select State
+                  </option>
+                  {(options[country] ?? []).map((item) => (
+                    <option key={item} value={item}>
+                      {item}
                     </option>
-                    {(options[country] ?? []).map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))}
-                  
-              </Select>
-                
+                  ))}
+
+                </Select>
+
               </div>
             ) : (
               ""
@@ -983,13 +983,13 @@ const TutorSetup = () => {
                 }}
               >
                 <Input
-                  label={<>
+                  label={<div className="d-flex" style={{ gap: "5px" }}>
                     <ToolTip
                       width="200px"
                       text={
-                        "Coordinated Universal Time or 'UTC' is the primary time standard by which the world regulate local time. "
+                        "Coordinated Universal Time, or 'UTC,' is the primary time standard by which the world regulates clocks and time. It's important to ensure that your PC's clock matches the UTC because discrepancies can lead to issues with scheduling, such as your booked lessons not synchronizing with your local time. To avoid any inconvenience, please verify that your computer's time settings are correctly adjusted to reflect UTC.."
                       }
-                    /><div>UTC</div></>}
+                    /><div className="display-inline-block">UTC</div></div>}
                   value={typeof dateTime === "object" ? "" : dateTime}
                   editMode={false}
                 />
@@ -1218,6 +1218,7 @@ const TutorSetup = () => {
               className="border p-2 shadow rounded"
               style={{ width: "40%", height: "120px" }}
             >
+              <div className="d-flex gap-3">
               <div
                 className="form-check form-switch d-flex gap-3"
                 style={{ fontSize: "16px " }}
@@ -1241,11 +1242,45 @@ const TutorSetup = () => {
                   Vacation Mode
                 </label>
                 <ToolTip
-                  text="Turn the switch to 'On' to block the period of time you do not want to tutor. A light green color will indicate your selected period on your calendar. 
-                Then students will not be able to book lessons with you for that period. 
-                By the end date, the switch will turn to 'Off' automatically."
+                  text="To set your unavailable days for tutoring, simply turn the switch to 'On'.
+                  This action allows you to choose the days you wish to take off. 
+                  Your selected dates will be highlighted in green on your calendar, signaling to
+                  students that you are not available for lessons during this time. Once the end 
+                  date is reached, the switch will automatically revert to 'Off', making you 
+                  available for bookings again."
                   width="200px"
                 />
+               
+              </div>
+              <div
+                className="form-check form-switch d-flex gap-3"
+                style={{ fontSize: "16px " }}
+              >
+                <input
+                  disabled={!editMode}
+                  className="form-check-input "
+                  type="checkbox"
+                  role="switch"
+                  style={{
+                    width: "30px",
+                    height: "15px",
+                  }}
+                  // onChange={() => set_vacation_mode(!vacation_mode)}
+                  // checked={vacation_mode}
+                />
+                <label
+                  className="form-check-label mr-3"
+                  htmlFor="flexSwitchCheckChecked"
+                >
+                 Franchise Operator
+                </label>
+                <ToolTip
+                  text="x-y-z"
+                  width="200px"
+                />
+
+              </div>
+
               </div>
               {vacation_mode && (
                 <div>
@@ -1391,7 +1426,7 @@ const TutorSetup = () => {
                   disabled={!editMode}
                   maxLength={500}
                   required
-                  placeholder='Write Something That will motivate Your Students. 
+                  placeholder='Write SomWething That will motivate Your Students. 
                 Use the "Motivate" tab to set up your promotions. 
                 Like up to 30 minutes introductionary session. Discount for multi students tutoring, or paid 
                 subscription for multi lessons...If you hold a teacher certificate, and wish to provide your

@@ -21,6 +21,7 @@ import Tooltip from "../../components/common/ToolTip";
 import Loading from "../../components/common/Loading";
 import DebounceInput from "../../components/common/DebounceInput";
 import _ from "lodash";
+import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
 
 const Feedback = () => {
   const dispatch = useDispatch();
@@ -59,7 +60,7 @@ const Feedback = () => {
     getFeedback();
   }, [tutor.AcademyId, tutor.timeZone]);
 
-  const handleRowSelect = () => {};
+  const handleRowSelect = () => { };
 
   const handleEmojiClick = async (id, star) => {
     const updatedQuestions = [...questions];
@@ -211,6 +212,8 @@ const Feedback = () => {
   if (fetchingSessions) return <Loading />;
   return (
     <TutorLayout>
+      <TabInfoVideoToast iframeVideo={true} video={'https://www.youtube.com/embed/I0eThHB5aP4?si=pQfF61TIBui0oSJV'} />
+
       <div className="container mt-1">
         <div className="py-2 row">
           <div className={` ${selectedEvent.id ? "col-md-8" : "col-md-12"}`}>

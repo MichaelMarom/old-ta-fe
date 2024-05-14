@@ -4,6 +4,7 @@ import Tabs from '../../../components/common/Tabs'
 import Ads from '../../../components/student/Ads'
 import List from '../../../components/tutor/Ads/ListComponent'
 import Classified from '../../../components/tutor/Ads/Classified'
+import TabInfoVideoToast from '../../../components/common/TabInfoVideoToast'
 
 const Layout = ({ children }) => {
     let [activeTab, setActiveTab] = useState('')
@@ -33,6 +34,9 @@ const Layout = ({ children }) => {
 
     return (
         <TutorLayout  >
+            <TabInfoVideoToast iframeVideo={true}
+                video={'https://www.youtube.com/embed/hvOnEeOqSIM?si=qvaWudz28uaxwWhj'} />
+
             <Tabs links={tabs} setActiveTab={setActiveTab}
                 setActiveTabIndex={setActiveTabIndex}
                 activeTab={activeTab}

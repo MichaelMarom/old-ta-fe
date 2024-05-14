@@ -1,8 +1,10 @@
 import React from "react";
+import Tooltip from "./ToolTip";
 
 const Input = ({
   setValue,
   value,
+  tooltipText="",
   editMode = true,
   label,
   required = true,
@@ -20,7 +22,15 @@ const Input = ({
         disabled={!editMode}
         {...rest}
       />
-      <span className="input__label"> {label}</span>
+     <span className="input__label" style={{ top: "2px" }}>
+        {tooltipText && !!tooltipText.length && (
+          <Tooltip
+            width="200px"
+            text={tooltipText}
+          />
+        )}
+        {label}
+      </span>
     </label>
   );
 };

@@ -152,6 +152,7 @@ export const send_email = async (body) => {
     return data;
   } catch (err) {
     showErrorToast(err)
+    throw new Error('Failed to send email')
   }
 };
 

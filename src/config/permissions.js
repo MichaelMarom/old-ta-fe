@@ -30,15 +30,15 @@ import { Schedules } from "../pages/student/Schedules";
 import { SingleTutorFeedbacks } from "../pages/student/SingleTutorFeedbacks";
 
 //admin
-import TutorNewSubject from "../pages/Admin/NewSubject";
-import TutorTable from "../pages/Admin/Tutor";
-import StudentTable from "../pages/Admin/Student";
-import AdminChat from '../pages/Admin/Chat'
-import EmailList from "../pages/Admin/EmailTemplates/List";
-import EmailTempCreate from '../pages/Admin/EmailTemplates/Create'
-import EmailTempEdit from '../pages/Admin/EmailTemplates/Edit'
-import Send from '../pages/Admin/Marketing/Send'
-import AddTutors from '../pages/Admin/Marketing/AddTutors'
+import TutorNewSubject from "../pages/admin/NewSubject";
+import TutorTable from "../pages/admin/Tutor";
+import StudentTable from "../pages/admin/Student";
+import AdminChat from '../pages/admin/Chat'
+import EmailList from "../pages/admin/EmailTemplates/List";
+import EmailTempCreate from '../pages/admin/EmailTemplates/Create'
+import EmailTempEdit from '../pages/admin/EmailTemplates/Edit'
+import Send from '../pages/admin/Marketing/Send'
+import AddTutors from '../pages/admin/Marketing/AddTutors'
 
 
 //common
@@ -50,6 +50,7 @@ import Bids from "../pages/student/MarketPlace/Bids";
 import Ads from "../pages/student/MarketPlace/Ad";
 import StudentAdList from "../pages/student/MarketPlace/StudentAdList";
 import EditAd from "../pages/student/MarketPlace/EditAd";
+import Agency from "../pages/tutor/Agency";
 
 
 const rolePermissions = {
@@ -64,16 +65,20 @@ const rolePermissions = {
     { path: "/tutor/my-students", component: <MyStudents /> },
     { path: "/tutor/scheduling", component: <Scheduling /> },
     { path: "/tutor/term-of-use", component: <TermOfUse /> },
+
     { path: "/tutor/market-place/classified", component: <Classified /> },
     { path: "/tutor/market-place/:id", component: <Edit /> },
     { path: "/tutor/market-place/bid", component: <Bid /> },
     { path: "/tutor/market-place", component: <Create /> },
     { path: "/tutor/market-place/list", component: <List /> },
+
     { path: "/tutor/tutor-profile/:id", component: <TutorProfile /> },
 
+    {path: "/tutor/agency", component: <Agency /> },
 
     { path: '/tutor/chat', component: <Chat /> },
     { path: '/tutor/chat/:id', component: <Chat /> },
+
     { path: '/tutor/feedback', component: <TutorFeedback /> }
 
   ],

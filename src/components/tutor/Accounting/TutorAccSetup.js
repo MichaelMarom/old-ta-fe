@@ -10,6 +10,7 @@ import { COMMISSION_DATA, monthFormatWithYYYY } from '../../../constants/constan
 import { compareStates } from '../../../helperFunctions/generalHelperFunctions';
 import { setTutor } from '../../../redux/tutor/tutorData';
 import Tooltip from '../../common/ToolTip';
+import Input from '../../common/Input';
 
 const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, previousYearEarning }) => {
     const { tutor } = useSelector(state => state.tutor)
@@ -164,7 +165,7 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
     }, [dbValues, acct_name, acct_type, acct, bank_name, ssh, email, routing, payment_option, tutor])
 
     return (
-        <div className="d-flex" style={{ height: "72vh", overflowY:"auto" }}>
+        <div className="d-flex" style={{ height: "72vh", overflowY: "auto" }}>
 
             <div className="d-flex col-md-3 border h-100 p-2">
 
@@ -176,17 +177,17 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                     <div className='p-3'>
                         <div className='d-flex align-items-center mb-2 justify-content-between'>
                             <h6 className='m-0 text-start '>Tutor's Start Day (First tutoring lesson)</h6>
-                            <p className="border px-4  py-2 rounded m-2 col-4">{ !!sessions.length ?  
-                            showDate(sessions?.[sessions.length - 1]?.start, monthFormatWithYYYY) :'N/A'}</p>
+                            <p className="border px-4  py-2 rounded m-2 col-4">{!!sessions.length ?
+                                showDate(sessions?.[sessions.length - 1]?.start, monthFormatWithYYYY) : 'N/A'}</p>
                         </div>
 
-                    <AcadCommission />
+                        <AcadCommission />
                     </div>
 
                 </div>
             </div>
             <form onSubmit={saver} className='d-flex h-100'>
-                <div className="col-md-7 border h-100 p-2">
+                <div className="col-md-8 border h-100 p-2">
                     <div className="highlight" style={{ height: '150px' }}>
                         Tutoring academy pays every 2nd Friday for the lessons performed up to the
                         previous Friday midnight (GMT-5), Please select below the form of payment you prefer. Keep in mind that it can takes 1-3 days until the funds in your account
@@ -195,8 +196,17 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
 
                         <h6 className='mb-3'>How do you want to be paid?</h6>
 
-                        <div className='d-flex align-items-center justify-content-between '>
-
+                        <div className='d-flex align-items-center justify-content-start flex-wrap' style={{ gap: "20px" }}>
+                            {tutor.Country === 'USA' && <div className=' w-100 d-block' style={{ float: 'left' }}>
+                                <input disabled={!editMode} className='m-0'
+                                    checked={payment_option === 'Bank'}
+                                    style={{
+                                        float: 'left', width: '30px', cursor: 'pointer', height: '20px',
+                                        fontSize: 'x-small'
+                                    }} type="radio" value='Bank'
+                                    onChange={(e) => set_payment_option(e.target.value)} name='p-method' id="" />
+                                <span className='m-0'>Direct Deposit Bank account (ACH)</span>
+                            </div>}
                             <div style={{ float: 'left' }}>
                                 <input disabled={!editMode} required
                                     checked={payment_option === 'Paypal'}
@@ -248,24 +258,20 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                                     onChange={(e) => set_payment_option(e.target.value)} value='Zelle' name='p-method' id="" />
                                 <span className='m-0'>Zelle</span>
                             </div>
-                            {tutor.Country === 'USA' && <div className='m-0' style={{ float: 'left' }}>
-                                <input disabled={!editMode} className='m-0'
-                                    checked={payment_option === 'Bank'}
-                                    style={{
-                                        float: 'left', width: '30px', cursor: 'pointer', height: '20px',
-                                        fontSize: 'x-small'
-                                    }} type="radio" value='Bank'
-                                    onChange={(e) => set_payment_option(e.target.value)} name='p-method' id="" />
-                                <span className='m-0'>Direct Deposit Bank account (ACH)</span>
-                            </div>}
+
 
                         </div>
 
                         {!!payment_option &&
-                            <div className='border shadow m-5 p-3'>
+                            <div className=' m-5 '>
+                                {emailRequiredPaymentMethods.includes(payment_option) && <p
+                                    style={{
+                                        fontWeight: "bold"
+                                    }}>3% service charge from above option
+                                    <Tooltip width='200px' text={'payoneer, paypal, zelle, wise'} /></p>}
 
                                 {payment_option === "Bank" &&
-                                    <div className=' mt-4'>
+                                    <div className=' shadow p-3 border border-2 '>
 
                                         <div className='d-flex align-items-center justify-content-between'>
                                             <label htmlFor="acct-name">Account Name</label>
@@ -300,7 +306,8 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                                 }
                                 {emailRequiredPaymentMethods.includes(payment_option) &&
 
-                                    <div className=' mt-4'>
+                                    <div className=' shadow p-3 border border-2 '>
+
                                         <div className='d-flex align-items-center justify-content-between'>
                                             <label htmlFor="acct-name">Email</label>
                                             <input disabled={!editMode} required type="email" className='form-control'
@@ -316,54 +323,102 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
 
                 </div>
 
-                <div className="col-md-5 border h-100 p-2">
+                <div className="col-md-4 border h-100 p-2">
                     <div className="highlight" style={{ height: '150px' }}>
                         Social security needs to be provided only from US residents for annual EARNING over $600.
-                        Form 1099 to be issued by the academy.
+                        Form 1099 to be issued by the academy. Therefore, no need to fill the SS number now, 
+                        only when your earnings exceeds $600    
                     </div>
                     <div className='p-3'>
 
                         <div className='d-flex align-items-center mb-2 justify-content-between'>
-                            <label htmlFor="">SS# (Social Security Number) &nbsp; <Tooltip text="Tutors that are American citizens, should mandatory 
+                            <Input
+                                tooltipText='Tutors that are American citizens, should mandatory 
+                         fill their SS# in order to receive annual form 1099.'
+                                editMode={editMode}
+                                label={"SS# (Social Security Number)"}
+                                required={currentYearEarning > 600}
+                                setValue={set_ssh}
+                                value={ssh}
+                                placeholder='XXX-XX-XXXX'
+                            />
+                            {/* <label htmlFor="">SS# (Social Security Number) &nbsp; 
+                            <Tooltip text="Tutors that are American citizens, should mandatory 
                             fill their SS# in order to receive annual form 1099." /> </label>
                             <input disabled={!editMode} className='form-control m-0 w-50'
-                                required={currentYearEarning > 600}
                                 onInput={e => set_ssh(e.target.value)}
                                 defaultValue={ssh} type="text"
                                 placeholder='XXX-XX-XXXX'
-                            />
+                            /> */}
                         </div>
 
                         <div className='d-flex align-items-center mb-2 justify-content-between'>
-                            <label htmlFor="accumulated-hrs">Accumulated Hours <Tooltip text="This is the total hours accumulated every
+                            <Input
+                                tooltipText='This is the total hours accumulated every
+                                year from the date of your start day'
+                                editMode={false}
+                                label={"Accumulated Hours"}
+                                value={`${currentYearAccHours}:00`}
+                                placeholder='XXX-XX-XXXX'
+                            />
+
+                            {/* <label htmlFor="accumulated-hrs">Accumulated Hours <Tooltip text="This is the total hours accumulated every
                              year from the date of your start day" /></label>
                             <input className='form-control m-0' type="text"
                                 value={`${currentYearAccHours}:00`}
-                                style={{ float: 'right', width: '50%' }} disabled />
+                                style={{ float: 'right', width: '50%' }} disabled /> */}
                         </div>
 
                         <div className='d-flex align-items-center mb-2 justify-content-between'>
-                            <label >Service charge % <Tooltip text="text" /></label>
-                            <input disabled className='form-control m-0' type="text"
+
+                            <Input
+                                tooltipText='text'
+                                editMode={false}
+                                label={"Service charge %"}
+                                required={currentYearEarning > 600}
                                 value={`${commissionAccordingtoNumOfSession(currentYearAccHours)} %`}
-                                style={{ float: 'right', width: '50%' }}
                             />
+                            {/* <label >Service charge % <Tooltip text="text" /></label>
+                            <input disabled className='form-control m-0' type="text"
+                                style={{ float: 'right', width: '50%' }}
+                            /> */}
                         </div>
 
                         <div className='d-flex align-items-center mb-2 justify-content-between'>
-                            <label htmlFor="total-earning">Total Earning {(new Date()).getFullYear()}. <Tooltip text="Calculate your total earnings since Jan 1st." /></label>
+                            <Input
+                                tooltipText='Calculate your total earnings since Jan 1st.'
+                                editMode={false}
+                                label={`Total Earning ${(new Date()).getFullYear()}. `}
+                                required={currentYearEarning > 600}
+                                setValue={set_ssh}
+                                value={(currentYearEarning || 0).toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                placeholder='XXX-XX-XXXX'
+                            />
+
+                            {/* <label htmlFor="total-earning">Total Earning {(new Date()).getFullYear()}. <Tooltip 
+                            text="Calculate your total earnings since Jan 1st." /></label>
                             <input className='form-control m-0' type="text"
                                 value={(currentYearEarning || 0).toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 id="total-earning"
-                                style={{ float: 'right', width: '50%' }} disabled />
+                                style={{ float: 'right', width: '50%' }} disabled /> */}
                         </div>
                         <div className='d-flex align-items-center mb-2 justify-content-between'>
-                            <label htmlFor="total-earning">Total Earning Previous Year. <Tooltip text="Calculate your total earning for the previous year. 
+
+                            <Input
+                                tooltipText='Calculate your total earning for the previous year. 
+                                This earnings will be shopwn on your 1099 form.'
+                                editMode={false}
+                                label={`Total Earning Previous Year. `}
+                                required={currentYearEarning > 600}
+                                value={(previousYearEarning || 0).toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            />
+                            {/* <label htmlFor="total-earning">Total Earning Previous Year.
+                             <Tooltip text="Calculate your total earning for the previous year. 
                             This earnings will be shopwn on your 1099 form." /></label>
                             <input className='form-control m-0' type="text"
                                 value={(previousYearEarning || 0).toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 id="total-earning"
-                                style={{ float: 'right', width: '50%' }} disabled />
+                                style={{ float: 'right', width: '50%' }} disabled /> */}
                         </div>
                     </div>
 

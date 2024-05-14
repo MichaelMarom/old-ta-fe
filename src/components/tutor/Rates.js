@@ -184,10 +184,10 @@ const Rates = () => {
 
   let subscription_discount = [
     { discount: "0%", hours: "1-5" },
-    { discount: "6.0%", hours: "6-11" },
-    { discount: "12.0%", hours: "12-17" },
-    { discount: "18.0%", hours: "18-23" },
-    { discount: "24.0%", hours: "24+" },
+    { discount: "5.0%", hours: "6-11" },
+    { discount: "10.0%", hours: "12-17" },
+    { discount: "15.0%", hours: "18-23" },
+    { discount: "20.0%", hours: "24+" },
   ];
 
   let multi_students_col = [
@@ -266,9 +266,14 @@ const Rates = () => {
             <div className="rounded shadow border m-2 p-4">
               <div
                 className="dropdown d-flex align-items-center mb-4"
-                style={{ width: "75%" }}
+                style={{ width: "100%" }}
               >
-                <label>Tutor Cancellation Policy</label>
+                <label>Tutor Cancellation Policy <Tooltip direction="bottomleft"
+                  text="How many hours before the lesson, you allow the student to cancel without penalty?"
+                  width="200px"
+                >
+                  <FaInfoCircle size={20} color="#0096ff" />
+                </Tooltip></label>
                 <button
                   style={{ pointerEvents: editMode ? "auto" : "none" }}
                   className={`btn ${
@@ -336,12 +341,7 @@ const Rates = () => {
                     </div>
                   </div>
                 )}
-                <Tooltip
-                  text="How many hours before the lesson, you allow the student to cancel without penalty?"
-                  width="200px"
-                >
-                  <FaInfoCircle size={20} color="#0096ff" />
-                </Tooltip>
+                
               </div>
               <div className="form-check form-switch d-flex gap-3">
                 <input
@@ -360,7 +360,7 @@ const Rates = () => {
                 >
                   50% Intro Session
                 </label>
-                <Tooltip
+                <Tooltip direction="bottomleft"
                   text="The academy mandate an |intro| sessions for new student as a 
                   prerequisite to book further sessions with the tutor. The 50% discount should motivate 
                   the student to select you."
@@ -386,7 +386,7 @@ const Rates = () => {
                 >
                   Consent Recording Session
                 </label>
-                <Tooltip
+                <Tooltip direction="bottomleft"
                   width="200px"
                   text="We record the lesson for learning purpose (or complains).
                      Students or parents can view the recorded lesson. You consent to the recording of the lesson with the student. The recording be saved on the academy servers for 30 days, then be deleted."
@@ -645,7 +645,7 @@ const Rates = () => {
                     <span className="input-group-text">.00</span>
                   </div>
                   <span className="small text-secondary bg-light">
-                    Amount should be less than $999{" "}
+                    Tutor must hold teaching certificate from his state to teach in American public, private or charters' schools.{" "}
                   </span>
                 </>
               )}
