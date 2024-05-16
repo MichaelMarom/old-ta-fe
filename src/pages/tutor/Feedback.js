@@ -12,6 +12,7 @@ import {
   get_feedback_to_question,
   post_feedback_to_question,
 } from "../../axios/student";
+import VIDEO from '../../assets/videos/feedback.mp4'
 
 import { useDispatch, useSelector } from "react-redux";
 import { postStudentBookings } from "../../redux/student/studentBookings";
@@ -212,7 +213,7 @@ const Feedback = () => {
   if (fetchingSessions) return <Loading />;
   return (
     <TutorLayout>
-      <TabInfoVideoToast iframeVideo={true} video={'https://www.youtube.com/embed/I0eThHB5aP4?si=pQfF61TIBui0oSJV'} />
+      <TabInfoVideoToast video={VIDEO} />
 
       <div className="container mt-1">
         <div className="py-2 row">

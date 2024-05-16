@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { PROFILE_STATUS, statesColours } from "../../constants/constants";
@@ -26,6 +26,15 @@ const Header = () => {
   let [tutorState, setTutorState] = useState("Pending");
   const { tutor } = useSelector((state) => state.tutor);
   const screenname = localStorage.getItem("tutor_screen_name");
+  const scrollRef = useRef(null);
+  const scrollStep = 100; // Adjust the scroll step as needed
+
+  const handleScrollLeft = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft -= scrollStep;
+    }
+  };
+
   const handleSignOut = () => {
     localStorage.removeItem('access_token')
     localStorage.removeItem('student_user_id')
@@ -39,6 +48,11 @@ const Header = () => {
     //setStudent tonull
 
     nav("/login");
+  };
+  const handleScrollRight = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft += scrollStep;
+    }
   };
 
   useEffect(() => {
@@ -139,7 +153,7 @@ const Header = () => {
 
   return (
     <>
-      <div
+      {/* <div
         className={`screen-name btn-success rounded  p-1 flex-column align-items-center`}
         style={{
           fontSize: "14px",
@@ -156,7 +170,7 @@ const Header = () => {
         <div style={{ fontSize: "12px", fontWeight: "700" }}>
           {StatusValues[tutor.Status]}
         </div>
-      </div>
+      </div> */}
 
       <div className="tutor-tab-header shadow-sm">
         <div
@@ -172,7 +186,7 @@ const Header = () => {
             width: "50px",
           }}
           className="scroller-left"
-          onClick={handle_scroll_left}
+          onClick={handleScrollLeft}
         >
           <div style={{ opacity: "1" }}>
             <svg
@@ -192,10 +206,29 @@ const Header = () => {
             </svg>
           </div>
         </div>
-
-        <ul
+        <div
+        className={`screen-name btn-success rounded  p-1 flex-column align-items-center`}
+        style={{
+          fontSize: "14px",
+          display: !tutor.TutorScreenname ? "none" : "flex",
+          // position: "fixed",
+          // top: "1px",
+          // zIndex: "999",
+          // left: "3%",
+          marginLeft:"80px",
+          width:"140px",
+          background: statesColours[tutorState]?.bg,
+          color: statesColours[tutorState]?.color,
+        }}
+      >
+        <div style={{ fontWeight: "bold" }}>{screen_name}</div>
+        <div style={{ fontSize: "12px", fontWeight: "700" }}>
+          {StatusValues[tutor.Status]}
+        </div>
+      </div>
+        <ul  ref={scrollRef}
           id=""
-          className={` header`}
+          className={`header`}
           style={{
             background:
               tutor.Status === PROFILE_STATUS.PENDING || !tutor.AcademyId

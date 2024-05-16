@@ -132,11 +132,13 @@ const Signup = () => {
               </p>
             </div>
             <div className="col-lg-6 mb-5 mb-lg-0">
-              <div className="card">
+              <div className="card m-auto">
+                <h3 className="mt-3 text-center"> Signup</h3>
+
                 <div className="card-body py-5 px-md-5">
                   {!pendingVerification ? <form onSubmit={handleSignup}>
 
-                    <div className='row'>
+                    <div className='row ' style={{ gap: "10px" }}>
                       <input
                         type="email"
                         id="email"
@@ -156,9 +158,6 @@ const Signup = () => {
                         onChange={handleInputChange}
                       />
 
-                    </div>
-
-                    <div className='form-outline mb-4'>
                       <select className="form-select"
                         name="role"
                         value={signupFormValues.role}
@@ -171,31 +170,14 @@ const Signup = () => {
                       //  <option value=""></option> */}
                       </select>
                     </div>
-
-                    <TAButton type="submit" loading={loading} buttonText={'Sign Up'} className="saving-btn blinking-button mb-4" />
+                    <div className='text-center'>
+                      <TAButton type="submit" loading={loading} buttonText={'Sign Up'} className="saving-btn blinking-button mb-4" />
+                    </div>
 
                     <div className="text-center">
                       <p>Already have an account? <Link to="/login">Login</Link></p>
                     </div>
 
-                    {/* <div className="text-center">
-                      <p>or sign up with:</p>
-                      <button type="button" className="btn btn-link btn-floating mx-1">
-                        <FaFacebook />
-                      </button>
-
-                      <button type="button" className="btn btn-link btn-floating mx-1">
-                        <FaGoogle />
-                      </button>
-
-                      <button type="button" className="btn btn-link btn-floating mx-1">
-                        <FaTwitter />
-                      </button>
-
-                      <button type="button" className="btn btn-link btn-floating mx-1">
-                        <FaGithub />
-                      </button>
-                    </div> */}
                   </form> :
                     <div>
                       <form className='d-flex justify-content-between flex-column'>

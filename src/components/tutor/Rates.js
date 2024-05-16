@@ -514,7 +514,7 @@ const Rates = () => {
 
                 <Tooltip
                   width="200px"
-                  text="Provide the code below to be used by your student for this platform. The code will pair your student to your profile upon the setup of student's account. You must generate new code for each one of your students"
+                  text="Provide the code below to be used by your student for the platform. The code will pair your student to your profile upon the setup of student's account. You must generate new code for each one of your students"
                 >
                   <FaInfoCircle size={20} color="#0096ff" />
                 </Tooltip>

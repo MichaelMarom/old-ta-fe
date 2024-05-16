@@ -193,7 +193,7 @@ const Subjects = () => {
                 </div>
                 <div
                   style={{
-                    height: "57vh",
+                    height: "60vh",
                     overflowY: "auto",
                     overflowX: "hidden",
                     position: "relative",

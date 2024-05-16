@@ -147,7 +147,8 @@ const LoginPage = () => {
             </div>
 
             <div className="col-lg-6 mb-5 mb-lg-0">
-              <div className="card">
+              <div className="card m-auto">
+                <h3 className="mt-3 text-center"> Login</h3>
                 <div className="card-body py-5 px-md-5">
                   <form onSubmit={handleLogin}>
                     <div className="form-outline mb-4">
@@ -201,13 +202,14 @@ const LoginPage = () => {
                         forgot password?
                       </div>
                     </div>
-
-                    <TAButton
-                      className="saving-btn blinking-button"
-                      type="submit"
-                      loading={loading}
-                      buttonText="Login"
-                    />
+                    <div className="text-center">
+                      <TAButton
+                        className="saving-btn blinking-button"
+                        type="submit"
+                        loading={loading}
+                        buttonText="Login"
+                      />
+                    </div>
 
                     <div className="text-center">
                       <p>

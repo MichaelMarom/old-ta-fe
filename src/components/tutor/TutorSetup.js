@@ -1219,67 +1219,72 @@ const TutorSetup = () => {
               style={{ width: "40%", height: "120px" }}
             >
               <div className="d-flex gap-3">
-              <div
-                className="form-check form-switch d-flex gap-3"
-                style={{ fontSize: "16px " }}
-              >
-                <input
-                  disabled={!editMode}
-                  className="form-check-input "
-                  type="checkbox"
-                  role="switch"
-                  style={{
-                    width: "30px",
-                    height: "15px",
-                  }}
-                  onChange={() => set_vacation_mode(!vacation_mode)}
-                  checked={vacation_mode}
-                />
-                <label
-                  className="form-check-label mr-3"
-                  htmlFor="flexSwitchCheckChecked"
+                <div
+                  className="form-check form-switch d-flex gap-3"
+                  style={{ fontSize: "16px " }}
                 >
-                  Vacation Mode
-                </label>
-                <ToolTip
-                  text="To set your unavailable days for tutoring, simply turn the switch to 'On'.
+                  <input
+                    disabled={!editMode}
+                    className="form-check-input "
+                    type="checkbox"
+                    role="switch"
+                    style={{
+                      width: "30px",
+                      height: "15px",
+                    }}
+                    onChange={() => set_vacation_mode(!vacation_mode)}
+                    checked={vacation_mode}
+                  />
+                  <label
+                    className="form-check-label mr-3"
+                    htmlFor="flexSwitchCheckChecked"
+                  >
+                    Vacation Mode
+                  </label>
+                  <ToolTip
+                    text="To set your unavailable days for tutoring, simply turn the switch to 'On'.
                   This action allows you to choose the days you wish to take off. 
                   Your selected dates will be highlighted in green on your calendar, signaling to
                   students that you are not available for lessons during this time. Once the end 
                   date is reached, the switch will automatically revert to 'Off', making you 
                   available for bookings again."
-                  width="200px"
-                />
-               
-              </div>
-              <div
-                className="form-check form-switch d-flex gap-3"
-                style={{ fontSize: "16px " }}
-              >
-                <input
-                  disabled={!editMode}
-                  className="form-check-input "
-                  type="checkbox"
-                  role="switch"
-                  style={{
-                    width: "30px",
-                    height: "15px",
-                  }}
-                  // onChange={() => set_vacation_mode(!vacation_mode)}
-                  // checked={vacation_mode}
-                />
-                <label
-                  className="form-check-label mr-3"
-                  htmlFor="flexSwitchCheckChecked"
-                >
-                 Franchise Operator
-                </label>
-                <ToolTip
-                  text="x-y-z"
-                  width="200px"
-                />
+                    width="200px"
+                  />
 
-              </div>
+                </div>
+                <div
+                  className="form-check form-switch d-flex gap-3"
+                  style={{ fontSize: "16px " }}
+                >
+                  <input
+                    disabled={!editMode}
+                    className="form-check-input "
+                    type="checkbox"
+                    role="switch"
+                    style={{
+                      width: "30px",
+                      height: "15px",
+                    }}
+                    onChange={() => toast.info("Tutor must conduct 40 hours before can activate “Agency” option.")}
+                  //  checked={vacation_mode}
+                  />
+                  <label
+                    className="form-check-label mr-3"
+                    htmlFor="flexSwitchCheckChecked"
+                  >
+                    Agency Operator
+                  </label>
+                  <ToolTip
+                    text="The Tutoring Academy platform presents a unique 'Agency' opportunity, 
+                  enabling you to enhance your business by recruiting and supervising other 
+                  tutors. This model allows for scalability by setting a markup for each tutor's 
+                  services, thereby creating a potential revenue stream. It's an innovative 
+                  approach to expand your educational services while managing and growing a team 
+                  of skilled tutors."
+                    width="200px"
+                  />
+
+                </div>
 
               </div>
               {vacation_mode && (
