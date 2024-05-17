@@ -424,7 +424,7 @@ const StudentSetup = () => {
           </label>
 
           <div className="rounded border shadow p-2 mt-4">
-            <h6>Type tutor code here</h6>
+            <h6>Type tutor's code here</h6>
             <div
               className="mb-2 d-flex align-items-center justify-content-center"
               style={{ gap: "2%" }}

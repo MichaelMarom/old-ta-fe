@@ -2,8 +2,9 @@ import React from "react";
 import Tooltip from "./ToolTip";
 
 const Input = ({
-  setValue,
+  setValue=()=>{},
   value,
+  type="text",
   tooltipText="",
   editMode = true,
   label,
@@ -16,7 +17,7 @@ const Input = ({
         className="input__field"
         onInput={(e) => setValue(e.target.value)}
         value={value}
-        type="text"
+        type={type}
         required={required}
         style={{ background: editMode ? "white" : "#e1e1e1" }}
         disabled={!editMode}

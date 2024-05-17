@@ -9,6 +9,7 @@ import {
 import { IoMdCopy, IoMdRefresh } from "react-icons/io";
 import { FaInfoCircle } from "react-icons/fa";
 import Tooltip from "../common/ToolTip";
+import TAButton from '../common/TAButton';
 import {
   compareStates,
   copyToClipboard,
@@ -18,6 +19,8 @@ import "../../styles/common.css";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { setTutor } from "../../redux/tutor/tutorData";
+import Select from "../common/Select";
+import SendCodeModal from "./SendCodeModal";
 
 const generateDiscountCode = () => {
   const length = 8;
@@ -39,6 +42,7 @@ const Rates = () => {
     useState("");
   let [SubscriptionPlan, setSubscriptionPlan] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [sendCodeModalOpen, setSendCodeModalOpen]=useState(false);
 
   const [discountEnabled, setDiscountEnabled] = useState(false);
   const [classTeaching, setClassTeaching] = useState(false);
@@ -274,20 +278,21 @@ const Rates = () => {
                 >
                   <FaInfoCircle size={20} color="#0096ff" />
                 </Tooltip></label>
+
                 <button
                   style={{ pointerEvents: editMode ? "auto" : "none" }}
-                  className={`btn ${
-                    selectedCancellationPolicy.length
+                  className={`btn ${selectedCancellationPolicy.length
                       ? "btn-success"
                       : "btn-secondary"
-                  } dropdown-toggle my-0 mx-3`}
+                    } dropdown-toggle my-0 mx-3`}
                   type="button"
                   onClick={() => setIsOpen(!isOpen)}
                 >
                   {selectedCancellationPolicy.length
-                    ? `${selectedCancellationPolicy}hr   `
+                    ? `${selectedCancellationPolicy}hr`
                     : " Select"}
                 </button>
+
                 {isOpen && (
                   <div
                     className="dropdown-menu show"
@@ -341,7 +346,6 @@ const Rates = () => {
                     </div>
                   </div>
                 )}
-                
               </div>
               <div className="form-check form-switch d-flex gap-3">
                 <input
@@ -442,7 +446,7 @@ const Rates = () => {
                 style={{
                   pointerEvents:
                     ActivateSubscriptionOption === "true" ||
-                    ActivateSubscriptionOption === true
+                      ActivateSubscriptionOption === true
                       ? "auto"
                       : "none",
                   opacity: "0.5",
@@ -514,77 +518,78 @@ const Rates = () => {
 
                 <Tooltip
                   width="200px"
-                  text="Provide the code below to be used by your student for the platform. The code will pair your student to your profile upon the setup of student's account. You must generate new code for each one of your students"
+                  text="To link your student to your profile, please use the unique code provided below 
+                  during the student's account setup. This code ensures that each student is correctly 
+                  associated with your profile. Remember to generate a distinct code for every student 
+                  to maintain individual connections."
                 >
                   <FaInfoCircle size={20} color="#0096ff" />
                 </Tooltip>
               </div>
 
               {discountEnabled && (
-                <div className="d-flex w-100 justify-content-between align-items-end">
-                  <div>
-                    <h6 className="mt-4 d-inline">Your Student's new code</h6>
-                    <Tooltip text="Generate New Code">
-                      <IoMdRefresh
-                        size={20}
-                        className="d-inline"
-                        onClick={() =>
-                          editMode && setDiscountCode(generateDiscountCode())
-                        }
-                      />
-                    </Tooltip>
-                    <div className="input-group">
-                      <input
-                        disabled={!editMode}
-                        type="text"
-                        className="form-control m-0 h-100 p-2"
-                        value={discountCode}
-                        readOnly
-                      />
-
-                      <label
-                        className="m-0 input-group-text"
-                        type="button"
-                        id="inputGroupFileAddon04"
-                      >
-                        <IoMdCopy
+                <div>
+                  <div className="d-flex w-100 justify-content-between align-items-end">
+                    <div>
+                      <h6 className="mt-4 d-inline">Your Student's new code</h6>
+                      <Tooltip text="Generate New Code">
+                        <IoMdRefresh
                           size={20}
-                          color="#0096ff"
-                          onClick={() => {
-                            copyToClipboard(discountCode);
-                            setCopied(true);
-                          }}
+                          className="d-inline"
+                          onClick={() =>
+                            editMode && setDiscountCode(generateDiscountCode())
+                          }
                         />
-                      </label>
+                      </Tooltip>
+                      <div className="input-group">
+                        <input
+                          disabled={!editMode}
+                          type="text"
+                          className="form-control m-0 h-100 p-2"
+                          value={discountCode}
+                          readOnly
+                        />
+
+                        <label
+                          className="m-0 input-group-text"
+                          type="button"
+                          id="inputGroupFileAddon04"
+                        >
+                          <IoMdCopy
+                            size={20}
+                            color="#0096ff"
+                            onClick={() => {
+                              copyToClipboard(discountCode);
+                              setCopied(true);
+                            }}
+                          />
+                        </label>
+                      </div>
+                      {copied && (
+                        <p className="text-success d-block">
+                          Code copied to clipboard!
+                        </p>
+                      )}
                     </div>
-                    {copied && (
-                      <p className="text-success d-block">
-                        Code copied to clipboard!
-                      </p>
-                    )}
+                    <div className="input-group w-50">
+                      <Select
+                        label={"Subject"}
+                        value={subject}
+                        setValue={setSubject}
+
+                      >
+                        <option value="" disabled>
+                          Select
+                        </option>
+                        {subjects.map((subject) => (
+                          <option value={subject}>{subject}</option>
+                        ))}
+                      </Select>
+
+                    </div>
                   </div>
-                  <div className="input-group w-50">
-                    <label
-                      className="m-0 input-group-text"
-                      type="button"
-                      id="inputGroupFileAddon04"
-                    >
-                      Subject
-                    </label>
-                    <select
-                      required
-                      className="form-select"
-                      value={subject}
-                      onChange={(e) => setSubject(e.target.value)}
-                    >
-                      <option value="" disabled>
-                        Select
-                      </option>
-                      {subjects.map((subject) => (
-                        <option value={subject}>{subject}</option>
-                      ))}
-                    </select>
-                  </div>
+                  <TAButton className="w-auto" buttonText={"Send Code"} handleClick={()=>setSendCodeModalOpen(true)}/>
+
                 </div>
               )}
             </div>
@@ -694,7 +699,7 @@ const Rates = () => {
                 style={{
                   pointerEvents:
                     ActivateSubscriptionOption === "true" ||
-                    ActivateSubscriptionOption === true
+                      ActivateSubscriptionOption === true
                       ? "auto"
                       : "none",
                   opacity: "0.5",
@@ -742,6 +747,7 @@ const Rates = () => {
             saveDisabled={!editMode}
           />
         </form>
+        <SendCodeModal isOpen={sendCodeModalOpen} onClose={()=>setSendCodeModalOpen(false)} code={discountCode} />
       </div>
     </div>
   );

@@ -143,7 +143,7 @@ export const send_sms = async (body) => {
 
 /**
  *
- * @param {Array} body array of emails and message
+ * @param {Array} body array of emails and message and subject
  * @returns
  */
 export const send_email = async (body) => {

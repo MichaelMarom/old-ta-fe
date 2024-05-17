@@ -4,7 +4,7 @@ import 'react-quill/dist/quill.snow.css';
 
 import './styles.css'
 
-const UserRichTextEditor = ({ value, onChange, readOnly, placeholder, height = '92vh', ...rest }) => {
+const UserRichTextEditor = ({ value, onChange=()=>{}, readOnly, placeholder, height = '92vh', ...rest }) => {
     const modules = {
         toolbar: [
             [{ header: [1, 2, 3, 4, 5, 6, false] }],

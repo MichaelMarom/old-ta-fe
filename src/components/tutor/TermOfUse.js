@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import RichTextEditor from "../common/RichTextEditor/RichTextEditor";
 import Actions from "../common/Actions";
 import { get_adminConstants, post_termsOfUse } from "../../axios/admin";
-import { post_tutor_setup, setAgreementDateToNullForAll } from "../../axios/tutor";
+import { get_my_edu, post_tutor_setup, setAgreementDateToNullForAll } from "../../axios/tutor";
 import Loading from "../common/Loading";
 import { setTutor } from "../../redux/tutor/tutorData";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +10,7 @@ import { showDate } from "../../helperFunctions/timeHelperFunctions";
 import { convertToDate } from "../common/Calendar/Calendar";
 import { PROFILE_STATUS } from "../../constants/constants";
 import { toast } from "react-toastify";
+import { apiClient } from "../../axios/config";
 
 const TermOfUse = () => {
     const [unSavedChanges, setUnSavedChanges] = useState(false);
@@ -17,10 +18,12 @@ const TermOfUse = () => {
     const [db_terms, set_db_terms] = useState('');
     const [userRole, setUserRole] = useState('');
     const [editMode, setEditMode] = useState(false);
+    const [videoError, setVideoError] = useState(false);
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true)
     const [agreed, setAgreed] = useState(false)
     const { tutor } = useSelector(state => state.tutor)
+    const [video, setVideo] = useState(null)
     const { user } = useSelector(state => state.user)
     const dispatch = useDispatch()
 
@@ -72,22 +75,52 @@ const TermOfUse = () => {
 
     const handleSaveAgreement = async (e) => {
         e.preventDefault()
+        const res = await get_my_edu(tutor.AcademyId);
+        if (!res?.[0]?.DegFileName || !res?.[0]?.DegFileName?.length)
+            return toast.error('Please upload your degree')
+
+        if (!tutor?.Photo?.length)
+            return toast.error('Please upload your Photo')
+
+        if (videoError) return toast.error('Please upload your Photo')
+
+
         setLoading(true)
         let body = {
             userId: tutor.userId, AgreementDate: new Date(),
             fname: tutor.FirstName, lname: tutor.LastName, mname: tutor.MiddleName
         }
-        if (tutor.Step === 5 && tutor.Status === PROFILE_STATUS.PENDING) body.Status = PROFILE_STATUS.UNDER_REVIEW
+        if (tutor.Step === 5 && tutor.Status === PROFILE_STATUS.PENDING)
+            body.Status = PROFILE_STATUS.UNDER_REVIEW
         await post_tutor_setup(body)
         setLoading(false)
 
         dispatch(setTutor());
     }
 
+    useEffect(() => {
+        tutor.AcademyId &&
+            apiClient
+                .get("/tutor/setup/intro", {
+                    params: { user_id: tutor.AcademyId.replace(/[.\s]/g, "") },
+                })
+                .then((res) => {
+                    res?.data?.url && setVideo(res.data.url);
+                })
+                .catch((err) => console.log(err));
+    }, [tutor]);
+
     if (fetching)
         return <Loading />
     return (
         <div className="form-term-of-use">
+            <video
+                src={video}
+                onError={() => setVideoError(true)}
+                className="w-100 h-100 m-0 p-0 videoLive d-hidden"
+                controls
+                autoPlay={false}
+            />
             <form onSubmit={userRole === 'admin' ? handleSaveTerms : handleSaveAgreement}>
                 <div className='px-4'>
                     <RichTextEditor

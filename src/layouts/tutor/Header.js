@@ -216,7 +216,7 @@ const Header = () => {
           // zIndex: "999",
           // left: "3%",
           marginLeft:"80px",
-          width:"140px",
+          width:"fit-content",
           background: statesColours[tutorState]?.bg,
           color: statesColours[tutorState]?.color,
         }}

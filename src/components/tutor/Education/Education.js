@@ -1168,7 +1168,6 @@ const Education = () => {
                           </div>
                         ) : (
                           <>
-                            {" "}
                             <div className="form-outline">
                               <input
                                 type="file"
