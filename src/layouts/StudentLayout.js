@@ -5,9 +5,26 @@ import SmallSideBar from "../components/common/SmallSideBar";
 import { generateUpcomingSessionMessage } from "../helperFunctions/generalHelperFunctions";
 import { useNavigate } from "react-router-dom";
 import _ from "lodash";
+import MobileScreen from "../pages/MobileScreen";
+import { widthResolutionAllowed } from "../constants/constants";
 
 const StudentLayout = ({ children }) => {
   const navigate = useNavigate();
+  const [resolution, setResolution] = useState({ width: window.innerWidth, height: window.innerHeight });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setResolution({ width: window.innerWidth, height: window.innerHeight });
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const { user } = useSelector((state) => state.user);
   const { student } = useSelector((state) => state.student);
   const { upcomingSessionFromNow, upcomingSession, inMins, currentSession } =
@@ -64,8 +81,8 @@ const StudentLayout = ({ children }) => {
         Please Select Student from Student-Table to view tutor records
       </div>
     );
-  return (
-    <div>
+  return resolution.width < widthResolutionAllowed ? <MobileScreen /> :
+    <>
       <Header />
       <SmallSideBar
         inMins={inMins}
@@ -73,10 +90,8 @@ const StudentLayout = ({ children }) => {
           upcomingSession,
           upcomingSessionFromNow
         )}
-      />
-      {children}
-    </div>
-  );
+      /> {children}
+    </>
 };
 
 export default StudentLayout;

@@ -4,8 +4,25 @@ import { useSelector } from 'react-redux'
 import SmallSideBar from '../components/common/SmallSideBar'
 import { generateUpcomingSessionMessage } from '../helperFunctions/generalHelperFunctions'
 import { useNavigate } from 'react-router-dom'
+import MobileScreen from '../pages/MobileScreen'
+import { widthResolutionAllowed } from '../constants/constants'
 
 const TutorLayout = ({ children }) => {
+    const [resolution, setResolution] = useState({ width: window.innerWidth, height: window.innerHeight });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setResolution({ width: window.innerWidth, height: window.innerHeight });
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
     const { tutor } = useSelector(state => state.tutor);
     const { user } = useSelector(state => state.user)
     const { upcomingSessionFromNow, upcomingSession, inMins, currentSession } = useSelector(state => state.tutorSessions)
@@ -41,15 +58,12 @@ const TutorLayout = ({ children }) => {
         return <div className='text-danger'>Your Account is Closed or Suspended. Please contact adminitrator.</div>
     if (user.role === 'admin' && !localStorage.getItem('tutor_user_id'))
         return <div className='text-danger'>Please Select Tutor  From Tutor-Table to view tutor records</div>
-    return (
-        <div>
-            {/* {(!tutor.Status || tutor.Status === 'pending') ?
-                <Steps steps={steps} currentStep={currentStep} /> : */}
-            < Header />
+    return resolution.width < widthResolutionAllowed ? <MobileScreen /> :
+        <>
+            <Header />
             <SmallSideBar inMins={inMins} currentSession={currentSession} message={generateUpcomingSessionMessage(upcomingSession, upcomingSessionFromNow)} />
             {children}
-        </div>
-    )
+        </>
 }
 
 export default TutorLayout

@@ -39,6 +39,7 @@ export const days = [
   "Holidays"
 ];
 
+export const widthResolutionAllowed = 700
 
 export const monthFormat = 'MMM D, YY';
 export const wholeDateFormat = 'ddd, MMM D, hh:mm a';

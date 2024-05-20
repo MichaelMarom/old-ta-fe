@@ -30,6 +30,7 @@ import { setTutorSessions } from "./redux/tutor/tutorSessions";
 import Collaboration from "./pages/tutor/Collaboration";
 import CallWithChatExperience from "./pages/tutor/Test1";
 import { setNewSubjCount } from "./redux/admin/newSubj";
+import MobileScreen from "./pages/MobileScreen";
 
 const App = () => {
   let location = useLocation();
@@ -232,25 +233,26 @@ const App = () => {
         // localStorage.clear()();
       }
     } else {
-      navigate("/login");
+      // navigate("/login");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <Routes>
-      <Route path={`/collab`} element={<Collaboration />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/chat-call" element={<CallWithChatExperience />} />
-      {activeRoutes.map((route) => (
-        <Route
-          key={route.path}
-          path={route.path}
-          element={<SignedIn>{route.element}</SignedIn>}
-        />
-      ))}
-      <Route path="*" element={<UnAuthorizeRoute />} />
+    <Routes>        
+          <Route path={`/collab`} element={<Collaboration />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/chat-call" element={<CallWithChatExperience />} />
+          {activeRoutes.map((route) => (
+            <Route
+              key={route.path}
+              path={route.path}
+              element={<SignedIn>{route.element}</SignedIn>}
+            />
+          ))}
+          {user?.role && <Route path="*" element={<UnAuthorizeRoute />} />}
+    
     </Routes>
   );
 };

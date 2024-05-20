@@ -429,7 +429,9 @@ const StudentSetup = () => {
               className="mb-2 d-flex align-items-center justify-content-center"
               style={{ gap: "2%" }}
             >
+              <div className="w-50">
               <Input setValue={set_code} value={code} label={"Enter Code"} required={false} />
+              </div>
 
               <Button className="action-btn" handleClick={handleConnectClick}>
                 <div className="button__content">

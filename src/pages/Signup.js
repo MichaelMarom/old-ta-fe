@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { get_user_detail, signup } from '../axios/auth';
 import { toast } from 'react-toastify';
 import { useSignUp, useAuth } from "@clerk/clerk-react";
@@ -12,6 +12,10 @@ import { setStudent } from '../redux/student/studentData';
 import { useDispatch } from 'react-redux';
 
 const Signup = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const role = queryParams.get("role");
+
   const [signupFormValues, setSignupFormValues] = useState({
     email: '',
     password: '',
@@ -26,9 +30,16 @@ const Signup = () => {
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState("");
 
+  useEffect(() => {
+    if (role === 'student')
+      setSignupFormValues({ ...signupFormValues, role })
+  }, [role])
+
   const handleSignup = async (e) => {
     e.preventDefault();
     if (!isLoaded) return
+    if (!signupFormValues?.email || !signupFormValues?.password || !signupFormValues?.role)
+      return toast.error("Please fill all the fields")
     setLoading(true);
     try {
       await signUp.create({
@@ -73,6 +84,7 @@ const Signup = () => {
           if (data) {
             dispatch(setUser(data));
             localStorage.setItem("user", JSON.stringify(data));
+            setPendingVerification(false);
 
             // data.SID && data.role === "tutor" && dispatch(setTutor());
             // if (data.role === "student") {
@@ -100,7 +112,6 @@ const Signup = () => {
       // setErrors(err.errors);
     } finally {
       setVerifying(false);
-      setPendingVerification(false);
     }
   };
 
@@ -133,7 +144,7 @@ const Signup = () => {
             </div>
             <div className="col-lg-6 mb-5 mb-lg-0">
               <div className="card m-auto">
-                <h3 className="mt-3 text-center"> Signup</h3>
+                <h3 className="mt-3 text-center"> Signup {role=='student' && 'as "Student"'}</h3>
 
                 <div className="card-body py-5 px-md-5">
                   {!pendingVerification ? <form onSubmit={handleSignup}>
@@ -143,6 +154,7 @@ const Signup = () => {
                         type="email"
                         id="email"
                         name="email"
+                        required
                         className="form-control m-0"
                         placeholder="Email"
                         value={signupFormValues.email}
@@ -152,23 +164,25 @@ const Signup = () => {
                         type="password"
                         id="password"
                         name="password"
+                        required
                         className="form-control m-0"
                         placeholder="Password"
                         value={signupFormValues.password}
                         onChange={handleInputChange}
                       />
 
-                      <select className="form-select"
+                      {role !== "student" && <select className="form-select"
                         name="role"
+                        required
                         value={signupFormValues.role}
                         aria-label="Default select example" onChange={handleInputChange}>
-                        <option selected>Select Role</option>
+                        <option value="" disabled>Select Role</option>
                         <option value="tutor">Tutor</option>
                         {/* //  <option value=""></option>
                       //  <option value=""></option>
                       //  <option value=""></option>
                       //  <option value=""></option> */}
-                      </select>
+                      </select>}
                     </div>
                     <div className='text-center'>
                       <TAButton type="submit" loading={loading} buttonText={'Sign Up'} className="saving-btn blinking-button mb-4" />
@@ -180,10 +194,13 @@ const Signup = () => {
 
                   </form> :
                     <div>
-                      <form className='d-flex justify-content-between flex-column'>
+                      <form className='d-flex justify-content-between flex-column ' onSubmit={handleVerification}>
                         <input type='text' onBlur={() => { }}
-                          onChange={(e) => setCode(e.target.value)} className='form-control' placeholder='Enter Verification Code here' />
-                        <TAButton buttonText={"Verify Email"} loading={verifying} handleClick={handleVerification} />
+                          onChange={(e) => setCode(e.target.value)}
+                          required
+                          className='form-control' placeholder='Enter Verification Code here' />
+                        <TAButton buttonText={"Verify Email"} loading={verifying} type='submit'
+                        />
                       </form>
                     </div>
                   }

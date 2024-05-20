@@ -26,3 +26,8 @@
 .student-terms .ql-container {
     height: 84%;
 }
+
+
+.tutor-tos .ql-container{
+    height: 75% !important;
+}

@@ -42,7 +42,7 @@ const Rates = () => {
     useState("");
   let [SubscriptionPlan, setSubscriptionPlan] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [sendCodeModalOpen, setSendCodeModalOpen]=useState(false);
+  const [sendCodeModalOpen, setSendCodeModalOpen] = useState(false);
 
   const [discountEnabled, setDiscountEnabled] = useState(false);
   const [classTeaching, setClassTeaching] = useState(false);
@@ -282,8 +282,8 @@ const Rates = () => {
                 <button
                   style={{ pointerEvents: editMode ? "auto" : "none" }}
                   className={`btn ${selectedCancellationPolicy.length
-                      ? "btn-success"
-                      : "btn-secondary"
+                    ? "btn-success"
+                    : "btn-secondary"
                     } dropdown-toggle my-0 mx-3`}
                   type="button"
                   onClick={() => setIsOpen(!isOpen)}
@@ -573,6 +573,7 @@ const Rates = () => {
                     </div>
                     <div className="input-group w-50">
                       <Select
+                        editMode={editMode}
                         label={"Subject"}
                         value={subject}
                         setValue={setSubject}
@@ -588,7 +589,8 @@ const Rates = () => {
 
                     </div>
                   </div>
-                  <TAButton className="w-auto" buttonText={"Send Code"} handleClick={()=>setSendCodeModalOpen(true)}/>
+                  <TAButton className="w-auto" buttonText={"Send Code"} handleClick={() => !!subject.length ?
+                    setSendCodeModalOpen(true) : toast.warning("Please Seelct subject First before sending code to your students!")} />
 
                 </div>
               )}
@@ -747,7 +749,10 @@ const Rates = () => {
             saveDisabled={!editMode}
           />
         </form>
-        <SendCodeModal isOpen={sendCodeModalOpen} onClose={()=>setSendCodeModalOpen(false)} code={discountCode} />
+        <SendCodeModal isOpen={sendCodeModalOpen}
+          onClose={() => setSendCodeModalOpen(false)}
+          subject={subject}
+          code={discountCode} />
       </div>
     </div>
   );

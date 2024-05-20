@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import AdminLayout from './AdminLayout'
 import TutorLayout from './TutorLayout'
 import StudentLayout from './StudentLayout'
+import UnAuthorizeRoute from '../pages/UnAuthorizeRoute'
 
 
 const CommonLayout = ({ role, children }) => {
@@ -16,12 +17,9 @@ const CommonLayout = ({ role, children }) => {
         )
     else if (role === 'admin')
         return (
-            <div>
                 <AdminLayout />
-                {children}
-            </div>
         )
-    else return null
+    else return <UnAuthorizeRoute />
 }
 
 export default CommonLayout

@@ -113,26 +113,18 @@ const TermOfUse = () => {
     if (fetching)
         return <Loading />
     return (
-        <div className="form-term-of-use">
+        <div className="form-term-of-use h-100">
             <video
                 src={video}
                 onError={() => setVideoError(true)}
-                className="w-100 h-100 m-0 p-0 videoLive d-hidden"
+                className="w-100 h-100 m-0 p-0 videoLive d-none"
                 controls
                 autoPlay={false}
             />
             <form onSubmit={userRole === 'admin' ? handleSaveTerms : handleSaveAgreement}>
-                <div className='px-4'>
-                    <RichTextEditor
-                        value={terms}
-                        onChange={handleEditorChange}
-                        readOnly={!editMode || userRole !== 'admin' || !editMode}
-                        placeholder="Enter Term Of  Service"
-                        height="60vh"
-                        className='mb-5'
-                    />
-                </div>
                 <div className="d-block p-5">
+                    <h4 style={{fontSize:"16px"}}>CHECKING THE BOX BELOW, CONSITUTES YOUR ACCPETANCE OF THESE TERMS OF USE</h4>
+
                     <div className="form-check " >
                         <input className="form-check-input" style={{ width: "30px", height: "30px", marginRight: '10px' }} type="checkbox" checked={agreed} onChange={() => setAgreed(true)}
                             disabled={tutor.AgreementDate || userRole !== 'tutor' || !editMode}
@@ -148,6 +140,17 @@ const TermOfUse = () => {
                         </div>
                     }
                 </div>
+                <div className='px-4 tutor-tos'>
+                    <RichTextEditor
+                        value={terms}
+                        onChange={handleEditorChange}
+                        readOnly={!editMode || userRole !== 'admin' || !editMode}
+                        placeholder="Enter Term Of  Service"
+                        height="55vh"
+                        className='mb-5'
+                    />
+                </div>
+
 
                 <Actions
                     loading={loading}

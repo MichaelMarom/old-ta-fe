@@ -11,7 +11,7 @@ import { convertToDate } from '../../components/common/Calendar/Calendar'
 import { post_student_agreement } from '../../axios/student'
 import { setStudent } from '../../redux/student/studentData'
 
-const StudentIntro = () => {
+const TermOfUse = () => {
     const { user } = useSelector(state => state.user)
     const [terms, setTerms] = useState('');
     const [editMode, setEditMode] = useState(false)
@@ -91,16 +91,8 @@ const StudentIntro = () => {
         <StudentLayout  >
 
             <form onSubmit={user.role === 'admin' ? handleSave : handleSaveAgreement}>
-                <div className='px-4 mt-4 student-terms'>
-                    <RichTextEditor
-                        value={terms}
-                        onChange={handleEditorChange}
-                        readOnly={!editMode || user.role !== 'admin' || !editMode}
-                        placeholder="Enter Term Of Service here"
-                        style={{ height: "55vh" }}
-                    />
-                </div>
                 <div className="d-block p-5">
+                    <h4 style={{fontSize:"16px"}}>CHECKING THE BOX BELOW, CONSITUTES YOUR ACCPETANCE OF THESE TERMS OF USE</h4>
                     <div className="form-check " >
                         <input className="form-check-input" style={{ width: "30px", height: "30px", marginRight: '10px' }}
                             type="checkbox" checked={agreed} onChange={() => setAgreed(true)}
@@ -117,6 +109,15 @@ const StudentIntro = () => {
                         </div>
                     }
                 </div>
+                <div className='px-4 mt-4 student-terms'>
+                    <RichTextEditor
+                        value={terms}
+                        onChange={handleEditorChange}
+                        readOnly={!editMode || user.role !== 'admin' || !editMode}
+                        placeholder="Enter Term Of Service here"
+                        style={{ height: "55vh" }}
+                    />
+                </div>
 
                 <Actions
                     loading={loading}
@@ -131,4 +132,4 @@ const StudentIntro = () => {
     )
 }
 
-export default StudentIntro
+export default TermOfUse

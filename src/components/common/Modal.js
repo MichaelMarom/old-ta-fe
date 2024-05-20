@@ -11,7 +11,7 @@ const CenteredModal = ({ show, handleClose, title, children, ...rest }) => {
                 <div className=" modal-dialog modal-dialog-centered" role="document" >
                     <div className="modal-content" onClick={(e) => e.stopPropagation()} {...rest}>
                         <div className="modal-header">
-                            <h5 className="modal-title">{title}</h5>
+                            <h5 className="modal-title" dangerouslySetInnerHTML={{__html:title}} />
                             <button type="button" className="close" onClick={handleClose} aria-label="Close">
                                 <AiOutlineClose />
                             </button>

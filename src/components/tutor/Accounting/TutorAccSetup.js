@@ -267,8 +267,8 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                                 {emailRequiredPaymentMethods.includes(payment_option) && <p
                                     style={{
                                         fontWeight: "bold"
-                                    }}>3% service charge from above option
-                                    <Tooltip width='200px' text={'payoneer, paypal, zelle, wise'} /></p>}
+                                    }}>3% service charge imposed by the services above.
+                                    <Tooltip width='200px' text={'Payoneer, Paypal, Zelle, Wise'} /></p>}
 
                                 {payment_option === "Bank" &&
                                     <div className=' shadow p-3 border border-2 '>
