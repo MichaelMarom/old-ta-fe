@@ -204,7 +204,7 @@ const LoginPage = () => {
                     </div>
                     <div className="text-center">
                       <TAButton
-                        className="saving-btn blinking-button"
+                        className=""
                         type="submit"
                         loading={loading}
                         buttonText="Login"

@@ -97,7 +97,8 @@ export const compareStates = (dbState, currentState) => {
   if (!(Object.keys(dbState).length)) return false;
 
   for (const key in currentState) {
-    // console.log(currentState[key], key, dbState?.[key], currentState[key] !== dbState?.[key], !_.isEqual(currentState[key], dbState[key]))
+    if(['Bach_College_State'].includes(key)) return false;
+    console.log(currentState[key], key, dbState?.[key], currentState[key] !== dbState?.[key], !_.isEqual(currentState[key], dbState[key]))
     if (_.isObject(currentState[key]) && !_.isEqual(currentState[key], dbState[key])) return true
     if (!_.isObject(currentState[key]) &&
       currentState[key] !== dbState?.[key]) {

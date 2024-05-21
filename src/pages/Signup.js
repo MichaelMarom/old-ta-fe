@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { get_user_detail, signup } from '../axios/auth';
 import { toast } from 'react-toastify';
 import { useSignUp, useAuth } from "@clerk/clerk-react";
@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux';
 
 const Signup = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const role = queryParams.get("role");
 
@@ -85,6 +86,7 @@ const Signup = () => {
             dispatch(setUser(data));
             localStorage.setItem("user", JSON.stringify(data));
             setPendingVerification(false);
+            navigate('/login')
 
             // data.SID && data.role === "tutor" && dispatch(setTutor());
             // if (data.role === "student") {
@@ -185,7 +187,7 @@ const Signup = () => {
                       </select>}
                     </div>
                     <div className='text-center'>
-                      <TAButton type="submit" loading={loading} buttonText={'Sign Up'} className="saving-btn blinking-button mb-4" />
+                      <TAButton type="submit" loading={loading} buttonText={'Sign Up'} className=" mb-4" />
                     </div>
 
                     <div className="text-center">

@@ -83,6 +83,20 @@ const StudentSetup = () => {
   const [nameFieldsDisabled, setNameFieldsDisabled] = useState(false);
   const [unSavedChanges, setUnSavedChanges] = useState(false);
 
+
+  useEffect(() => {
+    user.role && (!student.Status || student.Status === 'pending') &&
+      toast.success(`Please note that your application is currently in 'pending' status. 
+    Use the 'Next' or 'Back' buttons at the page footer to navigate between pages. 
+    The menu tabs will become active once your application is complete`, {
+        position: toast.POSITION.BOTTOM_CENTER,
+        hideProgressBar: true,
+        autoClose: false,
+        draggable: true,
+        className: "setup-private-info center-center"
+      })
+  }, [user.role, student.Status])
+
   let saver = async (e) => {
     e.preventDefault();
     setSaving(true);
@@ -116,7 +130,7 @@ const StudentSetup = () => {
     if (response.bool) {
       toast.success("success");
       const res = await get_my_data(localStorage.getItem("student_user_id"));
-      !(res?.response?.status === 400) && dispatch(setStudent(res[1][0][0]));
+      !(res?.response?.status === 400) && dispatch(setStudent(res));
     } else {
       toast.error("failed");
     }
@@ -430,7 +444,7 @@ const StudentSetup = () => {
               style={{ gap: "2%" }}
             >
               <div className="w-50">
-              <Input setValue={set_code} value={code} label={"Enter Code"} required={false} />
+                <Input setValue={set_code} value={code} label={"Enter Code"} required={false} />
               </div>
 
               <Button className="action-btn" handleClick={handleConnectClick}>
@@ -484,7 +498,8 @@ const StudentSetup = () => {
                 <Input
                   setValue={set_mname}
                   value={mname}
-                  label={" Middle Name"}
+                  required={false}
+                  label={<p>Middle Name: <span class='text-sm'>(optional)</span></p>}
                   editMode={!nameFieldsDisabled}
                 />
               </div>
@@ -617,7 +632,8 @@ const StudentSetup = () => {
                 <Input
                   setValue={set_add1}
                   value={add1}
-                  label={"       Address1"}
+                  label={<p>Address1: <span class='text-sm'>(optional)</span></p>}
+                  required={false}
                   editMode={editMode}
                 />
               </div>
@@ -626,8 +642,8 @@ const StudentSetup = () => {
                 <Input
                   setValue={set_add2}
                   value={add2}
-                  label={" Address2"}
                   required={false}
+                  label={<p>Address2: <span class='text-sm'>(optional)</span></p>}
                   editMode={editMode}
                 />
               </div>
@@ -636,7 +652,8 @@ const StudentSetup = () => {
                 <Input
                   setValue={set_city}
                   value={city}
-                  label={" City"}
+                  required={false}
+                  label={<p>City: <span class='text-sm'>(optional)</span></p>}
                   editMode={editMode}
                 />
               </div>
@@ -701,7 +718,8 @@ const StudentSetup = () => {
                 <Input
                   setValue={set_zipCode}
                   value={zipCode}
-                  label={" Zip"}
+                  required={false}
+                  label={<p>Zip: <span class='text-sm'>(optional)</span></p>}
                   editMode={editMode}
                 />
               </div>
@@ -733,52 +751,52 @@ const StudentSetup = () => {
               {!["Freshman", "Junior", "Senior", "Sophmore"].includes(
                 grade
               ) && (
-                <>
-                  <h6 className="mb-3">Parent Info</h6>
-                  <div className="d-flex" style={{ gap: "2%" }}>
-                    <div className="input-group mb-2 ">
-                      <Input
-                        value={parentAEmail}
-                        label={"  Parent A Email"}
-                        editMode={editMode}
-                        setValue={setParentAEmail}
-                        required={is_18 === "no"}
-                      />
-                    </div>
+                  <>
+                    <h6 className="mb-3">Parent Info</h6>
+                    <div className="d-flex" style={{ gap: "2%" }}>
+                      <div className="input-group mb-2 ">
+                        <Input
+                          value={parentAEmail}
+                          label={"  Parent A Email"}
+                          editMode={editMode}
+                          setValue={setParentAEmail}
+                          required={is_18 === "no"}
+                        />
+                      </div>
 
-                    <div className="input-group mb-2 ">
-                      <Input
-                        value={parentAName}
-                        label={" Parent A Name"}
-                        editMode={editMode}
-                        setValue={setParentAName}
-                        required={is_18 === "no"}
-                      />
+                      <div className="input-group mb-2 ">
+                        <Input
+                          value={parentAName}
+                          label={" Parent A Name"}
+                          editMode={editMode}
+                          setValue={setParentAName}
+                          required={is_18 === "no"}
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className="d-flex" style={{ gap: "2%" }}>
-                    <div className="input-group mb-2">
-                      <Input
-                        value={parentBEmail}
-                        label={"Parent B Email"}
-                        editMode={editMode}
-                        setValue={setParentBEmail}
-                        required={is_18 === "no"}
-                      />
-                    </div>
+                    <div className="d-flex" style={{ gap: "2%" }}>
+                      <div className="input-group mb-2">
+                        <Input
+                          value={parentBEmail}
+                          label={"Parent B Email"}
+                          editMode={editMode}
+                          setValue={setParentBEmail}
+                          required={is_18 === "no"}
+                        />
+                      </div>
 
-                    <div className="input-group mb-2 ">
-                      <Input
-                        value={parentBName}
-                        label={"Parent B Name"}
-                        editMode={editMode}
-                        setValue={setParentBName}
-                        required={is_18 === "no"}
-                      />
+                      <div className="input-group mb-2 ">
+                        <Input
+                          value={parentBName}
+                          label={"Parent B Name"}
+                          editMode={editMode}
+                          setValue={setParentBName}
+                          required={is_18 === "no"}
+                        />
+                      </div>
                     </div>
-                  </div>
-                </>
-              )}
+                  </>
+                )}
               {is_18 === "no" && (
                 <div
                   style={{

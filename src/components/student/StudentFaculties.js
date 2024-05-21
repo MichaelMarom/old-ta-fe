@@ -16,6 +16,8 @@ import { useNavigate } from "react-router-dom";
 import { setTutor } from "../../redux/student/selectedTutor";
 import BTN_ICON from "../../assets/images/button__icon.png";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
+import { FaCandyCane, FaCheckCircle } from "react-icons/fa";
+import { MdCancel } from "react-icons/md";
 
 const StudentFaculties = () => {
   const dispatch = useDispatch();
@@ -80,7 +82,8 @@ const StudentFaculties = () => {
         selectedFaculty,
         student.AcademyId
       ).then((result) => {
-        !result?.response?.data && setTutorWithRates(result);
+        console.log(result, 83);
+        (!result || !result?.response?.data) && setTutorWithRates(result);
         setFetchingTutorsRate(false);
       });
     }
@@ -198,41 +201,6 @@ const StudentFaculties = () => {
       ),
     },
   ];
-
-  // let handleSavedDeleteData = async (e, status, body) => {
-  //     setLoading(true)
-  //     let elem = e.target;
-
-  //     let pElem = elem.parentElement;
-  //     let id = pElem.dataset;
-  //     if (!elem.checked) {
-  //         toast.error("This record was removed from your shortlist")
-  //         socket.emit('studentIllShorList', { id });
-  //         getShortlist()
-  //         setCheckBoxClicked(elem)
-  //         setLoading(false)
-  //     }
-  //     else {
-  //         if (status === 'active') {
-  //             setTimeout(async () => {
-  //                 let res = await upload_student_short_list(body);
-  //                 if (!!res?.length) {
-  //                     setCheckBoxClicked(elem)
-
-  //                     toast.success("Your selected subject has been listed in the Shortlist tab! Select the tab to view it.", { pauseOnHover: true })
-
-  //                     await create_chat({ User1ID: body.Student, User2ID: body.AcademyId })
-  //                     toast.info('You can chat with the selected tutor in the Message Board Tab!')
-  //                     getShortlist()
-  //                     setLoading(false)
-
-  //                     elem.checked = true;
-  //                 }
-  //             }, 2000)
-  //         }
-  //         else toast.warning('You can select only Active Tutors')
-  //     }
-  // }
 
   const getFacultiesOption = async () => {
     let list = await get_faculty();
@@ -431,7 +399,7 @@ const StudentFaculties = () => {
                                 >
                                   <div style={{ overflowY: "auto", height: "100%" }}>
                                     {JSON.parse(item.grades).map(grade =>
-                                      <Pill label={grade} />
+                                      <Pill label={grade}  key={grade} />
                                     )}
                                   </div>
                                 </td>
@@ -441,7 +409,12 @@ const StudentFaculties = () => {
                                     border: "1px solid lightgray",
                                   }}
                                 >
-                                  <input
+                                  {
+                                     item?.IntroSessionDiscount ?
+                                      <FaCheckCircle color="limegreen" size={20} /> :
+                                       <MdCancel size={20} color="red" /> 
+                                  }
+                                  {/* <input
                                     type="checkbox"
                                     style={{
                                       height: "20px",
@@ -451,7 +424,7 @@ const StudentFaculties = () => {
                                     defaultChecked={
                                       item?.IntroSessionDiscount || false
                                     }
-                                  />
+                                  /> */}
                                 </td>
                                 <td
                                   style={{

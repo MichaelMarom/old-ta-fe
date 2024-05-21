@@ -125,15 +125,23 @@ const Rates = () => {
   }, [dbState]);
 
   useEffect(() => {
+    get_tutor_subjects(tutor.AcademyId)
+      .then((result) => {
+        result?.length && setSubjects(result);
+      })
+      .catch((err) => toast.error(err.message));
+  }, [])
+
+  useEffect(() => {
     if (discountEnabled) {
       setDiscountCode(generateDiscountCode());
       setSubject("");
       setCodeUsed("new");
-      get_tutor_subjects(tutor.AcademyId)
-        .then((result) => {
-          result?.length && setSubjects(result);
-        })
-        .catch((err) => toast.error(err.message));
+      // get_tutor_subjects(tutor.AcademyId)
+      //   .then((result) => {
+      //     result?.length && setSubjects(result);
+      //   })
+      //   .catch((err) => toast.error(err.message));
     }
   }, [discountEnabled, tutor]);
 
@@ -506,7 +514,9 @@ const Rates = () => {
                   type="checkbox"
                   role="switch"
                   id="flexSwitchCheckChecked"
-                  onChange={() => setDiscountEnabled(!discountEnabled)}
+                  onChange={() => !!subjects.length ? setDiscountEnabled(!discountEnabled) :
+                    toast.warning("Please select subject from Subjects Tab, after that you can share code with your students!")
+                  }
                   checked={discountEnabled}
                 />
                 <label

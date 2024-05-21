@@ -1158,8 +1158,8 @@ export const statesColours = {
 
 export const DEFAULT_URL_AFTER_LOGIN = {
   admin: "/admin/tutor-data",
-  tutor: "/tutor/intro",
-  student: "/student/intro"
+  tutor: "/tutor/setup",
+  student: "/student/setup"
 }
 
 

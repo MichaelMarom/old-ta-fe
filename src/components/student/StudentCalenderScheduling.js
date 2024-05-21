@@ -69,7 +69,7 @@ const StudentCalenderScheduling = () => {
   useEffect(() => {
     const getStudentDetails = async () => {
       const res = await get_my_data(localStorage.getItem("student_user_id"));
-      !res?.response?.data?.message && dispatch(setStudent(res[1][0][0]));
+      !res?.response?.data?.message && dispatch(setStudent(res));
     };
     getStudentDetails();
     // eslint-disable-next-line react-hooks/exhaustive-deps

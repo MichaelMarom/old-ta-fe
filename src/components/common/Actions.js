@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { STEPS } from '../../constants/constants';
+import { toast } from 'react-toastify';
 
 const actionsStyle = {
     position: 'fixed',
@@ -81,6 +82,12 @@ const Actions = ({
     const isBackTabExist = currentTabInfo.back;
 
     const onNext = () => {
+        toast.info("We are saving the fields you entered. You can return to this page later to complete the application.", {
+            hideProgressBar: true,
+            autoClose: false,
+            draggable: true,
+            className: "setup-private-info center-center"
+        })
         nextTabInfo.withRolePrefix ? navigate(`/${currentUser}/${currentTabInfo.next}`) :
             navigate(`${currentTabInfo.next}`)
     }

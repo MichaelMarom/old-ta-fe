@@ -120,8 +120,26 @@ const TutorSetup = () => {
   );
   const [nameFieldsDisabled, setNameFieldsDisabled] = useState(false);
   let [isRecording, setIsRecording] = useState(false);
+  const [toastShown, setToastShown] = useState(false);
+
+
 
   useEffect(() => {
+    user.role && (!tutor.AcademyId || tutor.Status === 'pending') && !toastShown &&
+      toast.success(`Please note that your application is currently in 'pending' status. 
+    Use the 'Next' or 'Back' buttons at the page footer to navigate between pages. 
+    The menu tabs will become active once your application is complete`, {
+        position: toast.POSITION.BOTTOM_CENTER,
+        hideProgressBar: true,
+        autoClose: false,
+        draggable: true,
+        className: "setup-private-info center-center"
+      })
+    setToastShown(true)
+  }, [user.role, tutor.AcademyId, tutor.Status, toastShown])
+
+  useEffect(() => {
+
     tutor.AcademyId &&
       apiClient
         .get("/tutor/setup/intro", {
@@ -681,7 +699,8 @@ const TutorSetup = () => {
               }}
             >
               <Input
-                label={"Middle Name"}
+                label={<p>Middle Name: <span class='text-sm'>(optional)</span></p>}
+                required={false}
                 setValue={set_mname}
                 value={mname}
                 editMode={!nameFieldsDisabled}
@@ -853,7 +872,8 @@ const TutorSetup = () => {
               }}
             >
               <Input
-                label={"Address 1"}
+                label={<p>Address 1: <span class='text-sm'>(optional)</span></p>}
+                required={false}
                 value={add1}
                 setValue={set_add1}
                 editMode={editMode}
@@ -872,7 +892,7 @@ const TutorSetup = () => {
               }}
             >
               <Input
-                label={"Address 2"}
+                label={<p>Address 2: <span class='text-sm'>(optional)</span></p>}
                 value={add2}
                 required={false}
                 setValue={set_add2}
@@ -892,8 +912,9 @@ const TutorSetup = () => {
               }}
             >
               <Input
-                label={"City/Town"}
+                label={<p>City/Town: <span class='text-sm'>(optional)</span></p>}
                 value={city}
+                required={false}
                 setValue={set_city}
                 editMode={editMode}
               />
@@ -963,8 +984,9 @@ const TutorSetup = () => {
               }}
             >
               <Input
-                label={"Zip Code"}
+                label={<p>Zip Code: <span class='text-sm'>(optional)</span></p>}
                 value={zipCode}
+                required={false}
                 setValue={set_zipCode}
                 editMode={editMode}
               />
@@ -983,13 +1005,16 @@ const TutorSetup = () => {
                 }}
               >
                 <Input
-                  label={<div className="d-flex" style={{ gap: "5px" }}>
-                    <ToolTip
-                      width="200px"
-                      text={
-                        "Coordinated Universal Time, or 'UTC,' is the primary time standard by which the world regulates clocks and time. It's important to ensure that your PC's clock matches the UTC because discrepancies can lead to issues with scheduling, such as your booked lessons not synchronizing with your local time. To avoid any inconvenience, please verify that your computer's time settings are correctly adjusted to reflect UTC.."
-                      }
-                    /><div className="display-inline-block">UTC</div></div>}
+                  label={
+                    <div className="d-flex" style={{ gap: "5px" }}>
+                      <ToolTip
+                        width="200px"
+                        text={
+                          "Coordinated Universal Time, or 'UTC,' is the primary time standard by which the world regulates clocks and time. It's important to ensure that your PC's clock matches the UTC because discrepancies can lead to issues with scheduling, such as your booked lessons not synchronizing with your local time. To avoid any inconvenience, please verify that your computer's time settings are correctly adjusted to reflect UTC.."
+                        }
+                      /><div className="display-inline-block">UTC</div>
+                    </div>
+                  }
                   value={typeof dateTime === "object" ? "" : dateTime}
                   editMode={false}
                 />
@@ -1072,7 +1097,7 @@ const TutorSetup = () => {
               </div>
             )}
 
-            <div className=" mt-2">
+            <div className=" mt-5">
               <div
                 className="row justify-content-center align-items-center"
                 onClick={() =>

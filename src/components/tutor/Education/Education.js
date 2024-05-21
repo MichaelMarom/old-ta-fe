@@ -38,7 +38,7 @@ const languageOptions = languages.map((language) => ({
 
 const Education = () => {
   const [editMode, setEditMode] = useState(false);
-  const [unSavedChanges, setUnsavedChanges] = useState(false);
+  const [unSavedChanges, setUnSavedChanges] = useState(false);
 
   let [level, set_level] = useState("");
 
@@ -106,11 +106,13 @@ const Education = () => {
       !dbValues.EducationalLevel?.length &&
       !(cert_file_name || deg_file_name) &&
       toast(
-        "Please upload the highest diploma you earned. The academy only verifies your credentials, and guard your privecy by not publishing it on the portal.",
+        `Please upload the highest diploma you earned. The academy only verifies your
+         credentials, and guard your privecy by not publishing it on the portal.`,
         {
-          closeButton: true,
+          hideProgressBar: true,
           autoClose: false,
-          className: "setup-private-info edu",
+          draggable: true,
+          className: "setup-private-info center-center",
         }
       );
     console.log(toastId);
@@ -418,7 +420,7 @@ const Education = () => {
   };
   // comparing DB, Local
   useEffect(() => {
-    setUnsavedChanges(compareStates(dbValues, fieldValues));
+    setUnSavedChanges(compareStates(dbValues, fieldValues));
   }, [dbValues, fieldValues]);
 
   //fetching DB
@@ -699,7 +701,7 @@ const Education = () => {
         `Please fill required field ${markSecondEduStepCompleted().value}`
       );
 
-    if (!cert_file_name || !deg_file_name)
+    if (level !== "No Academic Education" && (!cert_file_name || !deg_file_name))
       toast.warning(
         'You selected academic education, but did not upload your diploma. Hence,your Profile will stay in "Pending" status and cannot be activated until you upload your diploma!'
       );

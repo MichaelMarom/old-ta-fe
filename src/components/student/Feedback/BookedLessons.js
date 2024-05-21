@@ -53,7 +53,8 @@ function BookedLessons({ events, handleRowSelect }) {
       title: "Action",
     },
   ];
-  const checkedEligibility = (session) => {
+
+  const eligibleForFeedback = (session) => {
     if (session?.end) {
       const currentTimeInTimeZone = moment().tz(student.timeZone);
 
@@ -63,10 +64,10 @@ function BookedLessons({ events, handleRowSelect }) {
         "minutes"
       );
       if (minutesDifference <= 10) {
-        return false;
+        return true;
       }
     }
-    return true;
+    return false;
   };
 
   return (
@@ -145,12 +146,12 @@ function BookedLessons({ events, handleRowSelect }) {
                     buttonText={"Select"}
                     style={{
                       animation:
-                        !checkedEligibility(event)
+                       ( eligibleForFeedback(event) && !event.rating)
                           ? "blinking 1s infinite"
                           : "none",
                     }}
                     onClick={() => handleRowSelect(event)}
-                    disabled={checkedEligibility(event)}
+                    disabled={!eligibleForFeedback(event)}
                   />
                   {/* <button className={`btn ${selectedEvent.id === event.id ? 'btn-success' : 'btn-primary'} `}
                 style={{ animation: (event.feedbackEligible && !event.rating) ? 'blinking 1s infinite' : 'none' }}

@@ -7,7 +7,8 @@ import LeftSideBar from '../../LeftSideBar'
 import { SessionActions } from './SessionActions'
 import { SessionFeedback } from './SessionFeedback'
 
-export const TutorEventModal = ({ isOpen, onClose, clickedSlot, handlePostpone, handleDeleteSessionByTutor }) => {
+export const TutorEventModal = ({ isOpen, onClose, clickedSlot, handlePostpone,
+    handleDeleteSessionByTutor }) => {
     const [questions, setQuestions] = useState([]);
     const [questionLoading, setQuestionLoading] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(false)
@@ -18,10 +19,14 @@ export const TutorEventModal = ({ isOpen, onClose, clickedSlot, handlePostpone, 
             const fetchFeedbackToQuestion = async () => {
                 const data = await get_feedback_to_question(clickedSlot.id, clickedSlot.tutorId, clickedSlot.studentId)
                 if (data?.length) {
-                    // const uniqueData = data.reduce((acc, curr) => {
-                    //     return acc.find(item => item.questionText === curr.questionText) ? acc : [...acc, curr]
-                    // }, [])
-                    setQuestions(data)
+                    //sometime duplicate questions are there, so we need to remove duplicate questions
+                    const uniqueData = data.reduce((uniqueQuestions, currentQuestion) => {
+                        return uniqueQuestions.find(item =>
+                            item.questionText === currentQuestion.questionText) ?
+                            uniqueQuestions :
+                            [...uniqueQuestions, currentQuestion]
+                    }, [])
+                    setQuestions(uniqueData)
                 }
                 setQuestionLoading(false)
             }

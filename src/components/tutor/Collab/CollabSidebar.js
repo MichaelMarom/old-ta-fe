@@ -12,11 +12,8 @@ import CameraOn from '../../../assets/images/videoallowed.jpeg'
 import AudioOn from '../../../assets/images/microphoneallowed.jpeg'
 import CameraOff from '../../../assets/images/videoblock.jpeg'
 import AudioOff from '../../../assets/images/microphoneblock.jpeg'
-
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
-import { FaCamera, FaMicrophone } from "react-icons/fa";
-import { RiCameraOffFill } from "react-icons/ri";
-import { PiMicrophoneSlashFill } from "react-icons/pi";
+
 import _ from "lodash";
 
 const CollabSidebar = ({
@@ -334,12 +331,14 @@ const CollabSidebar = ({
         <div>
           <h6 className="text-start">Recording Consent</h6>
           <div className="d-flex align-items-center">
-            <div className="rounded-circle" style={{ height: "10px", width: "10px", background: tutorRecordingConsent ? "limegreen" : "#eb4b4b", marginRight: "10px" }}></div>
+            <div className="rounded-circle" 
+            style={{ height: "10px", width: "10px", background: tutorRecordingConsent ? "limegreen" : "#eb4b4b", marginRight: "10px" }}></div>
             <p className="m-0">Tutor
             </p>
           </div>
           <div className="d-flex align-items-center">
-            <div className="rounded-circle" style={{ height: "10px", width: "10px", background: studentRecordingConsent ? "limegreen" : "#eb4b4b", marginRight: "10px" }}></div>
+            <div className="rounded-circle"
+             style={{ height: "10px", width: "10px", background: studentRecordingConsent ? "limegreen" : "#eb4b4b", marginRight: "10px" }}></div>
             <p className="m-0">Student
             </p>
           </div>

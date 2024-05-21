@@ -159,7 +159,7 @@ const App = () => {
     if (res?.response?.data?.message?.includes("expired"))
       return redirect_to_login(navigate, signOut);
 
-    res && !res?.response?.data?.message && dispatch(setStudent(res[1][0][0]));
+    res && !res?.response?.data?.message && dispatch(setStudent(res));
   };
 
   useEffect(() => {

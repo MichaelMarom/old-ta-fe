@@ -9,7 +9,7 @@ import CommonLayout from "../../layouts/CommonLayout";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import TutorAside from "../../components/tutor/Collab/CollabSidebar";
+import CollabSidebar from "../../components/tutor/Collab/CollabSidebar";
 import Switch from "../../components/common/Switch";
 import Tooltip from "../../components/common/ToolTip";
 import _ from "lodash";
@@ -361,13 +361,15 @@ const Collaboration = () => {
         get_tutor_rates(openedSession.tutorId).then((result) => {
           !result?.response?.data &&
             setTutorVideoConsent(
+              result?.[0]?.ConsentRecordingLesson &&
               result?.[0]?.ConsentRecordingLesson === "true"
             );
         });
         get_my_data(openedSession.studentId).then((result) => {
           setStudentVideoConsent(
             !result?.response?.data &&
-            result?.[1]?.[0]?.[0]?.ParentConsent === "true"
+            result.ParentConsent &&
+            result?.ParentConsent === "true"
           );
         });
       }
@@ -482,7 +484,7 @@ const Collaboration = () => {
           >
             {/* <div onClick={() => setIsChatOpen(false)} className="cursor-pointer">
            <MdCancel size={24} /> </div> */}
-            <TutorAside
+            <CollabSidebar
               studentRecordingConsent={studentVideoConsent}
               tutorRecordingConsent={tutorVideoConsent}
               openedSession={openedSession}
