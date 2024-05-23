@@ -9,10 +9,10 @@ import { FaCalendar, FaComment, FaRegTimesCircle } from "react-icons/fa";
 import {
   convertGMTOffsetToLocalString,
   showDate,
-} from "../../helperFunctions/timeHelperFunctions";
+} from "../../utils/moment";
 import { useParams } from "react-router";
 import Avatar from "../common/Avatar";
-import { capitalizeFirstLetter } from "../../helperFunctions/generalHelperFunctions";
+import { capitalizeFirstLetter } from "../../utils/common";
 import Button from "../common/Button";
 import Loading from "../common/Loading";
 import { FaLocationDot } from "react-icons/fa6";

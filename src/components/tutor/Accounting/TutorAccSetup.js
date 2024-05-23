@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 
 import { get_bank_details, post_tutor_setup, upload_tutor_bank } from '../../../axios/tutor';
-import { showDate } from '../../../helperFunctions/timeHelperFunctions';
+import { showDate } from '../../../utils/moment';
 import AcadCommission from './Acad_Commission._Table';
 import Actions from '../../common/Actions'
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux'
 import { COMMISSION_DATA, monthFormatWithYYYY } from '../../../constants/constants';
-import { compareStates } from '../../../helperFunctions/generalHelperFunctions';
+import { compareStates, showRevisitToast } from '../../../utils/common';
 import { setTutor } from '../../../redux/tutor/tutorData';
 import Tooltip from '../../common/ToolTip';
 import Input from '../../common/Input';
@@ -80,6 +80,8 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
             }
             if (response) {
                 toast.success("Succesfully Saved The Bank Info.")
+                showRevisitToast()
+
                 setEditMode(false)
             } else {
                 toast.error("Error while Saving the Bank Info.")
@@ -95,6 +97,8 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                 dispatch(setTutor())
             }
             if (response) {
+                showRevisitToast()
+
                 toast.success("Succesfully Saved The Bank Info.");
                 setEditMode(false)
             } else {
@@ -326,8 +330,8 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                 <div className="col-md-4 border h-100 p-2">
                     <div className="highlight" style={{ height: '150px' }}>
                         Social security needs to be provided only from US residents for annual EARNING over $600.
-                        Form 1099 to be issued by the academy. Therefore, no need to fill the SS number now, 
-                        only when your earnings exceeds $600    
+                        Form 1099 to be issued by the academy. Therefore, no need to fill the SS number now,
+                        only when your earnings exceeds $600
                     </div>
                     <div className='p-3'>
 

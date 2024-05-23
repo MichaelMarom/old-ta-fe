@@ -1,6 +1,6 @@
 import React from 'react'
-import { showDate } from '../../../helperFunctions/timeHelperFunctions'
-import { convertTutorIdToName } from '../../../helperFunctions/generalHelperFunctions'
+import { showDate } from '../../../utils/moment'
+import { convertTutorIdToName } from '../../../utils/common'
 import { wholeDateFormat } from '../../../constants/constants'
 
 const Lessons = ({ paymentReportData }) => {

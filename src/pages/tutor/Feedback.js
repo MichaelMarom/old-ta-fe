@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TutorLayout from "../../layouts/TutorLayout";
-import { showDate } from "../../helperFunctions/timeHelperFunctions";
+import { showDate } from "../../utils/moment";
 import QuestionFeedback from "../../components/tutor/Feedback/QuestionFeedback";
 import SessionsTable from "../../components/tutor/Feedback/SessionsTable";
 import { wholeDateFormat } from "../../constants/constants";

@@ -1,5 +1,5 @@
 import React from 'react';
-import { showDate } from '../../helperFunctions/timeHelperFunctions';
+import { showDate } from '../../utils/moment';
 import logo from '../../assets/images/tutoring Logo.png'
 import moment from 'moment-timezone'
 import { HiPrinter } from "react-icons/hi2";

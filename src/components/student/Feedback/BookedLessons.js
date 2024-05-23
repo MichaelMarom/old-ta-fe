@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { wholeDateFormat } from "../../../constants/constants";
-import { showDate } from "../../../helperFunctions/timeHelperFunctions";
+import { showDate } from "../../../utils/moment";
 import Comment from "./Comment";
 import StarRating from "../../common/StarRating";
 import { convertToDate } from "../../common/Calendar/Calendar";
 import { useSelector } from "react-redux";
 import TAButton from "../../common/TAButton";
-import { convertTutorIdToName } from "../../../helperFunctions/generalHelperFunctions";
+import { convertTutorIdToName } from "../../../utils/common";
 import Avatar from "../../common/Avatar";
 import { moment } from "../../../config/moment";
 

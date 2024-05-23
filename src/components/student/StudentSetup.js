@@ -6,7 +6,7 @@ import {
   upload_setup_form,
 } from "../../axios/student";
 import { get_tutor_against_code } from "../../axios/tutor";
-import { convertGMTOffsetToLocalString } from "../../helperFunctions/timeHelperFunctions";
+import { convertGMTOffsetToLocalString } from "../../utils/moment";
 import { useDispatch } from "react-redux";
 import { setStudent } from "../../redux/student/studentData";
 import Tooltip from "../common/ToolTip";
@@ -26,7 +26,7 @@ import Actions from "../common/Actions";
 import { toast } from "react-toastify";
 import Button from "../common/Button";
 import BTN_ICON from "../../assets/images/button__icon.png";
-import { compareStates } from "../../helperFunctions/generalHelperFunctions";
+import { compareStates } from "../../utils/common";
 import { useNavigate } from "react-router-dom";
 import Avatar from "../common/Avatar";
 import Input from "../common/Input";

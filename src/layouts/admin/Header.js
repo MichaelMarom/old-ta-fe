@@ -56,19 +56,16 @@ const Header = () => {
         localStorage.removeItem('student_user_id')
         localStorage.removeItem('tutor_user_id')
         localStorage.removeItem('user')
-        // localStorage.clear()()
         dispatch(setUser({}))
-
         dispatch(setTutor({}))
         dispatch(setStudent({}))
-        //setTutor tonull
-        //setStudent tonull
         nav('/login')
     }
 
     return (
         <>
             <div className="admin-tab-header shadow-sm">
+                <div>
                 <ul style={{ overflowX: "auto", width:"600px" }}>
                     {tabs.map((tab) => (
                         <li key={tab.id} data-url={tab.id} onClick={handleTabClick}
@@ -96,6 +93,7 @@ const Header = () => {
                         </li>
                     ))}
                 </ul>
+                </div>
                 <div style={{ marginRight: "230px", cursor: "pointer" }}>
                     <Tooltip text={"signout"} direction="bottomright">
                         <FaSignOutAlt color="white" onClick={() => signOut(() => handleSignOut())} />

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { get_tutor_data, get_user_list, set_tutor_status } from "../../axios/admin";
-import { convertGMTOffsetToLocalString } from "../../helperFunctions/timeHelperFunctions";
+import { convertGMTOffsetToLocalString } from "../../utils/moment";
 import Loading from "../common/Loading";
 import ToolTip from "../common/ToolTip";
 import Pill from "../common/Pill";
@@ -21,6 +21,10 @@ const TutorTable = () => {
   const [status, setStatus] = useState("pending");
   const [statusCount, setStatusCount] = useState([]);
   const COLUMNS = [
+    {
+      Header: "Sr#",
+      accessor: "Sr#",
+    },
     {
       Header: "Status",
       accessor: "Status",
@@ -300,8 +304,9 @@ const TutorTable = () => {
             </tr>
           </thead>
           <tbody>
-            {data.map((item) => (
+            {data.map((item, index) => (
               <tr key={item.SID}>
+                <td>{index + 1}</td>
                 <td data-src={null} className="col-2">
                   <div className="col-10 m-auto">
                     <select value={item.Status}
@@ -321,13 +326,6 @@ const TutorTable = () => {
                       <option value={"closed"}>Close</option>
 
                     </select>
-                    {/* <Pill
-                      customColor={true}
-                      label={item.Status}
-                      fontColor={statesColours[item.Status].color}
-                      color={statesColours[item.Status].bg}
-                      hasIcon={false}
-                    /> */}
                   </div>
                 </td>
 

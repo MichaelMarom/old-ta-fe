@@ -1,7 +1,7 @@
 import React from 'react'
-import { showDate } from '../../../helperFunctions/timeHelperFunctions'
+import { showDate } from '../../../utils/moment'
 import { wholeDateFormat } from '../../../constants/constants'
-import { convertTutorIdToName } from '../../../helperFunctions/generalHelperFunctions'
+import { convertTutorIdToName } from '../../../utils/common'
 import AmountCalc from './AmountCalc'
 
 const AccountingTable = ({ paymentReportData

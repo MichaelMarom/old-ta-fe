@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { get_tutor_students } from '../../axios/tutor';
 import { wholeDateFormat } from '../../constants/constants';
-import { showDate } from '../../helperFunctions/timeHelperFunctions';
+import { showDate } from '../../utils/moment';
 import Avatar from '../common/Avatar';
 import Loading from '../common/Loading';
 import Actions from '../common/Actions'

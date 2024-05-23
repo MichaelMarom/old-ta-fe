@@ -3,7 +3,7 @@ import moment from 'moment';
 import StarRating from '../StarRating';
 import { useSelector } from 'react-redux';
 import { convertToDate } from './Calendar';
-import { convertTutorIdToName } from '../../../helperFunctions/generalHelperFunctions';
+import { convertTutorIdToName } from '../../../utils/common';
 
 function CustomEvent({
     event,

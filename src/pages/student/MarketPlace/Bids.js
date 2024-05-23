@@ -3,7 +3,7 @@ import Layout from "./Layout";
 import { get_shortlist_ads } from "../../../axios/student";
 import { useSelector } from "react-redux";
 import ShortlistAdCard from "./ShortlistAdCard";
-import { convertTutorIdToName } from "../../../helperFunctions/generalHelperFunctions";
+import { convertTutorIdToName } from "../../../utils/common";
 import Actions from "../../../components/common/Actions";
 
 const Bids = () => {

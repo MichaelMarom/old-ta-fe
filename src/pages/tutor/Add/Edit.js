@@ -12,9 +12,9 @@ import Loading from '../../../components/common/Loading'
 import Actions from '../../../components/common/Actions'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
-import { showDate } from '../../../helperFunctions/timeHelperFunctions'
+import { showDate } from '../../../utils/moment'
 import { convertToDate } from '../../../components/common/Calendar/Calendar'
-import { compareStates } from '../../../helperFunctions/generalHelperFunctions'
+import { compareStates, showRevisitToast } from '../../../utils/common'
 
 const Edit = () => {
     const { tutor } = useSelector(state => state.tutor);
@@ -110,6 +110,7 @@ const Edit = () => {
         setEditMode(false)
         setChangesMade(false)
         navigate(`/tutor/market-place/list`)
+      showRevisitToast()
         toast.success('Ad Published Succesfully, Please Visit Saved Ad Tab to view Published Ads');
     }
 

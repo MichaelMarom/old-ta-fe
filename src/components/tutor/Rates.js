@@ -13,7 +13,7 @@ import TAButton from '../common/TAButton';
 import {
   compareStates,
   copyToClipboard,
-} from "../../helperFunctions/generalHelperFunctions";
+} from "../../utils/common";
 import Actions from "../common/Actions";
 import "../../styles/common.css";
 import { toast } from "react-toastify";

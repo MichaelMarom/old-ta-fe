@@ -4,7 +4,7 @@ import SlotPill from "../../student/SlotPill";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import SlotsInvoice from "../../student/SlotsInvoice";
-import { convertTutorIdToName, formatName, isEqualTwoObjectsRoot } from "../../../helperFunctions/generalHelperFunctions";
+import { convertTutorIdToName, formatName, isEqualTwoObjectsRoot } from "../../../utils/common";
 import { convertToDate } from "../Calendar/Calendar";
 import Button from "../Button";
 import DatePicker from 'react-datepicker';

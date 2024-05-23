@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { get_feedback_to_question } from '../../../../axios/student'
 import { wholeDateFormat } from '../../../../constants/constants'
-import { showDate } from '../../../../helperFunctions/timeHelperFunctions'
+import { showDate } from '../../../../utils/moment'
 import { convertToDate } from '../../Calendar/Calendar'
 import LeftSideBar from '../../LeftSideBar'
 import { SessionActions } from './SessionActions'

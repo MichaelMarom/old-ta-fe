@@ -1,7 +1,7 @@
 import moment from 'moment-timezone'
 import { useSelector } from 'react-redux';
 import Avatar from '../common/Avatar';
-import { capitalizeFirstLetter } from '../../helperFunctions/generalHelperFunctions';
+import { capitalizeFirstLetter } from '../../utils/common';
 import { IoWarning } from 'react-icons/io5';
 import { FaCheckCircle } from "react-icons/fa";
 

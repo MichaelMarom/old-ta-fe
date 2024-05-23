@@ -5,13 +5,13 @@ import { get_faculty_subject } from '../../../axios/tutor';
 import { get_ad, get_student_market_data, put_ad } from '../../../axios/student';
 
 import { useSelector } from 'react-redux';
-import { CERTIFICATES, EXPERIENCE, GMT, LEVEL, languages } from '../../../constants/constants';
+import { CERTIFICATES, EXPERIENCE, GMT, LEVEL, LANGUAGES } from '../../../constants/constants';
 import { toast } from 'react-toastify';
 import Actions from '../../../components/common/Actions';
 import UserRichTextEditor from '../../../components/common/RichTextEditor/UserRichTextEditor';
 import ReactSelect from 'react-select';
-import { showDate } from '../../../helperFunctions/timeHelperFunctions';
-import { compareStates } from '../../../helperFunctions/generalHelperFunctions';
+import { showDate } from '../../../utils/moment';
+import { compareStates } from '../../../utils/common';
 
 const EditAd = () => {
     const params = useParams();
@@ -35,7 +35,7 @@ const EditAd = () => {
 
     let [activeFaculty, setActiveFaculty] = useState('')
 
-    const languageOptions = languages.map((language) => ({
+    const languageOptions = LANGUAGES.map((language) => ({
         value: language,
         label: language,
     }));

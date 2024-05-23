@@ -24,13 +24,12 @@ import { setTutor } from "./redux/tutor/tutorData";
 import { setChats } from "./redux/chat/chat";
 import { moment } from "./config/moment";
 import { useClerk, useAuth, SignedIn } from "@clerk/clerk-react";
-import { redirect_to_login } from "./helperFunctions/auth";
+import { redirect_to_login } from "./utils/auth";
 import { setStudentSessions } from "./redux/student/studentSessions";
 import { setTutorSessions } from "./redux/tutor/tutorSessions";
 import Collaboration from "./pages/tutor/Collaboration";
 import CallWithChatExperience from "./pages/tutor/Test1";
 import { setNewSubjCount } from "./redux/admin/newSubj";
-import MobileScreen from "./pages/MobileScreen";
 
 const App = () => {
   let location = useLocation();

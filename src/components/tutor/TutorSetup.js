@@ -12,8 +12,7 @@ import { RiRobot2Fill } from "react-icons/ri";
 import { post_tutor_setup } from "../../axios/tutor";
 import { apiClient } from "../../axios/config";
 import { useDispatch } from "react-redux";
-// import { setscreenNameTo } from "../../redux/tutor/ScreenName";
-import { convertGMTOffsetToLocalString } from "../../helperFunctions/timeHelperFunctions";
+import { convertGMTOffsetToLocalString } from "../../utils/moment";
 import WebcamCapture from "./Recorder/VideoRecorder";
 import Loading from "../common/Loading";
 import ToolTip from "../common/ToolTip";
@@ -31,14 +30,15 @@ import {
 import { setTutor } from "../../redux/tutor/tutorData";
 import {
   capitalizeFirstLetter,
+  showRevisitToast,
   unsavedChangesHelper,
-} from "../../helperFunctions/generalHelperFunctions";
+} from "../../utils/common";
 import ReactDatePicker from "react-datepicker";
 import { Link } from "react-router-dom";
 import Button from "../common/Button";
 import { IoPersonCircle } from "react-icons/io5";
 import { convertToDate } from "../common/Calendar/Calendar";
-import { uploadVideoToAzure } from "../../helperFunctions/uploadVideo";
+import { uploadVideoToAzure } from "../../utils/uploadVideo";
 import Avatar from "../common/Avatar";
 import Input from "../common/Input";
 import Select from "../common/Select";
@@ -74,6 +74,7 @@ const TutorSetup = () => {
   const lastNameInputRef = useRef(null);
   let [video, set_video] = useState("");
   const [videoError, setVideoError] = useState(false);
+  console.log(cell)
 
   let grades = [
     { grade: "1st grade" },
@@ -343,15 +344,16 @@ const TutorSetup = () => {
     }
     if (!video || !photo)
       toast.warning(`You did not upload your Photo or Video, therefore 
-    your Profile remains in 'Pending' status, until you upload the missing items!`);
-    if (!tutorGrades?.length > 0) {
-      return toast.warning("Please select at least one School grade");
-    }
+    your Profile remains in 'Pending' status, until you upload the missing items!`, { autoClose: false });
+    // if (!tutorGrades?.length > 0) {
+    //   return toast.warning("Please select at least one School grade");
+    // }
 
     setSavingRecord(true);
     let response = await saver();
     setSavingRecord(false);
     if (response.status === 200) {
+      if (!add1 || !add2 || !city || !zipCode) showRevisitToast()
       dispatch(setTutor());
       window.localStorage.setItem(
         "tutor_screen_name",
@@ -361,6 +363,7 @@ const TutorSetup = () => {
       // dispatch(setscreenNameTo(response.data?.[0]?.TutorScreenname));
       setEditMode(false);
       toast.success("Data saved successfully");
+
     } else {
       toast.error("Error saving the Data ");
     }
@@ -530,8 +533,10 @@ const TutorSetup = () => {
 
   let handleVideo = async (e) => {
     const file = e.target.files[0];
-
-    if (file.type.split("/")?.[0] !== "video") {
+    console.log(file, file.type)
+    if(file.size > 10485760)
+      return toast.warning("Video size should be less than 10MB")
+    if (!file?.type || file.type.split("/")?.[0] !== "video") {
       alert("Only Video Can Be Uploaded To This Field");
     } else {
       setVideoUploading(true);
@@ -591,7 +596,7 @@ const TutorSetup = () => {
     <form onSubmit={saveTutorSetup}>
       <div style={{ overflowY: "auto", height: "76vh" }}>
         <div
-          className="d-flex justify-content-between"
+          className="d-flex justify-content-between flex-column"
           style={{
             gap: "25px",
             marginLeft: "20px",
@@ -599,591 +604,590 @@ const TutorSetup = () => {
             marginTop: "0",
           }}
         >
-          <div className="profile-photo-cnt " style={{ width: "15%" }}>
-            <h6 className="text-start m-0" style={{ whiteSpace: "nowrap" }}>
-              Profile Photo
-            </h6>
-            {/* <input
-              type="file"
-              data-type="file"
-              name="photo"
-              onChange={handleImage}
-              style={{ display: "none" }}
-              id="photo"
-            /> */}
-            <div className="mb-2 w-100 h-100">
-              {picUploading && (
-                <Loading
-                  height="10px"
-                  iconSize="20px"
-                  loadingText="uploading picture ..."
-                />
-              )}
-            </div>
-            <div className=" h-100 border rounded-circle shadow">
-              {photo ? (
-                <Avatar avatarSrc={photo} showOnlineStatus={false} size="200" />
-              ) : (
-                <div style={{ textAlign: "justify", fontSize: "12px" }}>
-                  You must upload your picture, and video on this tab. You are
-                  permitted to move to next tabs without validating that, but
-                  your account will not be activated until it’s done
-                </div>
-              )}
-            </div>
-
-            <input
-              type="file"
-              data-type="file"
-              name="photo"
-              onChange={handleImage}
-              style={{ display: "none" }}
-              id="photo"
-              disabled={!editMode}
-            />
-            <label
-              id="btn"
-              onClick={() =>
-                !editMode &&
-                toast.info(
-                  'Please click the "Edit" button to activate the "Upload" Photo button!'
-                )
-              }
-              style={{
-                // pointerEvents: !editMode ? "none" : "auto",
-                width: "50%",
-              }}
-              type="label"
-              disabled={!editMode}
-              htmlFor="photo"
-              className="action-btn btn mt-4"
-            >
-              <div className="button__content">
-                <div className="button__icon">
-                  <IoPersonCircle size={20} />
-                </div>
-                <p className="button__text">Upload </p>
-              </div>
-            </label>
+          <div className="highlight w-100 m-0 justify-content-start">
+            <span className="text-danger" style={{ fontSize: "20px", fontWeight: "bold" }}> *</span> = Mandotory Fields
           </div>
 
-          <div className="mt-4" style={{ width: "25%" }}>
-            <div
-              style={{
-                display: "flex",
-                margin: "0 0 10px 0",
-                padding: "0",
+          <div className="d-flex flex-column">
 
-                alignItems: "center",
-                width: "100%",
-                whiteSpace: "nowrap",
-              }}
-            >
-              <Input
-                label={"First Name"}
-                setValue={set_fname}
-                value={fname}
-                editMode={!nameFieldsDisabled}
-              />
-            </div>
+            <div className="d-flex justify-content-between" style={{ gap: "20px" }}>
+              <div className="d-flex flex-column align-items-center" style={{ width: "15%", }}>
+                <h6 className="text-start m-0" style={{ whiteSpace: "nowrap" }}>
+                  Profile Photo<span className="text-danger " style={{fontSize:"25px", fontWeight:"bold"}}>*</span>
+                </h6>
+                {picUploading && (
+                  <div className="mb-2">
+                    <Loading
+                      height="10px"
+                      iconSize="20px"
+                      loadingText="uploading picture ..."
+                    />
+                  </div>
+                )}
+                <div className="border rounded-circle shadow" style={{ width: "215px", height: "215px" }}>
+                  {photo ? (
+                    <Avatar className="m-0" avatarSrc={photo} showOnlineStatus={false} size="200" />
+                  ) : (
+                    <div style={{ textAlign: "justify", fontSize: "12px" }}>
+                      You must upload your picture, and video on this tab. You are
+                      permitted to move to next tabs without validating that, but
+                      your account will not be activated until it’s done
+                    </div>
+                  )}
+                </div>
 
-            <div
-              style={{
-                display: "flex",
-                margin: "0 0 10px 0",
-                padding: "0",
+                <input
+                  type="file"
+                  data-type="file"
+                  name="photo"
+                  onChange={handleImage}
+                  style={{ display: "none" }}
+                  id="photo"
+                  disabled={!editMode}
+                />
+                <label
+                  id="btn"
+                  onClick={() =>
+                    !editMode &&
+                    toast.info(
+                      'Please click the "Edit" button to activate the "Upload" Photo button!'
+                    )
+                  }
+                  style={{
+                    // pointerEvents: !editMode ? "none" : "auto",
+                    width: "50%",
+                  }}
+                  type="label"
+                  disabled={!editMode}
+                  htmlFor="photo"
+                  className="action-btn btn mt-4"
+                >
+                  <div className="button__content">
+                    <div className="button__icon">
+                      <IoPersonCircle size={20} />
+                    </div>
+                    <p className="button__text">Upload </p>
+                  </div>
+                </label>
+              </div>
+              <div className="" style={{ width: "23%" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    margin: "0 0 10px 0",
+                    padding: "0",
 
-                alignItems: "center",
-                width: "100%",
-                whiteSpace: "nowrap",
-              }}
-            >
-              <Input
-                label={<p>Middle Name: <span class='text-sm'>(optional)</span></p>}
-                required={false}
-                setValue={set_mname}
-                value={mname}
-                editMode={!nameFieldsDisabled}
-              />
+                    alignItems: "center",
+                    width: "100%",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  <Input
+                    label={<MandotoryFieldLabel text="First Name" />}
+                    setValue={set_fname}
+                    value={fname}
+                    editMode={!nameFieldsDisabled}
+                  />
+                </div>
 
-            </div>
+                <div
+                  style={{
+                    display: "flex",
+                    margin: "0 0 10px 0",
+                    padding: "0",
 
-            <div
-              style={{
-                display: "flex",
-                margin: "0 0 10px 0",
-                padding: "0",
+                    alignItems: "center",
+                    width: "100%",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  <Input
+                    label={<p>Middle Name: <span class='text-sm'>(optional)</span></p>}
+                    required={false}
+                    setValue={set_mname}
+                    value={mname}
+                    editMode={!nameFieldsDisabled}
+                  />
 
-                alignItems: "center",
-                width: "100%",
-                whiteSpace: "nowrap",
-              }}
-            >
-              <Input
-                label={"Last Name"}
-                setValue={set_sname}
-                value={lname}
-                editMode={!nameFieldsDisabled}
-                onBlur={() => {
-                  if (fname.length && lname.length) {
-                    const screenName = `${capitalizeFirstLetter(fname)} ${mname.length
-                      ? `${capitalizeFirstLetter(mname?.[0])}.`
-                      : ``
-                      } ${capitalizeFirstLetter(lname?.[0])}.`;
-                    toast(
-                      `You screen name is; ${screenName} which we use online. We do not disclose your private information online. 
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    margin: "0 0 10px 0",
+                    padding: "0",
+
+                    alignItems: "center",
+                    width: "100%",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  <Input
+                    label={<MandotoryFieldLabel text="Last Name" />}
+                    setValue={set_sname}
+                    value={lname}
+                    editMode={!nameFieldsDisabled}
+                    onBlur={() => {
+                      if (fname.length && lname.length) {
+                        const screenName = `${capitalizeFirstLetter(fname)} ${mname.length
+                          ? `${capitalizeFirstLetter(mname?.[0])}.`
+                          : ``
+                          } ${capitalizeFirstLetter(lname?.[0])}.`;
+                        toast(
+                          `You screen name is; ${screenName} which we use online. We do not disclose your private information online. 
                 We use your cellphone only for verification to withdraw your funds, or for events notifications like
                 students booking/postponding/cancelling lessons, etc'. `,
-                      {
-                        closeButton: true,
-                        autoClose: false,
-                        className: "setup-private-info",
+                          {
+                            closeButton: true,
+                            autoClose: false,
+                            className: "setup-private-info",
+                          }
+                        );
                       }
-                    );
-                  }
-                }}
-              />
-            </div>
+                    }}
+                  />
+                </div>
 
-            <div
-              style={{
-                display: "flex",
-                margin: "0 0 10px 0",
-                padding: "0",
-                alignItems: "center",
-
-                width: "100%",
-                whiteSpace: "nowrap",
-              }}
-            >
-              <Input
-                label={"Email"}
-                value={email}
-                editMode={false}
-              />
-
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                margin: "0 0 10px 0",
-                padding: "0",
-
-                alignItems: "center",
-                width: "100%",
-                whiteSpace: "nowrap",
-              }}
-            >
-              <div className="input w-100">
-
-
-                <PhoneInput
-                  defaultCountry="us"
-                  value={cell}
-                  onChange={(cell) => set_cell(cell)}
-                  required
-                  disabled={nameFieldsDisabled}
-                  style={{ width: "100%" }}
-                />
-                <span
-                  className="input__label"
+                <div
                   style={{
-                    top: "-3px", left: "5px", zIndex: "99", padding: "2px",
-                    color: "rgb(133, 138, 133)",
-                    transform: " translate(0.25rem, -65%) scale(0.8)"
+                    display: "flex",
+                    margin: "0 0 10px 0",
+                    padding: "0",
+                    alignItems: "center",
+
+                    width: "100%",
+                    whiteSpace: "nowrap",
                   }}
-                >  phone
-                </span>
-              </div>
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                width: "100%",
-
-                alignItems: "center",
-                margin: "0 0 10px 0",
-
-                whiteSpace: "nowrap",
-              }}
-            >
-              <Select
-                setValue={set_response_zone}
-                value={response_zone}
-                editMode={editMode}
-                label={"Response Time"}
-                TooltipText={
-                  "Select your response time answering the student during business time in your time zone. Please take notice that the student take this fact as one of the considurations of selecting you as tutor."
-                }
-              >
-                {response_list}
-              </Select>
-
-            </div>
-
-            <div>
-              <div
-                style={{
-                  display: "flex",
-                  width: "100%",
-
-                  alignItems: "center",
-
-                  whiteSpace: "nowrap",
-                }}
-              >
-                <Select
-                  setValue={set_timeZone}
-                  value={timeZone}
-                  editMode={editMode}
-                  label={"Timezone"}
-                  TooltipText={
-                    "Select the Greenwich Mean Time (GMT) zone where you reside. It will let the student configure his time availability conducting lessons with you, when in a different time zone. "
-                  }
-
                 >
-                  {GMTList}
+                  <Input
+                    label={"Email"}
+                    value={email}
+                    editMode={false}
+                  />
 
-                </Select>
-              </div>
-              <Link
-                className="m-0"
-                style={{ fontSize: "12px" }}
-                target="_blank"
-                to={"https://24timezones.com/timezone-map"}
-              >
-                See your timezone from map.
-              </Link>
-            </div>
-          </div>
+                </div>
 
-          <div className="mt-4" style={{ width: "25%" }}>
-            <div
-              style={{
-                display: "flex",
-                width: "100%",
-                margin: "0 0 10px 0",
-                padding: "0",
+                <div
+                  style={{
+                    display: "flex",
+                    margin: "0 0 10px 0",
+                    padding: "0",
 
-                alignItems: "center",
-                whiteSpace: "nowrap",
-              }}
-            >
-              <Input
-                label={<p>Address 1: <span class='text-sm'>(optional)</span></p>}
-                required={false}
-                value={add1}
-                setValue={set_add1}
-                editMode={editMode}
-              />
-
-            </div>
-            <div
-              style={{
-                display: "flex",
-                width: "100%",
-
-                alignItems: "center",
-                margin: "0 0 10px 0",
-
-                whiteSpace: "nowrap",
-              }}
-            >
-              <Input
-                label={<p>Address 2: <span class='text-sm'>(optional)</span></p>}
-                value={add2}
-                required={false}
-                setValue={set_add2}
-                editMode={editMode}
-              />
-
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                width: "100%",
-                alignItems: "center",
-                margin: "0 0 10px 0",
-
-                whiteSpace: "nowrap",
-              }}
-            >
-              <Input
-                label={<p>City/Town: <span class='text-sm'>(optional)</span></p>}
-                value={city}
-                required={false}
-                setValue={set_city}
-                editMode={editMode}
-              />
-
-            </div>
-            <div className="w-100"
-              style={{
-                display: "flex",
-                width: "100%",
-                alignItems: "center",
-                margin: "0 0 10px 0",
-                whiteSpace: "nowrap",
-              }}
-            >
-
-              <Select
-                setValue={set_country}
-                value={country}
-                editMode={editMode}
-                label={"Country"}
-              >
-                {countryList}
-              </Select>
-
-            </div>
-            {(options[country] ?? [])?.length ? (
-              <div
-                className="mb-2"
-                style={{
-                  display: "flex",
-                  width: "100%",
-                  alignItems: "center",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                <Select
-                  setValue={set_state}
-                  value={state}
-                  editMode={editMode}
-                  label={"State/Province"}
+                    alignItems: "center",
+                    width: "100%",
+                    whiteSpace: "nowrap",
+                  }}
                 >
-                  <option value="" disabled>
-                    Select State
-                  </option>
-                  {(options[country] ?? []).map((item) => (
-                    <option key={item} value={item}>
-                      {item}
-                    </option>
-                  ))}
+                  <div className="input w-100">
 
-                </Select>
 
-              </div>
-            ) : (
-              ""
-            )}
+                    <PhoneInput
+                      defaultCountry="us"
+                      value={cell}
+                      onChange={(cell) => set_cell(cell)}
+                      disabled={nameFieldsDisabled}
+                      style={{ width: "100%" }}
+                    />
+                    <span
+                      className="input__label"
+                      style={{
+                        top: "-3px", left: "5px", zIndex: "99", padding: "2px",
+                        color: "rgb(133, 138, 133)",
+                        transform: " translate(0.25rem, -65%) scale(0.8)"
+                      }}
+                    >  phone
+                    </span>
+                  </div>
+                </div>
 
-            <div
-              style={{
-                display: "flex",
-                width: "100%",
+                <div
+                  style={{
+                    display: "flex",
+                    width: "100%",
 
-                alignItems: "center",
-                margin: "0 0 10px 0",
+                    alignItems: "center",
+                    margin: "0 0 10px 0",
 
-                whiteSpace: "nowrap",
-              }}
-            >
-              <Input
-                label={<p>Zip Code: <span class='text-sm'>(optional)</span></p>}
-                value={zipCode}
-                required={false}
-                setValue={set_zipCode}
-                editMode={editMode}
-              />
-
-            </div>
-
-            {!!timeZone && (
-              <div
-                style={{
-                  display: "flex",
-                  width: "100%",
-
-                  alignItems: "center",
-
-                  whiteSpace: "nowrap",
-                }}
-              >
-                <Input
-                  label={
-                    <div className="d-flex" style={{ gap: "5px" }}>
-                      <ToolTip
-                        width="200px"
-                        text={
-                          "Coordinated Universal Time, or 'UTC,' is the primary time standard by which the world regulates clocks and time. It's important to ensure that your PC's clock matches the UTC because discrepancies can lead to issues with scheduling, such as your booked lessons not synchronizing with your local time. To avoid any inconvenience, please verify that your computer's time settings are correctly adjusted to reflect UTC.."
-                        }
-                      /><div className="display-inline-block">UTC</div>
-                    </div>
-                  }
-                  value={typeof dateTime === "object" ? "" : dateTime}
-                  editMode={false}
-                />
-              </div>
-            )}
-          </div>
-
-          <div
-            className=" "
-            style={{
-              float: "right",
-              width: "30%",
-              height: "250px",
-              border: "1px solid dotted",
-            }}
-          >
-            <h6>Tutor's introduction video</h6>
-            <div className="mb-2">
-              {videoUploading && (
-                <Loading
-                  height="10px"
-                  iconSize="20px"
-                  loadingText="uploading video ..."
-                />
-              )}
-            </div>
-            {selectedVideoOption === "record" ? (
-              <div className="d-flex justify-content-center align-item-center w-100 h-100 border shadow">
-                <WebcamCapture
-                  user_id={tutor.AcademyId}
-                  record_duration={60000}
-                />
-              </div>
-            ) : selectedVideoOption === "upload" &&
-              video?.length &&
-              !videoError ? (
-              <div className="d-flex justify-content-center align-item-center w-100 h-100 border shadow">
-                <video
-                  src={video}
-                  onError={() => setVideoError(true)}
-                  className="w-100 h-100 m-0 p-0 videoLive"
-                  controls
-                  autoPlay={false}
-                />
-              </div>
-            ) : (
-              <div className="tutor-tab-video-frame p-2 card">
-                <div style={{ textAlign: "justify", fontSize: "12px" }}>
-                  {" "}
-                  Providing your video, is mandatory. Your registration is at
-                  the stage of 'pending' until you upload it. An introduction
-                  video is a great way to showcase your personality, skills and
-                  teaching style for potential students. It can help you stand
-                  out from other tutors and attract more atudents. Creating your
-                  video, briefly introduce yourself, your experience and your
-                  approach to tutoring. Mention what subjects and levels you can
-                  teach, and how you can help students achieve their goals. You
-                  should speak clearly, and confidently. A good introduction
-                  video can make a lasting impression and increase your chances
-                  of getting hired. View samples; <br />
-                  <Link
-                    to="https://www.youtube.com/watch?v=tZ3ndrKQXN8"
-                    target="_blank"
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  <Select
+                    setValue={set_response_zone}
+                    value={response_zone}
+                    editMode={editMode}
+                    label={<MandotoryFieldLabel text="Response Time" />}
+                    TooltipText={
+                      "Select your response time answering the student during business time in your time zone. Please take notice that the student take this fact as one of the considurations of selecting you as tutor."
+                    }
                   >
-                    Sample 1: Intro Video
-                  </Link>{" "}
-                  <br />
-                  <Link
-                    to="https://www.youtube.com/watch?v=sxa2C6UmrNQ"
-                    target="_blank"
+                    {response_list}
+                  </Select>
+
+                </div>
+
+                <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      width: "100%",
+
+                      alignItems: "center",
+
+                      whiteSpace: "nowrap",
+                    }}
                   >
-                    Sample 2: How to make an Introduction Video
-                  </Link>{" "}
-                  <br />
-                  <Link to="https://www.heygen.com" target="_blank">
-                    Sample 3: Create your free AI Introduction Video, in 3
-                    minutes or less.
+                    <Select
+                      setValue={set_timeZone}
+                      value={timeZone}
+                      editMode={editMode}
+                      label={<MandotoryFieldLabel text="Timezone" />}
+                      TooltipText={
+                        "Select the Greenwich Mean Time (GMT) zone where you reside. It will let the student configure his time availability conducting lessons with you, when in a different time zone. "
+                      }
+                    >
+                      {GMTList}
+                    </Select>
+                  </div>
+                  <Link
+                    className="m-0"
+                    style={{ fontSize: "12px" }}
+                    target="_blank"
+                    to={"https://24timezones.com/timezone-map"}
+                  >
+                    See your timezone from map.
                   </Link>
                 </div>
               </div>
-            )}
 
-            <div className=" mt-5">
-              <div
-                className="row justify-content-center align-items-center"
-                onClick={() =>
-                  !editMode &&
-                  toast.info(
-                    'Please click the "Edit" button to activate the "Upload", or "Record" video buttons!'
-                  )
-                }
-              >
-                <div className="col-md-4">
-                  <div className="">
-                    <Button
-                      className="action-btn btn btn-sm "
-                      style={{ width: "100%", fontSize: "12px" }}
-                      disabled={!editMode}
-                      onClick={() => window.open("https://www.heygen.com")}
-                    >
-                      <div className="button__content">
-                        <div className="button__icon">
-                          <RiRobot2Fill size={18} />
-                        </div>
-                        <p className="button__text"> Create AI intro</p>
-                      </div>
-                    </Button>
-                  </div>
+              <div className="" style={{ width: "23%" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    width: "100%",
+                    margin: "0 0 10px 0",
+                    padding: "0",
+
+                    alignItems: "center",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  <Input
+                    label={<p>Address 1: <span class='text-sm'>(optional)</span></p>}
+                    required={false}
+                    value={add1}
+                    setValue={set_add1}
+                    editMode={editMode}
+                  />
+
                 </div>
-                <div className="col-md-4">
-                  <div className="">
-                    <button
-                      style={{ width: "100%", fontSize: "10px" }}
-                      type="button"
-                      className={`action-btn btn small ${selectedVideoOption === "record" ? "active" : ""
-                        }`}
-                      disabled={!editMode}
-                      onClick={() => {
-                        set_video("");
-                        handleOptionClick("record");
-                        setIsRecording(!isRecording);
-                      }}
-                    >
-                      <div className="button__content">
-                        <div className="button__icon">
-                          <BsCameraVideo size={15} />
-                        </div>
-                        <p className="button__text">Record Video </p>
-                      </div>
-                    </button>
-                  </div>
+                <div
+                  style={{
+                    display: "flex",
+                    width: "100%",
+
+                    alignItems: "center",
+                    margin: "0 0 10px 0",
+
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  <Input
+                    label={<p>Address 2: <span class='text-sm'>(optional)</span></p>}
+                    value={add2}
+                    required={false}
+                    setValue={set_add2}
+                    editMode={editMode}
+                  />
+
                 </div>
-                <div className="col-md-4">
-                  <div className="">
-                    <input
-                      data-type="file"
-                      defaultValue={""}
-                      onChange={handleVideo}
-                      type="file"
-                      name="video"
-                      disabled={!editMode}
-                      style={{ display: "none" }}
-                      id="video"
+
+                <div
+                  style={{
+                    display: "flex",
+                    width: "100%",
+                    alignItems: "center",
+                    margin: "0 0 10px 0",
+
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  <Input
+                    label={<p>City/Town: <span class='text-sm'>(optional)</span></p>}
+                    value={city}
+                    required={false}
+                    setValue={set_city}
+                    editMode={editMode}
+                  />
+
+                </div>
+                <div className="w-100"
+                  style={{
+                    display: "flex",
+                    width: "100%",
+                    alignItems: "center",
+                    margin: "0 0 10px 0",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+
+                  <Select
+                    setValue={set_country}
+                    value={country}
+                    editMode={editMode}
+                    label={<MandotoryFieldLabel text="Country" />}
+                  >
+                    {countryList}
+                  </Select>
+
+                </div>
+                {(options[country] ?? [])?.length ? (
+                  <div
+                    className="mb-2"
+                    style={{
+                      display: "flex",
+                      width: "100%",
+                      alignItems: "center",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    <Select
+                      setValue={set_state}
+                      value={state}
+                      editMode={editMode}
+                      label={<MandotoryFieldLabel text="State/Province" />}
+                    >
+                      <option value="" disabled>
+                        Select State
+                      </option>
+                      {(options[country] ?? []).map((item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))}
+
+                    </Select>
+
+                  </div>
+                ) : (
+                  ""
+                )}
+
+                <div
+                  style={{
+                    display: "flex",
+                    width: "100%",
+
+                    alignItems: "center",
+                    margin: "0 0 10px 0",
+
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  <Input
+                    label={<p>Zip Code: <span class='text-sm'>(optional)</span></p>}
+                    value={zipCode}
+                    required={false}
+                    setValue={set_zipCode}
+                    editMode={editMode}
+                  />
+
+                </div>
+
+                {!!timeZone && (
+                  <div
+                    style={{
+                      display: "flex",
+                      width: "100%",
+
+                      alignItems: "center",
+
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    <Input
+                      label={
+                        <div className="d-flex" style={{ gap: "5px" }}>
+                          <ToolTip
+                            width="200px"
+                            text={
+                              "Coordinated Universal Time, or 'UTC,' is the primary time standard by which the world regulates clocks and time. It's important to ensure that your PC's clock matches the UTC because discrepancies can lead to issues with scheduling, such as your booked lessons not synchronizing with your local time. To avoid any inconvenience, please verify that your computer's time settings are correctly adjusted to reflect UTC.."
+                            }
+                          /><div className="display-inline-block">UTC</div>
+                        </div>
+                      }
+                      value={typeof dateTime === "object" ? "" : dateTime}
+                      editMode={false}
                     />
-                    <label
-                      id="btn"
-                      onClick={() => handleOptionClick("upload")}
-                      type="button"
-                      htmlFor="video"
-                      style={{
-                        width: "100%",
-                        // pointerEvents: !editMode ? "none" : "auto",
-                        fontSize: "10px",
-                      }}
-                      className={`action-btn btn ${selectedVideoOption === "upload" ? "active" : ""
-                        }`}
-                    >
-                      <div className="button__content">
-                        <div className="button__icon">
-                          <BsCloudUpload size={15} /> <br />
-                        </div>
-                        <p className="button__text"> Upload Video</p>
+                  </div>
+                )}
+              </div>
+              <div
+                className=" "
+                style={{
+                  float: "right",
+                  width: "30%",
+                  height: "250px",
+                  border: "1px solid dotted",
+                }}
+              >
+                <h6>Tutor's introduction video<span className="text-danger " style={{fontSize:"25px", fontWeight:"bold"}}>*</span></h6>
+                <div className="mb-2">
+                  {videoUploading && (
+                    <Loading
+                      height="10px"
+                      iconSize="20px"
+                      loadingText="uploading video ..."
+                    />
+                  )}
+                </div>
+                {selectedVideoOption === "record" ? (
+                  <div className="d-flex justify-content-center align-item-center w-100 h-100 border shadow">
+                    <WebcamCapture
+                      user_id={tutor.AcademyId}
+                      record_duration={60000}
+                    />
+                  </div>
+                ) : selectedVideoOption === "upload" &&
+                  video?.length &&
+                  !videoError ? (
+                  <div className="d-flex justify-content-center align-item-center w-100 h-100 border shadow">
+                    <video
+                      src={video}
+                      onError={() => setVideoError(true)}
+                      className="w-100 h-100 m-0 p-0 videoLive"
+                      controls
+                      autoPlay={false}
+                    />
+                  </div>
+                ) : (
+                  <div className="tutor-tab-video-frame p-2 card">
+                    <div style={{ textAlign: "justify", fontSize: "12px" }}>
+                      {" "}
+                      Providing your video, is mandatory. Your registration is at
+                      the stage of 'pending' until you upload it. An introduction
+                      video is a great way to showcase your personality, skills and
+                      teaching style for potential students. It can help you stand
+                      out from other tutors and attract more atudents. Creating your
+                      video, briefly introduce yourself, your experience and your
+                      approach to tutoring. Mention what subjects and levels you can
+                      teach, and how you can help students achieve their goals. You
+                      should speak clearly, and confidently. A good introduction
+                      video can make a lasting impression and increase your chances
+                      of getting hired. View samples; <br />
+                      <Link
+                        to="https://www.youtube.com/watch?v=tZ3ndrKQXN8"
+                        target="_blank"
+                      >
+                        Sample 1: Intro Video
+                      </Link>{" "}
+                      <br />
+                      <Link
+                        to="https://www.youtube.com/watch?v=sxa2C6UmrNQ"
+                        target="_blank"
+                      >
+                        Sample 2: How to make an Introduction Video
+                      </Link>{" "}
+                      <br />
+                      <Link to="https://www.heygen.com" target="_blank">
+                        Sample 3: Create your free AI Introduction Video, in 3
+                        minutes or less.
+                      </Link>
+                    </div>
+                  </div>
+                )}
+
+                <div className=" mt-5">
+                  <div
+                    className="row justify-content-center align-items-center"
+                    onClick={() =>
+                      !editMode &&
+                      toast.info(
+                        'Please click the "Edit" button to activate the "Upload", or "Record" video buttons!'
+                      )
+                    }
+                  >
+                    <div className="col-md-4">
+                      <div className="">
+                        <Button
+                          className="action-btn btn btn-sm "
+                          style={{ width: "100%", fontSize: "12px" }}
+                          disabled={!editMode}
+                          onClick={() => window.open("https://www.heygen.com")}
+                        >
+                          <div className="button__content">
+                            <div className="button__icon">
+                              <RiRobot2Fill size={18} />
+                            </div>
+                            <p className="button__text"> Create AI intro</p>
+                          </div>
+                        </Button>
                       </div>
-                    </label>
+                    </div>
+                    <div className="col-md-4">
+                      <div className="">
+                        <button
+                          style={{ width: "100%", fontSize: "10px" }}
+                          type="button"
+                          className={`action-btn btn small ${selectedVideoOption === "record" ? "active" : ""
+                            }`}
+                          disabled={!editMode}
+                          onClick={() => {
+                            set_video("");
+                            handleOptionClick("record");
+                            setIsRecording(!isRecording);
+                          }}
+                        >
+                          <div className="button__content">
+                            <div className="button__icon">
+                              <BsCameraVideo size={15} />
+                            </div>
+                            <p className="button__text">Record Video </p>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+                    <div className="col-md-4">
+                      <div className="">
+                        <input
+                          data-type="file"
+                          defaultValue={""}
+                          onChange={handleVideo}
+                          type="file"
+                          name="video"
+                          disabled={!editMode}
+                          style={{ display: "none" }}
+                          id="video"
+                        />
+                        <label
+                          id="btn"
+                          onClick={() => handleOptionClick("upload")}
+                          type="button"
+                          htmlFor="video"
+                          style={{
+                            width: "100%",
+                            // pointerEvents: !editMode ? "none" : "auto",
+                            fontSize: "10px",
+                          }}
+                          className={`action-btn btn ${selectedVideoOption === "upload" ? "active" : ""
+                            }`}
+                        >
+                          <div className="button__content">
+                            <div className="button__icon">
+                              <BsCloudUpload size={15} /> <br />
+                            </div>
+                            <p className="button__text"> Upload Video</p>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
+
+
         </div>
 
         <div className="mt-4 ">
@@ -1200,7 +1204,8 @@ const TutorSetup = () => {
                 height: "120px",
               }}
             >
-              <label>Grades I teach</label>
+              {/* <label>Grades I teach</label> */}
+              <MandotoryFieldLabel text="Grades I Teach" />
               <div className="tutor-grades">
                 <ul className="grades-sec">
                   {grades.map((item, index) => {
@@ -1378,12 +1383,10 @@ const TutorSetup = () => {
                 width: "60%",
               }}
             >
-              <label htmlFor="headline">Headline</label>
-              <br />
+              <MandotoryFieldLabel text="Profile Headline" />
               <input
                 className="form-control m-0 shadow w-100"
                 value={headline}
-                required
                 spellCheck="true"
                 disabled={!editMode}
                 placeholder="Write A Catchy Headline.. Example: 21 years experienced nuclear science professor."
@@ -1403,17 +1406,13 @@ const TutorSetup = () => {
             >
               <div
                 className="profile-headline"
-                style={{ textAlign: "center", float: "left" }}
+                style={{ textAlign: "center", float: "left", fontWeight: "bold" }}
               >
-                <label style={{ fontWeight: "bold" }} htmlFor="intro">
-                  Introduction
-                </label>
-                <br />
+                <MandotoryFieldLabel text="Introduction" />
                 <textarea
                   className="form-control m-0 shadow"
                   value={intro}
                   maxLength={500}
-                  required
                   placeholder="The Academy mandates the tutor uploading a self introductionary video. 
                     It's important for the student to check if the tutor accent is clear for him.
                     A self-introduction video is a great way to showcase your personality and teaching style to potential students. 
@@ -1444,18 +1443,14 @@ const TutorSetup = () => {
 
               <div
                 className="profile-motivation"
-                style={{ textAlign: "center", float: "right" }}
+                style={{ textAlign: "center", float: "right", fontWeight: "bold" }}
               >
-                <label style={{ fontWeight: "bold" }} htmlFor="intro">
-                  Motivate
-                </label>
-                <br />
+                <MandotoryFieldLabel text={"Motivate"} />
                 <textarea
                   className="form-control m-0 shadow"
                   value={motivation}
                   disabled={!editMode}
                   maxLength={500}
-                  required
                   placeholder='Write SomWething That will motivate Your Students. 
                 Use the "Motivate" tab to set up your promotions. 
                 Like up to 30 minutes introductionary session. Discount for multi students tutoring, or paid 
@@ -1488,5 +1483,9 @@ const TutorSetup = () => {
     </form >
   );
 };
+
+
+export const MandotoryFieldLabel = ({ text }) => <p>{text}:<span className="text-danger "
+  style={{ fontSize: "26px" }}>*</span></p>
 
 export default TutorSetup;

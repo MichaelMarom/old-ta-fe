@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { get_role_count_by_status, get_student_data, set_student_status } from '../../axios/admin';
-import { convertGMTOffsetToLocalString } from '../../helperFunctions/timeHelperFunctions'
+import { convertGMTOffsetToLocalString } from '../../utils/moment'
 import Loading from '../common/Loading'
 import { statesColours } from '../../constants/constants';
 import { toast } from 'react-toastify';

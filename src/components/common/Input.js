@@ -23,7 +23,7 @@ const Input = ({
         disabled={!editMode}
         {...rest}
       />
-      <span className="input__label" style={{ top: "2px" }} >
+      <span className="input__label d-flex align-items-end" style={{ top: "2px",background: editMode ? "white" : "#e1e1e1"  }} >
         {tooltipText && !!tooltipText.length && (
           <Tooltip
             width="200px"

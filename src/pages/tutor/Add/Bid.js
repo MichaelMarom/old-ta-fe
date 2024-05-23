@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Layout from './Layout'
 import { get_shortlist_ads } from '../../../axios/tutor'
 import { useSelector } from 'react-redux'
-import { convertTutorIdToName } from '../../../helperFunctions/generalHelperFunctions'
+import { convertTutorIdToName } from '../../../utils/common'
 import Actions from '../../../components/common/Actions'
 import ShortlistCard from '../../../components/tutor/Ads/ShortlistCard'
 

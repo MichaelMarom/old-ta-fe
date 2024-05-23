@@ -5,11 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import { add_to_shortlist, fetch_published_ads } from '../../../axios/student';
 import TAButton from '../../../components/common/TAButton'
 import { moment } from '../../../config/moment'
-import { showDate } from '../../../helperFunctions/timeHelperFunctions';
+import { showDate } from '../../../utils/moment';
 import { BiChevronDown } from 'react-icons/bi';
 import Avatar from '../../../components/common/Avatar';
 import Pill from '../../../components/common/Pill';
-import { convertTutorIdToName } from '../../../helperFunctions/generalHelperFunctions';
+import { convertTutorIdToName } from '../../../utils/common';
 import Actions from '../../../components/common/Actions';
 
 const Marketplace = () => {

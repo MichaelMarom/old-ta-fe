@@ -7,7 +7,7 @@ import {
   get_feedback_to_question,
   post_feedback_to_question,
 } from "../../axios/student";
-import { showDate } from "../../helperFunctions/timeHelperFunctions";
+import { showDate } from "../../utils/moment";
 import { wholeDateFormat } from "../../constants/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { postStudentBookings } from "../../redux/student/studentBookings";

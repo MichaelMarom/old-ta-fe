@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { IoChevronBackCircle, IoChevronForwardCircle } from "react-icons/io5";
 import { wholeDateFormat } from "../../../constants/constants";
-import { showDate } from "../../../helperFunctions/timeHelperFunctions";
+import { showDate } from "../../../utils/moment";
 import Button from "../../common/Button";
 import { moment } from "../../../config/moment";
 import { convertToDate } from "../../common/Calendar/Calendar";

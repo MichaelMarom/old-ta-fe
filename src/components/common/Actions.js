@@ -82,12 +82,6 @@ const Actions = ({
     const isBackTabExist = currentTabInfo.back;
 
     const onNext = () => {
-        toast.info("We are saving the fields you entered. You can return to this page later to complete the application.", {
-            hideProgressBar: true,
-            autoClose: false,
-            draggable: true,
-            className: "setup-private-info center-center"
-        })
         nextTabInfo.withRolePrefix ? navigate(`/${currentUser}/${currentTabInfo.next}`) :
             navigate(`${currentTabInfo.next}`)
     }

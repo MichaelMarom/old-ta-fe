@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { apiClient, showErrorToast } from "./config";
-import { capitalizeFirstLetter } from "../helperFunctions/generalHelperFunctions";
+import { capitalizeFirstLetter } from "../utils/common";
 
 export let upload_new_subject = (
   faculty,

@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { get_bank_details, post_bank_details } from '../../../axios/student';
 import Actions from '../../common/Actions';
 import _ from "lodash";
-import { compareStates } from '../../../helperFunctions/generalHelperFunctions';
+import { compareStates } from '../../../utils/common';
 
 function BankDetails() {
     let [AccountName, set_acct_name] = useState(null)

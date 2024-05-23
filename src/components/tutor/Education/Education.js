@@ -9,7 +9,7 @@ import { moment } from "../../../config/moment";
 
 import Select from "react-select";
 import Actions from "../../common/Actions";
-import { FaRegTimesCircle } from "react-icons/fa";
+import { FaFileUpload, FaRegTimesCircle } from "react-icons/fa";
 import { toast } from "react-toastify";
 import Loading from "../../common/Loading";
 import {
@@ -21,17 +21,19 @@ import {
   LEVEL,
   UK_STATES,
   US_STATES,
-  languages,
+  LANGUAGES,
 } from "../../../constants/constants";
-import { compareStates } from "../../../helperFunctions/generalHelperFunctions";
+import { compareStates, showRevisitToast } from "../../../utils/common";
 import Button from "../../common/Button";
 import Tooltip from "../../common/ToolTip";
 import ReactDatePicker from "react-datepicker";
 import { useDispatch, useSelector } from "react-redux";
 import { setTutor } from "../../../redux/tutor/tutorData";
 import DebounceInput from "../../common/DebounceInput";
+import { MandotoryFieldLabel } from "../TutorSetup";
+import FormSelect from '../../common/Select'
 
-const languageOptions = languages.map((language) => ({
+const languageOptions = LANGUAGES.map((language) => ({
   value: language,
   label: language,
 }));
@@ -115,7 +117,6 @@ const Education = () => {
           className: "setup-private-info center-center",
         }
       );
-    console.log(toastId);
 
     if (toastId && (cert_file_name || deg_file_name)) {
       toast.dismiss();
@@ -714,40 +715,45 @@ const Education = () => {
 
   if (fetchingEdu) return <Loading loadingText="Fetching Tutor Eduction..." />;
   return (
-    <div style={{ height: "70vh", overflowY: "auto" }}>
+    <div style={{ heightp: "70vh", overflowY: "auto", overflowX: "hidden" }}>
       <div className="container tutor-tab-education">
+        <h6 className="tutor-tab-education-notice highlight">
+          Tutor does not have to be an academy graduate in order to lecture
+          his knowledge. However, when you select your academic background,
+          you must upload your diploma and/or Certificate(s). You have 7
+          days to do that. Until your credentials are uploaded, "X" icon is
+          being shown near the appropriate field. When your documents are
+          uploaded, the "X" icon is changed to a green "Verified" logo. The
+          student or parents can see your status when making their decision
+          of selecting you.
+        </h6>
         <form action="" onSubmit={handleSave}>
-          <div className="tutor-tab-education-info pt-4">
-            <h3>Education</h3>
-            <h6 className="tutor-tab-education-notice highlight">
-              Tutor does not have to be an academy graduate in order to lecture
-              his knowledge. However, when you select your academic background,
-              you must upload your diploma and/or Certificate(s). You have 7
-              days to do that. Until your credentials are uploaded, "X" icon is
-              being shown near the appropriate field. When your documents are
-              uploaded, the "X" icon is changed to a green "Verified" logo. The
-              student or parents can see your status when making their decision
-              of selecting you.
-            </h6>
+          <div className="tutor-tab-education-info pt-4 ">
 
-            <div className="d-flex  row border p-3 shadow ">
+
+            <div className="d-flex  row border p-3 shadow " style={{ background: editMode ? "inherit" : "#e1e1e1" }}>
               <h6 className="border-bottom">Experience</h6>
               <div className="d-flex justify-content-between">
-                <div className="col-md-4">
+                <div className="col-md-4" style={{ fontSize: "14px" }}>
                   <div className="d-flex justify-content-between">
-                    <label
+                    {/* <label
                       className="text-secondary text-start"
                       htmlFor="level"
                     >
                       Education Level:
-                    </label>
-                    <Tooltip
-                      width="250px"
-                      text=" Please select the highest education level that you have earned diploma from (could be high school). If you selected academic education level, but cannot provide a proof in a form of diploma, we would have to decline your application."
-                    />
+                    </label> */}
+
                   </div>
-                  <select
-                    id="level"
+                  <FormSelect
+                    label={
+                      <>
+                        <MandotoryFieldLabel text={"Education Level"} />
+                        <Tooltip
+                          width="250px"
+                          text=" Please select the highest education level that you have earned diploma from (could be high school). If you selected academic education level, but cannot provide a proof in a form of diploma, we would have to decline your application."
+                        />
+                      </>
+                    }
                     className="form-select m-0"
                     onChange={(e) => {
                       set_level(e.target.value);
@@ -755,20 +761,18 @@ const Education = () => {
                     }}
                     value={level}
                     required
-                    disabled={!editMode}
+                    editMode={editMode}
                   >
                     <option value="" disabled>
                       Select highest Education
                     </option>
                     {level_list}
-                  </select>
+                  </FormSelect>
                 </div>
 
-                <div className="col-md-4">
-                  <label className="text-secondary" htmlFor="experience">
-                    Experience:
-                  </label>
-                  <select
+                <div className="col-md-4" style={{ fontSize: "14px" }}>
+                  <FormSelect
+                    label={<MandotoryFieldLabel text={"Experience"} />}
                     id="experience"
                     className="form-select m-0"
                     onChange={(e) => {
@@ -777,17 +781,17 @@ const Education = () => {
                     }}
                     value={experience}
                     required
-                    disabled={!editMode}
+                    editMode={editMode}
                   >
                     {exp}
-                  </select>
+                  </FormSelect>
                 </div>
               </div>
             </div>
 
             {level && level !== "No Academic Education" && level.length ? (
               <>
-                <div className="row mt-3 p-3 shadow  border shadow">
+                <div className="row mt-3 p-3 shadow  border shadow" style={{ background: editMode ? "inherit" : "#e1e1e1" }}>
                   {
                     <h6 className="border-bottom">
                       {level === "Associate Degree" ||
@@ -796,30 +800,21 @@ const Education = () => {
                         : "Bachelor Degree"}
                     </h6>
                   }
-                  <div className="d-flex justify-content-between">
-                    <div className="col-md-4">
-                      <label className="text-secondary" htmlFor="uni_bach">
-                        {level === "Associate Degree" ||
-                          level === "Undergraduate Student"
-                          ? "College Name"
-                          : "Bachelor Degree Institute:"}
-                      </label>
-                      {/* <input
-                                                type="text"
-                                                id="uni_bach"
-                                                className="form-control m-0"
-                                                value={uni_bach}
-                                                onChange={(e) => set_uni_bach(e.target.value)}
-                                                placeholder="College/University 1"
-                                                required
-                                                disabled={!editMode}
-                                            /> */}
+                  <div className="d-flex justify-content-between mt-3">
+                    <div className="col-md-4" style={{ fontSize: "14px" }}>
                       <DebounceInput
-                        placeholder="College/University 1"
-                        required
-                        disabled={!editMode}
-                        className="form-control m-0"
+                        label={
+                          <MandotoryFieldLabel text=
+                            {level === "Associate Degree" ||
+                              level === "Undergraduate Student"
+                              ? "College Name"
+                              : "College Name"}
+                          />
+                        }
+                        editMode={editMode}
+
                         delay={2000}
+                        element="app-input"
                         value={uni_bach}
                         setInputValue={set_uni_bach}
                         debounceCallback={() =>
@@ -829,23 +824,22 @@ const Education = () => {
                       />
                     </div>
 
-                    <div className="col-md-3">
+                    <div className="col-md-3" style={{ fontSize: "14px" }}>
                       <div>
-                        <label className="text-secondary">
-                          Country for{" "}
-                          {`${level === "Associate Degree"
+
+                        <FormSelect
+
+                          label={<MandotoryFieldLabel text={level === "Associate Degree"
                             ? "Associate degree"
                             : "Bachelor"
-                            }`}
-                        </label>
-                        <select
-                          className="form-select"
+                          }
+                          />}
                           onChange={(e) => {
                             setCountryForAssoc(e.target.value);
                             dynamicSave("BachCountry", e.target.value);
                           }}
                           value={countryForAssociate}
-                          disabled={!editMode}
+                          editMode={editMode}
                         >
                           <option value={""} disabled>
                             Select Country
@@ -855,14 +849,14 @@ const Education = () => {
                               {option.Country}
                             </option>
                           ))}
-                        </select>
+                        </FormSelect>
                       </div>
                       {options[countryForAssociate] && (
                         <div>
-                          <label className="text-secondary" htmlFor="state1">
-                            State/Province:
-                          </label>
-                          <select
+                          <FormSelect
+                            label={
+                              <MandotoryFieldLabel text={"State/Province"} />
+                            }
                             id="state1"
                             className="form-select m-0 w-100"
                             onChange={(e) => {
@@ -870,8 +864,7 @@ const Education = () => {
                               dynamicSave("Bach_College_State", e.target.value);
                             }}
                             value={bach_state}
-                            required
-                            disabled={!editMode}
+                            editMode={editMode}
                           >
                             <option value="">Select State</option>
                             {options[countryForAssociate].map((item) => (
@@ -879,19 +872,19 @@ const Education = () => {
                                 {item}
                               </option>
                             ))}
-                          </select>
+                          </FormSelect>
                         </div>
                       )}
                     </div>
 
-                    <div className="col-md-4">
-                      <label className="text-secondary" htmlFor="yr1">
-                        Graduation Year:
-                      </label>
+                    <div className="col-md-4" style={{ fontSize: "14px" }}>
                       {level === "Undergraduate Student" ? (
                         <div>{bach_yr}</div>
                       ) : (
-                        <select
+                        <FormSelect
+                          label={
+                            <MandotoryFieldLabel text={"Graduation Year"} />
+                          }
                           id="yr1"
                           className="form-select m-0 w-100"
                           onChange={(e) => {
@@ -899,8 +892,7 @@ const Education = () => {
                             dynamicSave("Bach_College_Year", e.target.value);
                           }}
                           value={bach_yr}
-                          required
-                          disabled={!editMode}
+                          editMode={editMode}
                         >
                           <option value="">Select Year</option>
                           {d_list.map((item) => (
@@ -908,7 +900,7 @@ const Education = () => {
                               {item}
                             </option>
                           ))}
-                        </select>
+                        </FormSelect>
                       )}
                     </div>
                   </div>
@@ -916,28 +908,17 @@ const Education = () => {
                 {level !== "Bachelor Degree" &&
                   level !== "Undergraduate Student" &&
                   level !== "Associate Degree" ? (
-                  <div className="row mt-3 border p-3 shadow ">
+                  <div className="row mt-3 border p-3 shadow " style={{ background: editMode ? "inherit" : "#e1e1e1" }}>
                     <h6 className="border-bottom">Master Degree</h6>
-                    <div className="d-flex justify-content-between">
-                      <div className="col-md-4">
-                        <label className="text-secondary" htmlFor="uni_mast">
-                          Master Degree University:
-                        </label>
-                        {/* <input
-                                                        type="text"
-                                                        id="uni_mast"
-                                                        className="form-control m-0"
-                                                        value={uni_mast}
-                                                        onChange={(e) => set_mast_uni(e.target.value)}
-                                                        placeholder="College/University 2"
-                                                        required
-                                                        disabled={!editMode}
-                                                    /> */}
+                    <div className="d-flex justify-content-between mt-3">
+                      <div className="col-md-4" style={{ fontSize: "14px" }}>
+
                         <DebounceInput
-                          placeholder="College/University 2"
-                          required
-                          disabled={!editMode}
-                          className="form-control m-0"
+                          label={
+                            <MandotoryFieldLabel text="Institute Name" />
+                          }
+                          element="app-input"
+                          editMode={editMode}
                           delay={2000}
                           value={uni_mast}
                           setInputValue={set_mast_uni}
@@ -948,18 +929,19 @@ const Education = () => {
                         />
                       </div>
 
-                      <div className="col-md-3">
+                      <div className="col-md-3" style={{ fontSize: "14px" }}>
                         <div>
-                          <label className="text-secondary">
-                            Country for Master.
-                          </label>
-                          <select
-                            className="form-select"
+                          <FormSelect
+                            label={
+                              <MandotoryFieldLabel text="Country for Master" />
+
+                            }
+
                             onChange={(e) => {
                               setCountryForMast(e.target.value);
                               dynamicSave("MastCountry", e.target.value);
                             }}
-                            disabled={!editMode}
+                            editMode={editMode}
                             value={countryForMast}
                           >
                             <option value={""} disabled>
@@ -970,14 +952,15 @@ const Education = () => {
                                 {option.Country}
                               </option>
                             ))}
-                          </select>
+                          </FormSelect>
                         </div>
                         {options[countryForMast] && (
                           <div>
-                            <label className="text-secondary" htmlFor="state1">
-                              State/Province:
-                            </label>
-                            <select
+
+                            <FormSelect
+                              label={
+                                <MandotoryFieldLabel text=" Satte/Province" />
+                              }
                               className="form-select m-0 w-100"
                               onChange={(e) => {
                                 set_mast_state(e.target.value);
@@ -987,8 +970,7 @@ const Education = () => {
                                 );
                               }}
                               value={mast_state}
-                              required
-                              disabled={!editMode}
+                              editMode={editMode}
                             >
                               <option value="">Select State</option>
                               {options[countryForMast].map((item) => (
@@ -996,16 +978,18 @@ const Education = () => {
                                   {item}
                                 </option>
                               ))}
-                            </select>
+                            </FormSelect>
                           </div>
                         )}
                       </div>
 
-                      <div className="col-md-4">
-                        <label className="text-secondary" htmlFor="yr2">
-                          Graduation Year:
-                        </label>
-                        <select
+                      <div className="col-md-4" style={{ fontSize: "14px" }}>
+
+                        <FormSelect
+                          label={
+                            <MandotoryFieldLabel text="Graduation Year" />
+
+                          }
                           id="yr2"
                           className="form-select m-0 w-100"
                           onChange={(e) => {
@@ -1016,8 +1000,7 @@ const Education = () => {
                             );
                           }}
                           value={mast_yr}
-                          required
-                          disabled={!editMode}
+                          editMode={editMode}
                         >
                           <option value="">Select Year</option>
                           {d_list.map((item) => (
@@ -1025,7 +1008,7 @@ const Education = () => {
                               {item}
                             </option>
                           ))}
-                        </select>
+                        </FormSelect>
                       </div>
                     </div>
                   </div>
@@ -1034,49 +1017,38 @@ const Education = () => {
                   level !== "Bachelor Degree" &&
                   level !== "Master Degree" &&
                   level !== "Associate Degree" ? (
-                  <div className="row mt-3 border p-3 shadow ">
+                  <div className="row mt-3 border p-3 shadow " style={{ background: editMode ? "inherit" : "#e1e1e1" }}>
                     <h6 className="border-bottom">Doctorate Degree</h6>
-                    <div className="d-flex justify-content-between">
-                      <div className="col-md-4">
-                        <label className="text-secondary" htmlFor="uni_mast">
-                          {" "}
-                          Doctorate Degree university{" "}
-                        </label>
-                        {/* <input
-                                                        type="text"
-                                                        className="form-control m-0"
-                                                        value={doc_uni}
-                                                        onChange={(e) => set_doc_uni(e.target.value)}
-                                                        placeholder="College/University 3"
-                                                        required
-                                                        disabled={!editMode}
-                                                    /> */}
+                    <div className="d-flex justify-content-between mt-3">
+                      <div className="col-md-4" style={{ fontSize: "14px" }}>
+
                         <DebounceInput
+                          label={
+                            <MandotoryFieldLabel text="Institute Name" />
+                          }
+                          element="app-input"
                           type="text"
-                          className="form-control m-0"
+
                           value={doc_uni}
                           setInputValue={set_doc_uni}
-                          placeholder="College/University 3"
-                          required
-                          disabled={!editMode}
+                          editMode={editMode}
                           debounceCallback={() =>
                             dynamicSave("DoctorateCollege", doc_uni)
                           }
                         />
                       </div>
 
-                      <div className="col-md-3">
+                      <div className="col-md-3" style={{ fontSize: "14px" }}>
                         <div>
-                          <label className="text-secondary">
-                            Country For Doctorate
-                          </label>
-                          <select
-                            className="form-select"
+                          <FormSelect
+                            label={
+                              <MandotoryFieldLabel text="Country For Doctorate" />
+                            }
                             onChange={(e) => {
                               setCountryForDoc(e.target.value);
                               dynamicSave("DocCountry", e.target.value);
                             }}
-                            disabled={!editMode}
+                            editMode={editMode}
                             value={countryForDoc}
                           >
                             <option value={""} disabled>
@@ -1087,23 +1059,22 @@ const Education = () => {
                                 {option.Country}
                               </option>
                             ))}
-                          </select>
+                          </FormSelect>
                         </div>
                         {options[countryForDoc] && (
                           <div>
-                            <label className="text-secondary" htmlFor="state1">
-                              State/Province:
-                            </label>
-                            <select
-                              id="state1"
+
+                            <FormSelect
+                              label={
+                                <MandotoryFieldLabel text="State/Province" />
+                              }
                               className="form-select m-0 w-100"
                               onChange={(e) => {
                                 set_doctorateState(e.target.value);
                                 dynamicSave("DoctorateState", e.target.value);
                               }}
                               value={doctorateState}
-                              required
-                              disabled={!editMode}
+                              editMode={editMode}
                             >
                               <option value="">Select State</option>
                               {options[countryForDoc].map((item) => (
@@ -1111,25 +1082,24 @@ const Education = () => {
                                   {item}
                                 </option>
                               ))}
-                            </select>
+                            </FormSelect>
                           </div>
                         )}
                       </div>
 
-                      <div className="col-md-4">
-                        <label className="text-secondary" htmlFor="yr2">
-                          Graduation Year:
-                        </label>
-                        <select
-                          id="yr2"
+                      <div className="col-md-4" style={{ fontSize: "14px" }}>
+
+                        <FormSelect
+                          label={
+                            <MandotoryFieldLabel text="Graduation Year" />
+                          }
                           className="form-select m-0 w-100"
                           onChange={(e) => {
                             setDoctorateGraduateYear(e.target.value);
                             dynamicSave("DoctorateGradYr", e.target.value);
                           }}
                           value={doctorateGraduateYear}
-                          required
-                          disabled={!editMode}
+                          editMode={editMode}
                         >
                           <option value="">Select Year</option>
                           {d_list.map((item) => (
@@ -1137,23 +1107,19 @@ const Education = () => {
                               {item}
                             </option>
                           ))}
-                        </select>
+                        </FormSelect>
                       </div>
                     </div>
                   </div>
                 ) : null}
 
-                <div className="row mt-3 border p-3 shadow ">
+                <div className="row mt-3 border p-3 shadow " style={{ background: editMode ? "inherit" : "#e1e1e1" }}>
                   <h6 className="border-bottom">Degree Document</h6>
-                  <div className="d-flex justify-content-between">
-                    <div className="col-md-4">
-                      <div className="d-flex">
-                        <label
-                          className="text-secondary text-start"
-                          htmlFor="degree"
-                        >
-                          Upload Highest Degree Diploma:
-                        </label>
+                  <div className="d-flex justify-content-between align-items-end mt-3">
+                    <div className="col-md-4" style={{ fontSize: "14px" }}>
+                      <div className="d-flex align-items-end">
+                        <MandotoryFieldLabel text="Upload Degree" />
+
                         <Tooltip
                           width="200px"
                           text="We use your document only to verify your status. we do not publish it to the public.
@@ -1170,18 +1136,20 @@ const Education = () => {
                           </div>
                         ) : (
                           <>
-                            <div className="form-outline">
+                            <div className="form-outline w-75">
+                              <label htmlFor="degreeFile" className=" cursor-pointer border border-secondary rounded">
+                                <FaFileUpload size={20} /> Upload Highest Degree Diploma</label>
                               <input
                                 type="file"
                                 accept=".pdf, .jpeg, .png, .jpg"
                                 id="degreeFile"
-                                name="degreeFile"
+                                className="d-none"
                                 disabled={!editMode}
-                                className="form-control m-0"
+
                                 onChange={handleDegFileUpload}
                               />
                             </div>
-                            <div className="cross-icon">
+                            <div className="cross-icon w-25 ">
                               <FaRegTimesCircle size={20} color="red" />
                             </div>
                           </>
@@ -1189,16 +1157,15 @@ const Education = () => {
                       </div>
                     </div>
 
-                    <div className="col-md-3">
+                    <div className="col-md-3" style={{ fontSize: "14px" }}>
                       <div>
-                        <label className="text-secondary">
-                          Country For Degree
-                        </label>
-                        <select
-                          className="form-select"
-                          disabled={!editMode}
+
+                        <FormSelect
+                          label={
+                            <MandotoryFieldLabel text="Country For Degree" />
+                          }
+                          editMode={editMode}
                           value={countryForDeg}
-                          required
                           onChange={(e) => {
                             setCountryForDeg(e.target.value);
                             dynamicSave("DegCountry", e.target.value);
@@ -1212,23 +1179,22 @@ const Education = () => {
                               {option.Country}
                             </option>
                           ))}
-                        </select>
+                        </FormSelect>
                       </div>
                       {options[countryForDeg] && (
                         <div>
-                          <label className="text-secondary" htmlFor="state1">
-                            State/Province:
-                          </label>
-                          <select
-                            id="state1"
+
+                          <FormSelect
+                            label={
+                              <MandotoryFieldLabel text="State/Province" />
+                            }
                             className="form-select m-0 w-100"
                             onChange={(e) => {
                               set_deg_state(e.target.value);
                               dynamicSave("DegreeState", e.target.value);
                             }}
                             value={deg_state}
-                            required
-                            disabled={!editMode}
+                            editMode={editMode}
                           >
                             <option value="">Select State</option>
                             {options[countryForDeg].map((item) => (
@@ -1236,25 +1202,25 @@ const Education = () => {
                                 {item}
                               </option>
                             ))}
-                          </select>
+                          </FormSelect>
                         </div>
                       )}
                     </div>
 
-                    <div className="col-md-4">
-                      <label className="text-secondary" htmlFor="yr3">
-                        Diploma earned Year:
-                      </label>
-                      <select
-                        id="yr3"
+                    <div className="col-md-4" style={{ fontSize: "14px" }}>
+
+                      <FormSelect
+                        label={
+                          <MandotoryFieldLabel text="Diploma Earned Year" />
+
+                        }
                         className="form-select m-0 w-100"
                         onChange={(e) => {
                           set_degree_year(e.target.value);
                           dynamicSave("DegreeYear", e.target.value);
                         }}
                         value={degree_yr}
-                        required
-                        disabled={!editMode}
+                        editMode={editMode}
                       >
                         <option value="" disabled>
                           Select Year
@@ -1264,31 +1230,31 @@ const Education = () => {
                             {item}
                           </option>
                         ))}
-                      </select>
+                      </FormSelect>
                     </div>
                   </div>
                 </div>
               </>
             ) : null}
 
-            <div className="row mt-3 align-items-start border p-3 shadow ">
+            <div className="row mt-3 align-items-start border p-3 shadow " style={{ background: editMode ? "inherit" : "#e1e1e1" }}>
               <h6 className="border-bottom">Certification</h6>
-              <div className="d-flex justify-content-between">
-                <div className="col-md-4">
+              <div className="d-flex justify-content-between align-items-end mt-3">
+                <div className="col-md-4" style={{ fontSize: "14px" }}>
                   <div className="d-flex justify-content-between">
-                    <label
-                      className="text-secondary text-start"
-                      htmlFor="degree"
-                    >
-                      Certification
-                    </label>
-                    <Tooltip
-                      width="200px"
-                      text="We use your document only to verify your certification. We do not publish it to the public.
-                                                               Upon verification, we mark your profile by the Diploma verification symbol"
-                    />
                   </div>
-                  <select
+                  <FormSelect
+                    label={
+                      <>
+                        <MandotoryFieldLabel text="Certification" />
+
+                        <Tooltip
+                          width="200px"
+                          text="We use your document only to verify your certification. We do not publish it to the public.
+                                                               Upon verification, we mark your profile by the Diploma verification symbol"
+                        />
+                      </>
+                    }
                     id="certificate"
                     name="certificate"
                     className="form-select m-0"
@@ -1296,106 +1262,61 @@ const Education = () => {
                       set_certificate(e.target.value);
                       dynamicSave("Certificate", e.target.value);
                     }}
-                    placeholder="Select Certificate"
                     value={certificate}
                     // required
-                    disabled={!editMode}
+                    editMode={editMode}
                   >
                     <option value="" disabled>
                       Select Certificate
                     </option>
                     {certificate_list}
-                  </select>
-                  {certificate &&
-                    certificate.length &&
-                    certificate !== "Not Certified" ? (
-                    <div className="d-flex justify-content-center align-items-center">
-                      {cert_file_name?.length ? (
-                        <div className="d-flex w-100 justify-content-between border rounded p-2">
-                          <div>Certificate Uploaded</div>
-                          <div className="tick-icon">
-                            <IoIosCheckmarkCircle size={20} color="green" />
-                          </div>
-                        </div>
-                      ) : (
-                        <>
-                          <div className="form-outline">
-                            <input
-                              type="file"
-                              accept=".pdf, .jpeg, .png, .jpg, .doc"
-                              id="certificateFile"
-                              name="certificateFile"
-                              className="form-control m-0 mr-2"
-                              onChange={handleCertUpload}
-                              disabled={!editMode}
-                            />
-                          </div>
-                          <div className="cross-icon">
-                            <FaRegTimesCircle size={20} color="red" />
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  ) : null}
+                  </FormSelect>
                 </div>
                 {certificate &&
                   certificate.length &&
                   certificate !== "Not Certified" ? (
                   <>
-                    <div className="col-md-3">
-                      <div>
-                        <label className="text-secondary">
-                          Country For Certification
-                        </label>
-                        <select
-                          className="form-select"
-                          disabled={!editMode}
-                          onChange={(e) => {
-                            setCountryForCert(e.target.value);
-                            dynamicSave("CertCountry", e.target.value);
-                          }}
-                          value={countryForCert}
-                          required
-                        >
-                          <option value={""} disabled>
-                            Select Country
-                          </option>
-                          {Countries.map((option) => (
-                            <option value={option.Country} key={option.Country}>
-                              {option.Country}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      {options[countryForCert] && (
-                        <div>
-                          <label className="text-secondary" htmlFor="state1">
-                            State/Province:
-                          </label>
-                          <select
-                            className="form-select m-0 w-100"
-                            onChange={(e) => {
-                              set_cert_state(e.target.value);
-                              dynamicSave("CertificateState", e.target.value);
-                            }}
-                            value={cert_state}
-                            required
-                            disabled={!editMode}
-                          >
-                            <option value="">Select State</option>
-                            {options[countryForCert].map((item) => (
-                              <option key={item} value={item}>
-                                {item}
-                              </option>
-                            ))}
-                          </select>
+                    <div className="col-md-3" style={{ fontSize: "14px" }}>
+                      {certificate &&
+                        certificate.length &&
+                        certificate !== "Not Certified" ? (
+                        <div className="d-flex justify-content-center align-items-center">
+                          {cert_file_name?.length ? (
+                            <div className="d-flex w-100 justify-content-between border rounded p-2">
+                              <div>Certificate Uploaded</div>
+                              <div className="tick-icon">
+                                <IoIosCheckmarkCircle size={20} color="green" />
+                              </div>
+                            </div>
+                          ) : (
+                            <>
+                              <div className="form-outline w-75">
+                                <label htmlFor="certificateFile"
+                                  className="border border-secondary rounded p-2 cursor-pointer">
+                                  <FaFileUpload size={20} />Upload Certificate File</label>
+
+                                <input
+                                  type="file"
+                                  accept=".pdf, .jpeg, .png, .jpg, .doc"
+                                  id="certificateFile"
+                                  className="form-control m-0 mr-2 d-none"
+                                  onChange={handleCertUpload}
+                                  disabled={!editMode}
+                                />
+                              </div>
+                              <div className="cross-icon w-25">
+                                <FaRegTimesCircle size={20} color="red" />
+                              </div>
+                            </>
+                          )}
                         </div>
-                      )}
+                      ) : null}
+
+
                     </div>
-                    <div className="col-md-4">
-                      <label className="text-secondary" htmlFor="expiration">
-                        Certificate Expiration:
-                      </label>
+                    <div className="col-md-4" style={{ fontSize: "14px" }}>
+                      <MandotoryFieldLabel text="Certificate Expiration" />
+
                       <ReactDatePicker
                         selected={moment
                           .tz(
@@ -1423,13 +1344,11 @@ const Education = () => {
               </div>
             </div>
 
-            <div className="row mt-3 justify-content-between border p-3 shadow ">
+            <div className="row mt-3 justify-content-between border p-3 shadow " style={{ background: editMode ? "inherit" : "#e1e1e1" }}>
               <h6 className="border-bottom">Languages</h6>
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-end">
                 <div className="col-md-5">
-                  <label className="text-secondary" htmlFor="language">
-                    Select Native (Primary) Language:
-                  </label>
+                  <MandotoryFieldLabel text=" Select Native (Primary) Language" />
                   <Select
                     isMulti={false}
                     placeholder="Select Native Languages"
@@ -1472,21 +1391,8 @@ const Education = () => {
           </div>
           <div
             className="tutor-tab-education-experience"
-            style={{ marginTop: "75px" }}
           >
-            <div className="education-work-experience-logo">
-              <img
-                src={career}
-                style={{
-                  height: "85%",
-                  width: "200px",
-                  display: "block",
-                  margin: "auto",
-                  padding: "5px 10px 5px 10px",
-                }}
-                alt=""
-              />
-            </div>
+
             <div>
               <Button
                 className="action-btn btn"
@@ -1537,7 +1443,6 @@ const Education = () => {
                 readOnly={!editMode}
                 placeholder="Enter Your Work Experience"
                 height="800px"
-                required
                 debounceCallback={() =>
                   dynamicSave("WorkExperience", workExperience)
                 }

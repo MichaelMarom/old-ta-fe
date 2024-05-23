@@ -72,13 +72,9 @@ const Header = () => {
     localStorage.removeItem('student_user_id')
     localStorage.removeItem('tutor_user_id')
     localStorage.removeItem('user')
-    // localStorage.clear()();
     dispatch(setUser({}));
-
     dispatch(setTutor({}));
     dispatch(setStudent({}));
-    //setTutor tonull
-    //setStudent tonull
     nav("/login");
   };
 

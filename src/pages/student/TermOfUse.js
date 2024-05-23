@@ -6,7 +6,7 @@ import RichTextEditor from '../../components/common/RichTextEditor/RichTextEdito
 import { get_adminConstants, post_termsOfUse } from '../../axios/admin'
 import Loading from '../../components/common/Loading'
 import { toast } from 'react-toastify'
-import { showDate } from '../../helperFunctions/timeHelperFunctions'
+import { showDate } from '../../utils/moment'
 import { convertToDate } from '../../components/common/Calendar/Calendar'
 import { post_student_agreement } from '../../axios/student'
 import { setStudent } from '../../redux/student/studentData'

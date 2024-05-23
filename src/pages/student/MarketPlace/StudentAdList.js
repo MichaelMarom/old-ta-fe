@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Layout from "./Layout";
 import Pill from "../../../components/common/Pill";
-import { showDate } from "../../../helperFunctions/timeHelperFunctions";
+import { showDate } from "../../../utils/moment";
 import { moment } from "../../../config/moment";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";

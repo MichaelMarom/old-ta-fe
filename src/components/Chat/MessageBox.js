@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { wholeDateFormat } from '../../constants/constants'
-import { showDate } from '../../helperFunctions/timeHelperFunctions'
+import { showDate } from '../../utils/moment'
 
 const MessageBox = ({ message }) => {
     const location = useLocation()

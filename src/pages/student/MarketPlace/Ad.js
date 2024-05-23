@@ -5,12 +5,12 @@ import { get_faculty_subject } from "../../../axios/tutor";
 import Layout from "./Layout";
 import { useSelector } from "react-redux";
 import UserRichTextEditor from "../../../components/common/RichTextEditor/UserRichTextEditor";
-import { CERTIFICATES, EXPERIENCE, LEVEL, languages } from "../../../constants/constants";
+import { CERTIFICATES, EXPERIENCE, LEVEL, LANGUAGES } from "../../../constants/constants";
 import ReactSelect from "react-select";
 import { toast } from "react-toastify";
 import Actions from "../../../components/common/Actions";
 import { useNavigate } from "react-router-dom";
-import { compareStates } from "../../../helperFunctions/generalHelperFunctions";
+import { compareStates } from "../../../utils/common";
 import Tooltip from "../../../components/common/ToolTip";
 
 const Ads = () => {
@@ -57,7 +57,7 @@ const Ads = () => {
         }, currentState))
     }, [currentState])
 
-    const languageOptions = languages.map((language) => ({
+    const languageOptions = LANGUAGES.map((language) => ({
         value: language,
         label: language,
     }));

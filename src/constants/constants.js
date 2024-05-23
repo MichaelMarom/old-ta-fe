@@ -1056,7 +1056,7 @@ export const COMMISSION_DATA = [
 // `
 export const loggedInAdmin = {}
 
-export const languages = [
+export const LANGUAGES = [
   'Afrikaans',
   'Albanian',
   'Arabic',
@@ -1133,9 +1133,9 @@ export const languages = [
 
 export const STEPS = ['',
   'setup',
-  'education',
-  'rates',
-  'accounting',
+  // 'education',
+  // 'rates',
+  // 'accounting',
 ]
 
 export const PROFILE_STATUS = {

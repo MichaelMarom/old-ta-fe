@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { toast } from 'react-toastify';
 
 export const formatName = (firstName, lastName) => {
   return `${firstName} ${lastName[0].toUpperCase()}.`;
@@ -112,3 +113,11 @@ export const compareStates = (dbState, currentState) => {
 export const generateUpcomingSessionMessage = (session, fromNow) => {
   return session?.id ? `The next lessson (${session.subject}) starting in ${fromNow}` : ''
 } 
+
+
+export const showRevisitToast = ()=>{
+  toast.info("We are saving the fields you entered. You can return to this page later to complete the application.", {
+    className: "setup-private-info",
+    autoClose:false
+})
+}

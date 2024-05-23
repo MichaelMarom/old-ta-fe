@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import UserRichTextEditor from './RichTextEditor/UserRichTextEditor';
 import RichTextEditor from './RichTextEditor/RichTextEditor';
+import Input from './Input';
 
 const DebounceInput = ({ delay, value, setInputValue, onChange, debounceCallback, element = 'input', ...rest }) => {
     // const [inputValue, setInputValue] = useState(value);
@@ -39,6 +40,14 @@ const DebounceInput = ({ delay, value, setInputValue, onChange, debounceCallback
             value={value}
             onChange={(value) => setInputValue(value)}
             {...rest}
+        />
+
+
+    if(element === 'app-input')
+        return <Input 
+        value={value}
+        onChange={(e) => setInputValue(e.target.value)}
+        {...rest}
         />
 };
 

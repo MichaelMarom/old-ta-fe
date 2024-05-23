@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { get_feedback_to_question } from '../../../axios/student'
 import { wholeDateFormat } from '../../../constants/constants'
-import { showDate } from '../../../helperFunctions/timeHelperFunctions'
+import { showDate } from '../../../utils/moment'
 import LeftSideBar from '../../common/LeftSideBar'
 import { SessionFeedback } from '../../common/EventModal/TutorEventModal/SessionFeedback'
-import { convertTutorIdToName } from '../../../helperFunctions/generalHelperFunctions'
+import { convertTutorIdToName } from '../../../utils/common'
 
 export const TutorFeedbackModal = ({ isOpen, onClose, clickedSlot, handlePostpone, handleDeleteSessionByTutor }) => {
     const [questions, setQuestions] = useState([]);

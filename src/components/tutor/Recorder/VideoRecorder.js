@@ -9,7 +9,7 @@ import { IoTrash } from 'react-icons/io5'
 import Tooltip from '../../common/ToolTip'
 import { FaRegCirclePlay } from 'react-icons/fa6'
 import { FaRegStopCircle } from 'react-icons/fa'
-import { uploadVideoToAzure } from '../../../helperFunctions/uploadVideo'
+import { uploadVideoToAzure } from '../../../utils/uploadVideo'
 
 const WebcamCapture = ({ user_id, record_duration }) => {
   const webcamRef = useRef(null)

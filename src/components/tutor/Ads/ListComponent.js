@@ -3,7 +3,7 @@ import { fetch_tutor_ads } from "../../../axios/tutor";
 import { useSelector } from "react-redux";
 import { moment } from "../../../config/moment";
 import { useNavigate } from "react-router-dom";
-import { showDate } from "../../../helperFunctions/timeHelperFunctions";
+import { showDate } from "../../../utils/moment";
 import Pill from "../../common/Pill";
 
 const ListComponent = ({ setActiveTab, setActiveTabIndex }) => {

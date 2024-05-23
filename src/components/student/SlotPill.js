@@ -1,5 +1,5 @@
 import React from 'react';
-import { showDate } from '../../helperFunctions/timeHelperFunctions';
+import { showDate } from '../../utils/moment';
 import { slotPillDateFormat } from '../../constants/constants';
 
 const SlotPill = ({ selectedSlots, handleRemoveSlot, selectedType }) => {

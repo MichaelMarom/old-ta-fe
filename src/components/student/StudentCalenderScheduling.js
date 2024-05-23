@@ -4,8 +4,8 @@ import { useSelector } from "react-redux";
 import {
   capitalizeFirstLetter,
   formatName,
-} from "../../helperFunctions/generalHelperFunctions";
-import { convertGMTOffsetToLocalString } from "../../helperFunctions/timeHelperFunctions";
+} from "../../utils/common";
+import { convertGMTOffsetToLocalString } from "../../utils/moment";
 import { get_my_data, update_student_shortlist } from "../../axios/student";
 import { useDispatch } from "react-redux";
 import { setStudent } from "../../redux/student/studentData";

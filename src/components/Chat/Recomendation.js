@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { recomendation } from "../../axios/chat";
-import { convertTutorIdToName } from "../../helperFunctions/generalHelperFunctions";
+import { convertTutorIdToName } from "../../utils/common";
 
 const Recomendation = ({ AcademyId }) => {
   const [recom, setRecom] = useState("");

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { fetch_tutor_ads, get_tutor_market_data, post_tutor_ad } from "../../../axios/tutor";
 import { useSelector } from "react-redux";
-import { capitalizeFirstLetter, compareStates } from "../../../helperFunctions/generalHelperFunctions";
+import { capitalizeFirstLetter, compareStates, showRevisitToast } from "../../../utils/common";
 import Pill from '../../common/Pill'
 import Loading from "../../common/Loading";
 import { RxCross2 } from "react-icons/rx";

@@ -19,7 +19,7 @@ import {
   setBookedSlots,
   setReservedSlots,
 } from "../../../redux/student/studentBookings";
-import { isEqualTwoObjectsRoot } from "../../../helperFunctions/generalHelperFunctions";
+import { isEqualTwoObjectsRoot } from "../../../utils/common";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import "../../../styles/common.css";

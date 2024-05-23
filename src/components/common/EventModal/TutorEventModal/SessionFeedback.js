@@ -1,7 +1,7 @@
 import React from 'react'
 import StarRating from '../../StarRating'
 import Loading from '../../Loading'
-import { convertTutorIdToName } from '../../../../helperFunctions/generalHelperFunctions'
+import { convertTutorIdToName } from '../../../../utils/common'
 
 export const SessionFeedback = ({ clickedSlot, questions, questionLoading, showTutorFeedback }) => {
     return (

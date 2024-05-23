@@ -6,7 +6,7 @@ import { get_my_edu, post_tutor_setup, setAgreementDateToNullForAll } from "../.
 import Loading from "../common/Loading";
 import { setTutor } from "../../redux/tutor/tutorData";
 import { useDispatch, useSelector } from "react-redux";
-import { showDate } from "../../helperFunctions/timeHelperFunctions";
+import { showDate } from "../../utils/moment";
 import { convertToDate } from "../common/Calendar/Calendar";
 import { PROFILE_STATUS } from "../../constants/constants";
 import { toast } from "react-toastify";
