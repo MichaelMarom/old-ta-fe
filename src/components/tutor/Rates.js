@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setTutor } from "../../redux/tutor/tutorData";
 import Select from "../common/Select";
 import SendCodeModal from "./SendCodeModal";
+import { MandotoryFieldLabel } from "./TutorSetup";
 
 const generateDiscountCode = () => {
   const length = 8;
@@ -280,12 +281,16 @@ const Rates = () => {
                 className="dropdown d-flex align-items-center mb-4"
                 style={{ width: "100%" }}
               >
-                <label>Tutor Cancellation Policy <Tooltip direction="bottomleft"
+                <div style={{fontWeight:"bold", fontSize:"13px"}}>
+               <MandotoryFieldLabel text="Tutor Cancellation Policy"/>
+
+                </div>
+                <Tooltip direction="bottomleft"
                   text="How many hours before the lesson, you allow the student to cancel without penalty?"
                   width="200px"
                 >
                   <FaInfoCircle size={20} color="#0096ff" />
-                </Tooltip></label>
+                </Tooltip>
 
                 <button
                   style={{ pointerEvents: editMode ? "auto" : "none" }}

@@ -12,23 +12,58 @@ const SubjectCard = ({ subject, rateVal, gradesVal, faculty, id }) => {
     const [editable, setEditable] = useState(false);
     const tutorId = localStorage.getItem('tutor_user_id')
     const options = [
+        // {
+        //     value: 'k',
+        //     text: 'K'
+        // },
         {
-            value: 'K-3',
-            text: 'K-3'
+            value: '1st',
+            text: '1st Grade'
         },
         {
-            value: '4-6',
-            text: '4-6'
+            value: '2nd',
+            text: '2nd Grade'
         },
         {
-            value: '7-9',
-            text: '7-9'
+            value: '3rd',
+            text: '3rd Grade'
         },
         {
-            value: '10-12',
-            text: '10-12'
-        }, {
-            value: "University"
+            value: '4th',
+            text: '4th Grade'
+        },{
+            value: '5th',
+            text: '5th Grade'
+        },
+        {
+            value: '6th',
+            text: '6th Grade'
+        },
+        {
+            value: '7th',
+            text: '7th Grade'
+        },{
+            value: '8th',
+            text: '8th Grade'
+        },{
+            value: '9th',
+            text: '9th Grade'
+        },
+        {
+            value: '10th',
+            text: '10th Grade'
+        }
+        ,{
+            value: '11th',
+            text: '11th Grade'
+        },
+        {
+            value: '12th',
+            text: '12th Grade'
+        },
+        {
+            value: 'university',
+            text: 'University'
         }
     ]
 
@@ -82,7 +117,7 @@ const SubjectCard = ({ subject, rateVal, gradesVal, faculty, id }) => {
 
                 <div className='d-flex col-6 flex-wrap'>
                     {options.map(option =>
-                        <GradePills editable={editable} grade={option.value} setGrades={setGrades} grades={grades} />)
+                        <GradePills editable={editable} hasIcon={false} grade={option.value} setGrades={setGrades} grades={grades} />)
                     }
                 </div>
                 <div className='col-2 text-center'>

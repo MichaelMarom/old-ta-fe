@@ -70,10 +70,6 @@
     }
 }
 
-body {
-    overflow-wrap: break-word;
-}
-
 .agreement {
     display: block;
     position: relative;

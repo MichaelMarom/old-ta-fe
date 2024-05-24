@@ -422,7 +422,9 @@ const Education = () => {
   // comparing DB, Local
   useEffect(() => {
     setUnSavedChanges(compareStates(dbValues, fieldValues));
+    console.log(compareStates(dbValues, fieldValues),dbValues.WorkExperience, fieldValues.WorkExperience, 101)
   }, [dbValues, fieldValues]);
+  console.log(unSavedChanges, 102)
 
   //fetching DB
 
@@ -527,8 +529,8 @@ const Education = () => {
   }, []);
 
   useEffect(() => {
-    let experiences = EXPERIENCE.map((item) => (
-      <option key={item} className={item} value={item}>
+    let experiences = EXPERIENCE.map((item, index) => (
+      <option key={index} className={item} value={item}>
         {item}
       </option>
     ));
@@ -570,8 +572,8 @@ const Education = () => {
     //         console.log(err)
     //     })
 
-    let eduLevels = LEVEL.map((item) => (
-      <option key={item} className={item} value={item}>
+    let eduLevels = LEVEL.map((item, index) => (
+      <option key={index} className={item} value={item}>
         {item}
       </option>
     ));
@@ -715,21 +717,18 @@ const Education = () => {
 
   if (fetchingEdu) return <Loading loadingText="Fetching Tutor Eduction..." />;
   return (
-    <div style={{ heightp: "70vh", overflowY: "auto", overflowX: "hidden" }}>
+    <div style={{ height: "70vh", overflowY: "auto", overflowX: "hidden" }}>
       <div className="container tutor-tab-education">
         <h6 className="tutor-tab-education-notice highlight">
-          Tutor does not have to be an academy graduate in order to lecture
-          his knowledge. However, when you select your academic background,
-          you must upload your diploma and/or Certificate(s). You have 7
-          days to do that. Until your credentials are uploaded, "X" icon is
-          being shown near the appropriate field. When your documents are
-          uploaded, the "X" icon is changed to a green "Verified" logo. The
-          student or parents can see your status when making their decision
-          of selecting you.
+          In the realm of tutoring, possessing a formal tutor's degree is not a prerequisite for imparting
+          knowledge. Nevertheless, for the purpose of validating tutor's educational background, it
+          is mandatory to submit diploma or certificate. Initially, an "X" icon will be displayed next to the relevant field, indicating the
+          pending status of document submission. Upon successful upload of the credentials, this
+          icon will transform into a green "Verified" emblem, thereby providing assurance to
+          students and parents during the tutor selection process.
         </h6>
         <form action="" onSubmit={handleSave}>
           <div className="tutor-tab-education-info pt-4 ">
-
 
             <div className="d-flex  row border p-3 shadow " style={{ background: editMode ? "inherit" : "#e1e1e1" }}>
               <h6 className="border-bottom">Experience</h6>
@@ -1392,6 +1391,22 @@ const Education = () => {
           <div
             className="tutor-tab-education-experience"
           >
+            <div style={{ width: "450px", fontWeight:"bold" }}>
+              <MandotoryFieldLabel text=" Work Experience" />
+              <DebounceInput
+                delay={2000}
+                className="work-exp"
+                value={workExperience}
+                setInputValue={set_workExperience}
+                readOnly={!editMode}
+                placeholder="Enter Your Work Experience"
+                height="800px"
+                debounceCallback={() =>
+                  dynamicSave("WorkExperience", workExperience)
+                }
+                element="user-rich-editor"
+              />
+            </div>
 
             <div>
               <Button
@@ -1422,47 +1437,10 @@ const Education = () => {
                   element="rich-editor"
                   height="400px"
                 />
-                {/* <RichTextEditor
-                                    className="references"
-                                    value={references}
-                                    onChange={(value) => setReferences(value)}
-                                    readOnly={!editMode}
-                                    placeholder={`Tutoring academy recommends using a digital pen made by Wacom for the collaboration tab whiteboard. Basic models are CTL-4100 & 6100. Check their official website www.wacom.com
-                                    Cost: $50 or less
-                                    `}
-                                    height='400px'
-                                /> */}
               </div>
             )}
-            <div style={{ width: "450px" }}>
-              <DebounceInput
-                delay={2000}
-                className="work-exp"
-                value={workExperience}
-                setInputValue={set_workExperience}
-                readOnly={!editMode}
-                placeholder="Enter Your Work Experience"
-                height="800px"
-                debounceCallback={() =>
-                  dynamicSave("WorkExperience", workExperience)
-                }
-                element="user-rich-editor"
-              />
 
-              {/* <UserRichTextEditor
-                                className="work-exp"
-                                value={workExperience}
-                                onChange={handleEditorChange}
-                                readOnly={!editMode}
-                                placeholder="Enter Your Work Experience"
-                                height='800px'
-                                required
-
-                            />
- */}
-            </div>
           </div>
-
           <Actions
             editDisabled={editMode}
             // saveDisabled={!editMode}

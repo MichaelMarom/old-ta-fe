@@ -14,16 +14,6 @@
         pointer-events: none;
     }
 
-    html,
-    body {
-        height: 100%;
-        width: 100%;
-        overflow: scroll;
-        padding: 0;
-        margin: 0;
-        user-select: none;
-    }
-
     .class-header {
         height: 80px;
         width: 100%;

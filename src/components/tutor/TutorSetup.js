@@ -342,9 +342,7 @@ const TutorSetup = () => {
     if (!isValid) {
       return toast.warning("Please enter the correct phone number");
     }
-    if (!video || !photo)
-      toast.warning(`You did not upload your Photo or Video, therefore 
-    your Profile remains in 'Pending' status, until you upload the missing items!`, { autoClose: false });
+    
     // if (!tutorGrades?.length > 0) {
     //   return toast.warning("Please select at least one School grade");
     // }
@@ -669,7 +667,42 @@ const TutorSetup = () => {
                     <p className="button__text">Upload </p>
                   </div>
                 </label>
+                <div
+                  className="form-check form-switch d-flex gap-2 border mt-2 rounded py-2"
+                  style={{ fontSize: "12px " }}
+                >
+                  <input
+                    disabled={!editMode}
+                    className="form-check-input "
+                    type="checkbox"
+                    role="switch"
+                    style={{
+                      width: "30px",
+                      height: "15px",
+                    }}
+                    onChange={() => toast.info("Tutor must conduct 40 hours before can activate “Agency” option.")}
+                  //  checked={vacation_mode}
+                  />
+                  <label
+                    className="form-check-label mr-3"
+                    htmlFor="flexSwitchCheckChecked"
+                  >
+                    Agency Operator
+                  </label>
+                  <ToolTip
+                    text="The Tutoring Academy platform presents a unique 'Agency' opportunity, 
+                  enabling you to enhance your business by recruiting and supervising other 
+                  tutors. This model allows for scalability by setting a markup for each tutor's 
+                  services, thereby creating a potential revenue stream. It's an innovative 
+                  approach to expand your educational services while managing and growing a team 
+                  of skilled tutors."
+                    width="200px"
+                  />
+
+                </div>
               </div>
+
+
               <div className="" style={{ width: "23%" }}>
                 <div
                   style={{
@@ -1193,60 +1226,36 @@ const TutorSetup = () => {
         <div className="mt-4 ">
           <div
             className="d-flex justify-content-center"
-            style={{ gap: "10px", width: "86%" }}
+            style={{ gap: "20px", width: "100%" }}
           >
-            <div
-              className="border rounded p-2 shadow d-flex flex-column justify-content-between"
+             <div
+              className="mt-2"
               style={{
                 fontWeight: "bold",
                 textAlign: "center",
-                width: "40%",
-                height: "120px",
+                width: "50%",
               }}
             >
-              {/* <label>Grades I teach</label> */}
-              <MandotoryFieldLabel text="Grades I Teach" />
-              <div className="tutor-grades">
-                <ul className="grades-sec">
-                  {grades.map((item, index) => {
-                    const isChecked = tutorGrades.includes(item.grade);
-                    return (
-                      <li key={index}>
-                        <div
-                          className="input-cnt"
-                          style={{
-                            width: "fit-content",
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                        >
-                          <input
-                            style={{
-                              background: "blue",
-                              color: "blue",
-                              height: "25px",
-                              width: "25px",
-                            }}
-                            type="checkbox"
-                            checked={isChecked}
-                            disabled={!editMode}
-                            id={item.grade}
-                            onChange={() => handleTutorGrade(item.grade)}
-                            className=" grades"
-                          />
-                          &nbsp;
-                          <label htmlFor={item.grade}>{item.grade}</label>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
+              <MandotoryFieldLabel text="Profile Headline" />
+              <input
+                className="form-control m-0 shadow "
+                value={headline}
+                spellCheck="true"
+                disabled={!editMode}
+                placeholder="Write A Catchy Headline.. Example: 21 years experienced nuclear science professor."
+                onChange={(e) =>
+                  counter(e.target.value, e.target, set_headline, 80)
+                }
+                type="text"
+              />
+              <div className="inputValidator">
+                Your have reached the max limit of 80 characters.
               </div>
             </div>
+
             <div
               className="border p-2 shadow rounded"
-              style={{ width: "40%", height: "120px" }}
+              style={{ width: "30%", height: "120px" }}
             >
               <div className="d-flex gap-3">
                 <div
@@ -1282,40 +1291,7 @@ const TutorSetup = () => {
                   />
 
                 </div>
-                <div
-                  className="form-check form-switch d-flex gap-3"
-                  style={{ fontSize: "16px " }}
-                >
-                  <input
-                    disabled={!editMode}
-                    className="form-check-input "
-                    type="checkbox"
-                    role="switch"
-                    style={{
-                      width: "30px",
-                      height: "15px",
-                    }}
-                    onChange={() => toast.info("Tutor must conduct 40 hours before can activate “Agency” option.")}
-                  //  checked={vacation_mode}
-                  />
-                  <label
-                    className="form-check-label mr-3"
-                    htmlFor="flexSwitchCheckChecked"
-                  >
-                    Agency Operator
-                  </label>
-                  <ToolTip
-                    text="The Tutoring Academy platform presents a unique 'Agency' opportunity, 
-                  enabling you to enhance your business by recruiting and supervising other 
-                  tutors. This model allows for scalability by setting a markup for each tutor's 
-                  services, thereby creating a potential revenue stream. It's an innovative 
-                  approach to expand your educational services while managing and growing a team 
-                  of skilled tutors."
-                    width="200px"
-                  />
-
-                </div>
-
+                
               </div>
               {vacation_mode && (
                 <div>
@@ -1372,60 +1348,33 @@ const TutorSetup = () => {
             </div>
           </div>
 
-          <div style={{ width: "86%" }}>
+          <div style={{ width: "100%" }}>
+           
             <div
-              className="mt-2"
-              style={{
-                fontWeight: "bold",
-                margin: "auto",
-
-                textAlign: "center",
-                width: "60%",
-              }}
-            >
-              <MandotoryFieldLabel text="Profile Headline" />
-              <input
-                className="form-control m-0 shadow w-100"
-                value={headline}
-                spellCheck="true"
-                disabled={!editMode}
-                placeholder="Write A Catchy Headline.. Example: 21 years experienced nuclear science professor."
-                onChange={(e) =>
-                  counter(e.target.value, e.target, set_headline, 80)
-                }
-                type="text"
-              />
-              <div className="inputValidator">
-                Your have reached the max limit of 80 characters.
-              </div>
-            </div>
-
-            <div
-              className="tutor-setup-bottom-field d-flex justify-content-between"
+              className="tutor-setup-bottom-field d-flex justify-content-center "
               style={{ gap: "20px" }}
             >
               <div
                 className="profile-headline"
-                style={{ textAlign: "center", float: "left", fontWeight: "bold" }}
+                style={{ textAlign: "center", float: "left", fontWeight: "bold", width:
+                "  40%"
+                 }}
               >
                 <MandotoryFieldLabel text="Introduction" />
                 <textarea
                   className="form-control m-0 shadow"
                   value={intro}
                   maxLength={500}
-                  placeholder="The Academy mandates the tutor uploading a self introductionary video. 
-                    It's important for the student to check if the tutor accent is clear for him.
-                    A self-introduction video is a great way to showcase your personality and teaching style to potential students. 
-                    Here are some tips on how to create a self-introduction video of tutor to students.
-                    
-                    - Start with a friendly greeting and introduce yourself by name, location and subject you teach.
-                    - Explain why you are passionate about teaching and what you can offer to your students, such as your qualifications, experience, teaching methods and goals.
-                    - Give some examples of how you make your lessons engaging, interactive and fun, such as using multimedia, games, quizzes or real-life scenarios.
-                    - End with a call to action, such as inviting the students to book a trial lesson with you or to check out your profile for more information.
-                    - Keep your video short and concise, ideally between 45-90 seconds.
-                    - Use a clear and professional tone, avoid slang, jargon or filler words.
-                    - Record your video in a quiet and well-lit place, with a neutral background and good audio quality.
-                    - Review your video before uploading it and make sure it is error-free and reflects your best self.
+                  placeholder="Crafting an engaging introduction as a tutor on an online platform 
+                  involves highlighting your qualifications, teaching philosophy, and experience 
+                  in a concise and compelling manner. Begin with your name and the subject you 
+                  specialize in, ensuring to communicate your passion for teaching and the unique 
+                  approach you bring to your lessons. It's also beneficial to mention any notable 
+                  achievements or certifications that may build credibility and trust with 
+                  potential students. Remember to keep the language simple and jargon-free, making
+                  it accessible to a broad audience. Incorporating multimedia elements like a 
+                  profile picture or a brief introductory video can also enhance your profile, 
+                  giving students a better sense of your personality and teaching style.
                     "
                   onInput={(e) =>
                     counter(e.target.value, e.target, set_intro, 500)
@@ -1443,7 +1392,7 @@ const TutorSetup = () => {
 
               <div
                 className="profile-motivation"
-                style={{ textAlign: "center", float: "right", fontWeight: "bold" }}
+                style={{ textAlign: "center", float: "right", fontWeight: "bold",width:"40%" }}
               >
                 <MandotoryFieldLabel text={"Motivate"} />
                 <textarea
@@ -1451,11 +1400,14 @@ const TutorSetup = () => {
                   value={motivation}
                   disabled={!editMode}
                   maxLength={500}
-                  placeholder='Write SomWething That will motivate Your Students. 
+                  placeholder='Write Somethingt that will motivate Your Students. 
                 Use the "Motivate" tab to set up your promotions. 
-                Like up to 30 minutes introductionary session. Discount for multi students tutoring, or paid 
-                subscription for multi lessons...If you hold a teacher certificate, and wish to provide your
-                 profession to a full class of students in a public school, you can charge the school a premium.'
+                Offering an introductory session for half price can spark curiosity and engagement 
+                among students.
+                Discount for multi students tutoring, or paid subscription for multi lessons, 
+                is motivating factor.
+                If you hold a teacher certificate, and wish to provide your profession to a full
+                class of students in a public school, you can charge the school a premium.'
                   onInput={(e) =>
                     counter(e.target.value, e.target, set_motivation, 500)
                   }

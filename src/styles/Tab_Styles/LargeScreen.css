@@ -145,11 +145,6 @@
     display: none;
 }
 
-html,
-body {
-    overflow: hidden;
-}
-
 @media screen and (min-width: 800px) {
     * {
         box-sizing: border-box;

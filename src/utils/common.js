@@ -94,19 +94,19 @@ export function getFileExtension(filename) {
  * @returns Boolean - if dbValues = localValues
  */
 export const compareStates = (dbState, currentState) => {
-  // console.log(dbState, currentState)
-  if (!(Object.keys(dbState).length)) return false;
+// console.log(dbState, currentState)
+if (!(Object.keys(dbState).length)) return false;
 
-  for (const key in currentState) {
-    if(['Bach_College_State'].includes(key)) return false;
-    console.log(currentState[key], key, dbState?.[key], currentState[key] !== dbState?.[key], !_.isEqual(currentState[key], dbState[key]))
-    if (_.isObject(currentState[key]) && !_.isEqual(currentState[key], dbState[key])) return true
-    if (!_.isObject(currentState[key]) &&
-      currentState[key] !== dbState?.[key]) {
-      return true
-    }
+for (const key in currentState) {
+  // console.log(currentState[key], key, dbState?.[key], currentState[key]!==undefined, currentState[key] !== dbState?.[key], !_.isEqual(currentState[key], dbState[key]))
+  if (_.isObject(currentState[key]) && currentState[key]!==undefined && !_.isEqual(currentState[key], dbState[key])) return true
+ 
+  if (!_.isObject(currentState[key]) &&
+    currentState[key] !== dbState?.[key] &&  currentState[key]!==undefined) {
+    return true
   }
-  return false
+}
+return false
 };
 
 
