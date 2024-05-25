@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setTutor } from "../../redux/tutor/tutorData";
 import Select from "../common/Select";
 import SendCodeModal from "./SendCodeModal";
-import { MandotoryFieldLabel } from "./TutorSetup";
+import { MandatoryFieldLabel } from "./TutorSetup";
 
 const generateDiscountCode = () => {
   const length = 8;
@@ -282,7 +282,7 @@ const Rates = () => {
                 style={{ width: "100%" }}
               >
                 <div style={{fontWeight:"bold", fontSize:"13px"}}>
-               <MandotoryFieldLabel text="Tutor Cancellation Policy"/>
+               <MandatoryFieldLabel text="Tutor Cancellation Policy"/>
 
                 </div>
                 <Tooltip direction="bottomleft"

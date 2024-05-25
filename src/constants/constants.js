@@ -732,7 +732,7 @@ export const STATES = [
   },
   {
     "Id": 24,
-    "State": "MY"
+    "State": "MI"
   },
   {
     "Id": 25,

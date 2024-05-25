@@ -5,6 +5,11 @@
     border-radius: 0.5rem;
 }
 
+.profile-motivation textarea, .profile-headline textarea{
+    text-align: justify;
+    white-space: wrap;
+}
+
 a.active {
     border-bottom: 2px solid #55c57a;
 }

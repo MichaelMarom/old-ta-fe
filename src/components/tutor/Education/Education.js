@@ -30,7 +30,7 @@ import ReactDatePicker from "react-datepicker";
 import { useDispatch, useSelector } from "react-redux";
 import { setTutor } from "../../../redux/tutor/tutorData";
 import DebounceInput from "../../common/DebounceInput";
-import { MandotoryFieldLabel } from "../TutorSetup";
+import { MandatoryFieldLabel } from "../TutorSetup";
 import FormSelect from '../../common/Select'
 
 const languageOptions = LANGUAGES.map((language) => ({
@@ -746,7 +746,7 @@ const Education = () => {
                   <FormSelect
                     label={
                       <>
-                        <MandotoryFieldLabel text={"Education Level"} />
+                        <MandatoryFieldLabel text={"Education Level"} />
                         <Tooltip
                           width="250px"
                           text=" Please select the highest education level that you have earned diploma from (could be high school). If you selected academic education level, but cannot provide a proof in a form of diploma, we would have to decline your application."
@@ -771,7 +771,7 @@ const Education = () => {
 
                 <div className="col-md-4" style={{ fontSize: "14px" }}>
                   <FormSelect
-                    label={<MandotoryFieldLabel text={"Experience"} />}
+                    label={<MandatoryFieldLabel text={"Experience"} />}
                     id="experience"
                     className="form-select m-0"
                     onChange={(e) => {
@@ -803,7 +803,7 @@ const Education = () => {
                     <div className="col-md-4" style={{ fontSize: "14px" }}>
                       <DebounceInput
                         label={
-                          <MandotoryFieldLabel text=
+                          <MandatoryFieldLabel text=
                             {level === "Associate Degree" ||
                               level === "Undergraduate Student"
                               ? "College Name"
@@ -828,7 +828,7 @@ const Education = () => {
 
                         <FormSelect
 
-                          label={<MandotoryFieldLabel text={level === "Associate Degree"
+                          label={<MandatoryFieldLabel text={level === "Associate Degree"
                             ? "Associate degree"
                             : "Bachelor"
                           }
@@ -854,7 +854,7 @@ const Education = () => {
                         <div>
                           <FormSelect
                             label={
-                              <MandotoryFieldLabel text={"State/Province"} />
+                              <MandatoryFieldLabel text={"State/Province"} />
                             }
                             id="state1"
                             className="form-select m-0 w-100"
@@ -882,7 +882,7 @@ const Education = () => {
                       ) : (
                         <FormSelect
                           label={
-                            <MandotoryFieldLabel text={"Graduation Year"} />
+                            <MandatoryFieldLabel text={"Graduation Year"} />
                           }
                           id="yr1"
                           className="form-select m-0 w-100"
@@ -914,7 +914,7 @@ const Education = () => {
 
                         <DebounceInput
                           label={
-                            <MandotoryFieldLabel text="Institute Name" />
+                            <MandatoryFieldLabel text="Institute Name" />
                           }
                           element="app-input"
                           editMode={editMode}
@@ -932,7 +932,7 @@ const Education = () => {
                         <div>
                           <FormSelect
                             label={
-                              <MandotoryFieldLabel text="Country for Master" />
+                              <MandatoryFieldLabel text="Country for Master" />
 
                             }
 
@@ -958,7 +958,7 @@ const Education = () => {
 
                             <FormSelect
                               label={
-                                <MandotoryFieldLabel text=" Satte/Province" />
+                                <MandatoryFieldLabel text=" Satte/Province" />
                               }
                               className="form-select m-0 w-100"
                               onChange={(e) => {
@@ -986,7 +986,7 @@ const Education = () => {
 
                         <FormSelect
                           label={
-                            <MandotoryFieldLabel text="Graduation Year" />
+                            <MandatoryFieldLabel text="Graduation Year" />
 
                           }
                           id="yr2"
@@ -1023,7 +1023,7 @@ const Education = () => {
 
                         <DebounceInput
                           label={
-                            <MandotoryFieldLabel text="Institute Name" />
+                            <MandatoryFieldLabel text="Institute Name" />
                           }
                           element="app-input"
                           type="text"
@@ -1041,7 +1041,7 @@ const Education = () => {
                         <div>
                           <FormSelect
                             label={
-                              <MandotoryFieldLabel text="Country For Doctorate" />
+                              <MandatoryFieldLabel text="Country For Doctorate" />
                             }
                             onChange={(e) => {
                               setCountryForDoc(e.target.value);
@@ -1065,7 +1065,7 @@ const Education = () => {
 
                             <FormSelect
                               label={
-                                <MandotoryFieldLabel text="State/Province" />
+                                <MandatoryFieldLabel text="State/Province" />
                               }
                               className="form-select m-0 w-100"
                               onChange={(e) => {
@@ -1090,7 +1090,7 @@ const Education = () => {
 
                         <FormSelect
                           label={
-                            <MandotoryFieldLabel text="Graduation Year" />
+                            <MandatoryFieldLabel text="Graduation Year" />
                           }
                           className="form-select m-0 w-100"
                           onChange={(e) => {
@@ -1117,7 +1117,7 @@ const Education = () => {
                   <div className="d-flex justify-content-between align-items-end mt-3">
                     <div className="col-md-4" style={{ fontSize: "14px" }}>
                       <div className="d-flex align-items-end">
-                        <MandotoryFieldLabel text="Upload Degree" />
+                        <MandatoryFieldLabel text="Upload Degree" />
 
                         <Tooltip
                           width="200px"
@@ -1161,7 +1161,7 @@ const Education = () => {
 
                         <FormSelect
                           label={
-                            <MandotoryFieldLabel text="Country For Degree" />
+                            <MandatoryFieldLabel text="Country For Degree" />
                           }
                           editMode={editMode}
                           value={countryForDeg}
@@ -1185,7 +1185,7 @@ const Education = () => {
 
                           <FormSelect
                             label={
-                              <MandotoryFieldLabel text="State/Province" />
+                              <MandatoryFieldLabel text="State/Province" />
                             }
                             className="form-select m-0 w-100"
                             onChange={(e) => {
@@ -1210,7 +1210,7 @@ const Education = () => {
 
                       <FormSelect
                         label={
-                          <MandotoryFieldLabel text="Diploma Earned Year" />
+                          <MandatoryFieldLabel text="Diploma Earned Year" />
 
                         }
                         className="form-select m-0 w-100"
@@ -1245,7 +1245,7 @@ const Education = () => {
                   <FormSelect
                     label={
                       <>
-                        <MandotoryFieldLabel text="Certification" />
+                        <MandatoryFieldLabel text="Certification" />
 
                         <Tooltip
                           width="200px"
@@ -1314,7 +1314,7 @@ const Education = () => {
 
                     </div>
                     <div className="col-md-4" style={{ fontSize: "14px" }}>
-                      <MandotoryFieldLabel text="Certificate Expiration" />
+                      <MandatoryFieldLabel text="Certificate Expiration" />
 
                       <ReactDatePicker
                         selected={moment
@@ -1347,7 +1347,7 @@ const Education = () => {
               <h6 className="border-bottom">Languages</h6>
               <div className="d-flex justify-content-between align-items-end">
                 <div className="col-md-5">
-                  <MandotoryFieldLabel text=" Select Native (Primary) Language" />
+                  <MandatoryFieldLabel text=" Select Native (Primary) Language" />
                   <Select
                     isMulti={false}
                     placeholder="Select Native Languages"
@@ -1392,7 +1392,7 @@ const Education = () => {
             className="tutor-tab-education-experience"
           >
             <div style={{ width: "450px", fontWeight:"bold" }}>
-              <MandotoryFieldLabel text=" Work Experience" />
+              <MandatoryFieldLabel text=" Work Experience" />
               <DebounceInput
                 delay={2000}
                 className="work-exp"

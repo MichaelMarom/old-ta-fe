@@ -42,6 +42,7 @@ import { uploadVideoToAzure } from "../../utils/uploadVideo";
 import Avatar from "../common/Avatar";
 import Input from "../common/Input";
 import Select from "../common/Select";
+import VacationSettingModal from "./VacationSettingModal";
 
 const phoneUtil = PhoneNumberUtil.getInstance();
 const isPhoneValid = (phone) => {
@@ -74,7 +75,7 @@ const TutorSetup = () => {
   const lastNameInputRef = useRef(null);
   let [video, set_video] = useState("");
   const [videoError, setVideoError] = useState(false);
-  console.log(cell)
+  const [isOpen, setIsOpen] = useState(false);
 
   let grades = [
     { grade: "1st grade" },
@@ -342,7 +343,7 @@ const TutorSetup = () => {
     if (!isValid) {
       return toast.warning("Please enter the correct phone number");
     }
-    
+
     // if (!tutorGrades?.length > 0) {
     //   return toast.warning("Please select at least one School grade");
     // }
@@ -532,7 +533,7 @@ const TutorSetup = () => {
   let handleVideo = async (e) => {
     const file = e.target.files[0];
     console.log(file, file.type)
-    if(file.size > 10485760)
+    if (file.size > 10485760)
       return toast.warning("Video size should be less than 10MB")
     if (!file?.type || file.type.split("/")?.[0] !== "video") {
       alert("Only Video Can Be Uploaded To This Field");
@@ -575,20 +576,6 @@ const TutorSetup = () => {
     }
   }, [vacation_mode]);
 
-  const gmtInInt = timeZone ? parseInt(timeZone) : 0;
-  // for reactdatepicker because it opertae on new Date() not on moment.
-  // getting getLocalGMT and then multiple it with -1 to add (-5:00) or subtract (+5:00)
-  const getLocalGMT =
-    parseInt(
-      ((offset) =>
-        (offset < 0 ? "+" : "-") +
-        ("00" + Math.abs((offset / 60) | 0)).slice(-2) +
-        ":" +
-        ("00" + Math.abs(offset % 60)).slice(-2))(
-          new Date().getTimezoneOffset()
-        )
-    ) * -1;
-
   if (tutorDataLoading) return <Loading height="80vh" />;
   return (
     <form onSubmit={saveTutorSetup}>
@@ -602,8 +589,9 @@ const TutorSetup = () => {
             marginTop: "0",
           }}
         >
-          <div className="highlight w-100 m-0 justify-content-start">
-            <span className="text-danger" style={{ fontSize: "20px", fontWeight: "bold" }}> *</span> = Mandotory Fields
+          <div className="highlight w-100 m-0 justify-content-start text-sm">
+            <span className="text-danger" style={{ fontSize: "20px", fontWeight: "bold" }}>
+              *</span> = Mandatory Fields
           </div>
 
           <div className="d-flex flex-column">
@@ -611,7 +599,7 @@ const TutorSetup = () => {
             <div className="d-flex justify-content-between" style={{ gap: "20px" }}>
               <div className="d-flex flex-column align-items-center" style={{ width: "15%", }}>
                 <h6 className="text-start m-0" style={{ whiteSpace: "nowrap" }}>
-                  Profile Photo<span className="text-danger " style={{fontSize:"25px", fontWeight:"bold"}}>*</span>
+                  Profile Photo<span className="text-danger " style={{ fontSize: "25px", fontWeight: "bold" }}>*</span>
                 </h6>
                 {picUploading && (
                   <div className="mb-2">
@@ -700,6 +688,100 @@ const TutorSetup = () => {
                   />
 
                 </div>
+                
+            <div
+              className="border p-2 shadow rounded"
+            >
+              <div className="d-flex gap-1">
+                <div
+                  className="form-check form-switch d-flex gap-2 w-100"
+                  style={{ fontSize: "12px " }}
+                >
+                  <input
+                    disabled={!editMode}
+                    className="form-check-input "
+                    type="checkbox"
+                    role="switch"
+                    style={{
+                      width: "30px",
+                      height: "15px",
+                    }}
+                    onChange={() => {set_vacation_mode(!vacation_mode); 
+                      setIsOpen(!isOpen)}}
+                    checked={vacation_mode}
+                  />
+                  <label
+                    className="form-check-label mr-3"
+                    htmlFor="flexSwitchCheckChecked"
+                  >
+                    Vacation Mode
+                  </label>
+                  <ToolTip
+                    text="To set your unavailable days for tutoring, simply turn the switch to 'On'.
+                  This action allows you to choose the days you wish to take off. 
+                  Your selected dates will be highlighted in green on your calendar, signaling to
+                  students that you are not available for lessons during this time. Once the end 
+                  date is reached, the switch will automatically revert to 'Off', making you 
+                  available for bookings again."
+                    width="200px"
+                  />
+
+                </div>
+
+              </div>
+              {/* {vacation_mode && (
+                <div>
+                  <h6 className="text-start">Enter Start and end Date</h6>
+                  <div
+                    className="d-flex align-items-center"
+                    style={{ gap: "10px" }}
+                  >
+                    <ReactDatePicker
+                      disabled={!editMode}
+                      selected={
+                        new Date(
+                          start
+                            ? start
+                            : moment(new Date()).toDate().getTime() +
+                            (gmtInInt + getLocalGMT) * 60 * 60 * 1000
+                        )
+                      }
+                      onChange={(date) => {
+                        date.setHours(0);
+                        date.setMinutes(0);
+                        date.setSeconds(0);
+                        const originalMoment = moment
+                          .tz(date, tutor.timeZone)
+                          .startOf("day");
+                        const utcMomentStartDate = originalMoment.clone();
+                        // utcMomentStartDate.utc()
+                        // console.log(originalMoment.get('hour'), utcMomentStartDate.get('hour'), originalMoment.get('date'), date.getDate(), date.getHours())
+                        setStart(utcMomentStartDate);
+                      }}
+                      minDate={new Date()}
+                      dateFormat="MMM d, yyyy"
+                      className="form-control"
+                    />
+
+                    <h6 className="m-0">and</h6>
+                    <ReactDatePicker
+                      disabled={!editMode}
+                      minDate={new Date(start)}
+                      selected={moment(end ? end : new Date()).toDate()}
+                      onChange={(date) => {
+                        date.setHours(0);
+                        date.setMinutes(0);
+                        date.setSeconds(0);
+                        const originalMoment = moment(date).endOf("day").utc();
+                        setEnd(originalMoment.toISOString());
+                      }}
+                      dateFormat="MMM d, yyyy"
+                      className="form-control"
+                    />
+                  </div>
+                </div>
+              )} */}
+            </div>
               </div>
 
 
@@ -716,7 +798,7 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
-                    label={<MandotoryFieldLabel text="First Name" />}
+                    label={<MandatoryFieldLabel text="First Name" />}
                     setValue={set_fname}
                     value={fname}
                     editMode={!nameFieldsDisabled}
@@ -756,7 +838,7 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
-                    label={<MandotoryFieldLabel text="Last Name" />}
+                    label={<MandatoryFieldLabel text="Last Name" />}
                     setValue={set_sname}
                     value={lname}
                     editMode={!nameFieldsDisabled}
@@ -848,7 +930,7 @@ const TutorSetup = () => {
                     setValue={set_response_zone}
                     value={response_zone}
                     editMode={editMode}
-                    label={<MandotoryFieldLabel text="Response Time" />}
+                    label={<MandatoryFieldLabel text="Response Time" />}
                     TooltipText={
                       "Select your response time answering the student during business time in your time zone. Please take notice that the student take this fact as one of the considurations of selecting you as tutor."
                     }
@@ -873,7 +955,7 @@ const TutorSetup = () => {
                       setValue={set_timeZone}
                       value={timeZone}
                       editMode={editMode}
-                      label={<MandotoryFieldLabel text="Timezone" />}
+                      label={<MandatoryFieldLabel text="Timezone" />}
                       TooltipText={
                         "Select the Greenwich Mean Time (GMT) zone where you reside. It will let the student configure his time availability conducting lessons with you, when in a different time zone. "
                       }
@@ -967,7 +1049,7 @@ const TutorSetup = () => {
                     setValue={set_country}
                     value={country}
                     editMode={editMode}
-                    label={<MandotoryFieldLabel text="Country" />}
+                    label={<MandatoryFieldLabel text="Country" />}
                   >
                     {countryList}
                   </Select>
@@ -987,7 +1069,7 @@ const TutorSetup = () => {
                       setValue={set_state}
                       value={state}
                       editMode={editMode}
-                      label={<MandotoryFieldLabel text="State/Province" />}
+                      label={<MandatoryFieldLabel text="State/Province" />}
                     >
                       <option value="" disabled>
                         Select State
@@ -1063,7 +1145,7 @@ const TutorSetup = () => {
                   border: "1px solid dotted",
                 }}
               >
-                <h6>Tutor's introduction video<span className="text-danger " style={{fontSize:"25px", fontWeight:"bold"}}>*</span></h6>
+                <h6>Tutor's introduction video<span className="text-danger " style={{ fontSize: "25px", fontWeight: "bold" }}>*</span></h6>
                 <div className="mb-2">
                   {videoUploading && (
                     <Loading
@@ -1219,8 +1301,6 @@ const TutorSetup = () => {
             </div>
 
           </div>
-
-
         </div>
 
         <div className="mt-4 ">
@@ -1228,7 +1308,7 @@ const TutorSetup = () => {
             className="d-flex justify-content-center"
             style={{ gap: "20px", width: "100%" }}
           >
-             <div
+            <div
               className="mt-2"
               style={{
                 fontWeight: "bold",
@@ -1236,136 +1316,53 @@ const TutorSetup = () => {
                 width: "50%",
               }}
             >
-              <MandotoryFieldLabel text="Profile Headline" />
-              <input
-                className="form-control m-0 shadow "
-                value={headline}
-                spellCheck="true"
-                disabled={!editMode}
-                placeholder="Write A Catchy Headline.. Example: 21 years experienced nuclear science professor."
-                onChange={(e) =>
-                  counter(e.target.value, e.target, set_headline, 80)
-                }
-                type="text"
-              />
-              <div className="inputValidator">
-                Your have reached the max limit of 80 characters.
+              <div className="input w-100">
+                <input
+                  className="input__field m-0 shadow form-control"
+                  value={headline}
+                  spellCheck="true"
+                  disabled={!editMode}
+                  placeholder="Write A Catchy Headline.. Example: 21 years experienced nuclear science professor."
+                  onChange={(e) =>
+                    counter(e.target.value, e.target, set_headline, 80)
+                  }
+                  type="text"
+                />
+                <div className="inputValidator">
+                  Your have reached the max limit of 80 characters.
+                </div>
+                <span className="" style={{
+                  position: "absolute",
+                  top: "-25px",
+                  left: "10px",
+                  background: editMode ? "white" : "#e1e1e1",
+                  padding: "2px", fontSize: "12px"
+                }}><MandatoryFieldLabel text={"Profile Headline"} /></span>
+
               </div>
             </div>
 
-            <div
-              className="border p-2 shadow rounded"
-              style={{ width: "30%", height: "120px" }}
-            >
-              <div className="d-flex gap-3">
-                <div
-                  className="form-check form-switch d-flex gap-3"
-                  style={{ fontSize: "16px " }}
-                >
-                  <input
-                    disabled={!editMode}
-                    className="form-check-input "
-                    type="checkbox"
-                    role="switch"
-                    style={{
-                      width: "30px",
-                      height: "15px",
-                    }}
-                    onChange={() => set_vacation_mode(!vacation_mode)}
-                    checked={vacation_mode}
-                  />
-                  <label
-                    className="form-check-label mr-3"
-                    htmlFor="flexSwitchCheckChecked"
-                  >
-                    Vacation Mode
-                  </label>
-                  <ToolTip
-                    text="To set your unavailable days for tutoring, simply turn the switch to 'On'.
-                  This action allows you to choose the days you wish to take off. 
-                  Your selected dates will be highlighted in green on your calendar, signaling to
-                  students that you are not available for lessons during this time. Once the end 
-                  date is reached, the switch will automatically revert to 'Off', making you 
-                  available for bookings again."
-                    width="200px"
-                  />
-
-                </div>
-                
-              </div>
-              {vacation_mode && (
-                <div>
-                  <h6 className="text-start">Enter Start and end Date</h6>
-                  <div
-                    className="d-flex align-items-center"
-                    style={{ gap: "10px" }}
-                  >
-                    <ReactDatePicker
-                      disabled={!editMode}
-                      selected={
-                        new Date(
-                          start
-                            ? start
-                            : moment(new Date()).toDate().getTime() +
-                            (gmtInInt + getLocalGMT) * 60 * 60 * 1000
-                        )
-                      }
-                      onChange={(date) => {
-                        date.setHours(0);
-                        date.setMinutes(0);
-                        date.setSeconds(0);
-                        const originalMoment = moment
-                          .tz(date, tutor.timeZone)
-                          .startOf("day");
-                        const utcMomentStartDate = originalMoment.clone();
-                        // utcMomentStartDate.utc()
-                        // console.log(originalMoment.get('hour'), utcMomentStartDate.get('hour'), originalMoment.get('date'), date.getDate(), date.getHours())
-                        setStart(utcMomentStartDate);
-                      }}
-                      minDate={new Date()}
-                      dateFormat="MMM d, yyyy"
-                      className="form-control"
-                    />
-
-                    <h6 className="m-0">and</h6>
-                    <ReactDatePicker
-                      disabled={!editMode}
-                      minDate={new Date(start)}
-                      selected={moment(end ? end : new Date()).toDate()}
-                      onChange={(date) => {
-                        date.setHours(0);
-                        date.setMinutes(0);
-                        date.setSeconds(0);
-                        const originalMoment = moment(date).endOf("day").utc();
-                        setEnd(originalMoment.toISOString());
-                      }}
-                      dateFormat="MMM d, yyyy"
-                      className="form-control"
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
           </div>
 
           <div style={{ width: "100%" }}>
-           
+
             <div
               className="tutor-setup-bottom-field d-flex justify-content-center "
               style={{ gap: "20px" }}
             >
               <div
                 className="profile-headline"
-                style={{ textAlign: "center", float: "left", fontWeight: "bold", width:
-                "  40%"
-                 }}
+                style={{
+                  textAlign: "center", float: "left", fontWeight: "bold", width:
+                    "  40%"
+                }}
               >
-                <MandotoryFieldLabel text="Introduction" />
-                <textarea
-                  className="form-control m-0 shadow"
-                  value={intro}
-                  maxLength={500}
-                  placeholder="Crafting an engaging introduction as a tutor on an online platform 
+                <div className="input w-100">
+                  <textarea
+                    className="form-control m-0 shadow input__field"
+                    value={intro}
+                    maxLength={500}
+                    placeholder="Crafting an engaging introduction as a tutor on an online platform 
                   involves highlighting your qualifications, teaching philosophy, and experience 
                   in a concise and compelling manner. Begin with your name and the subject you 
                   specialize in, ensuring to communicate your passion for teaching and the unique 
@@ -1376,54 +1373,81 @@ const TutorSetup = () => {
                   profile picture or a brief introductory video can also enhance your profile, 
                   giving students a better sense of your personality and teaching style.
                     "
-                  onInput={(e) =>
-                    counter(e.target.value, e.target, set_intro, 500)
-                  }
-                  style={{ width: "100%", padding: "10px", height: "160px" }}
-                  name=""
-                  spellCheck="true"
-                  disabled={!editMode}
-                  id=""
-                ></textarea>
-                <div className="inputValidator">
-                  Your have reached the max limit of 1500 characters.
+                    onInput={(e) =>
+                      counter(e.target.value, e.target, set_intro, 500)
+                    }
+                    style={{ width: "100%", padding: "10px", height: "160px" }}
+                    name=""
+                    spellCheck="true"
+                    disabled={!editMode}
+                    id=""
+                  ></textarea>
+                  <div className="inputValidator">
+                    Your have reached the max limit of 1500 characters.
+                  </div>
+                  <span className="" style={{
+                    position: "absolute",
+                    top: "-25px",
+                    left: "10px",
+                    background: editMode ? "white" : "#e1e1e1",
+                    padding: "2px", fontSize: "12px"
+                  }}><MandatoryFieldLabel text={"Introduction"} /></span>
+
                 </div>
               </div>
 
               <div
                 className="profile-motivation"
-                style={{ textAlign: "center", float: "right", fontWeight: "bold",width:"40%" }}
+                style={{ textAlign: "center", float: "right", fontWeight: "bold", width: "40%" }}
               >
-                <MandotoryFieldLabel text={"Motivate"} />
-                <textarea
-                  className="form-control m-0 shadow"
-                  value={motivation}
-                  disabled={!editMode}
-                  maxLength={500}
-                  placeholder='Write Somethingt that will motivate Your Students. 
-                Use the "Motivate" tab to set up your promotions. 
-                Offering an introductory session for half price can spark curiosity and engagement 
-                among students.
-                Discount for multi students tutoring, or paid subscription for multi lessons, 
+                <div className="input w-100">
+
+                  <textarea
+                    className="form-control m-0 shadow input___field"
+                    value={motivation}
+                    disabled={!editMode}
+                    maxLength={500}
+                    placeholder='Write Somethingt that will motivate Your Students. Use the "Motivate" tab to set up your promotions. Offering an introductory session for half price can spark curiosity and engagement 
+                among students. Discount for multi students tutoring, or paid subscription for multi lessons, 
                 is motivating factor.
                 If you hold a teacher certificate, and wish to provide your profession to a full
                 class of students in a public school, you can charge the school a premium.'
-                  onInput={(e) =>
-                    counter(e.target.value, e.target, set_motivation, 500)
-                  }
-                  spellCheck="true"
-                  style={{ width: "100%", padding: "10px", height: "160px" }}
-                  name=""
-                  id=""
-                ></textarea>
-                <div className="inputValidator">
-                  Your have reached the max limit of 500 characters.
+                    onInput={(e) =>
+                      counter(e.target.value, e.target, set_motivation, 500)
+                    }
+                    spellCheck="true"
+                    style={{ width: "100%", padding: "10px", height: "160px" }}
+                    name=""
+                    id=""
+                  ></textarea>
+                  <div className="inputValidator">
+                    Your have reached the max limit of 500 characters.
+                  </div>
+                  <span className="" style={{
+                    position: "absolute",
+                    top: "-25px",
+                    left: "10px",
+                    background: editMode ? "white" : "#e1e1e1",
+                    padding: "2px", fontSize: "12px"
+                  }}><MandatoryFieldLabel text={"Motivate"} /></span>
+
                 </div>
               </div>
+
             </div>
           </div>
         </div>
       </div>
+
+      <VacationSettingModal isOpen={isOpen}
+        start={start}
+        end={end}
+        setStart={setStart}
+        setEnd={setEnd}
+        timeZone={timeZone}
+        editMode={editMode}
+        handleClose={() => setIsOpen(false)} />
+
       <Actions
         nextDisabled={!tutor.AcademyId}
         onEdit={handleEditClick}
@@ -1437,7 +1461,7 @@ const TutorSetup = () => {
 };
 
 
-export const MandotoryFieldLabel = ({ text }) => <p>{text}:<span className="text-danger "
+export const MandatoryFieldLabel = ({ text }) => <p>{text}:<span className="text-danger "
   style={{ fontSize: "26px" }}>*</span></p>
 
 export default TutorSetup;
