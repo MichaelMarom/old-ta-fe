@@ -791,7 +791,7 @@ const TutorProfile = () => {
                       {activeTab === "deg" && (
                         <div className="d-flex border shadow flex-column w-75  p-4 justify-content-between">
                           <div className="d-flex justify-content-between align-items-center">
-                            <h5 className=" text-center">Degree Info</h5>
+                            <h5 className="text-center">Degree Info</h5>
                             {/* {data.DegFileName && < FaFilePdf size={32} color='red' style={{ cursor: "pointer" }}
                                                             onClick={() => window.open(`${process.env.REACT_APP_FILES_BASE_PATH}/${data.DegFileName}`, '_blank')}
                                                         />} */}
@@ -799,7 +799,6 @@ const TutorProfile = () => {
 
                           {data.DegCountry ? (
                             <>
-                              {" "}
                               <div
                                 className="d-flex align-items-center"
                                 style={{ gap: "15px" }}

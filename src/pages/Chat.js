@@ -22,6 +22,7 @@ import Recomendation from "../components/Chat/Recomendation";
 function Chat() {
   const [selectedChat, setSelectedChat] = useState({});
   const navigate = useNavigate();
+  const [files, setFiles] = useState({ images: [], pdfs: [] })
   const params = useParams();
   const location = useLocation();
   const { shortlist } = useSelector((state) => state.shortlist);
@@ -69,8 +70,24 @@ function Chat() {
     }
   }, [loggedInUserDetail, selectedChat.id]);
 
-  const sendMessage = async (text) => {
-    if (text.trim() !== "") {
+  const sendFile = () => {
+    const file = document.getElementById("file").files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = async () => {
+      const body = {
+        Sender: loggedInUserDetail.AcademyId,
+        ChatID: selectedChat.id,
+        File: reader.result,
+      };
+      await post_message(body);
+      socket.emit("send-file", body);
+    };
+  }
+
+  const sendMessage = async (text, type, files) => {
+    const messagesToSend = [];
+    if (text.trim() !== "" && type==="text") {
       const newMessage = {
         screenName: selectedChat.screenName,
         senderId: loggedInUserDetail.AcademyId,
@@ -91,6 +108,42 @@ function Chat() {
       await post_message(body);
       delete newMessage.photo;
       socket.emit("send-msg", newMessage);
+    }
+    if (files && files.length > 0) {
+      files.forEach(file => {
+        const fileMessage = {
+          screenName: selectedChat.screenName,
+          senderId: loggedInUserDetail.AcademyId,
+          date:  new Date(),
+          text: null,
+          fileName: file.name,
+          fileUrl: URL.createObjectURL(file),
+          fileType: file.type,
+          photo: loggedInUserDetail.Photo,
+          to: selectedChat.AcademyId,
+          room: selectedChat.id,
+        };
+        messagesToSend.push(fileMessage);
+  
+        const body = {
+          Text: null,
+          Date:  new Date(),
+          Sender: loggedInUserDetail.AcademyId,
+          ChatID: selectedChat.id,
+          FileName: file.name,
+          FileUrl: URL.createObjectURL(file), // You might want to upload the file to a server and get the actual URL instead.
+          FileType: file.type,
+        };
+  
+        post_message(body).then(() => {
+          delete fileMessage.photo;
+          socket.emit("send-msg", fileMessage);
+        });
+      });
+    }
+  
+    if (messagesToSend.length > 0) {
+      setMessages([...messages, ...messagesToSend]);
     }
   };
 
@@ -170,6 +223,7 @@ function Chat() {
                     <Header selectedChat={selectedChat} />
                     <Messages
                       selectedChat={selectedChat}
+                      files={files}
                       messages={messages}
                       fetchingMessages={fetchingMessages}
                     />
@@ -177,6 +231,8 @@ function Chat() {
                       selectedChat={selectedChat}
                       messages={messages}
                       setMessages={setMessages}
+                      files={files}
+                      setFiles={setFiles}
                       sendMessage={sendMessage}
                     />
                   </>

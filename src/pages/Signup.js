@@ -16,11 +16,13 @@ const Signup = () => {
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const role = queryParams.get("role");
+  const [showPassword, setShowPassword] = useState(false);
 
   const [signupFormValues, setSignupFormValues] = useState({
     email: '',
     password: '',
-    role: ''
+    role: 'tutor',
+    confirmPass: ''
   });
   const [loading, setLoading] = useState(false);
   const [verifying, setVerifying] = useState(false)
@@ -41,6 +43,10 @@ const Signup = () => {
     if (!isLoaded) return
     if (!signupFormValues?.email || !signupFormValues?.password || !signupFormValues?.role)
       return toast.error("Please fill all the fields")
+
+    if (signupFormValues?.password !== signupFormValues?.confirmPass) {
+      return toast.error("Passwords do not match")
+    }
     setLoading(true);
     try {
       await signUp.create({
@@ -63,9 +69,7 @@ const Signup = () => {
   const handleVerification = async (e) => {
     setVerifying(true);
     e.preventDefault();
-    if (!isLoaded) {
-      return;
-    }
+    if (!isLoaded) return;
     try {
       const completeSignUp = await signUp.attemptEmailAddressVerification({
         code,
@@ -146,62 +150,84 @@ const Signup = () => {
             </div>
             <div className="col-lg-6 mb-5 mb-lg-0">
               <div className="card m-auto">
-                <h3 className="mt-3 text-center"> Signup {role=='student' && 'as "Student"'}</h3>
+                <h3 className="mt-3 text-center">Signup {role == 'student' && 'as "Student"'}</h3>
 
                 <div className="card-body py-5 px-md-5">
-                  {!pendingVerification ? <form onSubmit={handleSignup}>
-
-                    <div className='row ' style={{ gap: "10px" }}>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        required
-                        className="form-control m-0"
-                        placeholder="Email"
-                        value={signupFormValues.email}
-                        onChange={handleInputChange}
-                      />
-                      <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        required
-                        className="form-control m-0"
-                        placeholder="Password"
-                        value={signupFormValues.password}
-                        onChange={handleInputChange}
-                      />
-
-                      {role !== "student" && <select className="form-select"
-                        name="role"
-                        required
-                        value={signupFormValues.role}
-                        aria-label="Default select example" onChange={handleInputChange}>
-                        <option value="" disabled>Select Role</option>
-                        <option value="tutor">Tutor</option>
-                        {/* //  <option value=""></option>
-                      //  <option value=""></option>
-                      //  <option value=""></option>
-                      //  <option value=""></option> */}
-                      </select>}
-                    </div>
-                    <div className='text-center'>
-                      <TAButton type="submit" loading={loading} buttonText={'Sign Up'} className=" mb-4" />
-                    </div>
-
-                    <div className="text-center">
-                      <p>Already have an account? <Link to="/login">Login</Link></p>
-                    </div>
-
-                  </form> :
+                  {!pendingVerification ?
                     <div>
+                      <h6 className='text-start'>An 8 digit code will be sent to your email after signup</h6>
+                      <form onSubmit={handleSignup}>
+
+                        <div className='row ' style={{ gap: "10px" }}>
+                          <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            required
+                            className="form-control m-0"
+                            placeholder="Email"
+                            value={signupFormValues.email}
+                            onChange={handleInputChange}
+                          />
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            required
+                            className="form-control m-0"
+                            placeholder="Password"
+                            value={signupFormValues.password}
+                            onChange={handleInputChange}
+                          />
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            name="confirmPass"
+                            required
+                            className="form-control m-0"
+                            placeholder="Confirm Password"
+                            value={signupFormValues.confirmPass}
+                            onChange={handleInputChange}
+                          />
+                          <div className=" mt-2" style={{ marginBottom: "-10px" }}>
+                            <input
+                              className="form-check-input d-inline-block"
+                              type="checkbox"
+                              id="show"
+                              role="switch"
+                              onChange={() => setShowPassword(!showPassword)}
+                              checked={showPassword}
+                            />
+                            <label htmlFor="show" className="d-inline-block cursor-pointer" style={{ marginLeft: "5px" }}>
+                              Show password
+                            </label>
+                          </div>
+                          {/* {role !== "student" && <select className="form-select"
+    name="role"
+    required
+    value={signupFormValues.role}
+    aria-label="Default select example" onChange={handleInputChange}>
+    <option value="" disabled>Select Role</option>
+    <option value="tutor">Tutor</option>
+  </select>} */}
+                        </div>
+                        <div className='text-center'>
+                          <TAButton type="submit" loading={loading} buttonText={'Sign Up'} className=" mb-4" />
+                        </div>
+
+                        <div className="text-center">
+                          <p>Already have an account? <Link to="/login">Login</Link></p>
+                        </div>
+
+                      </form>
+                    </div>
+                    :
+                    <div>
+                      <h6 className='text-start'>An 8 digit code was sent to your email</h6>
                       <form className='d-flex justify-content-between flex-column ' onSubmit={handleVerification}>
                         <input type='text' onBlur={() => { }}
                           onChange={(e) => setCode(e.target.value)}
                           required
                           className='form-control' placeholder='Enter Verification Code here' />
-                        <TAButton buttonText={"Verify Email"} loading={verifying} type='submit'
+                        <TAButton buttonText={"Verify Email"} loading={verifying} type='submit' className='w-50'
                         />
                       </form>
                     </div>

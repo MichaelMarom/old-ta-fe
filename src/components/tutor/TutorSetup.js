@@ -127,7 +127,7 @@ const TutorSetup = () => {
 
 
   useEffect(() => {
-    user.role && (!tutor.AcademyId || tutor.Status === 'pending') && !toastShown &&
+    user.role && (tutor.AcademyId && tutor.Status === 'pending') && !toastShown &&
       toast.success(`Please note that your application is currently in 'pending' status. 
     Use the 'Next' or 'Back' buttons at the page footer to navigate between pages. 
     The menu tabs will become active once your application is complete`, {
@@ -141,7 +141,6 @@ const TutorSetup = () => {
   }, [user.role, tutor.AcademyId, tutor.Status, toastShown])
 
   useEffect(() => {
-
     tutor.AcademyId &&
       apiClient
         .get("/tutor/setup/intro", {

@@ -910,3 +910,19 @@
         margin-bottom: 20px
     }
 }
+
+
+.fileAboutToSend{
+    background-color: #e1e1e1;
+    max-height: 0; 
+    opacity: 0;
+    overflow: scroll;
+    overflow-x: hidden;
+    transition: max-height 0.5s ease-out, padding 0.5s ease-out; /* Transition for height and padding */
+}
+
+.fileAboutToSend.open{
+    max-height: 500px; 
+    opacity: 1;
+    padding: 10px;
+}
