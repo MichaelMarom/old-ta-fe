@@ -155,7 +155,7 @@ const Signup = () => {
                 <div className="card-body py-5 px-md-5">
                   {!pendingVerification ?
                     <div>
-                      <h6 className='text-start'>An 8 digit code will be sent to your email after signup</h6>
+                      <h6 className='text-start'>An 6 digit code will be sent to your email after signup</h6>
                       <form onSubmit={handleSignup}>
 
                         <div className='row ' style={{ gap: "10px" }}>
@@ -221,7 +221,7 @@ const Signup = () => {
                     </div>
                     :
                     <div>
-                      <h6 className='text-start'>An 8 digit code was sent to your email</h6>
+                      <h6 className='text-start'>An 6 digit code was sent to your email</h6>
                       <form className='d-flex justify-content-between flex-column ' onSubmit={handleVerification}>
                         <input type='text' onBlur={() => { }}
                           onChange={(e) => setCode(e.target.value)}

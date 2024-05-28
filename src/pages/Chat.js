@@ -69,38 +69,27 @@ function Chat() {
       socket.emit("add-user", selectedChat.id);
     }
   }, [loggedInUserDetail, selectedChat.id]);
-
-  const sendFile = () => {
-    const file = document.getElementById("file").files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = async () => {
-      const body = {
-        Sender: loggedInUserDetail.AcademyId,
-        ChatID: selectedChat.id,
-        File: reader.result,
-      };
-      await post_message(body);
-      socket.emit("send-file", body);
-    };
-  }
-
+console.log(files)
   const sendMessage = async (text, type, files) => {
     const messagesToSend = [];
-    if (text.trim() !== "" && type==="text") {
+    const currentDate = new Date();
+
+
+    console.log(text, type, files)
+    if (text.trim() !== "" && type === "text") {
       const newMessage = {
         screenName: selectedChat.screenName,
         senderId: loggedInUserDetail.AcademyId,
-        date: new Date(),
+        date: currentDate,
         text,
         photo: loggedInUserDetail.Photo,
         to: selectedChat.AcademyId,
         room: selectedChat.id,
       };
-      setMessages([...messages, newMessage]);
+      messagesToSend.push(newMessage);
       const body = {
         Text: text,
-        Date: new Date(),
+        Date: currentDate,
         Sender: loggedInUserDetail.AcademyId,
         ChatID: selectedChat.id,
       };
@@ -109,39 +98,82 @@ function Chat() {
       delete newMessage.photo;
       socket.emit("send-msg", newMessage);
     }
-    if (files && files.length > 0) {
-      files.forEach(file => {
+    else {
+      files.images.forEach((file, index) => {
+        if (index !== 0) text = "";
+
+
+        const reader = new FileReader();
+        let base64;
+        reader.onload = function (e) {
+          base64 = e.target.result.split(',')[1];
+        }
+        reader.readAsDataURL(file);
+
         const fileMessage = {
           screenName: selectedChat.screenName,
           senderId: loggedInUserDetail.AcademyId,
-          date:  new Date(),
-          text: null,
+          date: currentDate,
+          text: text.trim() === "" ? null : text.trim(),
           fileName: file.name,
-          fileUrl: URL.createObjectURL(file),
-          fileType: file.type,
+          fileUrl: base64,
+          fileType: 'image',
           photo: loggedInUserDetail.Photo,
           to: selectedChat.AcademyId,
           room: selectedChat.id,
         };
         messagesToSend.push(fileMessage);
-  
+
         const body = {
-          Text: null,
-          Date:  new Date(),
+          Text: fileMessage.text,
+          Date: currentDate,
           Sender: loggedInUserDetail.AcademyId,
           ChatID: selectedChat.id,
           FileName: file.name,
-          FileUrl: URL.createObjectURL(file), // You might want to upload the file to a server and get the actual URL instead.
-          FileType: file.type,
+          FileUrl: base64, // You might want to upload the file to a server and get the actual URL instead.
+          Type: "image",
         };
-  
+
+        post_message(body).then(() => {
+          delete fileMessage.photo;
+          socket.emit("send-msg", fileMessage);
+        });
+      });
+
+      if (!files.images.length) text = null
+      files.pdfs.forEach((file, index) => {
+        if (index !== 0) text = ""
+        const fileMessage = {
+          screenName: selectedChat.screenName,
+          senderId: loggedInUserDetail.AcademyId,
+          date: currentDate,
+          text: text.trim() === "" ? null : text.trim(),
+          fileName: file.name,
+          fileUrl: null,
+          fileType: 'pdf',
+          photo: loggedInUserDetail.Photo,
+          to: selectedChat.AcademyId,
+          room: selectedChat.id,
+        };
+        messagesToSend.push(fileMessage);
+
+        const body = {
+          Text: fileMessage.text,
+          Date: currentDate,
+          Sender: loggedInUserDetail.AcademyId,
+          ChatID: selectedChat.id,
+          FileName: file.name,
+          FileUrl: null, // You might want to upload the file to a server and get the actual URL instead.
+          Type: "pdf",
+        };
+
         post_message(body).then(() => {
           delete fileMessage.photo;
           socket.emit("send-msg", fileMessage);
         });
       });
     }
-  
+
     if (messagesToSend.length > 0) {
       setMessages([...messages, ...messagesToSend]);
     }

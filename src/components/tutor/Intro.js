@@ -4,9 +4,11 @@ import RichTextEditor from '../common/RichTextEditor/RichTextEditor';
 import Actions from '../common/Actions';
 import { get_adminConstants, post_termsOfUse } from '../../axios/admin';
 import Loading from '../common/Loading';
+import { useSelector } from 'react-redux';
 
 const Intro = () => {
     const [unSavedChanges, setUnsavedChanges] = useState(false);
+    const { tutor } = useSelector(state => state.tutor)
 
     const [db_intro, set_db_intro] = useState('');
 
@@ -54,6 +56,7 @@ const Intro = () => {
         setEditMode(false);
         setLoading(false)
     };
+    console.log(tutor, tutor)
 
     if (fetching)
         return <Loading />

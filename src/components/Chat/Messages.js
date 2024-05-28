@@ -16,12 +16,13 @@ function Messages({ messages, fetchingMessages, files }) {
   }, [messages])
 
   useEffect(() => {
-    setTimeout(() => {
+    if (!!files.images.length || !!files.pdfs.length)
       fileAboutToSend.current && fileAboutToSend.current.classList.add('open')
-    }, 1000)
-  }, [])
-
-  console.log(fileAboutToSend.current, files)
+    else{
+      fileAboutToSend.current && fileAboutToSend.current.classList.remove('open')
+    }
+  }, [files.images, files.pdfs])
+console.log(messages)
 
   if (fetchingMessages)
     return <Loading height='100%' />
@@ -39,7 +40,8 @@ function Messages({ messages, fetchingMessages, files }) {
           </ul>
         </div>
       </div>
-      <div className='position-absolute border p-3 shadow rounded fileAboutToSend d-flex flex-column' style={{ bottom: "5px", right: "5px" , gap:"10px"}} ref={fileAboutToSend}>
+      <div className='position-absolute border shadow rounded fileAboutToSend d-flex flex-column'
+        style={{ right: "5px", gap: "10px" }} ref={fileAboutToSend}>
         {files.images.map((image, index) => (
           <div className='border border-secondary p-2 rounded'>
             <div>{image.name}</div>

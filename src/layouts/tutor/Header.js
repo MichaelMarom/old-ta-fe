@@ -45,6 +45,7 @@ const Header = () => {
     dispatch(setStudent({}));
     nav("/login");
   };
+  
   const handleScrollRight = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollLeft += scrollStep;

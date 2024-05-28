@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { get_user_detail } from "../../axios/auth";
 import * as tutorApis from "../../axios/tutor"
+import _ from "lodash";
 
 // Create a slice with your event-related reducers
 const slice = createSlice({
@@ -31,6 +32,7 @@ export default slice.reducer;
 
 export function setTutor(data) {
     return async (dispatch) => {
+        if(_.isEmpty(data) && typeof data === "object") return dispatch(slice.actions.setTutor(data))
         dispatch(slice.actions.isLoading());
         let result;
         const nullValues = ['null', 'undefined']

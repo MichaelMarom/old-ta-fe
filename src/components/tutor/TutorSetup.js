@@ -350,6 +350,7 @@ const TutorSetup = () => {
     setSavingRecord(true);
     let response = await saver();
     setSavingRecord(false);
+    console.log(response, "posting tutor setup")
     if (response.status === 200) {
       if (!add1 || !add2 || !city || !zipCode) showRevisitToast()
       dispatch(setTutor());
