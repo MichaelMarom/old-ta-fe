@@ -13,7 +13,7 @@ function Messages({ messages, fetchingMessages, files }) {
     if (messagesContainer.current) {
       messagesContainer.current.scrollTop = messagesContainer.current.scrollHeight;
     }
-  }, [messages])
+  }, [messages, files.images, files.pdfs])
 
   useEffect(() => {
     if (!!files.images.length || !!files.pdfs.length)
@@ -22,14 +22,14 @@ function Messages({ messages, fetchingMessages, files }) {
       fileAboutToSend.current && fileAboutToSend.current.classList.remove('open')
     }
   }, [files.images, files.pdfs])
-console.log(messages)
+console.log(messages ,'messages')
 
   if (fetchingMessages)
     return <Loading height='100%' />
   return (
     <div className="ks-body ks-scrollable jspScrollable position-relative" data-auto-height="" data-reduce-height=".ks-footer" data-fix-height="32"
       style={{ height: '480px', overflowY: 'auto', padding: '0px', width: '100%' }} tabIndex="0" ref={messagesContainer}>
-      <div className="jspContainer" style={{ width: '100%', height: '481px' }}>
+      <div className="jspContainer" style={{ width: '100%', height: 'fit-content' }}>
         <div className="jspPane" style={{ padding: '0px', top: '0px', width: '100%' }}>
           <ul className="ks-items d-flex flex-column">
             {
@@ -43,7 +43,7 @@ console.log(messages)
       <div className='position-absolute border shadow rounded fileAboutToSend d-flex flex-column'
         style={{ right: "5px", gap: "10px" }} ref={fileAboutToSend}>
         {files.images.map((image, index) => (
-          <div className='border border-secondary p-2 rounded'>
+          <div className='border border-secondary p-2 rounded' key={index}>
             <div>{image.name}</div>
             <div className='w-100 text-right' style={{ fontSize: '12px', color: 'gray', fontWeight: '500' }}>
               {showDate(new Date(), wholeDateFormat)}

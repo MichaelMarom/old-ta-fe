@@ -14,7 +14,7 @@ const Avatar = ({ avatarSrc, online, size = "50", indicSize = "12px", positionIn
         width: indicSize,
         height: indicSize,
         borderRadius: '50%',
-        backgroundColor: online ? '#28a745' : 'red', // Green for online, gray for offline
+        backgroundColor: online ? 'limegreen' : 'red', // Green for online, gray for offline
         border: '2px solid #ffffff',
     };
 

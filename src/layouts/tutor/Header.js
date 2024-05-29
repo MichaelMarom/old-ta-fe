@@ -45,7 +45,7 @@ const Header = () => {
     dispatch(setStudent({}));
     nav("/login");
   };
-  
+
   const handleScrollRight = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollLeft += scrollStep;
@@ -74,7 +74,7 @@ const Header = () => {
     { url: "/tutor/market-place", name: "Market place" },
     { url: "/tutor/agency", name: "Agency" },
 
-    { url: "/collab", name: "Collaboration" },
+    { url: "/collab", name: "Collaboration", common: true },
     { url: `/tutor/tutor-profile/${tutor.AcademyId}`, name: "Profile" },
   ];
 
@@ -121,6 +121,23 @@ const Header = () => {
     let new_index = urls.indexOf(url);
     window.localStorage.setItem("tab_index", new_index);
   };
+
+
+  const getId = (tab) => {
+    if (tab.common) {
+      if (location.pathname === tab.url) {
+        return "tutor-tab-header-list-active"
+      }
+      return '';
+    } else {
+      const locationSegment = location.pathname.split('/')[2];
+      const tabSegment = tab.url.split('/')[2];
+      if (locationSegment === tabSegment) {
+        return 'tutor-tab-header-list-active'
+      }
+      return '';
+    }
+  }
 
   let handle_scroll_right = () => {
     let div = document.querySelector(".tutor-tab-header");
@@ -204,27 +221,27 @@ const Header = () => {
           </div>
         </div>
         <div
-        className={`screen-name btn-success rounded  p-1 flex-column align-items-center`}
-        style={{
-          fontSize: "14px",
-          display: !tutor.TutorScreenname ? "none" : "flex",
-          // position: "fixed",
-          // top: "1px",
-          // zIndex: "999",
-          // left: "3%",
-          marginLeft:"80px",
-          width:"auto",
-          whiteSpace:"nowrap",
-          background: statesColours[tutorState]?.bg,
-          color: statesColours[tutorState]?.color,
-        }}
-      >
-        <div style={{ fontWeight: "bold" }}>{screen_name}</div>
-        <div style={{ fontSize: "12px", fontWeight: "700" }}>
-          {StatusValues[tutor.Status]}
+          className={`screen-name btn-success rounded  p-1 flex-column align-items-center`}
+          style={{
+            fontSize: "14px",
+            display: !tutor.TutorScreenname ? "none" : "flex",
+            // position: "fixed",
+            // top: "1px",
+            // zIndex: "999",
+            // left: "3%",
+            marginLeft: "80px",
+            width: "auto",
+            whiteSpace: "nowrap",
+            background: statesColours[tutorState]?.bg,
+            color: statesColours[tutorState]?.color,
+          }}
+        >
+          <div style={{ fontWeight: "bold" }}>{screen_name}</div>
+          <div style={{ fontSize: "12px", fontWeight: "700" }}>
+            {StatusValues[tutor.Status]}
+          </div>
         </div>
-      </div>
-        <ul  ref={scrollRef}
+        <ul ref={scrollRef}
           id=""
           className={`header`}
           style={{
@@ -246,17 +263,10 @@ const Header = () => {
                 key={tab.url}
                 data-url={tab.url}
                 onClick={handleTabClick}
-                id={
-                  activeTab === tab.url.replace(/ /g, "%20") ||
-                    (activeTab.split("/").length > 3 &&
-                      activeTab.split("/").slice(0, -1).join() ===
-                      tab.url.split("/").slice(0, -1).join())
-                    ? "tutor-tab-header-list-active"
-                    : ""
-                }
+                id={getId(tab)}
               >
                 <p className="m-0" style={{ transform: "skew(41deg, 0deg)" }}>
-                  {tab.name}{!!filteredSessions.length && tab.url === '/tutor/feedback' && <span className=" text-bg-danger p-1 rounded-circle" style={{
+                  {tab.name}{!!filteredSessions.length && tab.url === '/tutor/feedback' && <span className="text-bg-danger p-1 rounded-circle" style={{
                     display: "inline-flex",
                     width: "24px",
                     height: "24px",

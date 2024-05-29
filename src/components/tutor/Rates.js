@@ -445,13 +445,10 @@ const Rates = () => {
               </div>
 
               <div className="highlight">
-                You must check the box above to activate this option. Your
-                student will select one option from the table below when he/she
-                want to save by paying upfront for multi sessions. The Academy
-                will forward you 50% from the discounted amount upfront, and the
-                balance upon completion. For example; student selects the 12
-                hours option, and you charge $45.00/hr, then $45.00 X 12 = $540
-                -12% = $475.20 .
+              Please ensure to select the checkbox above to enable this feature. Your student can choose a payment option from the following table to benefit 
+              from savings by paying in advance for multiple sessions. The Academy will remit 50% of the discounted total to you upfront, with the remaining 
+              balance provided after completion. For instance, if a student opts for the 12-hour package and your rate is $60.00 per hour, the calculation 
+              would be $60.00 x 12 hours, totaling $720.00, less a 10% discount, resulting in a final amount of $648.00.
               </div>
 
               <div
@@ -507,10 +504,7 @@ const Rates = () => {
             <div className="p-4  float-end rounded shadow border m-2 ">
               <h6>Tutor's Own Students</h6>
               <div className="highlight">
-                In order for you tutoring your own current students on this
-                plateform, forward the Code below to your students to be used
-                with thier registration. You need to generate new code for each
-                one of your students.
+              To assist your current students on this platform, please provide the following code to each student for use during their registration process. It is important to generate a unique code for every student..
               </div>
               <div className="form-check form-switch d-flex align-items-center gap-2">
                 <input
@@ -532,11 +526,14 @@ const Rates = () => {
                 </label>
 
                 <Tooltip
-                  width="200px"
-                  text="To link your student to your profile, please use the unique code provided below 
-                  during the student's account setup. This code ensures that each student is correctly 
-                  associated with your profile. Remember to generate a distinct code for every student 
-                  to maintain individual connections."
+                  width="300px"
+                  text="To link your student to your profile, please utilize 
+                  the unique code provided below during the account setup 
+                  process. This code is essential to ensure that each 
+                  student is accurately linked to your profile. It's 
+                  important to generate a separate code for each student to
+                   preserve individual connections and maintain the integrity
+                    of the tracking system."
                 >
                   <FaInfoCircle size={20} color="#0096ff" />
                 </Tooltip>
@@ -614,12 +611,10 @@ const Rates = () => {
               <h6>School class Students</h6>
 
               <div className="p-2 mt-4 highlight">
-                The American public schools are suffering from accute shortage
-                of teachers. if you hold teacher's certificate, and willing to
-                teach full class of students, you are able to post your ad on
-                the portal message board. and charge higher rate for your
-                skills. Similarly, a school in a need for a substitute teacher,
-                can find your account which is flagged accordingly.
+              American public schools are currently experiencing a severe shortage of teachers. If you possess a teaching certificate and are willing to 
+              instruct online a full class of students, you have the opportunity to advertise your services on our portal's message board. This platform allows you 
+              to set a competitive rate for your expertise. Likewise, schools in need of a substitute teacher can easily locate your profile, which is marked 
+              to indicate your availability.
               </div>
               <div className="form-check form-switch d-flex align-items-center gap-2 mt-4">
                 <input
@@ -703,11 +698,9 @@ const Rates = () => {
               </div>
 
               <div className="highlight">
-                You or your student can create a group that reflects the
-                discount from the table below. Example; if you charge $50/hr
-                then, and the group contain 6 students, then each student pays
-                $30.50 Only one student responsible for the account. if one of
-                the group is missing a session, there is no refund.
+              You or your student may form a group to take advantage of the discounts listed in the table below. For instance, if your hourly rate is $60 and 
+              the group includes 6 students, each student would receive a 39% discount per hour. A single student will be accountable for managing the account.
+              Please note, if a student from the group misses a session, the payment for that session is non-refundable.
               </div>
 
               <h6>Multi Students hourly rate</h6>

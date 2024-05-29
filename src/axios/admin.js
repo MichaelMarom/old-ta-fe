@@ -157,6 +157,25 @@ export const send_email = async (body) => {
 };
 
 
+
+/**
+ *
+ * @param {Array} body array of emails and message and subject
+ * @returns
+ */
+export const send_temaplted_email = async (body) => {
+  try {
+    const data = await apiClient.post("/send-email/chat", body);
+    return data;
+  } catch (err) {
+    showErrorToast(err)
+    // throw new Error('Failed to send email')
+  }
+};
+
+
+
+
 /**
  * 
  * @param {Object} body it will contain name, text and created_by

@@ -25,20 +25,20 @@ const MessageBox = ({ message }) => {
                     <span className="ks-datetime">{showDate(message.date, wholeDateFormat)}</span>
                 </div>
                 <div className='d-flex flex-column align-items-end'>
-                    <div className='border border-secondary p-2 rounded float-end mb-2' style={{
+                  {message.fileName&&  <div className='border border-secondary p-2 rounded float-end mb-2' style={{
                         boxShadow: " inset 0 0 10px rgba(0, 0, 0, 0.5)",
                         width: 'fit-content'
                     }}>
                         <div>{message.fileName}</div>
-                        <div className='mt-2' >
+                        {message.fileUrl && <div className='mt-2' >
                             <img
-                                src={MessageEvent.fileUrl && URL.createObjectURL(message.fileUrl)}
+                                src={message.fileUrl}
                                 alt={message.file}
                                 style={{ maxWidth: '100px', maxHeight: '100px' }}
                             />
-                        </div>
-                    </div>
-                    <div className="ks-message">{message.text}</div>
+                        </div>}
+                    </div>}
+                    <div className="ks-message" style={{whiteSpace:"wrap"}}>{message.text}</div>
                 </div>
             </div>
         </li>

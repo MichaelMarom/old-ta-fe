@@ -18,6 +18,7 @@ import { setChats } from "../redux/chat/chat";
 import Actions from "../components/common/Actions";
 import Loading from "../components/common/Loading";
 import Recomendation from "../components/Chat/Recomendation";
+import { send_email, send_temaplted_email } from "../axios/admin";
 
 function Chat() {
   const [selectedChat, setSelectedChat] = useState({});
@@ -35,6 +36,7 @@ function Chat() {
   const [arrivalMsg, setArrivalMsg] = useState(null);
   const [fetchingMessages, setFetchingMessages] = useState(false);
   const loggedInRole = studentLoggedIn ? "student" : "tutor";
+  const [recentMessages, setRecentMessages] = useState([])
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -69,13 +71,17 @@ function Chat() {
       socket.emit("add-user", selectedChat.id);
     }
   }, [loggedInUserDetail, selectedChat.id]);
-console.log(files)
+
+  const sendMessagesToEmail = (message, email) => {
+    send_email(['asiyabat123@gmail.com'], message, 'You recieved a message');
+  }
+
   const sendMessage = async (text, type, files) => {
     const messagesToSend = [];
     const currentDate = new Date();
+    let textAttached = false;
+    send_temaplted_email()
 
-
-    console.log(text, type, files)
     if (text.trim() !== "" && type === "text") {
       const newMessage = {
         screenName: selectedChat.screenName,
@@ -86,7 +92,8 @@ console.log(files)
         to: selectedChat.AcademyId,
         room: selectedChat.id,
       };
-      messagesToSend.push(newMessage);
+      messagesToSend.push({ ...newMessage });
+
       const body = {
         Text: text,
         Date: currentDate,
@@ -97,85 +104,102 @@ console.log(files)
       await post_message(body);
       delete newMessage.photo;
       socket.emit("send-msg", newMessage);
-    }
-    else {
+    } else {
+      const filePromises = [];
+
       files.images.forEach((file, index) => {
-        if (index !== 0) text = "";
+        filePromises.push(new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const base64 = e.target.result;
 
+            const fileMessage = {
+              screenName: selectedChat.screenName,
+              senderId: loggedInUserDetail.AcademyId,
+              date: currentDate,
+              text: !textAttached && text.trim() !== "" ? text : null,
+              fileName: file.name,
+              fileUrl: base64,
+              fileType: 'image',
+              photo: loggedInUserDetail.Photo,
+              to: selectedChat.AcademyId,
+              room: selectedChat.id,
+            };
 
-        const reader = new FileReader();
-        let base64;
-        reader.onload = function (e) {
-          base64 = e.target.result.split(',')[1];
-        }
-        reader.readAsDataURL(file);
+            if (!textAttached && text.trim() !== "") {
+              textAttached = true;
+            }
 
-        const fileMessage = {
-          screenName: selectedChat.screenName,
-          senderId: loggedInUserDetail.AcademyId,
-          date: currentDate,
-          text: text.trim() === "" ? null : text.trim(),
-          fileName: file.name,
-          fileUrl: base64,
-          fileType: 'image',
-          photo: loggedInUserDetail.Photo,
-          to: selectedChat.AcademyId,
-          room: selectedChat.id,
-        };
-        messagesToSend.push(fileMessage);
+            messagesToSend.push({ ...fileMessage });
 
-        const body = {
-          Text: fileMessage.text,
-          Date: currentDate,
-          Sender: loggedInUserDetail.AcademyId,
-          ChatID: selectedChat.id,
-          FileName: file.name,
-          FileUrl: base64, // You might want to upload the file to a server and get the actual URL instead.
-          Type: "image",
-        };
+            const body = {
+              Text: fileMessage.text,
+              Date: fileMessage.date,
+              Sender: fileMessage.senderId,
+              ChatID: fileMessage.room,
+              FileName: fileMessage.fileName,
+              FileUrl: fileMessage.fileUrl,
+              Type: fileMessage.fileType,
+            };
 
-        post_message(body).then(() => {
-          delete fileMessage.photo;
-          socket.emit("send-msg", fileMessage);
-        });
+            post_message(body).then(() => {
+              delete fileMessage.photo;
+              socket.emit("send-msg", fileMessage);
+              resolve();
+            });
+          };
+          reader.readAsDataURL(file);
+        }));
       });
 
-      if (!files.images.length) text = null
       files.pdfs.forEach((file, index) => {
-        if (index !== 0) text = ""
-        const fileMessage = {
-          screenName: selectedChat.screenName,
-          senderId: loggedInUserDetail.AcademyId,
-          date: currentDate,
-          text: text.trim() === "" ? null : text.trim(),
-          fileName: file.name,
-          fileUrl: null,
-          fileType: 'pdf',
-          photo: loggedInUserDetail.Photo,
-          to: selectedChat.AcademyId,
-          room: selectedChat.id,
-        };
-        messagesToSend.push(fileMessage);
+        filePromises.push(new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const fileMessage = {
+              screenName: selectedChat.screenName,
+              senderId: loggedInUserDetail.AcademyId,
+              date: currentDate,
+              text: !textAttached && text.trim() !== "" ? text : null,
+              fileName: file.name,
+              fileUrl: null,
+              fileType: 'pdf',
+              photo: loggedInUserDetail.Photo,
+              to: selectedChat.AcademyId,
+              room: selectedChat.id,
+            };
 
-        const body = {
-          Text: fileMessage.text,
-          Date: currentDate,
-          Sender: loggedInUserDetail.AcademyId,
-          ChatID: selectedChat.id,
-          FileName: file.name,
-          FileUrl: null, // You might want to upload the file to a server and get the actual URL instead.
-          Type: "pdf",
-        };
+            if (!textAttached && text.trim() !== "") {
+              textAttached = true;
+            }
 
-        post_message(body).then(() => {
-          delete fileMessage.photo;
-          socket.emit("send-msg", fileMessage);
-        });
+            messagesToSend.push({ ...fileMessage });
+
+            const body = {
+              Text: fileMessage.text,
+              Date: fileMessage.date,
+              Sender: fileMessage.senderId,
+              ChatID: fileMessage.room,
+              FileName: fileMessage.fileName,
+              FileUrl: fileMessage.fileUrl,
+              Type: fileMessage.fileType,
+            };
+
+            post_message(body).then(() => {
+              delete fileMessage.photo;
+              socket.emit("send-msg", fileMessage);
+              resolve();
+            });
+          };
+          reader.readAsDataURL(file);
+        }));
       });
+
+      await Promise.all(filePromises);
     }
 
     if (messagesToSend.length > 0) {
-      setMessages([...messages, ...messagesToSend]);
+      setMessages((prevMessages) => [...prevMessages, ...messagesToSend]);
     }
   };
 
@@ -224,8 +248,9 @@ console.log(files)
     if (selectedChat.id) {
       const currentPath = `/${loggedInRole}/chat/${selectedChat.id}`;
       navigate(currentPath);
+      setFiles({ images: [], pdfs: [] })
     }
-  }, [selectedChat.id, navigate, studentLoggedIn, loggedInRole]);
+  }, [selectedChat.id, studentLoggedIn, loggedInRole]);
 
   useEffect(() => {
     // eslint-disable-next-line
