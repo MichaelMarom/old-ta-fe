@@ -551,19 +551,6 @@ const TutorSetup = () => {
     }
   };
 
-  let counter = (inputs, elem, cb, length) => {
-    let charLength = inputs?.length;
-    cb(inputs);
-
-    if (charLength < length) {
-      elem.style.border = "1px solid black";
-      elem.nextElementSibling?.removeAttribute("id");
-    } else {
-      elem.style.border = "1px solid red";
-      elem.nextElementSibling?.setAttribute("id", "inputValidator");
-    }
-  };
-
   useEffect(() => {
     const localTime = convertGMTOffsetToLocalString(timeZone);
     setDateTime(localTime);
@@ -579,7 +566,7 @@ const TutorSetup = () => {
   if (tutorDataLoading) return <Loading height="80vh" />;
   return (
     <form onSubmit={saveTutorSetup}>
-      <div style={{ overflowY: "auto", height: "76vh" }}>
+      <div style={{ overflowY: "auto", height: "calc(100vh - 150px)" }}>
         <div
           className="d-flex justify-content-between flex-column"
           style={{
@@ -688,48 +675,48 @@ const TutorSetup = () => {
                   />
 
                 </div>
-                
-            <div
-              className="border p-2 shadow rounded"
-            >
-              <div className="d-flex gap-1">
-                <div
-                  className="form-check form-switch d-flex gap-2 w-100"
-                  style={{ fontSize: "12px " }}
-                >
-                  <input
-                    disabled={!editMode}
-                    className="form-check-input "
-                    type="checkbox"
-                    role="switch"
-                    style={{
-                      width: "30px",
-                      height: "15px",
-                    }}
-                    onChange={() => {set_vacation_mode(!vacation_mode); 
-                      setIsOpen(!isOpen)}}
-                    checked={vacation_mode}
-                  />
-                  <label
-                    className="form-check-label mr-3"
-                    htmlFor="flexSwitchCheckChecked"
-                  >
-                    Vacation Mode
-                  </label>
-                  <ToolTip
-                    text="To set your unavailable days for tutoring, simply turn the switch to 'On'.
+
+                <div className="border p-2 shadow rounded" >
+                  <div className="d-flex gap-1">
+                    <div
+                      className="form-check form-switch d-flex gap-2 w-100"
+                      style={{ fontSize: "12px " }}
+                    >
+                      <input
+                        disabled={!editMode}
+                        className="form-check-input "
+                        type="checkbox"
+                        role="switch"
+                        style={{
+                          width: "30px",
+                          height: "15px",
+                        }}
+                        onChange={() => {
+                          set_vacation_mode(!vacation_mode);
+                          setIsOpen(!isOpen)
+                        }}
+                        checked={vacation_mode}
+                      />
+                      <label
+                        className="form-check-label mr-3"
+                        htmlFor="flexSwitchCheckChecked"
+                      >
+                        Vacation Mode
+                      </label>
+                      <ToolTip
+                        text="To set your unavailable days for tutoring, simply turn the switch to 'On'.
                   This action allows you to choose the days you wish to take off. 
                   Your selected dates will be highlighted in green on your calendar, signaling to
                   students that you are not available for lessons during this time. Once the end 
                   date is reached, the switch will automatically revert to 'Off', making you 
                   available for bookings again."
-                    width="200px"
-                  />
+                        width="200px"
+                      />
 
-                </div>
+                    </div>
 
-              </div>
-              {/* {vacation_mode && (
+                  </div>
+                  {/* {vacation_mode && (
                 <div>
                   <h6 className="text-start">Enter Start and end Date</h6>
                   <div
@@ -781,7 +768,7 @@ const TutorSetup = () => {
                   </div>
                 </div>
               )} */}
-            </div>
+                </div>
               </div>
 
 
@@ -798,7 +785,7 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
-                    label={<MandatoryFieldLabel text="First Name" />}
+                    label={<MandatoryFieldLabel text="First Name" editMode={editMode} />}
                     setValue={set_fname}
                     value={fname}
                     editMode={!nameFieldsDisabled}
@@ -817,7 +804,7 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
-                    label={<p>Middle Name: <span class='text-sm'>(optional)</span></p>}
+                    label={<p style={{ background: editMode ? "white" : "#e1e1e1",}}>Middle Name: <span class='text-sm'>(optional)</span></p>}
                     required={false}
                     setValue={set_mname}
                     value={mname}
@@ -838,7 +825,7 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
-                    label={<MandatoryFieldLabel text="Last Name" />}
+                    label={<MandatoryFieldLabel text="Last Name" editMode={editMode} />}
                     setValue={set_sname}
                     value={lname}
                     editMode={!nameFieldsDisabled}
@@ -875,7 +862,7 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
-                    label={"Email"}
+                    label={<p style={{background:  "#e1e1e1"}}>Email</p>}
                     value={email}
                     editMode={false}
                   />
@@ -930,7 +917,7 @@ const TutorSetup = () => {
                     setValue={set_response_zone}
                     value={response_zone}
                     editMode={editMode}
-                    label={<MandatoryFieldLabel text="Response Time" />}
+                    label={<MandatoryFieldLabel text="Response Time" editMode={editMode} />}
                     TooltipText={
                       "Select your response time answering the student during business time in your time zone. Please take notice that the student take this fact as one of the considurations of selecting you as tutor."
                     }
@@ -955,7 +942,7 @@ const TutorSetup = () => {
                       setValue={set_timeZone}
                       value={timeZone}
                       editMode={editMode}
-                      label={<MandatoryFieldLabel text="Timezone" />}
+                      label={<MandatoryFieldLabel text="Timezone" editMode={editMode} />}
                       TooltipText={
                         "Select the Greenwich Mean Time (GMT) zone where you reside. It will let the student configure his time availability conducting lessons with you, when in a different time zone. "
                       }
@@ -987,7 +974,7 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
-                    label={<p>Address 1: <span class='text-sm'>(optional)</span></p>}
+                    label={<p style={{background: editMode ? "white" : "#e1e1e1"}}>Address 1: <span class='text-sm'>(optional)</span></p>}
                     required={false}
                     value={add1}
                     setValue={set_add1}
@@ -1049,7 +1036,7 @@ const TutorSetup = () => {
                     setValue={set_country}
                     value={country}
                     editMode={editMode}
-                    label={<MandatoryFieldLabel text="Country" />}
+                    label={<MandatoryFieldLabel text="Country" editMode={editMode} />}
                   >
                     {countryList}
                   </Select>
@@ -1069,7 +1056,7 @@ const TutorSetup = () => {
                       setValue={set_state}
                       value={state}
                       editMode={editMode}
-                      label={<MandatoryFieldLabel text="State/Province" />}
+                      label={<MandatoryFieldLabel text="State/Province" editMode={editMode} />}
                     >
                       <option value="" disabled>
                         Select State
@@ -1099,7 +1086,7 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
-                    label={<p>Zip Code: <span class='text-sm'>(optional)</span></p>}
+                    label={<p style={{background: editMode ? "white" : "#e1e1e1"}}>Zip Code: <span class='text-sm'>(optional)</span></p>}
                     value={zipCode}
                     required={false}
                     setValue={set_zipCode}
@@ -1121,7 +1108,9 @@ const TutorSetup = () => {
                   >
                     <Input
                       label={
-                        <div className="d-flex" style={{ gap: "5px" }}>
+                        <div className="d-flex" style={{ gap: "5px" ,
+                          background: editMode ? "white" : "#e1e1e1",
+                        }}>
                           <ToolTip
                             width="200px"
                             text={
@@ -1303,7 +1292,7 @@ const TutorSetup = () => {
           </div>
         </div>
 
-        <div className="mt-4 ">
+        <div className="mt-1 ">
           <div
             className="d-flex justify-content-center"
             style={{ gap: "20px", width: "100%" }}
@@ -1317,15 +1306,15 @@ const TutorSetup = () => {
               }}
             >
               <div className="input w-100">
+                <div style={{fontWeight:"300", fontSize:"12px", float:"right"}}>{headline.length}/80</div>
                 <input
                   className="input__field m-0 shadow form-control"
                   value={headline}
+                  maxLength={80}
                   spellCheck="true"
                   disabled={!editMode}
                   placeholder="Write A Catchy Headline.. Example: 21 years experienced nuclear science professor."
-                  onChange={(e) =>
-                    counter(e.target.value, e.target, set_headline, 80)
-                  }
+                  onChange={(e) => set_headline(e.target.value) }
                   type="text"
                 />
                 <div className="inputValidator">
@@ -1333,11 +1322,10 @@ const TutorSetup = () => {
                 </div>
                 <span className="" style={{
                   position: "absolute",
-                  top: "-25px",
+                  top: "-10px",
                   left: "10px",
-                  background: editMode ? "white" : "#e1e1e1",
                   padding: "2px", fontSize: "12px"
-                }}><MandatoryFieldLabel text={"Profile Headline"} /></span>
+                }}><MandatoryFieldLabel text={"Profile Headline"} editMode={editMode} /></span>
 
               </div>
             </div>
@@ -1358,6 +1346,7 @@ const TutorSetup = () => {
                 }}
               >
                 <div className="input w-100">
+                  <div className="w-100 text-end" style={{fontWeight:"300", fontSize:"12px", float:"right"}}> {intro.length}/500</div>
                   <textarea
                     className="form-control m-0 shadow input__field"
                     value={intro}
@@ -1373,9 +1362,7 @@ const TutorSetup = () => {
                   profile picture or a brief introductory video can also enhance your profile, 
                   giving students a better sense of your personality and teaching style.
                     "
-                    onInput={(e) =>
-                      counter(e.target.value, e.target, set_intro, 500)
-                    }
+                    onInput={(e) => set_intro(e.taregt.value) }
                     style={{ width: "100%", padding: "10px", height: "160px" }}
                     name=""
                     spellCheck="true"
@@ -1387,11 +1374,10 @@ const TutorSetup = () => {
                   </div>
                   <span className="" style={{
                     position: "absolute",
-                    top: "-25px",
+                    top: "-10px",
                     left: "10px",
-                    background: editMode ? "white" : "#e1e1e1",
                     padding: "2px", fontSize: "12px"
-                  }}><MandatoryFieldLabel text={"Introduction"} /></span>
+                  }}><MandatoryFieldLabel text={"Introduction"} editMode={editMode} /></span>
 
                 </div>
               </div>
@@ -1401,6 +1387,7 @@ const TutorSetup = () => {
                 style={{ textAlign: "center", float: "right", fontWeight: "bold", width: "40%" }}
               >
                 <div className="input w-100">
+                <div className="w-100 text-end" style={{fontWeight:"300", fontSize:"12px", float:"right"}}>{motivation.length}/500</div>
 
                   <textarea
                     className="form-control m-0 shadow input___field"
@@ -1412,24 +1399,19 @@ const TutorSetup = () => {
                 is motivating factor.
                 If you hold a teacher certificate, and wish to provide your profession to a full
                 class of students in a public school, you can charge the school a premium.'
-                    onInput={(e) =>
-                      counter(e.target.value, e.target, set_motivation, 500)
-                    }
+                    onInput={(e) =>  set_motivation(e.target.value)}
                     spellCheck="true"
                     style={{ width: "100%", padding: "10px", height: "160px" }}
                     name=""
                     id=""
                   ></textarea>
-                  <div className="inputValidator">
-                    Your have reached the max limit of 500 characters.
-                  </div>
                   <span className="" style={{
                     position: "absolute",
-                    top: "-25px",
+                    top: "-10px",
                     left: "10px",
-                    background: editMode ? "white" : "#e1e1e1",
+                   
                     padding: "2px", fontSize: "12px"
-                  }}><MandatoryFieldLabel text={"Motivate"} /></span>
+                  }}><MandatoryFieldLabel text={"Motivate"} editMode={editMode} /></span>
 
                 </div>
               </div>
@@ -1461,7 +1443,9 @@ const TutorSetup = () => {
 };
 
 
-export const MandatoryFieldLabel = ({ text }) => <p>{text}:<span className="text-danger "
+export const MandatoryFieldLabel = ({ text, editMode=true }) => <p> <span style={{
+  background: editMode ? "white" : "#e1e1e1",
+}}>{text}:</span><span className="text-danger "
   style={{ fontSize: "26px" }}>*</span></p>
 
 export default TutorSetup;

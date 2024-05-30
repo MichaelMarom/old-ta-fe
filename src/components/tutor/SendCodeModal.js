@@ -33,7 +33,7 @@ const SendCodeModal = ({ isOpen, onClose, code, subject }) => {
     }, [name, code, tutor.TutorScreenname, subject, isOpen])
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
+       try{ e.preventDefault()
         setLoading(true)
         const data = await send_email({ emails: [email], message: emailText, subject: "Tutor's Code" })
         if (!data?.response?.data) {
@@ -44,7 +44,10 @@ const SendCodeModal = ({ isOpen, onClose, code, subject }) => {
             toast.success("Email Sent Successfully")
         }
         else toast.error("Email Sent Error")
-        setLoading(false)
+        setLoading(false)}
+        catch(err){
+            toast.error("Email Sent Error", err.message)
+        }
     }
 
     return (

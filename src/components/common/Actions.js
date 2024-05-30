@@ -15,6 +15,7 @@ const actionsStyle = {
     backgroundColor: 'white',
     borderTop: '1px solid #ccc',
     padding: '10px',
+    height:"100px"
 };
 
 const Actions = ({

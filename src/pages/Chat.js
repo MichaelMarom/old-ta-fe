@@ -72,15 +72,14 @@ function Chat() {
     }
   }, [loggedInUserDetail, selectedChat.id]);
 
-  const sendMessagesToEmail = (message, email) => {
-    send_email(['asiyabat123@gmail.com'], message, 'You recieved a message');
+  const sendMessagesToEmail = (messages, files) => {
+    send_temaplted_email({ email: 'asiyabat123@gmail.com', messages, files, subject: "You recieved a new message." });
   }
 
   const sendMessage = async (text, type, files) => {
     const messagesToSend = [];
     const currentDate = new Date();
     let textAttached = false;
-    send_temaplted_email()
 
     if (text.trim() !== "" && type === "text") {
       const newMessage = {
@@ -199,6 +198,8 @@ function Chat() {
     }
 
     if (messagesToSend.length > 0) {
+    sendMessagesToEmail(messagesToSend, files)
+
       setMessages((prevMessages) => [...prevMessages, ...messagesToSend]);
     }
   };
@@ -261,7 +262,7 @@ function Chat() {
   if (isLoading) return <Loading height="100vh" />;
   return (
     <CommonLayout role={loggedInRole}>
-      <div className="container" style={{ height: "65vh" }}>
+      <div className="container" style={{ height: "calc(100vh - 200px)" }}>
         <div className="h-100 m-4">
           <div className="ks-page-content-body h-100">
             <div className="border ks-messenger shadow">

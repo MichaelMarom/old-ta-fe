@@ -15,6 +15,8 @@ import AudioOff from '../../../assets/images/microphoneblock.jpeg'
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 
 import _ from "lodash";
+import { HiPaperClip } from "react-icons/hi2";
+import { FaPaperclip } from "react-icons/fa";
 
 const CollabSidebar = ({
   openedSession,
@@ -331,14 +333,14 @@ const CollabSidebar = ({
         <div>
           <h6 className="text-start">Recording Consent</h6>
           <div className="d-flex align-items-center">
-            <div className="rounded-circle" 
-            style={{ height: "10px", width: "10px", background: tutorRecordingConsent ? "limegreen" : "#eb4b4b", marginRight: "10px" }}></div>
+            <div className="rounded-circle"
+              style={{ height: "10px", width: "10px", background: tutorRecordingConsent ? "limegreen" : "#eb4b4b", marginRight: "10px" }}></div>
             <p className="m-0">Tutor
             </p>
           </div>
           <div className="d-flex align-items-center">
             <div className="rounded-circle"
-             style={{ height: "10px", width: "10px", background: studentRecordingConsent ? "limegreen" : "#eb4b4b", marginRight: "10px" }}></div>
+              style={{ height: "10px", width: "10px", background: studentRecordingConsent ? "limegreen" : "#eb4b4b", marginRight: "10px" }}></div>
             <p className="m-0">Student
             </p>
           </div>
@@ -477,6 +479,12 @@ const CollabSidebar = ({
           value={volume}
           onChange={handleVolumeChange}
         />
+      </div>
+      <div className="d-flex" style={{ gap: "10px" }}>
+        <FaPaperclip color="white" size="30" />
+        <p>
+          Use "Message Board" tab to send Images and Pdfs related to lecture.
+        </p>
       </div>
 
       <div

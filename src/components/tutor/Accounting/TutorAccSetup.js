@@ -169,14 +169,15 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
     }, [dbValues, acct_name, acct_type, acct, bank_name, ssh, email, routing, payment_option, tutor])
 
     return (
-        <div className="d-flex" style={{ height: "72vh", overflowY: "auto" }}>
+        <div className="d-flex" style={{ height: "calc(100vh - 150px)", overflowY: "auto" }}>
 
             <div className="d-flex col-md-3 border h-100 p-2">
 
                 <div className="d-flex flex-column">
-                    <div className="highlight m-0" style={{ height: '150px' }}>
-                        Tutoring academy service charge calculated on Hours accumulated on annual bases. The more hours you conduct, the less is the service charge.
-                        Your hours starts counting from your first conducted lesson each year.
+                    <div className="highlight m-0" >
+                        At our tutoring academy, the service charge is determined by the total hours accumulated annually. The system is designed to reward
+                        frequent tutoring; thus, the more hours you tutor, the lower your the service charge the academy will be. The calculation of your hours
+                        begins with the first lesson you conduct each year, ensuring a fair and transparent billing cycle.r.
                     </div>
                     <div className='p-3'>
                         <div className='d-flex align-items-center mb-2 justify-content-between'>
@@ -193,8 +194,7 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
             <form onSubmit={saver} className='d-flex h-100'>
                 <div className="col-md-8 border h-100 p-2">
                     <div className="highlight" style={{ height: '150px' }}>
-                        Tutoring academy pays every 2nd Friday for the lessons performed up to the
-                        previous Friday midnight (GMT-5), Please select below the form of payment you prefer. Keep in mind that it can takes 1-3 days until the funds in your account
+                        Our tutoring academy issues payments bi-weekly, every second Friday, for the lessons conducted up to the preceding Friday at midnight (GMT-5). We kindly ask you to choose your preferred method of payment from the options listed below. Please note that once the payment is processed, it may take 1-3 business days for the funds to be available in your account. We appreciate your understanding and are committed to ensuring a smooth and timely payment process.
                     </div>
                     <div className='p-3 '>
 
@@ -271,7 +271,7 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                                 {emailRequiredPaymentMethods.includes(payment_option) && <p
                                     style={{
                                         fontWeight: "bold"
-                                    }}>3% service charge imposed by the services above.
+                                    }}>3% service charge imposed by the services listed above.
                                     <Tooltip width='200px' text={'Payoneer, Paypal, Zelle, Wise'} /></p>}
 
                                 {payment_option === "Bank" &&
@@ -337,8 +337,7 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
 
                         <div className='d-flex align-items-center mb-2 justify-content-between'>
                             <Input
-                                tooltipText='Tutors that are American citizens, should mandatory 
-                         fill their SS# in order to receive annual form 1099.'
+                                tooltipText='It is mandatory for tutors who are American citizens to provide their Social Security Number (SSN) to receive the annual Form 1099. This requirement ensures compliance with tax regulations and enables accurate reporting of income to the Internal Revenue Service (IRS)..'
                                 editMode={editMode}
                                 label={"SS# (Social Security Number)"}
                                 required={currentYearEarning > 600}
@@ -358,8 +357,8 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
 
                         <div className='d-flex align-items-center mb-2 justify-content-between'>
                             <Input
-                                tooltipText='This is the total hours accumulated every
-                                year from the date of your start day'
+                                tooltipText='This statement represents the total number of hours accrued annually from the commencement date of your 
+                                employment.'
                                 editMode={false}
                                 label={"Accumulated Hours"}
                                 value={`${currentYearAccHours}:00`}
@@ -376,7 +375,9 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                         <div className='d-flex align-items-center mb-2 justify-content-between'>
 
                             <Input
-                                tooltipText='text'
+                                tooltipText='The service charge is calculated based on the table to the left. As you increase the number of hours spent tutoring, the 
+                                academy offers a reduction in your service charge. This incentivizes tutors to commit more time, as they benefit from lower rates, making it a 
+                                mutually beneficial arrangement.'
                                 editMode={false}
                                 label={"Service charge %"}
                                 required={currentYearEarning > 600}
@@ -390,7 +391,10 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
 
                         <div className='d-flex align-items-center mb-2 justify-content-between'>
                             <Input
-                                tooltipText='Calculate your total earnings since Jan 1st.'
+                                tooltipText={`The field automatically computes your total earnings annually, starting from January 1st. 
+                                 This feature ensures that you have an accurate account of your income from the beginning of each year,
+                                 providing a clear and comprehensive financial overview. It's a valuable tool for financial planning and tracking your 
+                                 earnings progress over time`}
                                 editMode={false}
                                 label={`Total Earning ${(new Date()).getFullYear()}. `}
                                 required={currentYearEarning > 600}

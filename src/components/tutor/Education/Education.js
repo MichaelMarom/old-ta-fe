@@ -717,7 +717,7 @@ const Education = () => {
 
   if (fetchingEdu) return <Loading loadingText="Fetching Tutor Eduction..." />;
   return (
-    <div style={{ height: "70vh", overflowY: "auto", overflowX: "hidden" }}>
+    <div style={{ height: "calc(100vh - 150px)", overflowY: "auto", overflowX: "hidden" }}>
       <div className="container tutor-tab-education">
         <h6 className="tutor-tab-education-notice highlight">
           In the realm of tutoring, possessing a formal tutor's degree is not a prerequisite for imparting
@@ -748,8 +748,11 @@ const Education = () => {
                       <>
                         <MandatoryFieldLabel text={"Education Level"} />
                         <Tooltip
-                          width="250px"
-                          text=" Please select the highest education level that you have earned diploma from (could be high school). If you selected academic education level, but cannot provide a proof in a form of diploma, we would have to decline your application."
+                          width="300px"
+                          text=" Please indicate the highest level of education from which you have obtained a diploma, which may include high school. It is
+                           essential to provide proof of your academic qualifications in the form of a diploma when requested. Failure to do so may result 
+                           in the rejection of your application. We appreciate your understanding and cooperation in this matter to ensure a smooth and 
+                           efficient application process.."
                         />
                       </>
                     }
@@ -1121,8 +1124,8 @@ const Education = () => {
 
                         <Tooltip
                           width="200px"
-                          text="We use your document only to verify your status. we do not publish it to the public.
-                                                               Upon verification, we mark your profile by the academic verification symbol"
+                          text="Your document is used solely for the purpose of verifying your status and is not disclosed to the public. Once verified, your profile will be 
+                          distinguished with a green verification badge.l"
                         />
                       </div>
                       <div className="d-flex align-items-center">
@@ -1249,8 +1252,9 @@ const Education = () => {
 
                         <Tooltip
                           width="200px"
-                          text="We use your document only to verify your certification. We do not publish it to the public.
-                                                               Upon verification, we mark your profile by the Diploma verification symbol"
+                          text="Your uploaded document is utilized solely for the purpose of verifying your certification. Rest assured, it will not be made 
+                          public. Once verified, your profile will be distinguished with the certification Verification Symbol, indicating the authenticity 
+                          of your credentials."
                         />
                       </>
                     }
@@ -1400,7 +1404,7 @@ const Education = () => {
                 setInputValue={set_workExperience}
                 readOnly={!editMode}
                 placeholder="Enter Your Work Experience"
-                height="800px"
+                height="500px"
                 debounceCallback={() =>
                   dynamicSave("WorkExperience", workExperience)
                 }

@@ -243,7 +243,7 @@ const Feedback = () => {
           {selectedEvent.id && (
             <div
               className="col-md-4 "
-              style={{ height: "75vh", overflowY: "auto" }}
+              style={{ height: "calc(100vh - 165px)", overflowY: "auto" }}
             >
               <h4>
                 Feedback on {showDate(selectedEvent.start, wholeDateFormat)}{" "}

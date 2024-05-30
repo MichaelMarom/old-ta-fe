@@ -126,7 +126,8 @@ const TermOfUse = () => {
                     <h4 style={{fontSize:"16px"}}>CHECKING THE BOX BELOW, CONSITUTES YOUR ACCPETANCE OF THESE TERMS OF USE</h4>
 
                     <div className="form-check " >
-                        <input className="form-check-input" style={{ width: "30px", height: "30px", marginRight: '10px' }} type="checkbox" checked={agreed} onChange={() => setAgreed(true)}
+                        <input className="form-check-input" 
+                        style={{ width: "30px", height: "30px", marginRight: '10px', border:"4px solid black" }} type="checkbox" checked={agreed} onChange={() => setAgreed(true)}
                             disabled={tutor.AgreementDate || userRole !== 'tutor' || !editMode}
                             required={userRole === 'tutor'}
                         />
@@ -146,7 +147,7 @@ const TermOfUse = () => {
                         onChange={handleEditorChange}
                         readOnly={!editMode || userRole !== 'admin' || !editMode}
                         placeholder="Enter Term Of  Service"
-                        height="55vh"
+                        height="calc(100vh - 190px)"
                         className='mb-5'
                     />
                 </div>
