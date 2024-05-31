@@ -5,7 +5,6 @@ import Ads from '../../../components/student/Ads'
 import List from '../../../components/tutor/Ads/ListComponent'
 import Classified from '../../../components/tutor/Ads/Classified'
 import TabInfoVideoToast from '../../../components/common/TabInfoVideoToast'
-import VIDEO from '../../../assets/videos/marketplace.mp4'
 
 const Layout = ({ children }) => {
     let [activeTab, setActiveTab] = useState('')
@@ -35,8 +34,8 @@ const Layout = ({ children }) => {
 
     return (
         <TutorLayout  >
-            <TabInfoVideoToast
-                video={VIDEO} />
+            {/* <TabInfoVideoToast
+                video={VIDEO} /> */}
 
             <Tabs links={tabs} setActiveTab={setActiveTab}
                 setActiveTabIndex={setActiveTabIndex}

@@ -12,7 +12,7 @@ import { RiRobot2Fill } from "react-icons/ri";
 import { post_tutor_setup } from "../../axios/tutor";
 import { apiClient } from "../../axios/config";
 import { useDispatch } from "react-redux";
-import { convertGMTOffsetToLocalString } from "../../utils/moment";
+import { convertGMTOffsetToLocalString, showDate } from "../../utils/moment";
 import WebcamCapture from "./Recorder/VideoRecorder";
 import Loading from "../common/Loading";
 import ToolTip from "../common/ToolTip";
@@ -563,6 +563,11 @@ const TutorSetup = () => {
     }
   }, [vacation_mode]);
 
+
+  const mandatoryFields = [{ name: "fname", filled: !!fname.length }, { name: "lname", filled: !!lname.length }, { name: "phone", filled: !!cell.length },
+  { name: "rtime", filled: !!response_zone.length }, { name: "country", filled: !!country.length }, { name: "state", filled: !!state.length },
+  { name: "photo", filled: !!photo.length }, { name: "video", filled: !!video.length }]
+
   if (tutorDataLoading) return <Loading height="80vh" />;
   return (
     <form onSubmit={saveTutorSetup}>
@@ -585,7 +590,7 @@ const TutorSetup = () => {
 
             <div className="d-flex justify-content-between" style={{ gap: "20px" }}>
               <div className="d-flex flex-column align-items-center" style={{ width: "15%", }}>
-                <h6 className="text-start m-0" style={{ whiteSpace: "nowrap" }}>
+                <h6 className={`text-start m-0 ${mandatoryFields.find(item=>item.name==='photo').filled ? '' : 'blink_me'}`} style={{ whiteSpace: "nowrap" }}>
                   Profile Photo<span className="text-danger " style={{ fontSize: "25px", fontWeight: "bold" }}>*</span>
                 </h6>
                 {picUploading && (
@@ -677,7 +682,7 @@ const TutorSetup = () => {
                 </div>
 
                 <div className="border p-2 shadow rounded" >
-                  <div className="d-flex gap-1">
+                  <div className="d-flex gap-1 flex-column">
                     <div
                       className="form-check form-switch d-flex gap-2 w-100"
                       style={{ fontSize: "12px " }}
@@ -693,7 +698,7 @@ const TutorSetup = () => {
                         }}
                         onChange={() => {
                           set_vacation_mode(!vacation_mode);
-                          setIsOpen(!isOpen)
+                          !vacation_mode && !isOpen && setIsOpen(true)
                         }}
                         checked={vacation_mode}
                       />
@@ -714,7 +719,10 @@ const TutorSetup = () => {
                       />
 
                     </div>
-
+                    {vacation_mode && <div className="" style={{ fontSize: "12px" }}>
+                      <div><span style={{ fontWeight: "bold" }}>Start Date: </span> {showDate(tutor.StartVacation)}</div>
+                      <div><span style={{ fontWeight: "bold" }}>End Date: </span> {showDate(tutor.EndVacation)}</div>
+                    </div>}
                   </div>
                   {/* {vacation_mode && (
                 <div>
@@ -804,7 +812,7 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
-                    label={<p style={{ background: editMode ? "white" : "#e1e1e1",}}>Middle Name: <span class='text-sm'>(optional)</span></p>}
+                    label={<p style={{ background: editMode ? "white" : "#e1e1e1", }}>Middle Name: <span class='text-sm'>(optional)</span></p>}
                     required={false}
                     setValue={set_mname}
                     value={mname}
@@ -862,7 +870,7 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
-                    label={<p style={{background:  "#e1e1e1"}}>Email</p>}
+                    label={<p style={{ background: "#e1e1e1" }}>Email</p>}
                     value={email}
                     editMode={false}
                   />
@@ -974,7 +982,7 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
-                    label={<p style={{background: editMode ? "white" : "#e1e1e1"}}>Address 1: <span class='text-sm'>(optional)</span></p>}
+                    label={<p style={{ background: editMode ? "white" : "#e1e1e1" }}>Address 1: <span class='text-sm'>(optional)</span></p>}
                     required={false}
                     value={add1}
                     setValue={set_add1}
@@ -1086,7 +1094,7 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
-                    label={<p style={{background: editMode ? "white" : "#e1e1e1"}}>Zip Code: <span class='text-sm'>(optional)</span></p>}
+                    label={<p style={{ background: editMode ? "white" : "#e1e1e1" }}>Zip Code: <span class='text-sm'>(optional)</span></p>}
                     value={zipCode}
                     required={false}
                     setValue={set_zipCode}
@@ -1108,7 +1116,8 @@ const TutorSetup = () => {
                   >
                     <Input
                       label={
-                        <div className="d-flex" style={{ gap: "5px" ,
+                        <div className="d-flex" style={{
+                          gap: "5px",
                           background: editMode ? "white" : "#e1e1e1",
                         }}>
                           <ToolTip
@@ -1306,7 +1315,7 @@ const TutorSetup = () => {
               }}
             >
               <div className="input w-100">
-                <div style={{fontWeight:"300", fontSize:"12px", float:"right"}}>{headline.length}/80</div>
+                <div style={{ fontWeight: "300", fontSize: "12px", float: "right" }}>{headline.length}/80</div>
                 <input
                   className="input__field m-0 shadow form-control"
                   value={headline}
@@ -1314,7 +1323,7 @@ const TutorSetup = () => {
                   spellCheck="true"
                   disabled={!editMode}
                   placeholder="Write A Catchy Headline.. Example: 21 years experienced nuclear science professor."
-                  onChange={(e) => set_headline(e.target.value) }
+                  onChange={(e) => set_headline(e.target.value)}
                   type="text"
                 />
                 <div className="inputValidator">
@@ -1324,7 +1333,8 @@ const TutorSetup = () => {
                   position: "absolute",
                   top: "-10px",
                   left: "10px",
-                  padding: "2px", fontSize: "12px"
+                  padding: "2px",
+                  fontSize: "12px"
                 }}><MandatoryFieldLabel text={"Profile Headline"} editMode={editMode} /></span>
 
               </div>
@@ -1346,7 +1356,7 @@ const TutorSetup = () => {
                 }}
               >
                 <div className="input w-100">
-                  <div className="w-100 text-end" style={{fontWeight:"300", fontSize:"12px", float:"right"}}> {intro.length}/500</div>
+                  <div className="w-100 text-end" style={{ fontWeight: "300", fontSize: "12px", float: "right" }}> {intro.length}/500</div>
                   <textarea
                     className="form-control m-0 shadow input__field"
                     value={intro}
@@ -1362,12 +1372,10 @@ const TutorSetup = () => {
                   profile picture or a brief introductory video can also enhance your profile, 
                   giving students a better sense of your personality and teaching style.
                     "
-                    onInput={(e) => set_intro(e.taregt.value) }
+                    onInput={(e) => set_intro(e.target.value)}
                     style={{ width: "100%", padding: "10px", height: "160px" }}
-                    name=""
                     spellCheck="true"
                     disabled={!editMode}
-                    id=""
                   ></textarea>
                   <div className="inputValidator">
                     Your have reached the max limit of 1500 characters.
@@ -1387,7 +1395,7 @@ const TutorSetup = () => {
                 style={{ textAlign: "center", float: "right", fontWeight: "bold", width: "40%" }}
               >
                 <div className="input w-100">
-                <div className="w-100 text-end" style={{fontWeight:"300", fontSize:"12px", float:"right"}}>{motivation.length}/500</div>
+                  <div className="w-100 text-end" style={{ fontWeight: "300", fontSize: "12px", float: "right" }}>{motivation.length}/500</div>
 
                   <textarea
                     className="form-control m-0 shadow input___field"
@@ -1399,7 +1407,7 @@ const TutorSetup = () => {
                 is motivating factor.
                 If you hold a teacher certificate, and wish to provide your profession to a full
                 class of students in a public school, you can charge the school a premium.'
-                    onInput={(e) =>  set_motivation(e.target.value)}
+                    onInput={(e) => set_motivation(e.target.value)}
                     spellCheck="true"
                     style={{ width: "100%", padding: "10px", height: "160px" }}
                     name=""
@@ -1409,7 +1417,7 @@ const TutorSetup = () => {
                     position: "absolute",
                     top: "-10px",
                     left: "10px",
-                   
+
                     padding: "2px", fontSize: "12px"
                   }}><MandatoryFieldLabel text={"Motivate"} editMode={editMode} /></span>
 
@@ -1443,7 +1451,7 @@ const TutorSetup = () => {
 };
 
 
-export const MandatoryFieldLabel = ({ text, editMode=true }) => <p> <span style={{
+export const MandatoryFieldLabel = ({ text, editMode = true }) => <p> <span style={{
   background: editMode ? "white" : "#e1e1e1",
 }}>{text}:</span><span className="text-danger "
   style={{ fontSize: "26px" }}>*</span></p>

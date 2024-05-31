@@ -13,7 +13,7 @@ const SendCodeModal = ({ isOpen, onClose, code, subject }) => {
     const [email, setEmail] = useState('')
     const [loading, setLoading] = useState(false)
     const [emailText, setEmailText] = useState(`Hi <b>${name}</b>,
-    <p> I am tutor ${tutor.TutorScreenname} is my screen name for the new platfor. I am happy to announce the launch of a new educational platform,
+    <p> I am a tutor, my screen name is  ${tutor.TutorScreenname} for the new tutoring platfor. I am happy to announce the launch of a new educational platform,
      that i am using for my tutoring.
     <a href="${process.env.REACT_APP_BASE_URL}/signup?role=student">https://tutoring-Academy.com</a>. 
     As part of this initiative, I have provided you the code “${code}” for subject “${subject}”  
@@ -23,7 +23,7 @@ const SendCodeModal = ({ isOpen, onClose, code, subject }) => {
     useEffect(() => {
         if (name?.length && code?.length && tutor?.TutorScreenname && subject?.length) {
             setEmailText(`Hi <b>${name}</b>,
-            <p> I am tutor ${tutor.TutorScreenname} is my screen name for the new platform. I am happy to announce the launch of a new educational platform, 
+            <p> I am a tutor my screen name is ${tutor.TutorScreenname} for the new platform. I am happy to announce the launch of a new educational platform, 
             that i am using for my tutoring.
             <a href="${process.env.REACT_APP_BASE_URL}/signup?role=student">https://tutoriring-Academy.com</a>. 
             As part of this initia  tive, I have provided you the code “${code}”  for subject “${subject}” 

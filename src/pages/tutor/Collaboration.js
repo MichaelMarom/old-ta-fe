@@ -21,7 +21,6 @@ import {
 import { get_my_data } from "../../axios/student";
 import logo from "../../assets/images/tutoring Logo.png";
 import Loading from "../../components/common/Loading";
-import VIDEO from '../../assets/videos/collaboration.mp4'
 import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
 
 const Collaboration = () => {
@@ -394,7 +393,7 @@ const Collaboration = () => {
     return <Loading loadingText={"Fetching Session!"} />;
   return (
     <CommonLayout role={user.role}>
-      <TabInfoVideoToast video={VIDEO} />
+      {/* <TabInfoVideoToast video={VIDEO} /> */}
 
       {openedSession.subject && (
         <div

@@ -923,6 +923,8 @@ const ShowCalendar = ({
     }
   };
 
+  console.log(selectedTutor, tutor)
+
   const slotPropGetter = useCallback(
     (date) => {
       if (date && moment(date).isSame(moment(date), "day")) {

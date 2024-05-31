@@ -203,7 +203,7 @@ const Education = () => {
   }, []);
 
   let AcademyId = window.localStorage.getItem("tutor_user_id");
-  const jsonFields = ["NativeLang", "NativeLangOtherLang", 'expiration'];
+  const jsonFields = ["NativeLang", "NativeLangOtherLang"];
   const dynamicSave = async (key, value) => {
     if (jsonFields.includes(key)) value = JSON.stringify(value);
     if (key && value && tutor.AcademyId) {
@@ -311,10 +311,10 @@ const Education = () => {
           certificate !== "Not Certified" &&
           options[countryForAssociate],
       },
-      countryForCert: {
-        value: countryForCert,
-        validate: certificate && certificate !== "Not Certified",
-      },
+      // countryForCert: {
+      //   value: countryForCert,
+      //   validate: certificate && certificate !== "Not Certified",
+      // },
       NativeLang: { validate: true, value: language },
       NativeLangOtherLang: { validate: false },
       workExperience: { validate: true, value: workExperience },
@@ -324,8 +324,9 @@ const Education = () => {
 
     Object.keys(fieldsForThirdStep).map((field) => {
       if (fieldsForThirdStep[field].validate) {
+        console.log(fieldsForThirdStep[field], field)
         const validated = jsonFields.includes(field)
-          ? !!Object.keys(fieldsForThirdStep[field].value)?.length
+          ? !!Object.keys(fieldsForThirdStep[field]?.value)?.length
           : !!fieldsForThirdStep[field].value?.length;
 
         if (!validated) {
@@ -337,6 +338,7 @@ const Education = () => {
     });
     return flag;
   };
+  console.log(expiration)
 
   let saver = async () => {
     let Step = 3;
@@ -422,7 +424,7 @@ const Education = () => {
   // comparing DB, Local
   useEffect(() => {
     setUnSavedChanges(compareStates(dbValues, fieldValues));
-    console.log(compareStates(dbValues, fieldValues),dbValues.WorkExperience, fieldValues.WorkExperience, 101)
+    console.log(compareStates(dbValues, fieldValues), dbValues.WorkExperience, fieldValues.WorkExperience, 101)
   }, [dbValues, fieldValues]);
   console.log(unSavedChanges, 102)
 
@@ -480,7 +482,7 @@ const Education = () => {
           set_level(data.EducationalLevel);
           set_db_edu_level(data.EducationalLevel);
 
-          set_expiration(data.CertificateExpiration);
+          set_expiration(data.CertificateExpiration || moment());
           set_experience(data.EducationalLevelExperience);
 
           set_resumePath(data.Resume);
@@ -746,7 +748,7 @@ const Education = () => {
                   <FormSelect
                     label={
                       <>
-                        <MandatoryFieldLabel text={"Education Level"} />
+                        <MandatoryFieldLabel editMode={editMode} text={"Education Level"} />
                         <Tooltip
                           width="300px"
                           text=" Please indicate the highest level of education from which you have obtained a diploma, which may include high school. It is
@@ -774,7 +776,7 @@ const Education = () => {
 
                 <div className="col-md-4" style={{ fontSize: "14px" }}>
                   <FormSelect
-                    label={<MandatoryFieldLabel text={"Experience"} />}
+                    label={<MandatoryFieldLabel editMode={editMode} text={"Experience"} />}
                     id="experience"
                     className="form-select m-0"
                     onChange={(e) => {
@@ -806,7 +808,7 @@ const Education = () => {
                     <div className="col-md-4" style={{ fontSize: "14px" }}>
                       <DebounceInput
                         label={
-                          <MandatoryFieldLabel text=
+                          <MandatoryFieldLabel editMode={editMode} text=
                             {level === "Associate Degree" ||
                               level === "Undergraduate Student"
                               ? "College Name"
@@ -831,7 +833,7 @@ const Education = () => {
 
                         <FormSelect
 
-                          label={<MandatoryFieldLabel text={level === "Associate Degree"
+                          label={<MandatoryFieldLabel editMode={editMode} text={level === "Associate Degree"
                             ? "Associate degree"
                             : "Bachelor"
                           }
@@ -857,7 +859,7 @@ const Education = () => {
                         <div>
                           <FormSelect
                             label={
-                              <MandatoryFieldLabel text={"State/Province"} />
+                              <MandatoryFieldLabel editMode={editMode} text={"State/Province"} />
                             }
                             id="state1"
                             className="form-select m-0 w-100"
@@ -885,7 +887,7 @@ const Education = () => {
                       ) : (
                         <FormSelect
                           label={
-                            <MandatoryFieldLabel text={"Graduation Year"} />
+                            <MandatoryFieldLabel editMode={editMode} text={"Graduation Year"} />
                           }
                           id="yr1"
                           className="form-select m-0 w-100"
@@ -917,7 +919,7 @@ const Education = () => {
 
                         <DebounceInput
                           label={
-                            <MandatoryFieldLabel text="Institute Name" />
+                            <MandatoryFieldLabel editMode={editMode} text="Institute Name" />
                           }
                           element="app-input"
                           editMode={editMode}
@@ -935,7 +937,7 @@ const Education = () => {
                         <div>
                           <FormSelect
                             label={
-                              <MandatoryFieldLabel text="Country for Master" />
+                              <MandatoryFieldLabel editMode={editMode} text="Country for Master" />
 
                             }
 
@@ -958,10 +960,9 @@ const Education = () => {
                         </div>
                         {options[countryForMast] && (
                           <div>
-
                             <FormSelect
                               label={
-                                <MandatoryFieldLabel text=" Satte/Province" />
+                                <MandatoryFieldLabel editMode={editMode} text=" Satte/Province" />
                               }
                               className="form-select m-0 w-100"
                               onChange={(e) => {
@@ -986,11 +987,9 @@ const Education = () => {
                       </div>
 
                       <div className="col-md-4" style={{ fontSize: "14px" }}>
-
                         <FormSelect
                           label={
-                            <MandatoryFieldLabel text="Graduation Year" />
-
+                            <MandatoryFieldLabel editMode={editMode} text="Graduation Year" />
                           }
                           id="yr2"
                           className="form-select m-0 w-100"
@@ -1026,7 +1025,7 @@ const Education = () => {
 
                         <DebounceInput
                           label={
-                            <MandatoryFieldLabel text="Institute Name" />
+                            <MandatoryFieldLabel editMode={editMode} text="Institute Name" />
                           }
                           element="app-input"
                           type="text"
@@ -1044,7 +1043,7 @@ const Education = () => {
                         <div>
                           <FormSelect
                             label={
-                              <MandatoryFieldLabel text="Country For Doctorate" />
+                              <MandatoryFieldLabel editMode={editMode} text="Country For Doctorate" />
                             }
                             onChange={(e) => {
                               setCountryForDoc(e.target.value);
@@ -1068,7 +1067,7 @@ const Education = () => {
 
                             <FormSelect
                               label={
-                                <MandatoryFieldLabel text="State/Province" />
+                                <MandatoryFieldLabel editMode={editMode} text="State/Province" />
                               }
                               className="form-select m-0 w-100"
                               onChange={(e) => {
@@ -1093,7 +1092,7 @@ const Education = () => {
 
                         <FormSelect
                           label={
-                            <MandatoryFieldLabel text="Graduation Year" />
+                            <MandatoryFieldLabel editMode={editMode} text="Graduation Year" />
                           }
                           className="form-select m-0 w-100"
                           onChange={(e) => {
@@ -1120,7 +1119,7 @@ const Education = () => {
                   <div className="d-flex justify-content-between align-items-end mt-3">
                     <div className="col-md-4" style={{ fontSize: "14px" }}>
                       <div className="d-flex align-items-end">
-                        <MandatoryFieldLabel text="Upload Degree" />
+                        <MandatoryFieldLabel editMode={editMode} text="Upload Degree" />
 
                         <Tooltip
                           width="200px"
@@ -1164,7 +1163,7 @@ const Education = () => {
 
                         <FormSelect
                           label={
-                            <MandatoryFieldLabel text="Country For Degree" />
+                            <MandatoryFieldLabel editMode={editMode} text="Country For Degree" />
                           }
                           editMode={editMode}
                           value={countryForDeg}
@@ -1188,7 +1187,7 @@ const Education = () => {
 
                           <FormSelect
                             label={
-                              <MandatoryFieldLabel text="State/Province" />
+                              <MandatoryFieldLabel editMode={editMode} text="State/Province" />
                             }
                             className="form-select m-0 w-100"
                             onChange={(e) => {
@@ -1213,7 +1212,7 @@ const Education = () => {
 
                       <FormSelect
                         label={
-                          <MandatoryFieldLabel text="Diploma Earned Year" />
+                          <MandatoryFieldLabel editMode={editMode} text="Diploma Earned Year" />
 
                         }
                         className="form-select m-0 w-100"
@@ -1248,7 +1247,7 @@ const Education = () => {
                   <FormSelect
                     label={
                       <>
-                        <MandatoryFieldLabel text="Certification" />
+                        <MandatoryFieldLabel editMode={editMode} text="Certification" />
 
                         <Tooltip
                           width="200px"
@@ -1314,11 +1313,9 @@ const Education = () => {
                           )}
                         </div>
                       ) : null}
-
-
                     </div>
                     <div className="col-md-4" style={{ fontSize: "14px" }}>
-                      <MandatoryFieldLabel text="Certificate Expiration" />
+                      <MandatoryFieldLabel editMode={editMode} text="Certificate Expiration" />
 
                       <ReactDatePicker
                         selected={moment
@@ -1328,14 +1325,20 @@ const Education = () => {
                           )
                           .toDate()}
                         onChange={(date) => {
-                          date.setHours(23);
-                          date.setMinutes(59);
-                          date.setSeconds(59);
-                          const originalMoment = moment(date);
-                          set_expiration(originalMoment);
-                          dynamicSave("CertificateExpiration", originalMoment);
+                          if (date) {
+                            date.setHours(23);
+                            date.setMinutes(59);
+                            date.setSeconds(59);
+                            const originalMoment = moment(date);
+                            set_expiration(originalMoment);
+                            dynamicSave("CertificateExpiration", originalMoment);
+                          }
+                          else {
+                            set_expiration(null);
+                            dynamicSave("CertificateExpiration", null);
+                          }
                         }}
-                        minDate={new Date()}
+                        // minDate={new Date()}
                         dateFormat="MMM d, yyyy"
                         className="form-control m-2"
                         readOnly={!editMode}
@@ -1351,7 +1354,7 @@ const Education = () => {
               <h6 className="border-bottom">Languages</h6>
               <div className="d-flex justify-content-between align-items-end">
                 <div className="col-md-5">
-                  <MandatoryFieldLabel text=" Select Native (Primary) Language" />
+                  <MandatoryFieldLabel editMode={editMode} edit text=" Select Native (Primary) Language" />
                   <Select
                     isMulti={false}
                     placeholder="Select Native Languages"
@@ -1395,8 +1398,8 @@ const Education = () => {
           <div
             className="tutor-tab-education-experience"
           >
-            <div style={{ width: "450px", fontWeight:"bold" }}>
-              <MandatoryFieldLabel text=" Work Experience" />
+            <div style={{ width: "450px", fontWeight: "bold" }}>
+              <MandatoryFieldLabel editMode={editMode} text=" Work Experience" />
               <DebounceInput
                 delay={2000}
                 className="work-exp"

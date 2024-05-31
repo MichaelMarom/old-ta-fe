@@ -588,3 +588,26 @@
   height: 1px;
   background-color: #c4c2c2;
 }
+
+
+
+
+/* --------header------------- */
+
+
+.video-nav-icon:hover {
+  transition: width 800ms ease-in-out ;
+  transform: scale(1.2); /* Enlarge the icon on hover */
+}
+
+
+.blink_me {
+  color:red;
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  20% {
+    opacity: 0;
+  }
+}

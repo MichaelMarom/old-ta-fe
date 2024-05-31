@@ -4,8 +4,9 @@ import { BsFillPlayFill } from 'react-icons/bs';
 import Modal from './Modal'
 
 
-const TabInfoVideoToast = ({ video, iframeVideo = false }) => {
+const TabInfoVideoToast = ({ video, iframeVideo = false,isOpen, setIsOpen  }) => {
     const [showToast, setShowToast] = useState(false);
+    console.log(video)
 
     const closeModal = () => {
         const video = document.getElementById('tabvideo');
@@ -13,8 +14,9 @@ const TabInfoVideoToast = ({ video, iframeVideo = false }) => {
             video.pause();
             video.currentTime = 0;
         }
-        setShowToast(false);
+        setIsOpen(false);
     };
+    
     useEffect(() => {
         return () => {
             closeModal()
@@ -23,7 +25,7 @@ const TabInfoVideoToast = ({ video, iframeVideo = false }) => {
 
     return (
         <>
-            <div className='d-flex justify-content-center align-items-center border border-light rounded'
+            {/* <div className='d-flex justify-content-center align-items-center border border-light rounded'
                 style={{ position: "fixed", top: '5px', right: "14%", zIndex: "999", height: "40px" }}
             >
                 <div className='text-light text-sm' style={{ fontSize: "12px" }}>View Tutorial</div>
@@ -34,9 +36,9 @@ const TabInfoVideoToast = ({ video, iframeVideo = false }) => {
                 >
                     <BsFillPlayFill size={16} />
                 </Button>
-            </div>
+            </div> */}
             {video &&
-                <Modal show={showToast}
+                <Modal show={isOpen}
                     handleClose={closeModal} title={'Video'}>
                     <div>
                         {iframeVideo ?

@@ -8,7 +8,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-family: cursive;
         background: #212F3D;
     }
 
@@ -35,7 +34,6 @@
 
     .admin-tab-header ul li {
         color: #fff;
-        /* padding: 0px !important; */
         display: flex;
         transform: skew(-40deg);
         font-size: large;

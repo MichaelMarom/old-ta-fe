@@ -114,7 +114,7 @@
 .scroller-right {
     height: 40px;
     width: 40px;
-    position: absolute;
+    /* position: absolute; */
     right: 0;
     background-color: rgb(0, 0, 0);
     background-color: rgb(0, 0, 0, .1);
@@ -131,7 +131,7 @@
 .scroller-left {
     height: 40px;
     width: 40px;
-    position: absolute;
+    /* position: absolute; */
     left: 0;
     background-color: rgb(0, 0, 0);
     background-color: rgb(0, 0, 0, .1);
@@ -157,7 +157,6 @@
         display: flex;
         z-index: 998;
         align-items: center;
-        font-family: cursive;
         position: relative;
         background: #212F3D;
         scroll-behavior: smooth;

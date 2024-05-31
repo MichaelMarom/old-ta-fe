@@ -25,7 +25,7 @@ const Select = ({
       >
         {options ? options : children}
       </select>
-      <span className="input__label d-flex align-items-end" style={{ top: "2px", background:editMode?"white": "#e1e1e1" }}>
+      <span className="input__label d-flex align-items-end" style={{ top: "2px", background:editMode?"white": "#e1e1e1", color:"black" }}>
         {TooltipText && !!TooltipText.length && (
           <Tooltip
             width="200px"

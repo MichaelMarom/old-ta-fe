@@ -9,6 +9,18 @@ import { setUser } from "../../redux/auth/auth";
 import { setTutor } from "../../redux/tutor/tutorData";
 import { setStudent } from "../../redux/student/studentData";
 import { moment } from '../../config/moment'
+import educationVideo from '../../assets/videos/education.mp4'
+import collabVideo from '../../assets/videos/collaboration.mp4'
+import feedbackVideo from '../../assets/videos/feedback.mp4'
+import introVideo from '../../assets/videos/intro.mp4'
+import motivateVideo from '../../assets/videos/motivation.mp4'
+import calenderVideo from '../../assets/videos/calender.mp4'
+import facultiesVideo from '../../assets/videos/faculties.mp4'
+import setupVideo from '../../assets/videos/setup.mp4'
+import marketplaceVideo from '../../assets/videos/marketplace.mp4'
+import { PiVideoBold } from "react-icons/pi";
+
+import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
 
 const Header = () => {
   const { signOut } = useClerk();
@@ -17,6 +29,7 @@ const Header = () => {
   const [activeTab, setActiveTab] = useState("intro");
   const [filteredSessions, setFilteredSessions] = useState([])
   const { sessions } = useSelector(state => state.tutorSessions)
+  const [isOpen, setIsOpen] = useState(false)
 
   const dispatch = useDispatch();
   let [screen_name, set_screen_name] = useState(
@@ -60,22 +73,21 @@ const Header = () => {
   }, [location.pathname, activeTab]);
 
   const tabs = [
-    { url: "/tutor/intro", name: "Introduction" },
-    { url: "/tutor/setup", name: "Tutor Setup" },
-    { url: "/tutor/education", name: "Education" },
-    { url: "/tutor/rates", name: "Motivate" },
-    { url: "/tutor/accounting", name: "Accounting" },
-    { url: "/tutor/subjects", name: "Subjects" },
-    { url: "/tutor/scheduling", name: "Scheduling" },
-    { url: "/tutor/feedback", name: "Feedback" },
+    { url: "/tutor/intro", name: "Introduction", video: introVideo },
+    { url: "/tutor/setup", name: "Tutor Setup", video: setupVideo },
+    { url: "/tutor/education", name: "Education", video: educationVideo },
+    { url: "/tutor/rates", name: "Motivate", video: motivateVideo },
+    { url: "/tutor/accounting", name: "Accounting", },
+    { url: "/tutor/subjects", name: "Subjects", video:facultiesVideo },
+    { url: "/tutor/scheduling", name: "Scheduling", video: calenderVideo },
+    { url: "/tutor/feedback", name: "Feedback", video: feedbackVideo },
     { url: "/tutor/my-students", name: "My students" },
     { url: "/tutor/term-of-use", name: "Terms Of Use" },
-    { url: "/tutor/chat", name: "Message Board" },
-    { url: "/tutor/market-place", name: "Market place" },
+    { url: "/tutor/chat", name: "Message Board", },
+    { url: "/tutor/market-place", name: "Market place", video: marketplaceVideo },
     { url: "/tutor/agency", name: "Agency" },
-
-    { url: "/collab", name: "Collaboration", common: true },
-    { url: `/tutor/tutor-profile/${tutor.AcademyId}`, name: "Profile" },
+    { url: "/collab", name: "Collaboration", common: true, video: collabVideo },
+    { url: `/tutor/tutor-profile/${tutor.AcademyId}`, name: "Profile", },
   ];
 
   const StatusValues = {
@@ -104,22 +116,22 @@ const Header = () => {
     let url = e.currentTarget.dataset.url;
     nav(`${url}`);
 
-    let urls = [
-      "intro",
-      "setup",
-      "education",
-      "rates",
-      "accounting",
-      "subjects",
-      "my-students",
-      "scheduling",
-      "term-of-use",
-      "market-place",
-      "collaboration",
-      "tutor-profile",
-    ];
-    let new_index = urls.indexOf(url);
-    window.localStorage.setItem("tab_index", new_index);
+    // let urls = [
+    //   "intro",
+    //   "setup",
+    //   "education",
+    //   "rates",
+    //   "accounting",
+    //   "subjects",
+    //   "my-students",
+    //   "scheduling",
+    //   "term-of-use",
+    //   "market-place",
+    //   "collaboration",
+    //   "tutor-profile",
+    // ];
+    // let new_index = urls.indexOf(url);
+    // window.localStorage.setItem("tab_index", new_index);
   };
 
 
@@ -167,25 +179,6 @@ const Header = () => {
 
   return (
     <>
-      {/* <div
-        className={`screen-name btn-success rounded  p-1 flex-column align-items-center`}
-        style={{
-          fontSize: "14px",
-          display: !tutor.TutorScreenname ? "none" : "flex",
-          position: "fixed",
-          top: "1px",
-          zIndex: "999",
-          left: "3%",
-          background: statesColours[tutorState]?.bg,
-          color: statesColours[tutorState]?.color,
-        }}
-      >
-        <div style={{ fontWeight: "bold" }}>{screen_name}</div>
-        <div style={{ fontSize: "12px", fontWeight: "700" }}>
-          {StatusValues[tutor.Status]}
-        </div>
-      </div> */}
-
       <div className="tutor-tab-header shadow-sm">
         <div
           style={{
@@ -225,11 +218,7 @@ const Header = () => {
           style={{
             fontSize: "14px",
             display: !tutor.TutorScreenname ? "none" : "flex",
-            // position: "fixed",
-            // top: "1px",
-            // zIndex: "999",
-            // left: "3%",
-            marginLeft: "80px",
+            marginLeft: "30px",
             width: "auto",
             whiteSpace: "nowrap",
             background: statesColours[tutorState]?.bg,
@@ -242,7 +231,6 @@ const Header = () => {
           </div>
         </div>
         <ul ref={scrollRef}
-          id=""
           className={`header`}
           style={{
             background:
@@ -254,34 +242,43 @@ const Header = () => {
                 ? "none"
                 : "auto",
             width: "calc(100% - 300px)",
-            margin: "0 150px ",
+            margin: "0 50px 0 50px ",
           }}
         >
           {tabs.map((tab) => {
             return (
-              <li
-                key={tab.url}
-                data-url={tab.url}
-                onClick={handleTabClick}
-                id={getId(tab)}
-              >
-                <p className="m-0" style={{ transform: "skew(41deg, 0deg)" }}>
-                  {tab.name}{!!filteredSessions.length && tab.url === '/tutor/feedback' && <span className="text-bg-danger p-1 rounded-circle" style={{
-                    display: "inline-flex",
-                    width: "24px",
-                    height: "24px",
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}>{filteredSessions.length}</span>}
-                </p>
-              </li>
+              <>
+                <li
+                  key={tab.url}
+                  data-url={tab.url}
+                  onClick={handleTabClick}
+                  id={getId(tab)}
+                >
+                  <p className="m-0" style={{ transform: "skew(41deg, 0deg)" }}>
+                    {tab.name}{!!filteredSessions.length && tab.url === '/tutor/feedback' && <span className="text-bg-danger p-1 rounded-circle" style={{
+                      display: "inline-flex",
+                      width: "24px",
+                      height: "24px",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}>{filteredSessions.length}</span>}
+                  </p>
+                </li>
+               {tab.video && <div className="cursor-pointer mx-2 video-nav-icon" style={{ transform: "skew(0)" }} onClick={() => setIsOpen(tab.url)}>
+                  <PiVideoBold color='#ff4e4e' size="28" className="video-nav-icon" />
+                </div>}
+                <div className="text-light" style={{ fontWeight: "bold" }}>|</div>
+              </>
             );
           })}
         </ul>
+        <div>
+          <TabInfoVideoToast video={tabs.find(tab => tab.url === isOpen)?.video} isOpen={isOpen} setIsOpen={setIsOpen} />
+        </div>
         <div
           className="d-flex border rounded p-1 justify-content-center align-items-center "
-          style={{ marginRight: "60px", cursor: "pointer" }}
+          style={{ marginRight: "30px", cursor: "pointer" }}
           onClick={() => signOut(() => handleSignOut())}
         >
           <p className="text-danger m-0">Signout</p>
@@ -289,21 +286,6 @@ const Header = () => {
             <FaSignOutAlt color="red" />
           </Tooltip>
         </div>
-        <div
-          className="scroller-right"
-          onClick={handle_scroll_right}
-          style={{
-            margin: "0 0 0 0",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "#efefef",
-            opacity: ".7",
-            height: "100%",
-            transform: "skew(-0deg)",
-            width: "50px",
-          }}
-        ></div>
         <div
           style={{
             margin: "0 0 0 0",

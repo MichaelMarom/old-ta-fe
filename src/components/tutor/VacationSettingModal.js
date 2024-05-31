@@ -85,7 +85,7 @@ const VacationSettingModal = ({ isOpen, handleClose, start, end, editMode, setSt
                 </div>
                 <div className='divider'>
                     <TAButton buttonText="Setup" handleClick={() => { 
-                        toast.success("Vacation Settings Saved!");
+                        toast.info("Please Save the Tab to Save Vacation Settings!");
                          handleClose(); }} />
                 </div>
             </div>
