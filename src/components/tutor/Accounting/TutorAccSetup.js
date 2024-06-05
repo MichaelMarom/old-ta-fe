@@ -413,8 +413,8 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                         <div className='d-flex align-items-center mb-2 justify-content-between'>
 
                             <Input
-                                tooltipText='Calculate your total earning for the previous year. 
-                                This earnings will be shopwn on your 1099 form.'
+                                tooltipText='To accurately calculate your total earnings for the previous year, you can refer to your 1099 form, which reports all non-employment
+                                 income. WE sum up the amounts you earned last year to determine your total earnings.'
                                 editMode={false}
                                 label={`Total Earning Previous Year. `}
                                 required={currentYearEarning > 600}

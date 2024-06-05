@@ -564,9 +564,18 @@ const TutorSetup = () => {
   }, [vacation_mode]);
 
 
-  const mandatoryFields = [{ name: "fname", filled: !!fname.length }, { name: "lname", filled: !!lname.length }, { name: "phone", filled: !!cell.length },
-  { name: "rtime", filled: !!response_zone.length }, { name: "country", filled: !!country.length }, { name: "state", filled: !!state.length },
-  { name: "photo", filled: !!photo.length }, { name: "video", filled: !!video.length }]
+  const mandatoryFields = [{ name: "fname", filled: !!fname.length, value: fname },
+  { name: "lname", filled: !!lname.length, value: lname },
+  { name: "phone", filled: !!cell.length, value: cell },
+  { name: "rtime", filled: !!response_zone.length, value: response_zone },
+  { name: "country", filled: !!country.length, value: country },
+  { name: "state", filled: !!state.length, value: state },
+  { name: "photo", filled: !!photo.length, value: photo },
+  { name: "video", filled: !!video.length, value: video },
+  { name: 'timezone', filled: !!timeZone.length, value: timeZone },
+  { name: 'motivate', filled: !!motivation.length, value: motivation },
+  { name: 'intro', filled: !!intro.length, value: intro },
+  { name: 'headline', filled: !!headline.length, value: headline }]
 
   if (tutorDataLoading) return <Loading height="80vh" />;
   return (
@@ -590,7 +599,7 @@ const TutorSetup = () => {
 
             <div className="d-flex justify-content-between" style={{ gap: "20px" }}>
               <div className="d-flex flex-column align-items-center" style={{ width: "15%", }}>
-                <h6 className={`text-start m-0 ${mandatoryFields.find(item=>item.name==='photo').filled ? '' : 'blink_me'}`} style={{ whiteSpace: "nowrap" }}>
+                <h6 className={`text-start m-0 ${mandatoryFields.find(item => item.name === 'photo').filled ? '' : 'blink_me'}`} style={{ whiteSpace: "nowrap" }}>
                   Profile Photo<span className="text-danger " style={{ fontSize: "25px", fontWeight: "bold" }}>*</span>
                 </h6>
                 {picUploading && (
@@ -660,17 +669,17 @@ const TutorSetup = () => {
                       width: "30px",
                       height: "15px",
                     }}
-                    onChange={() => toast.info("Tutor must conduct 40 hours before can activate “Agency” option.")}
+                    onChange={() => toast.info("Tutor must conduct 40 hours before can activate “Franchise” option.")}
                   //  checked={vacation_mode}
                   />
                   <label
                     className="form-check-label mr-3"
                     htmlFor="flexSwitchCheckChecked"
                   >
-                    Agency Operator
+                    My Franchise
                   </label>
                   <ToolTip
-                    text="The Tutoring Academy platform presents a unique 'Agency' opportunity, 
+                    text="The Tutoring Academy platform presents a unique 'Franchisey' opportunity, 
                   enabling you to enhance your business by recruiting and supervising other 
                   tutors. This model allows for scalability by setting a markup for each tutor's 
                   services, thereby creating a potential revenue stream. It's an innovative 
@@ -778,7 +787,6 @@ const TutorSetup = () => {
               )} */}
                 </div>
               </div>
-
 
               <div className="" style={{ width: "23%" }}>
                 <div
@@ -889,8 +897,6 @@ const TutorSetup = () => {
                   }}
                 >
                   <div className="input w-100">
-
-
                     <PhoneInput
                       defaultCountry="us"
                       value={cell}
@@ -902,10 +908,11 @@ const TutorSetup = () => {
                       className="input__label"
                       style={{
                         top: "-3px", left: "5px", zIndex: "99", padding: "2px",
-                        color: "rgb(133, 138, 133)",
+                        color: "black",
+                        background: "transparent",
                         transform: " translate(0.25rem, -65%) scale(0.8)"
                       }}
-                    >  phone
+                    >  <MandatoryFieldLabel name="phone" mandatoryFields={mandatoryFields} editMode={editMode} text={"Phone"} />
                     </span>
                   </div>
                 </div>
@@ -925,7 +932,7 @@ const TutorSetup = () => {
                     setValue={set_response_zone}
                     value={response_zone}
                     editMode={editMode}
-                    label={<MandatoryFieldLabel text="Response Time" editMode={editMode} />}
+                    label={<MandatoryFieldLabel name="rtime" mandatoryFields={mandatoryFields} text="Response Time" editMode={editMode} />}
                     TooltipText={
                       "Select your response time answering the student during business time in your time zone. Please take notice that the student take this fact as one of the considurations of selecting you as tutor."
                     }
@@ -950,7 +957,7 @@ const TutorSetup = () => {
                       setValue={set_timeZone}
                       value={timeZone}
                       editMode={editMode}
-                      label={<MandatoryFieldLabel text="Timezone" editMode={editMode} />}
+                      label={<MandatoryFieldLabel name="timezone" mandatoryFields={mandatoryFields} text="Timezone" editMode={editMode} />}
                       TooltipText={
                         "Select the Greenwich Mean Time (GMT) zone where you reside. It will let the student configure his time availability conducting lessons with you, when in a different time zone. "
                       }
@@ -1044,7 +1051,7 @@ const TutorSetup = () => {
                     setValue={set_country}
                     value={country}
                     editMode={editMode}
-                    label={<MandatoryFieldLabel text="Country" editMode={editMode} />}
+                    label={<MandatoryFieldLabel name="country" mandatoryFields={mandatoryFields} text="Country" editMode={editMode} />}
                   >
                     {countryList}
                   </Select>
@@ -1064,7 +1071,7 @@ const TutorSetup = () => {
                       setValue={set_state}
                       value={state}
                       editMode={editMode}
-                      label={<MandatoryFieldLabel text="State/Province" editMode={editMode} />}
+                      label={<MandatoryFieldLabel name="state" mandatoryFields={mandatoryFields} text="State/Province" editMode={editMode} />}
                     >
                       <option value="" disabled>
                         Select State
@@ -1143,7 +1150,8 @@ const TutorSetup = () => {
                   border: "1px solid dotted",
                 }}
               >
-                <h6>Tutor's introduction video<span className="text-danger " style={{ fontSize: "25px", fontWeight: "bold" }}>*</span></h6>
+                <h6 className={`${!!video.length&& !videoError ? '' : 'blink_me'}`}>
+                  Tutor's introduction video<span className="text-danger " style={{ fontSize: "25px", fontWeight: "bold" }}>*</span></h6>
                 <div className="mb-2">
                   {videoUploading && (
                     <Loading
@@ -1161,7 +1169,7 @@ const TutorSetup = () => {
                     />
                   </div>
                 ) : selectedVideoOption === "upload" &&
-                  video?.length &&
+                  !video?.length &&
                   !videoError ? (
                   <div className="d-flex justify-content-center align-item-center w-100 h-100 border shadow">
                     <video
@@ -1175,7 +1183,6 @@ const TutorSetup = () => {
                 ) : (
                   <div className="tutor-tab-video-frame p-2 card">
                     <div style={{ textAlign: "justify", fontSize: "12px" }}>
-                      {" "}
                       Providing your video, is mandatory. Your registration is at
                       the stage of 'pending' until you upload it. An introduction
                       video is a great way to showcase your personality, skills and
@@ -1288,7 +1295,7 @@ const TutorSetup = () => {
                             <div className="button__icon">
                               <BsCloudUpload size={15} /> <br />
                             </div>
-                            <p className="button__text"> Upload Video</p>
+                            <p className="button__text">Upload Video</p>
                           </div>
                         </label>
                       </div>
@@ -1335,7 +1342,7 @@ const TutorSetup = () => {
                   left: "10px",
                   padding: "2px",
                   fontSize: "12px"
-                }}><MandatoryFieldLabel text={"Profile Headline"} editMode={editMode} /></span>
+                }}><MandatoryFieldLabel name="headline" mandatoryFields={mandatoryFields} text={"Profile Headline"} editMode={editMode} /></span>
 
               </div>
             </div>
@@ -1361,7 +1368,7 @@ const TutorSetup = () => {
                     className="form-control m-0 shadow input__field"
                     value={intro}
                     maxLength={500}
-                    placeholder="Crafting an engaging introduction as a tutor on an online platform 
+                    placeholder="Type here an engaging introduction as being a tutor on an online platform 
                   involves highlighting your qualifications, teaching philosophy, and experience 
                   in a concise and compelling manner. Begin with your name and the subject you 
                   specialize in, ensuring to communicate your passion for teaching and the unique 
@@ -1385,7 +1392,7 @@ const TutorSetup = () => {
                     top: "-10px",
                     left: "10px",
                     padding: "2px", fontSize: "12px"
-                  }}><MandatoryFieldLabel text={"Introduction"} editMode={editMode} /></span>
+                  }}><MandatoryFieldLabel name="intro" mandatoryFields={mandatoryFields} text={"Introduction"} editMode={editMode} /></span>
 
                 </div>
               </div>
@@ -1398,11 +1405,12 @@ const TutorSetup = () => {
                   <div className="w-100 text-end" style={{ fontWeight: "300", fontSize: "12px", float: "right" }}>{motivation.length}/500</div>
 
                   <textarea
-                    className="form-control m-0 shadow input___field"
+                    className="form-control m-0 shadow input__field"
                     value={motivation}
                     disabled={!editMode}
                     maxLength={500}
-                    placeholder='Write Somethingt that will motivate Your Students. Use the "Motivate" tab to set up your promotions. Offering an introductory session for half price can spark curiosity and engagement 
+                    placeholder='Type here Something that will motivate Your Students. Use the "Motivate" tab to set up your promotions. Offering an 
+                    introductory session for half price can spark curiosity and engagement 
                 among students. Discount for multi students tutoring, or paid subscription for multi lessons, 
                 is motivating factor.
                 If you hold a teacher certificate, and wish to provide your profession to a full
@@ -1419,7 +1427,7 @@ const TutorSetup = () => {
                     left: "10px",
 
                     padding: "2px", fontSize: "12px"
-                  }}><MandatoryFieldLabel text={"Motivate"} editMode={editMode} /></span>
+                  }}><MandatoryFieldLabel name="motivate" mandatoryFields={mandatoryFields} text={"Motivate"} editMode={editMode} /></span>
 
                 </div>
               </div>
@@ -1450,10 +1458,22 @@ const TutorSetup = () => {
   );
 };
 
+export const MandatoryFieldLabel = ({ text, editMode = true, mandatoryFields = [], name }) => {
+  const blinkMe = () => {
+    if (!name) return false
+    const filled = mandatoryFields.find(item => item.name === name)?.filled;
+    return !filled;
+  }
 
-export const MandatoryFieldLabel = ({ text, editMode = true }) => <p> <span style={{
-  background: editMode ? "white" : "#e1e1e1",
-}}>{text}:</span><span className="text-danger "
-  style={{ fontSize: "26px" }}>*</span></p>
+  console.log(name, blinkMe(), mandatoryFields.find(item => item.name === name))
+
+  return <p className={`${blinkMe() ? 'blink_me' : ''}`}>
+    <span style={{
+      background: editMode ? "white" : "#e1e1e1",
+    }}>{text}:
+    </span><span className="text-danger"
+      style={{ fontSize: "26px" }}>*</span>
+  </p>
+}
 
 export default TutorSetup;

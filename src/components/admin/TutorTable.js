@@ -152,8 +152,7 @@ const TutorTable = () => {
             background: statesColours["pending"].bg,
             border: status === "pending" ? "2px solid #268daf" : "none",
           }}
-        >
-          Pending{" "}
+        >Pending
           {statusCount.find((rec) => rec.Status === "pending")?.count && (
             <span
               className="rounded-circle text-bg-danger p-1 d-flex justify-content-center align-items-center"
@@ -305,7 +304,7 @@ const TutorTable = () => {
           </thead>
           <tbody>
             {data.map((item, index) => (
-              <tr key={item.SID}>
+              <tr key={index}>
                 <td>{index + 1}</td>
                 <td data-src={null} className="col-2">
                   <div className="col-10 m-auto">

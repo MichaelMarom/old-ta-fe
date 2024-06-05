@@ -52,7 +52,7 @@ function TutorCalenderSidebar({
 
     return (
         <div className="tab-content card h-100" style={{ overflowY: "auto" }}>
-            <div className='highlight small p-2'> To view feedback, click on past due date lessons that has stars icon.
+            <div className='highlight small p-2'> To view your student's feedback, click on past due date lessons that has stars icon.
                 To postpone, or cancel a lesson, click on a futor date session, and follow dialog.</div>
             <div className='d-flex '>
                 <button

@@ -17,6 +17,7 @@ const Marketing = () => {
   const [selectedTemplate, setSelectedTemplate] = useState({})
   const [sentRecords, setSentRecords] = useState([])
   const [sending, setSending] = useState(false)
+  const [fileUploaded, setFileUploaded] = useState(false)
 
   useEffect(() => {
     get_email_temp_list().then(result => !result?.response?.data && setList(result))
@@ -58,6 +59,7 @@ const Marketing = () => {
   };
 
   const handleFileUpload = (e) => {
+    setFileUploaded(true);
     const selectedFile = e.target.files[0];
     setSentRecords([])
     if (selectedFile) {
@@ -118,7 +120,7 @@ const Marketing = () => {
       return toast.warning('Please type your message to send')
 
     if (messageType === 'email' && !selectedTemplate.id)
-      return toast.warning('Pleaseselect email template to send')
+      return toast.warning('Please select email template to send')
     // if (messageType === 'sms') { await send_sms({ numbers, message }); }
     if (messageType === 'email') {
       setSending(true)
@@ -206,6 +208,7 @@ const Marketing = () => {
                   ))}
                 </tbody>
               </table>
+              {fileUploaded && !data.length && <p className='text-danger'>No record found</p>}
             </div>
           </div>
           <div className='rounded border p-2 m-2 shadow ' style={{ width: "40%" }}>
