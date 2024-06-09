@@ -10,6 +10,8 @@ import { setTutor } from '../redux/tutor/tutorData';
 import { get_student_setup_by_userId } from '../axios/student';
 import { setStudent } from '../redux/student/studentData';
 import { useDispatch } from 'react-redux';
+import { FaCheck } from 'react-icons/fa';
+import { RxCross1 } from 'react-icons/rx'
 
 const Signup = () => {
   const location = useLocation();
@@ -17,6 +19,28 @@ const Signup = () => {
   const queryParams = new URLSearchParams(location.search);
   const role = queryParams.get("role");
   const [showPassword, setShowPassword] = useState(false);
+  const [showPassConditions, setShowPassConditions] = useState(false)
+  const [passValid, setPassValid] = useState(false)
+  const [passConditions, setPassConditions] = useState([{
+    condition: "Must contain at least 8 characters",
+    status: false
+  }, {
+    condition: "Must contain at least 1 number",
+    status: false
+  }, {
+    condition: "Must contain at least 1 uppercase letter",
+    status: false
+  }, {
+    condition: "Must contain at least 1 lowercase letter",
+    status: false
+  }, {
+    condition: "Must contain at least 3 special character",
+    status: false
+  }, {
+    condition: "Password and ConfirmPassword must be same",
+    status: false
+  }
+  ])
 
   const [signupFormValues, setSignupFormValues] = useState({
     email: '',
@@ -24,6 +48,7 @@ const Signup = () => {
     role: 'tutor',
     confirmPass: ''
   });
+
   const [loading, setLoading] = useState(false);
   const [verifying, setVerifying] = useState(false)
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -41,6 +66,7 @@ const Signup = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     if (!isLoaded) return
+    if (!passValid) return
     if (!signupFormValues?.email || !signupFormValues?.password || !signupFormValues?.role)
       return toast.error("Please fill all the fields")
 
@@ -103,7 +129,7 @@ const Signup = () => {
           }
           if (result.status === 200) {
             setSignupFormValues({ role: '', email: '', password: '' })
-            toast.success('Registration Succesfull')
+            toast.success('Registration Successfull')
           }
           else {
             toast.error("Error: Please contact support!");
@@ -120,6 +146,30 @@ const Signup = () => {
       setVerifying(false);
     }
   };
+
+  useEffect(() => {
+    if (passConditions.find(con => !con.status))
+      setPassValid(false)
+    else setPassValid(true)
+  }, [passConditions])
+
+  useEffect(() => {
+    if (!!signupFormValues.password.length) {
+      setShowPassConditions(true)
+      const checkConditions = () => {
+        return [
+          { condition: "Must contain at least 8 characters", status: signupFormValues.password.length >= 8 },
+          { condition: "Must contain at least 1 number", status: /\d/.test(signupFormValues.password) },
+          { condition: "Must contain at least 1 uppercase letter", status: /[A-Z]/.test(signupFormValues.password) },
+          { condition: "Must contain at least 1 lowercase letter", status: /[a-z]/.test(signupFormValues.password) },
+          { condition: "Password and ConfirmPassword must be same", status: signupFormValues.password === signupFormValues.confirmPass },
+          { condition: "Must contain at least 3 special characters", status: (signupFormValues.password.match(/[!@#$%^&*(),.?":{}|<>]/g) || []).length >= 3 }
+        ];
+      };
+      setPassConditions(checkConditions());
+    }
+    else setShowPassConditions(false)
+  }, [signupFormValues.password, signupFormValues.confirmPass])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -178,6 +228,20 @@ const Signup = () => {
                             value={signupFormValues.password}
                             onChange={handleInputChange}
                           />
+                          {showPassConditions &&
+                            <div className='d-flex flex-column'>
+                              {passConditions.map(cond => {
+                                return <div className={`${cond.status ? 'text-success' : 'text-danger'} d-flex`}>
+                                  <div className='mx-1'>
+                                    {cond.status ? <FaCheck /> : <RxCross1 />}
+                                  </div>
+                                  <p>
+                                    {cond.condition}
+                                  </p>
+                                </div>
+                              })}
+                            </div>
+                          }
                           <input
                             type={showPassword ? "text" : "password"}
                             name="confirmPass"
@@ -196,18 +260,19 @@ const Signup = () => {
                               onChange={() => setShowPassword(!showPassword)}
                               checked={showPassword}
                             />
-                            <label htmlFor="show" className="d-inline-block cursor-pointer" style={{ marginLeft: "5px" }}>
+                            <label htmlFor="show" className="d-inline-block cursor-pointer"
+                              style={{ marginLeft: "5px" }}>
                               Show password
                             </label>
                           </div>
                           {/* {role !== "student" && <select className="form-select"
-    name="role"
-    required
-    value={signupFormValues.role}
-    aria-label="Default select example" onChange={handleInputChange}>
-    <option value="" disabled>Select Role</option>
-    <option value="tutor">Tutor</option>
-  </select>} */}
+                            name="role"
+                            required
+                            value={signupFormValues.role}
+                            aria-label="Default select example" onChange={handleInputChange}>
+                            <option value="" disabled>Select Role</option>
+                            <option value="tutor">Tutor</option>
+                          </select>} */}
                         </div>
                         <div className='text-center'>
                           <TAButton type="submit" loading={loading} buttonText={'Sign Up'} className=" mb-4" />

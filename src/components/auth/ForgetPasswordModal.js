@@ -7,13 +7,15 @@ import { setUser } from "../../redux/auth/auth";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import TAButton from "../common/TAButton";
+import { FaCheck } from "react-icons/fa";
+import { RxCross1 } from "react-icons/rx";
 
 export const ForgetPasswordModal = ({ modalOpen, setOpenModel }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [password, setPassword] = useState();
-  const [confirmPassword, setConfirmPassword] = useState();
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [code, setCode] = useState("");
@@ -24,6 +26,51 @@ export const ForgetPasswordModal = ({ modalOpen, setOpenModel }) => {
   const { isLoaded, signIn, setActive } = useSignIn();
 
   const { getToken, userId, isSignedIn } = useAuth();
+  const [showPassConditions, setShowPassConditions] = useState(false)
+  const [passValid, setPassValid] = useState(false)
+  const [passConditions, setPassConditions] = useState([{
+    condition: "Must contain at least 8 characters",
+    status: false
+  }, {
+    condition: "Must contain at least 1 number",
+    status: false
+  }, {
+    condition: "Must contain at least 1 uppercase letter",
+    status: false
+  }, {
+    condition: "Must contain at least 1 lowercase letter",
+    status: false
+  }, {
+    condition: "Must contain at least 1 special character",
+    status: false
+  }, {
+    condition: "Password and ConfirmPassword must be same",
+    status: false
+  }])
+
+  useEffect(() => {
+    if (passConditions.find(con => !con.status))
+      setPassValid(false)
+    else setPassValid(true)
+  }, [passConditions])
+
+  useEffect(() => {
+    if (!!password.length) {
+      setShowPassConditions(true)
+      const checkConditions = () => {
+        return [
+          { condition: "Must contain at least 8 characters", status: password.length >= 8 },
+          { condition: "Must contain at least 1 number", status: /\d/.test(password) },
+          { condition: "Must contain at least 1 uppercase letter", status: /[A-Z]/.test(password) },
+          { condition: "Must contain at least 1 lowercase letter", status: /[a-z]/.test(password) },
+          { condition: "Password and ConfirmPassword must be same", status: password === confirmPassword },
+          { condition: "Must contain at least 3 special characters", status: (password.match(/[!@#$%^&*(),.?":{}|<>]/g) || []).length >= 3 }
+        ];
+      };
+      setPassConditions(checkConditions());
+    }
+    else setShowPassConditions(false)
+  }, [password, confirmPassword])
 
   async function sendResetCode(e) {
     e.preventDefault();
@@ -50,6 +97,8 @@ export const ForgetPasswordModal = ({ modalOpen, setOpenModel }) => {
   async function reset(e) {
     e.preventDefault();
     if (password !== confirmPassword) return;
+    if (!passValid) return
+    if (!code.length) return toast.error("Please fill code field")
     if (!isLoaded) return;
     setLoading(true);
     await signIn
@@ -79,7 +128,8 @@ export const ForgetPasswordModal = ({ modalOpen, setOpenModel }) => {
         }
       })
       .catch((err) => {
-        toast.error(err.errors[0].long_message);
+        console.log(err.errors)
+        toast.error(err.errors[0].longMessage);
 
         // setErrors(err.errors);
       })
@@ -166,6 +216,20 @@ export const ForgetPasswordModal = ({ modalOpen, setOpenModel }) => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+            {showPassConditions &&
+              <div className='d-flex flex-column'>
+                {passConditions.map(cond => {
+                  return <div className={`${cond.status ? 'text-success' : 'text-danger'} d-flex`}>
+                    <div className='mx-1'>
+                      {cond.status ? <FaCheck /> : <RxCross1 />}
+                    </div>
+                    <p>
+                      {cond.condition}
+                    </p>
+                  </div>
+                })}
+              </div>
+            }
 
             <div className="form-group">
               <label htmlFor="confirmPassword">Confirm Password:</label>
@@ -178,20 +242,16 @@ export const ForgetPasswordModal = ({ modalOpen, setOpenModel }) => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </div>
-            {password !== confirmPassword && (
-              <div className="alert alert-danger">Passwords do not match.</div>
-            )}
             <hr className="mt-4" />
             <div className="d-flex justify-content-between">
               <TAButton
                 buttonText="Close"
                 handleClick={() => setOpenModel(false)}
               />
-
               <TAButton
                 buttonText="Reset"
                 className="saving-btn blinking button"
-                handleClick={reset}
+                handleClick={reset} 
                 loading={loading}
               />
             </div>
@@ -201,3 +261,5 @@ export const ForgetPasswordModal = ({ modalOpen, setOpenModel }) => {
     </Modal>
   );
 };
+
+

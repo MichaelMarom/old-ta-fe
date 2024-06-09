@@ -611,11 +611,11 @@ const TutorSetup = () => {
                     />
                   </div>
                 )}
-                <div className="border rounded-circle shadow" style={{ width: "215px", height: "215px" }}>
+                <div className="border rounded-circle shadow " style={{ width: "215px", height: "215px" }}>
                   {photo ? (
                     <Avatar className="m-0" avatarSrc={photo} showOnlineStatus={false} size="200" />
                   ) : (
-                    <div style={{ textAlign: "justify", fontSize: "12px" }}>
+                    <div style={{ textAlign: "justify", fontSize: "12px", padding: "50px 20px" }}>
                       You must upload your picture, and video on this tab. You are
                       permitted to move to next tabs without validating that, but
                       your account will not be activated until it’s done
@@ -656,41 +656,43 @@ const TutorSetup = () => {
                     <p className="button__text">Upload </p>
                   </div>
                 </label>
-                <div
-                  className="form-check form-switch d-flex gap-2 border mt-2 rounded py-2"
-                  style={{ fontSize: "12px " }}
-                >
-                  <input
-                    disabled={!editMode}
-                    className="form-check-input "
-                    type="checkbox"
-                    role="switch"
-                    style={{
-                      width: "30px",
-                      height: "15px",
-                    }}
-                    onChange={() => toast.info("Tutor must conduct 40 hours before can activate “Franchise” option.")}
-                  //  checked={vacation_mode}
-                  />
-                  <label
-                    className="form-check-label mr-3"
-                    htmlFor="flexSwitchCheckChecked"
+                <div className="border p-2 shadow rounded w-100 mb-3">
+                  <div
+                    className="form-check form-switch d-flex gap-2  mt-2"
+                    style={{ fontSize: "12px " }}
                   >
-                    My Franchise
-                  </label>
-                  <ToolTip
-                    text="The Tutoring Academy platform presents a unique 'Franchisey' opportunity, 
+                    <input
+                      disabled={!editMode}
+                      className="form-check-input "
+                      type="checkbox"
+                      role="switch"
+                      style={{
+                        width: "30px",
+                        height: "15px",
+                      }}
+                      onChange={() => toast.info("Tutor must conduct 40 hours before can activate “Franchise” option.")}
+                    //  checked={vacation_mode}
+                    />
+                    <label
+                      className="form-check-label mr-3"
+                      htmlFor="flexSwitchCheckChecked"
+                    >
+                      My Franchise
+                    </label>
+                    <ToolTip
+                      text="The Tutoring Academy platform presents a unique 'Franchisey' opportunity, 
                   enabling you to enhance your business by recruiting and supervising other 
                   tutors. This model allows for scalability by setting a markup for each tutor's 
                   services, thereby creating a potential revenue stream. It's an innovative 
                   approach to expand your educational services while managing and growing a team 
                   of skilled tutors."
-                    width="200px"
-                  />
+                      width="200px"
+                    />
 
+                  </div>
                 </div>
 
-                <div className="border p-2 shadow rounded" >
+                <div className="border p-2 shadow rounded w-100" >
                   <div className="d-flex gap-1 flex-column">
                     <div
                       className="form-check form-switch d-flex gap-2 w-100"
@@ -1150,7 +1152,7 @@ const TutorSetup = () => {
                   border: "1px solid dotted",
                 }}
               >
-                <h6 className={`${!!video.length&& !videoError ? '' : 'blink_me'}`}>
+                <h6 className={`${!!video.length && !videoError ? '' : 'blink_me'}`}>
                   Tutor's introduction video<span className="text-danger " style={{ fontSize: "25px", fontWeight: "bold" }}>*</span></h6>
                 <div className="mb-2">
                   {videoUploading && (
@@ -1169,7 +1171,7 @@ const TutorSetup = () => {
                     />
                   </div>
                 ) : selectedVideoOption === "upload" &&
-                  !video?.length &&
+                  video?.length &&
                   !videoError ? (
                   <div className="d-flex justify-content-center align-item-center w-100 h-100 border shadow">
                     <video
@@ -1322,7 +1324,7 @@ const TutorSetup = () => {
               }}
             >
               <div className="input w-100">
-                <div style={{ fontWeight: "300", fontSize: "12px", float: "right" }}>{headline.length}/80</div>
+                <div style={{ fontWeight: "900", fontSize: "14px", float: "right" }}>{headline.length}/80</div>
                 <input
                   className="input__field m-0 shadow form-control"
                   value={headline}
@@ -1333,17 +1335,15 @@ const TutorSetup = () => {
                   onChange={(e) => set_headline(e.target.value)}
                   type="text"
                 />
-                <div className="inputValidator">
-                  Your have reached the max limit of 80 characters.
-                </div>
                 <span className="" style={{
                   position: "absolute",
                   top: "-10px",
                   left: "10px",
                   padding: "2px",
                   fontSize: "12px"
-                }}><MandatoryFieldLabel name="headline" mandatoryFields={mandatoryFields} text={"Profile Headline"} editMode={editMode} /></span>
-
+                }}>
+                  <MandatoryFieldLabel name="headline" mandatoryFields={mandatoryFields} text={"Profile Headline"}
+                    editMode={editMode} /></span>
               </div>
             </div>
 
@@ -1363,7 +1363,7 @@ const TutorSetup = () => {
                 }}
               >
                 <div className="input w-100">
-                  <div className="w-100 text-end" style={{ fontWeight: "300", fontSize: "12px", float: "right" }}> {intro.length}/500</div>
+                  <div className="w-100 text-end" style={{ fontWeight: "900", fontSize: "14px", float: "right" }}> {intro.length}/500</div>
                   <textarea
                     className="form-control m-0 shadow input__field"
                     value={intro}
@@ -1384,9 +1384,7 @@ const TutorSetup = () => {
                     spellCheck="true"
                     disabled={!editMode}
                   ></textarea>
-                  <div className="inputValidator">
-                    Your have reached the max limit of 1500 characters.
-                  </div>
+                  
                   <span className="" style={{
                     position: "absolute",
                     top: "-10px",
@@ -1402,7 +1400,7 @@ const TutorSetup = () => {
                 style={{ textAlign: "center", float: "right", fontWeight: "bold", width: "40%" }}
               >
                 <div className="input w-100">
-                  <div className="w-100 text-end" style={{ fontWeight: "300", fontSize: "12px", float: "right" }}>{motivation.length}/500</div>
+                  <div className="w-100 text-end" style={{ fontWeight: "900", fontSize: "14px", float: "right" }}>{motivation.length}/500</div>
 
                   <textarea
                     className="form-control m-0 shadow input__field"

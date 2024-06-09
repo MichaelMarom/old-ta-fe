@@ -78,7 +78,7 @@ const Header = () => {
     { url: "/tutor/education", name: "Education", video: educationVideo },
     { url: "/tutor/rates", name: "Motivate", video: motivateVideo },
     { url: "/tutor/accounting", name: "Accounting", },
-    { url: "/tutor/subjects", name: "Subjects", video:facultiesVideo },
+    { url: "/tutor/subjects", name: "Subjects", video: facultiesVideo },
     { url: "/tutor/scheduling", name: "Scheduling", video: calenderVideo },
     { url: "/tutor/feedback", name: "Feedback", video: feedbackVideo },
     { url: "/tutor/my-students", name: "My students" },
@@ -115,23 +115,6 @@ const Header = () => {
   let handleTabClick = (e) => {
     let url = e.currentTarget.dataset.url;
     nav(`${url}`);
-
-    // let urls = [
-    //   "intro",
-    //   "setup",
-    //   "education",
-    //   "rates",
-    //   "accounting",
-    //   "subjects",
-    //   "my-students",
-    //   "scheduling",
-    //   "term-of-use",
-    //   "market-place",
-    //   "collaboration",
-    //   "tutor-profile",
-    // ];
-    // let new_index = urls.indexOf(url);
-    // window.localStorage.setItem("tab_index", new_index);
   };
 
 
@@ -251,7 +234,7 @@ const Header = () => {
                 <li
                   key={tab.url}
                   data-url={tab.url}
-                  onClick={handleTabClick}
+                  onClick={() => nav(tab.url)}
                   id={getId(tab)}
                 >
                   <p className="m-0" style={{ transform: "skew(41deg, 0deg)" }}>
@@ -265,17 +248,17 @@ const Header = () => {
                     }}>{filteredSessions.length}</span>}
                   </p>
                 </li>
-               {tab.video && <div className="cursor-pointer mx-2 video-nav-icon" style={{ transform: "skew(0)" }} onClick={() => setIsOpen(tab.url)}>
-                  <PiVideoBold color='#ff4e4e' size="28" className="video-nav-icon" />
+                {tab.video && <div className="cursor-pointer mx-2 video-nav-icon" style={{ transform: "skew(0)" }}
+                  onClick={() => setIsOpen(tab.url)}>
+                  <PiVideoBold color={location.pathname === tab.url ? '#ff4e4e' : "rgb(153 132 132)"}
+                    size="28" className="video-nav-icon" />
                 </div>}
                 <div className="text-light" style={{ fontWeight: "bold" }}>|</div>
               </>
             );
           })}
         </ul>
-        <div>
-          <TabInfoVideoToast video={tabs.find(tab => tab.url === isOpen)?.video} isOpen={isOpen} setIsOpen={setIsOpen} />
-        </div>
+        <TabInfoVideoToast video={tabs.find(tab => tab.url === isOpen)?.video} isOpen={isOpen} setIsOpen={setIsOpen} />
         <div
           className="d-flex border rounded p-1 justify-content-center align-items-center "
           style={{ marginRight: "30px", cursor: "pointer" }}

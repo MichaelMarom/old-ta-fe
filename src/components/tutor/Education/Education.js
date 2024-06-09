@@ -86,7 +86,7 @@ const Education = () => {
   const { tutor } = useSelector((state) => state.tutor);
   const dispatch = useDispatch();
   let [dbValues, setDbValues] = useState({});
-  
+
   //private info protection notice
   let toastId = useRef();
   useEffect(() => {
@@ -689,9 +689,11 @@ const Education = () => {
       return toast.warning("Work Experiece is Required!");
 
     if (!markSecondEduStepCompleted().valid)
-      return toast.warning(
-        `Please fill required field ${markSecondEduStepCompleted().value}`
-      );
+      if (!markSecondEduStepCompleted().value === 'expiration') return toast.warning(`Please fill required field ${markSecondEduStepCompleted().value} 
+      and Epxpiration Date cannot be set to today Date.`)
+    return toast.warning(
+      `Please fill required field ${markSecondEduStepCompleted().value}`
+    );
 
     if (level !== "No Academic Education" && (!cert_file_name || !deg_file_name))
       toast.warning(
@@ -706,23 +708,22 @@ const Education = () => {
 
   const mandatoryFields = [{ name: "level", filled: !!level?.length, value: level },
   { name: "experience", filled: !!experience?.length, value: experience },
+  { name: "degreeFile", filled: !!deg_file_name?.length, value: deg_file_name },
   { name: "bcollege", filled: !!uni_bach?.length, value: uni_bach },
-  { name: "degreeFile", filled: !!deg_file_name?.length, value:deg_file_name  },
-  {name: "byear", filled: !!bach_yr?.length, value:bach_yr },
-  {
-    name:"bcountry", filled: !!countryForAssociate?.length, value: countryForAssociate
-  },
-  {name:"bstate", filled:!!bach_state?.length,value:bach_state},
-  {name:"mcollege", filled:!!uni_mast?.length, value:uni_mast},
-  {name:"mstate", filled:!!mast_state?.length, value:mast_state},
-  {name:"mcountry", filled:!!countryForMast?.length, value: countryForMast},
-  {name:"myear", filled:!!mast_yr?.length, value:mast_yr},
-  {name:"dcollege", filled:!!doc_uni?.length, value:doc_uni },
-  {name:"dstate", filled: !!doctorateState?.length, value:doctorateState},
-  {name:"dcountry", filled:!!countryForDoc?.length, value:countryForDoc},
-  {name:"dyear", filled:!!doctorateGraduateYear?.length, value:doctorateGraduateYear},
-  {name:"degreeYear", filled:!!degree_yr?.length, value:degree_yr},
-// {name:"", filled:}
+  { name: "byear", filled: !!bach_yr?.length, value: bach_yr },
+  { name: "bcountry", filled: !!countryForAssociate?.length, value: countryForAssociate },
+  { name: "bstate", filled: !!bach_state?.length, value: bach_state },
+  { name: "mcollege", filled: !!uni_mast?.length, value: uni_mast },
+  { name: "mstate", filled: !!mast_state?.length, value: mast_state },
+  { name: "mcountry", filled: !!countryForMast?.length, value: countryForMast },
+  { name: "myear", filled: !!mast_yr?.length, value: mast_yr },
+  { name: "dcollege", filled: !!doc_uni?.length, value: doc_uni },
+  { name: "dstate", filled: !!doctorateState?.length, value: doctorateState },
+  { name: "dcountry", filled: !!countryForDoc?.length, value: countryForDoc },
+  { name: "dyear", filled: !!doctorateGraduateYear?.length, value: doctorateGraduateYear },
+  { name: "degreeYear", filled: !!degree_yr?.length, value: degree_yr },
+
+    // {name:"", filled:}
   ]
 
   if (fetchingEdu) return <Loading loadingText="Fetching Tutor Eduction..." />;
@@ -895,7 +896,8 @@ const Education = () => {
                       ) : (
                         <FormSelect
                           label={
-                            <MandatoryFieldLabel editMode={editMode} text={"Graduation Year"} name="byear" mandatoryFields={mandatoryFields} />
+                            <MandatoryFieldLabel editMode={editMode} text={"Graduation Year"} name="byear"
+                              mandatoryFields={mandatoryFields} />
                           }
                           id="yr1"
                           className="form-select m-0 w-100"
@@ -1343,7 +1345,7 @@ const Education = () => {
                             dynamicSave("CertificateExpiration", null);
                           }
                         }}
-                        // minDate={new Date()}
+                        minDate={moment().toDate()}
                         dateFormat="MMM d, yyyy"
                         className="form-control m-2"
                         readOnly={!editMode}
