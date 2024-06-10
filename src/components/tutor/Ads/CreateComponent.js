@@ -11,6 +11,7 @@ import { GoPlus } from "react-icons/go";
 import Actions from "../../common/Actions";
 import { toast } from "react-toastify";
 import UserRichTextEditor from "../../common/RichTextEditor/UserRichTextEditor";
+import GradePills from "../GradePills";
 
 
 const CreateComponent = ({ setActiveTab }) => {
@@ -18,17 +19,17 @@ const CreateComponent = ({ setActiveTab }) => {
     let [education, set_education] = useState({})
     const [subjects, set_subjects] = useState([])
     const [fetching, setFetching] = useState(true);
-    const [subject, setSubject] = useState('');
-    const [grades, setGrades] = useState([])
+    const [subjectAndGrade, setSubjectAndGrade] = useState({});
+    const [grades, setGrades] = useState([]);
     const [header, setHeader] = useState('');
     const [error, setErrors] = useState({})
     const [loading, setLoading] = useState(false)
     const AcademyId = localStorage.getItem('tutor_user_id');
     const [unSavedChanges, setUnSavedChanges] = useState(false);
-    console.log(tutor)
+    console.log(subjectAndGrade)
 
     const [addText, setAddText] = useState(`Hello Students. My screen name is ${tutor.TutorScreenname ? capitalizeFirstLetter(tutor.TutorScreenname) : ''}, 
-    I teach ${subject.length ? subject : "......"}  for ${grades.length ? grades.map(elem => '[' + elem + ']') : '.....'}. 
+    I teach ${subjectAndGrade.subject?.length ? subjectAndGrade.subject : "......"}  for ${grades.length ? grades.map(elem => '[' + elem + ']') : '.....'}. 
     I am ${education ? education?.EducationalLevel : '...'} with experience of ${education ? education?.EducationalLevelExperience : '...'}. 
     I live in ${tutor.Country}, time zone ${tutor.GMT}.  Click here to view my profile for my work experience, certificates, and Diploma.
     There you can look at my calendar-scheduling for availability, and book your lesson.`)
@@ -51,12 +52,12 @@ const CreateComponent = ({ setActiveTab }) => {
     useEffect(() => {
         if (tutor.AcademyId) {
             setAddText(`Hello Students. My screen name is ${capitalizeFirstLetter(tutor.TutorScreenname)}, 
-        I teach ${subject.length ? subject : "......"}  for ${grades.length ? grades.map(elem => '[' + elem + ']') : '.....'}. 
+        I teach ${subjectAndGrade.subject?.length ? subjectAndGrade.subject : "......"}  for ${grades.length ? grades.map(elem => '[' + elem + ']') : '.....'}. 
         I am ${education ? education?.EducationalLevel : '...'} with experience of ${education ? education?.EducationalLevelExperience : '...'}. 
         I live in ${tutor.Country}, time zone ${tutor.GMT}.  Click here to view my profile for my work experience, certificates, and Diploma.
         There you can look at my calendar-scheduling for availability, and book your lesson.`)
         }
-    }, [subject, tutor, education, grades])
+    }, [subjectAndGrade.subject, tutor, education, grades])
 
     const handleClickPill = (grade) => {
         const gradeExist = grades.find(item => item === grade)
@@ -68,37 +69,36 @@ const CreateComponent = ({ setActiveTab }) => {
 
     const handleSave = async (e) => {
         e.preventDefault();
-        if (!grades.length) return toast.warning('Please select at least one school grade!')
         setLoading(true)
         const ads = await fetch_tutor_ads(AcademyId)
         setLoading(false)
         if (ads?.length) {
-            const adExist = ads.find(ad => ad.Subject === subject)
+            const adExist = ads.find(ad => ad.Subject === subjectAndGrade.subject)
             if (adExist) return toast.warning('You can  Publish 1 Ad per Subject every 7 days. this subject is already published in the last 7 days!')
         }
         const data = await post_tutor_ad({
             AcademyId,
             AdText: addText,
             AdHeader: header,
-            Subject: subject,
+            Subject: subjectAndGrade.subject,
             Certificate: education.Certificate,
             Experience: education.EducationalLevelExperience,
             GMT: tutor.GMT,
             Country: tutor.Country,
             EducationalLevel: education.EducationalLevel,
             Languages: education.NativeLang,
-            Grades: grades,
+            Grades: subjectAndGrade.grades,
             Published_At: new Date(),
             Status: 'published'
         })
         if (data?.response?.data?.message) {
             return toast.error(data?.response?.data?.message)
         }
-        setSubject('')
+        setSubjectAndGrade({})
         setGrades([])
         setHeader('')
         setAddText(`Hello Students. My screen name is ${capitalizeFirstLetter(tutor.TutorScreenname)}, 
-        I teach ${subject.length ? subject : "......"}  for ${grades.length ? grades.map(elem => '[' + elem + ']') : '.....'}. 
+        I teach ${subjectAndGrade.subject?.length ? subjectAndGrade.subject : "......"}  for ${grades.length ? grades.map(elem => '[' + elem + ']') : '.....'}. 
         I am ${education ? education?.EducationalLevel : '...'} with experience of ${education ? education?.EducationalLevelExperience : '...'}. 
         I live in ${tutor.Country}, time zone ${tutor.GMT}.  Click here to view my profile for my work experience, certificates, and Diploma.
         There you can look at my calendar-scheduling for availability, and book your lesson.`)
@@ -109,7 +109,7 @@ const CreateComponent = ({ setActiveTab }) => {
     //compare changes
     // eslint-disable-next-line react-hooks/exhaustive-deps 
     const currentState = {
-        Subject: subject,
+        Subject: subjectAndGrade.subject,
         Grades: grades,
         AdHeader: header,
         // AdText: addText
@@ -120,13 +120,13 @@ const CreateComponent = ({ setActiveTab }) => {
             Grades: [],
             AdHeader: '',
             // AdText: `Hello Students. My screen name is ${capitalizeFirstLetter(tutor.TutorScreenname)}, 
-            // I teach ${subject.length ? subject : "......"}  for ${grades.length ? grades.map(elem => '[' + elem + ']') : '.....'}. 
+            // I teach ${subjectAndGrade.subject.length ? subjectAndGrade.subject : "......"}  for ${grades.length ? grades.map(elem => '[' + elem + ']') : '.....'}. 
             // I am ${education ? education?.EducationalLevel : '...'} with experience of ${education ? education?.EducationalLevelExperience : '...'}. 
             // I live in ${tutor.Country}, time zone ${tutor.GMT}.  Click here to view my profile for my work experience, certificates, and Diploma.
             // There you can look at my calendar-scheduling for availability, and book your lesson.`
         }
         setUnSavedChanges(compareStates(initialState, currentState))
-    }, [currentState, tutor, grades, education, subject])
+    }, [currentState, tutor, grades, education, subjectAndGrade.subject])
 
     if (fetching || !tutor.AcademyId)
         return <Loading />
@@ -160,12 +160,13 @@ const CreateComponent = ({ setActiveTab }) => {
                                 <label htmlFor="">Subject</label>
                                 <select className="form-select shadow"
                                     required
-                                    onChange={(e) => setSubject(e.target.value)}
-                                    value={subject}>
-                                    <option value={''} disabled>Select</option>
+                                    onChange={(e) => setSubjectAndGrade(JSON.parse(e.target.value))}
+                                    value={JSON.stringify(subjectAndGrade) || ''}
+                                >
+                                    <option value={"{}"} disabled>Select</option>
 
                                     {(subjects || []).map((item, index) =>
-                                        <option key={index} value={item.subject}>{item.subject}</option>
+                                        <option key={index} value={JSON.stringify(item)}>{item.subject}</option>
                                     )}
                                 </select>
                             </div>
@@ -206,12 +207,12 @@ const CreateComponent = ({ setActiveTab }) => {
 
                                     <div className="d-flex  " style={{ width: "100%", overflowX: "auto", overflowY: "hidden" }}>
                                         {
-                                            JSON.parse(tutor?.Grades ?? '[]').map(grade =>
-                                                <div style={{ width: "115px", margin: "2px" }} onClick={() => handleClickPill(grade)}>
-                                                    <Pill
-                                                        label={grade}
-                                                        hasIcon={true} icon={grades.find(item => item === grade) ? <RxCross2 /> : <GoPlus />}
-                                                        color={grades.find(item => item === grade) ? "success" : "primary"} />
+                                            JSON.parse(subjectAndGrade?.grades || '[]').map(grade =>
+                                                <div style={{ width: "115px", margin: "2px" }}>
+                                                    <GradePills
+                                                        editable={false}
+                                                        hasIcon={false}
+                                                        grade={grade} grades={JSON.parse(subjectAndGrade?.grades || '[]')} />
                                                 </div>)
                                         }
                                     </div>

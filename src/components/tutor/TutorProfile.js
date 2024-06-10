@@ -380,7 +380,7 @@ const TutorProfile = () => {
                     ))}
                   </div>
                 ) : null}
-                <div>
+                {/* <div>
                   <h5 className="">Grades I Teach</h5>
                   <div className="border p-2">
                     <div
@@ -399,14 +399,14 @@ const TutorProfile = () => {
                       ))}
                     </div>
                   </div>
-                </div>
+                </div> */}
                 <div>
                   <h5 className="">Introduction</h5>
                   <p className="border p-2">{data.Introduction}</p>
                 </div>
               </div>
             </div>
-            <div className="w-75">
+            <div className="" style={{width:"calc(100% - 33.33% - 20px)"}}>
               <div className="bg-white p-4 rounded">
                 <div>
                   <h5 className="">Motivate</h5>
@@ -892,13 +892,14 @@ const TutorProfile = () => {
                             >
                               {item.Subject}
                             </p>
-                            <div className="d-flex col-9">
+                            <div className="d-flex col-9 flex-wrap">
                               {subjectGrades.map((option) => (
                                 <GradePills
                                   key={option}
                                   editable={false}
                                   grade={option}
-                                  grades={[]}
+                                  grades={subjectGrades}
+                                  hasIcon={false}
                                 />
                               ))}
                             </div>

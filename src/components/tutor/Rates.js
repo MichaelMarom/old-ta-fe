@@ -264,6 +264,11 @@ const Rates = () => {
     }
   }, [dbState.CodeStatus]);
 
+
+  const mandatoryFields = [
+    {name:"cancPolicy", filled:!!selectedCancellationPolicy.length},
+  ]
+
   return (
     <div className="tutor-tab-rates">
       <div
@@ -281,8 +286,8 @@ const Rates = () => {
                 className="dropdown d-flex align-items-center mb-4"
                 style={{ width: "100%" }}
               >
-                <div style={{fontWeight:"bold", fontSize:"13px"}}>
-               <MandatoryFieldLabel text="Tutor Cancellation Policy"/>
+                {/* <div style={{ fontWeight: "bold", fontSize: "13px" }}>
+                  <MandatoryFieldLabel text="Tutor Cancellation Policy" />
 
                 </div>
                 <Tooltip direction="bottomleft"
@@ -290,9 +295,24 @@ const Rates = () => {
                   width="200px"
                 >
                   <FaInfoCircle size={20} color="#0096ff" />
-                </Tooltip>
+                </Tooltip> */}
+                <Select
+                  value={selectedCancellationPolicy}
+                  setValue={setSelectedCancPolicy}
+                  editMode={editMode}
+                  TooltipText={"How many hours before the lesson, you allow the student to cancel without penalty?"}
+                  label={<MandatoryFieldLabel text="Cancellation Policy" mandatoryFields={mandatoryFields} name={"cancPolicy"} />}
+                >
+                  <option value={""}>Select</option>
+                  <option value={4} >4hr</option>
+                  <option value={8} >8hr</option>
+                  <option value={12} >12hr</option>
+                  <option value={24} >24hr</option>
+                  <option value={48} >48hr</option>
 
-                <button
+                </Select>
+
+                {/* <button
                   style={{ pointerEvents: editMode ? "auto" : "none" }}
                   className={`btn ${selectedCancellationPolicy.length
                     ? "btn-success"
@@ -358,7 +378,7 @@ const Rates = () => {
                       48 hr.
                     </div>
                   </div>
-                )}
+                )} */}
               </div>
               <div className="form-check form-switch d-flex gap-3">
                 <input
@@ -445,10 +465,10 @@ const Rates = () => {
               </div>
 
               <div className="highlight">
-              Please ensure to select the checkbox above to enable this feature. Your student can choose a payment option from the following table to benefit 
-              from savings by paying in advance for multiple sessions. The Academy will remit 50% of the discounted total to you upfront, with the remaining 
-              balance provided after completion. For instance, if a student opts for the 12-hour package and your rate is $60.00 per hour, the calculation 
-              would be $60.00 x 12 hours, totaling $720.00, less a 10% discount, resulting in a final amount of $648.00.
+                Please ensure to select the checkbox above to enable this feature. Your student can choose a payment option from the following table to benefit
+                from savings by paying in advance for multiple sessions. The Academy will remit 50% of the discounted total to you upfront, with the remaining
+                balance provided after completion. For instance, if a student opts for the 12-hour package and your rate is $60.00 per hour, the calculation
+                would be $60.00 x 12 hours, totaling $720.00, less a 10% discount, resulting in a final amount of $648.00.
               </div>
 
               <div
@@ -504,7 +524,7 @@ const Rates = () => {
             <div className="p-4  float-end rounded shadow border m-2 ">
               <h6>Tutor's Own Students</h6>
               <div className="highlight">
-              To assist your current students on this platform, please provide the following code to each student for use during their registration process. It is important to generate a unique code for every student..
+                To assist your current students on this platform, please provide the following code to each student for use during their registration process. It is important to generate a unique code for every student..
               </div>
               <div className="form-check form-switch d-flex align-items-center gap-2">
                 <input
@@ -611,10 +631,10 @@ const Rates = () => {
               <h6>School class Students</h6>
 
               <div className="p-2 mt-4 highlight">
-              American public schools are currently experiencing a severe shortage of teachers. If you possess a teaching certificate and are willing to 
-              instruct online a full class of students, you have the opportunity to advertise your services on our portal's message board. This platform allows you 
-              to set a competitive rate for your expertise. Likewise, schools in need of a substitute teacher can easily locate your profile, which is marked 
-              to indicate your availability.
+                American public schools are currently experiencing a severe shortage of teachers. If you possess a teaching certificate and are willing to
+                instruct online a full class of students, you have the opportunity to advertise your services on our portal's message board. This platform allows you
+                to set a competitive rate for your expertise. Likewise, schools in need of a substitute teacher can easily locate your profile, which is marked
+                to indicate your availability.
               </div>
               <div className="form-check form-switch d-flex align-items-center gap-2 mt-4">
                 <input
@@ -698,9 +718,9 @@ const Rates = () => {
               </div>
 
               <div className="highlight">
-              You or your student may form a group to take advantage of the discounts listed in the table below. For instance, if your hourly rate is $60 and 
-              the group includes 6 students, each student would receive a 39% discount per hour. A single student will be accountable for managing the account.
-              Please note, if a student from the group misses a session, the payment for that session is non-refundable.
+                You or your student may form a group to take advantage of the discounts listed in the table below. For instance, if your hourly rate is $60 and
+                the group includes 6 students, each student would receive a 39% discount per hour. A single student will be accountable for managing the account.
+                Please note, if a student from the group misses a session, the payment for that session is non-refundable.
               </div>
 
               <h6>Multi Students hourly rate</h6>

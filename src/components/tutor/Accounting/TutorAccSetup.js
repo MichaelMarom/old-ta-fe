@@ -11,6 +11,8 @@ import { compareStates, showRevisitToast } from '../../../utils/common';
 import { setTutor } from '../../../redux/tutor/tutorData';
 import Tooltip from '../../common/ToolTip';
 import Input from '../../common/Input';
+import { MandatoryFieldLabel } from '../TutorSetup';
+import Select from '../../common/Select';
 
 const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, previousYearEarning }) => {
     const { tutor } = useSelector(state => state.tutor)
@@ -168,6 +170,14 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
         setUnSavedChanges(compareStates(dbValues, localState))
     }, [dbValues, acct_name, acct_type, acct, bank_name, ssh, email, routing, payment_option, tutor])
 
+    const mandatoryFields = [{ name: "paymentOption", filled: !!payment_option?.length },
+    { name: "accName", filled: !!acct_name.length },
+    { name: "acc#", filled: !!acct.length },
+    { name: "routing#", filled: !!routing.length },
+    { name: "accType", filled: !!acct_type.length },
+    { name: "bankName", filled: !!bank_name.length },
+    { name: "email", filled: !!email.length }]
+
     return (
         <div className="d-flex" style={{ height: "calc(100vh - 150px)", overflowY: "auto" }}>
 
@@ -196,9 +206,9 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                     <div className="highlight" style={{ height: '150px' }}>
                         Our tutoring academy issues payments bi-weekly, every second Friday, for the lessons conducted up to the preceding Friday at midnight (GMT-5). We kindly ask you to choose your preferred method of payment from the options listed below. Please note that once the payment is processed, it may take 1-3 business days for the funds to be available in your account. We appreciate your understanding and are committed to ensuring a smooth and timely payment process.
                     </div>
-                    <div className='p-3 '>
+                    <div className='p-3 ' style={{ fontWeight: "bold" }}>
 
-                        <h6 className='mb-3'>How do you want to be paid?</h6>
+                        <MandatoryFieldLabel text={'How do you want to be paid?'} name="paymentOption" mandatoryFields={mandatoryFields} />
 
                         <div className='d-flex align-items-center justify-content-start flex-wrap' style={{ gap: "20px" }}>
                             {tutor.Country === 'USA' && <div className=' w-100 d-block' style={{ float: 'left' }}>
@@ -267,7 +277,7 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                         </div>
 
                         {!!payment_option &&
-                            <div className=' m-5 '>
+                            <div className='m-5'>
                                 {emailRequiredPaymentMethods.includes(payment_option) && <p
                                     style={{
                                         fontWeight: "bold"
@@ -277,35 +287,63 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                                 {payment_option === "Bank" &&
                                     <div className=' shadow p-3 border border-2 '>
 
-                                        <div className='d-flex align-items-center justify-content-between'>
-                                            <label htmlFor="acct-name">Account Name</label>
-                                            <input disabled={!editMode} required type="text" className='form-control' onInput={e => set_acct_name(e.target.value)} id="acct-name" defaultValue={acct_name} style={{ float: 'right', width: '60%' }} />
+                                        <div className='d-flex align-items-center justify-content-between flex-wrap' style={{ gap: "10px" }}>
+                                            <div style={{ width: "48%" }}>
+                                                <Input
+                                                    value={acct_name}
+                                                    setValue={set_acct_name}
+                                                    editMode={editMode}
+                                                    label={<MandatoryFieldLabel text="Account Name" name={"accName"} mandatoryFields={mandatoryFields} />}
+                                                />
+                                            </div>
+                                            <div style={{ width: "48%" }}>
+                                                <Select
+                                                    editMode={editMode}
+                                                    value={acct_type}
+                                                    setValue={set_acct_type}
+                                                    label={<MandatoryFieldLabel text={"Account Type"} name="accType" mandatoryFields={mandatoryFields} />}
+                                                >
+                                                    <option value="">Select Account Type</option>
+                                                    <option value="savings">Savings</option>
+                                                    <option value="checking">Checking</option>
+
+                                                </Select>
+                                            </div>
+                                            <div style={{ width: "48%" }}>
+                                                <Input
+                                                    value={bank_name}
+                                                    setValue={set_bank_name}
+                                                    editMode={editMode}
+                                                    label={<MandatoryFieldLabel text="Bank Name" name="bankName" mandatoryFields={mandatoryFields} />}
+                                                />
+                                            </div>
+                                            {/* <label htmlFor="acct-name">Account Name</label>
+                                            <input disabled={!editMode} required type="text" className='form-control' 
+                                            onInput={e => set_acct_name(e.target.value)} id="acct-name" 
+                                            defaultValue={acct_name} style={{ float: 'right', width: '60%' }} /> */}
+                                            <div style={{ width: "48%" }}>
+
+                                                <Input
+                                                    value={routing}
+                                                    setValue={set_routing}
+                                                    editMode={editMode}
+                                                    label={<MandatoryFieldLabel text="Routing#" name="routing#" mandatoryFields={mandatoryFields} />}
+                                                /></div>
+
+                                            {/* <label htmlFor="bank-name">Bank Name</label>
+                                            <input disabled={!editMode} className='form-control' required type="text"
+                                             onInput={e => set_bank_name(e.target.value)} defaultValue={bank_name} id="bank-name" 
+                                             style={{ float: 'right', width: '60%' }} /> */}
+                                            <div style={{ width: "48%" }}>
+                                                <Input
+                                                    value={acct}
+                                                    setValue={set_acct}
+                                                    editMode={editMode}
+                                                    label={<MandatoryFieldLabel text="Account#" mandatoryFields={mandatoryFields} name="acc#" />}
+                                                />
+                                            </div>
                                         </div>
 
-                                        <div className='d-flex align-items-center justify-content-between'>
-                                            <label htmlFor="acct-type">Account Type</label>
-
-                                            <select className='form-select' dname="" id="" onInput={e => set_acct_type(e.target.value)} style={{ float: 'right', width: '60%', margin: '0  0 10px 0', padding: '0 8px 0 8px', cursor: 'pointer' }}>
-                                                <option selected={acct_type === '' ? 'selected' : ''} value="null">Select Account Type</option>
-                                                <option selected={acct_type === 'savings' ? 'selected' : ''} value="savings">Savings</option>
-                                                <option selected={acct_type === 'checking' ? 'selected' : ''} value="checking">Checking</option>
-                                            </select>
-                                        </div>
-
-                                        <div className='d-flex align-items-center justify-content-between'>
-                                            <label htmlFor="bank-name">Bank Name</label>
-                                            <input disabled={!editMode} className='form-control' required type="text" onInput={e => set_bank_name(e.target.value)} defaultValue={bank_name} id="bank-name" style={{ float: 'right', width: '60%' }} />
-                                        </div>
-
-                                        <div className='d-flex align-items-center justify-content-between'>
-                                            <label htmlFor="acct">Account #</label>
-                                            <input disabled={!editMode} className='form-control' required type="number" onInput={e => set_acct(e.target.value)} defaultValue={acct} id="acct" style={{ float: 'right', width: '60%' }} />
-                                        </div>
-
-                                        <div className='d-flex align-items-center justify-content-between'>
-                                            <label htmlFor="routing">Routing #</label>
-                                            <input disabled={!editMode} className='form-control' required type="text" onInput={e => set_routing(e.target.value)} defaultValue={routing} id="routing" style={{ float: 'right', width: '60%' }} />
-                                        </div>
                                     </div>
                                 }
                                 {emailRequiredPaymentMethods.includes(payment_option) &&
@@ -313,13 +351,18 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                                     <div className=' shadow p-3 border border-2 '>
 
                                         <div className='d-flex align-items-center justify-content-between'>
-                                            <label htmlFor="acct-name">Email</label>
+                                            <Input
+                                                value={email}
+                                                setValue={set_email}
+                                                editMode={editMode}
+                                                label={<MandatoryFieldLabel text="Email" name="email" mandatoryFields={mandatoryFields} />}
+                                            />
+                                            {/* <label htmlFor="acct-name">Email</label>
                                             <input disabled={!editMode} required type="email" className='form-control'
                                                 onInput={e => { set_email(e.target.value) }}
                                                 id="acct-name" value={email}
-                                                style={{ float: 'right', width: '60%' }} />
+                                                style={{ float: 'right', width: '60%' }} /> */}
                                         </div>
-
                                     </div>}
                             </div>
                         }

@@ -42,7 +42,7 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!isLoaded) return;
-    isSignedIn && user.role && navigate(DEFAULT_URL_AFTER_LOGIN[user.role]);
+    isSignedIn && user?.role && navigate(DEFAULT_URL_AFTER_LOGIN[user.role]);
     console.log(isSignedIn, user, sessionSignedIn);
     setLoading(true);
     try {

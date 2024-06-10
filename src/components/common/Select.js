@@ -11,7 +11,7 @@ const Select = ({
   onChange = null,
   TooltipText,
   required = false,
-  
+
 }) => {
   return (
     <label className="input w-100">
@@ -25,13 +25,13 @@ const Select = ({
       >
         {options ? options : children}
       </select>
-      <span className="input__label d-flex align-items-end" style={{ top: "2px", background:editMode?"white": "#e1e1e1", color:"black" }}>
+      <span className="input__label d-flex align-items-end" style={{ top: "2px", background: "transparent", color: "black" }}>
         {TooltipText && !!TooltipText.length && (
           <Tooltip
             width="200px"
             text={TooltipText}
           />
-        )}{" "}
+        )}
         {label}
       </span>
     </label>

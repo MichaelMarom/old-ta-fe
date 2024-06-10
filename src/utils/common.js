@@ -121,3 +121,17 @@ export const showRevisitToast = ()=>{
     autoClose:false
 })
 }
+
+
+export const measureSpeed = async () => {
+  const imageUrl = "https://via.placeholder.com/1000"; // URL of a small image file
+  const startTime = new Date().getTime();
+  const response = await fetch(imageUrl);
+  const endTime = new Date().getTime();
+  const duration = (endTime - startTime) / 1000; // Time in seconds
+  const imageSize = response.headers.get('content-length'); // Image size in bytes
+  const speedBps = (imageSize * 8) / duration; // Speed in bits per second
+  const speedKbps = speedBps / 1024; // Speed in kilobits per second
+  return speedKbps;
+};
+

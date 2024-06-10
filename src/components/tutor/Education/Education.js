@@ -32,6 +32,7 @@ import { setTutor } from "../../../redux/tutor/tutorData";
 import DebounceInput from "../../common/DebounceInput";
 import { MandatoryFieldLabel } from "../TutorSetup";
 import FormSelect from '../../common/Select';
+import _ from "lodash";
 
 const languageOptions = LANGUAGES.map((language) => ({
   value: language,
@@ -194,7 +195,7 @@ const Education = () => {
   const jsonFields = ["NativeLang", "NativeLangOtherLang"];
   const dynamicSave = async (key, value) => {
     if (jsonFields.includes(key)) value = JSON.stringify(value);
-    if (key && value && tutor.AcademyId) {
+    if (key && tutor.AcademyId) {
       await post_edu({
         AcademyId: tutor.AcademyId,
         [key]: value,
@@ -416,7 +417,6 @@ const Education = () => {
   console.log(unSavedChanges, 102)
 
   //fetching DB
-
   useEffect(() => {
     !editMode && setFetchingEdu(true);
 
@@ -517,6 +517,8 @@ const Education = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  console.log(workExperience)
+
   useEffect(() => {
     let experiences = EXPERIENCE.map((item, index) => (
       <option key={index} className={item} value={item}>
@@ -524,7 +526,7 @@ const Education = () => {
       </option>
     ));
     let head = (
-      <option value="" disabled>
+      <option value="">
         Select
       </option>
     );
@@ -684,18 +686,22 @@ const Education = () => {
     if (
       !workExperience ||
       workExperience.length === 11 ||
-      !workExperience.length
+      !workExperience.length || !markSecondEduStepCompleted().valid
     )
-      return toast.warning("Work Experiece is Required!");
+      toast.warning(`Some mandatory fields are not filled. You can return later and complete`)
 
-    if (!markSecondEduStepCompleted().valid)
-      if (!markSecondEduStepCompleted().value === 'expiration') return toast.warning(`Please fill required field ${markSecondEduStepCompleted().value} 
-      and Epxpiration Date cannot be set to today Date.`)
-    return toast.warning(
-      `Please fill required field ${markSecondEduStepCompleted().value}`
-    );
+    // if (!markSecondEduStepCompleted().valid) {
+    //   if (!markSecondEduStepCompleted().value === 'expiration')
+    //     return toast.warning(`Please fill required field ${markSecondEduStepCompleted().value} 
+    //   and Epxpiration Date cannot be set to today Date.`)
+    //   return;
+    // }
 
-    if (level !== "No Academic Education" && (!cert_file_name || !deg_file_name))
+    if (level !== "No Academic Education" && (!cert_file_name) && certificate && certificate !== "Not Certified")
+      toast.warning(
+        'You selected academic education, but did not upload your certificate. Hence your Profile will stay in "Pending" status and cannot be activated until you upload your certificate!'
+      );
+    if (level !== "No Academic Education" && level !== 'Undergraduate Student' && !deg_file_name)
       toast.warning(
         'You selected academic education, but did not upload your diploma. Hence,your Profile will stay in "Pending" status and cannot be activated until you upload your diploma!'
       );
@@ -722,12 +728,12 @@ const Education = () => {
   { name: "dyear", filled: !!doctorateGraduateYear?.length, value: doctorateGraduateYear },
   { name: "degreeYear", filled: !!degree_yr?.length, value: degree_yr },
   { name: "degreeFile", filled: !!deg_file_name?.length, value: deg_file_name },
-  { name: "degreeState", filled: !!deg_state.length },
-  { name: "degreeCountry", filled: !!countryForDeg.length },
-  { name: "certifcate", filled: !!certificate.length },
+  { name: "degreeState", filled: !!deg_state?.length },
+  { name: "degreeCountry", filled: !!countryForDeg?.length },
+  { name: "certification", filled: !!certificate.length },
   { name: "certificateExpire", filled: !!expiration },
-  { name: "nativeLang", filled: !!language.length },
-  { name: "aboutExperience", filled: !!experience.length },
+  { name: "nativeLang", filled: !!language && !_.isEmpty(language) },
+  { name: "aboutExperience", filled: !!workExperience.length && workExperience !== '<p><br></p>' },
   ]
 
   if (fetchingEdu) return <Loading loadingText="Fetching Tutor Eduction..." />;
@@ -764,7 +770,7 @@ const Education = () => {
                         <MandatoryFieldLabel editMode={editMode} text={"Education Level"} name="level" mandatoryFields={mandatoryFields} />
                         <Tooltip
                           width="300px"
-                          text=" Please indicate the highest level of education from which you have obtained a diploma, which may include high school. It is
+                          text="Please indicate the highest level of education from which you have obtained a diploma, which may include high school. It is
                            essential to provide proof of your academic qualifications in the form of a diploma when requested. Failure to do so may result 
                            in the rejection of your application. We appreciate your understanding and cooperation in this matter to ensure a smooth and 
                            efficient application process.."
@@ -773,14 +779,14 @@ const Education = () => {
                     }
                     className="form-select m-0"
                     onChange={(e) => {
+                      console.log(e.target.value)
                       set_level(e.target.value);
                       dynamicSave("EducationalLevel", e.target.value);
                     }}
                     value={level}
-                    required
                     editMode={editMode}
                   >
-                    <option value="" disabled>
+                    <option value="" >
                       Select highest Education
                     </option>
                     {level_list}
@@ -797,7 +803,6 @@ const Education = () => {
                       dynamicSave("EducationalLevelExperience", e.target.value);
                     }}
                     value={experience}
-                    required
                     editMode={editMode}
                   >
                     {exp}
@@ -858,7 +863,7 @@ const Education = () => {
                           value={countryForAssociate}
                           editMode={editMode}
                         >
-                          <option value={""} disabled>
+                          <option value={""}>
                             Select Country
                           </option>
                           {Countries.map((option) => (
@@ -960,7 +965,7 @@ const Education = () => {
                             editMode={editMode}
                             value={countryForMast}
                           >
-                            <option value={""} disabled>
+                            <option value={""}>
                               Select Country
                             </option>
                             {Countries.map((option) => (
@@ -1064,7 +1069,7 @@ const Education = () => {
                             editMode={editMode}
                             value={countryForDoc}
                           >
-                            <option value={""} disabled>
+                            <option value={""}>
                               Select Country
                             </option>
                             {Countries.map((option) => (
@@ -1126,7 +1131,7 @@ const Education = () => {
                   </div>
                 ) : null}
 
-                <div className="row mt-3 border p-3 shadow " style={{ background: editMode ? "inherit" : "#e1e1e1" }}>
+                <div className="row mt-3 border p-3 shadow" style={{ background: editMode ? "inherit" : "#e1e1e1" }}>
                   <h6 className="border-bottom">Degree Document</h6>
                   <div className="d-flex justify-content-between align-items-end mt-3">
                     <div className="col-md-4" style={{ fontSize: "14px" }}>
@@ -1184,7 +1189,7 @@ const Education = () => {
                             dynamicSave("DegCountry", e.target.value);
                           }}
                         >
-                          <option value={""} disabled>
+                          <option value={""}>
                             Select Country
                           </option>
                           {Countries.map((option) => (
@@ -1234,7 +1239,7 @@ const Education = () => {
                         value={degree_yr}
                         editMode={editMode}
                       >
-                        <option value="" disabled>
+                        <option value="">
                           Select Year
                         </option>
                         {d_list.map((item) => (
@@ -1276,10 +1281,9 @@ const Education = () => {
                       dynamicSave("Certificate", e.target.value);
                     }}
                     value={certificate}
-                    // required
                     editMode={editMode}
                   >
-                    <option value="" disabled>
+                    <option value="">
                       Select Certificate
                     </option>
                     {certificate_list}
@@ -1365,7 +1369,8 @@ const Education = () => {
               <h6 className="border-bottom">Languages</h6>
               <div className="d-flex justify-content-between align-items-end">
                 <div className="col-md-5">
-                  <MandatoryFieldLabel editMode={editMode} edit text="Select Native (Primary) Language" name="nativeLang" mandatoryFields={mandatoryFields} />
+                  <MandatoryFieldLabel editMode={editMode} edit text="Select Native (Primary) Language"
+                    name="nativeLang" mandatoryFields={mandatoryFields} />
                   <Select
                     isMulti={false}
                     placeholder="Select Native Languages"
@@ -1378,7 +1383,6 @@ const Education = () => {
                     defaultValue={language}
                     value={language}
                     options={languageOptions}
-                    required
                     isDisabled={!editMode}
                   />
                 </div>
@@ -1410,7 +1414,8 @@ const Education = () => {
             className="tutor-tab-education-experience"
           >
             <div style={{ width: "450px", fontWeight: "bold" }}>
-              <MandatoryFieldLabel editMode={editMode} text="Work Experience" name="aboutExperience" mandatoryFields={mandatoryFields} />
+              <MandatoryFieldLabel editMode={editMode} text="Work Experience" name="aboutExperience"
+                mandatoryFields={mandatoryFields} />
               <DebounceInput
                 delay={2000}
                 className="work-exp"

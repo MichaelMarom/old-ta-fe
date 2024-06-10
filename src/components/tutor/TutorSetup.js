@@ -1457,15 +1457,14 @@ const TutorSetup = () => {
 };
 
 export const MandatoryFieldLabel = ({ text, editMode = true, mandatoryFields = [], name }) => {
+
   const blinkMe = () => {
     if (!name) return false
     const filled = mandatoryFields.find(item => item.name === name)?.filled;
     return !filled;
   }
 
-  console.log(name, blinkMe(), mandatoryFields.find(item => item.name === name))
-
-  return <p className={`${blinkMe() ? 'blink_me' : ''}`}>
+  return <p className={ `${blinkMe() ? 'blink_me' : ''}`}>
     <span style={{
       background: editMode ? "white" : "#e1e1e1",
     }}>{text}:
