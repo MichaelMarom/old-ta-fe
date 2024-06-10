@@ -31,7 +31,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setTutor } from "../../../redux/tutor/tutorData";
 import DebounceInput from "../../common/DebounceInput";
 import { MandatoryFieldLabel } from "../TutorSetup";
-import FormSelect from '../../common/Select'
+import FormSelect from '../../common/Select';
 
 const languageOptions = LANGUAGES.map((language) => ({
   value: language,
@@ -708,7 +708,6 @@ const Education = () => {
 
   const mandatoryFields = [{ name: "level", filled: !!level?.length, value: level },
   { name: "experience", filled: !!experience?.length, value: experience },
-  { name: "degreeFile", filled: !!deg_file_name?.length, value: deg_file_name },
   { name: "bcollege", filled: !!uni_bach?.length, value: uni_bach },
   { name: "byear", filled: !!bach_yr?.length, value: bach_yr },
   { name: "bcountry", filled: !!countryForAssociate?.length, value: countryForAssociate },
@@ -722,8 +721,13 @@ const Education = () => {
   { name: "dcountry", filled: !!countryForDoc?.length, value: countryForDoc },
   { name: "dyear", filled: !!doctorateGraduateYear?.length, value: doctorateGraduateYear },
   { name: "degreeYear", filled: !!degree_yr?.length, value: degree_yr },
-
-    // {name:"", filled:}
+  { name: "degreeFile", filled: !!deg_file_name?.length, value: deg_file_name },
+  { name: "degreeState", filled: !!deg_state.length },
+  { name: "degreeCountry", filled: !!countryForDeg.length },
+  { name: "certifcate", filled: !!certificate.length },
+  { name: "certificateExpire", filled: !!expiration },
+  { name: "nativeLang", filled: !!language.length },
+  { name: "aboutExperience", filled: !!experience.length },
   ]
 
   if (fetchingEdu) return <Loading loadingText="Fetching Tutor Eduction..." />;
@@ -1361,7 +1365,7 @@ const Education = () => {
               <h6 className="border-bottom">Languages</h6>
               <div className="d-flex justify-content-between align-items-end">
                 <div className="col-md-5">
-                  <MandatoryFieldLabel editMode={editMode} edit text=" Select Native (Primary) Language" name="nativeLang" mandatoryFields={mandatoryFields} />
+                  <MandatoryFieldLabel editMode={editMode} edit text="Select Native (Primary) Language" name="nativeLang" mandatoryFields={mandatoryFields} />
                   <Select
                     isMulti={false}
                     placeholder="Select Native Languages"
