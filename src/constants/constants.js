@@ -1220,3 +1220,91 @@ export const DEFAULT_URL_AFTER_LOGIN = {
 //   // ... (The Americas, Asia & The Middle East, Europe, Oceania, Island Nations & Territories)
 // ];
 
+export const applicationMandatoryFields = {
+  Setup: [{ column: "Photo" },
+  { column: "Video" }, { column: "FirstName", }, { column: "LastName", },
+  { column: "CityTown" }, { column: "StateProvince" },
+  { column: "ZipCode" }, { column: "Country" },
+  { column: "CellPhone" },
+  { column: "ResponseHrs" },
+  { column: "GMT" },
+  { column: "Healine" },
+  { column: "Introduction" },
+  { column: "Motivate" },
+  { column: "AgreementDate" }],
+  Education: [
+    { column: "EducationalLevel" },
+    { column: "EducationalLevelExperience" },
+    {
+      column: "Bach_College", notMandatory:
+        { EducationalLevel: ["Undergraduate Student", "No Academic Education"] }
+    },
+    { column: "Bach_College_State", notMandatory: { EducationalLevel: ["Undergraduate Student", "No Academic Education"] } },
+    {
+      column: "Bach_College_Year", notMandatory:
+        { EducationalLevel: ["Undergraduate Student", "No Academic Education"] }
+    },
+    {
+      column: "BachCountry", notMandatory:
+        { EducationalLevel: ["Undergraduate Student", "No Academic Education"] }
+    },
+    {
+      column: "Mast_College", notMandatory:
+        { EducationalLevel: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachlor Degree"] }
+    },
+    {
+      column: "Mast_College_State", notMandatory:
+        { EducationalLevel: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachlor Degree"] }
+    },
+    {
+      column: "Mast_College_StateYear", notMandatory:
+        { EducationalLevel: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachlor Degree"] }
+    },
+    {
+      column: "MastCountry", notMandatory:
+        { EducationalLevel: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachlor Degree"] }
+    },
+    {
+      column: "DoctorateCollege", notMandatory:
+        { EducationalLevel: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachlor Degree"] }
+    },
+    {
+      column: "DoctorateState", notMandatory:
+        { EducationalLevel: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachlor Degree"] }
+    },
+    {
+      column: "DoctorateGradYr", notMandatory:
+        { EducationalLevel: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachlor Degree"] }
+    },
+    {
+      column: "DocCountry", notMandatory:
+        { EducationalLevel: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachlor Degree"] }
+    },
+    {
+      column: "DegreeFileName", notMandatory:
+        { EducationalLevel: ["Undergraduate Student", "No Academic Education"] }
+    },
+    {
+      column: "CertFileName", notMandatory:
+        { Certificate: ["Not Certified"] }
+    },
+    { column: "Certificate" },
+    { column: "CertificateExpiration" },
+    { column: "DegreeState" },
+    { column: "DegCountry" },
+    { column: "NativeLang" },
+    { column: "WorkExperience" },
+  ],
+  Accounting: [
+    { column: "PaymentOption" },
+    { column: "Email" },
+    { column: "SSH" },
+    { column: "Routing" },
+    { column: "Account" },
+    { column: "AccountType" },
+    { column: "AccountName" },
+  ],
+  Motivate: [
+    { column: "CancellationPolicy" },
+  ]
+}

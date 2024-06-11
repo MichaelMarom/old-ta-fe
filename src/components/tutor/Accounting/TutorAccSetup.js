@@ -171,12 +171,12 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
     }, [dbValues, acct_name, acct_type, acct, bank_name, ssh, email, routing, payment_option, tutor])
 
     const mandatoryFields = [{ name: "paymentOption", filled: !!payment_option?.length },
-    { name: "accName", filled: !!acct_name.length },
-    { name: "acc#", filled: !!acct.length },
-    { name: "routing#", filled: !!routing.length },
-    { name: "accType", filled: !!acct_type.length },
-    { name: "bankName", filled: !!bank_name.length },
-    { name: "email", filled: !!email.length }]
+    { name: "accName", filled: !!acct_name?.length },
+    { name: "acc#", filled: !!acct?.length },
+    { name: "routing#", filled: !!routing?.length },
+    { name: "accType", filled: !!acct_type?.length },
+    { name: "bankName", filled: !!bank_name?.length },
+    { name: "email", filled: !!email?.length }]
 
     return (
         <div className="d-flex" style={{ height: "calc(100vh - 150px)", overflowY: "auto" }}>

@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import RichTextEditor from "../common/RichTextEditor/RichTextEditor";
 import Actions from "../common/Actions";
 import { get_adminConstants, post_termsOfUse } from "../../axios/admin";
-import { get_my_edu, post_tutor_setup, setAgreementDateToNullForAll } from "../../axios/tutor";
+import { get_bank_details, get_my_edu, get_tutor_rates, post_tutor_setup, setAgreementDateToNullForAll } from "../../axios/tutor";
 import Loading from "../common/Loading";
 import { setTutor } from "../../redux/tutor/tutorData";
 import { useDispatch, useSelector } from "react-redux";
 import { showDate } from "../../utils/moment";
 import { convertToDate } from "../common/Calendar/Calendar";
-import { PROFILE_STATUS } from "../../constants/constants";
+import { PROFILE_STATUS, applicationMandatoryFields } from "../../constants/constants";
 import { toast } from "react-toastify";
 import { apiClient } from "../../axios/config";
 
@@ -76,26 +76,36 @@ const TermOfUse = () => {
     const handleSaveAgreement = async (e) => {
         e.preventDefault()
         const res = await get_my_edu(tutor.AcademyId);
-        if (!res?.[0]?.DegFileName || !res?.[0]?.DegFileName?.length)
-            return toast.error('Please upload your degree')
+        const bank = await get_bank_details(tutor.AcademyId);
+        const rate = await get_tutor_rates(tutor.AcademyId);
+        // console.log(bank, rate);
+        applicationMandatoryFields.Accounting.map(item => {
+            console.log(bank?.[0]?.[item.column], item.column)
+            if (!bank?.[0]?.[item.column] || bank?.[0]?.[item.column] === "null") return toast.warning(`Please fill ${item.column} Field in Accounting atb`)
+        })
 
-        if (!tutor?.Photo?.length)
-            return toast.error('Please upload your Photo')
+        // if ((!res?.[0]?.DegFileName || !res?.[0]?.DegFileName?.length)
+        //     && (res?.[0]?.EducationalLevel !== "Undergraduate Student" ||
+        //         (res?.[0]?.EducationalLevel !== "No Academic Record")))
+        //     return toast.warning('Please upload your degree in Education Tab')
 
-        if (videoError) return toast.error('Please upload your Photo')
+        // if (!tutor?.Photo?.length)
+        //     return toast.error('Please upload your Photo in Setup Tab')
+
+        // if (videoError) return toast.error('Please upload your Video in Setup Tab')
 
 
-        setLoading(true)
-        let body = {
-            userId: tutor.userId, AgreementDate: new Date(),
-            fname: tutor.FirstName, lname: tutor.LastName, mname: tutor.MiddleName
-        }
-        if (tutor.Step === 5 && tutor.Status === PROFILE_STATUS.PENDING)
-            body.Status = PROFILE_STATUS.UNDER_REVIEW
-        await post_tutor_setup(body)
-        setLoading(false)
+        // setLoading(true)
+        // let body = {
+        //     userId: tutor.userId, AgreementDate: new Date(),
+        //     fname: tutor.FirstName, lname: tutor.LastName, mname: tutor.MiddleName
+        // }
+        // if (tutor.Step === 5 && tutor.Status === PROFILE_STATUS.PENDING)
+        //     body.Status = PROFILE_STATUS.UNDER_REVIEW
+        // await post_tutor_setup(body)
+        // setLoading(false)
 
-        dispatch(setTutor());
+        // dispatch(setTutor());
     }
 
     useEffect(() => {
