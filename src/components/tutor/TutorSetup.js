@@ -532,7 +532,7 @@ const TutorSetup = () => {
 
   let handleVideo = async (e) => {
     const file = e.target.files[0];
-    console.log(file, file.type)
+    setVideoError(false)
     if (file.size > 10485760)
       return toast.warning("Video size should be less than 10MB")
     if (!file?.type || file.type.split("/")?.[0] !== "video") {

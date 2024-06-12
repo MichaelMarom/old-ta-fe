@@ -11,6 +11,7 @@ import { convertToDate } from "../common/Calendar/Calendar";
 import { PROFILE_STATUS, applicationMandatoryFields } from "../../constants/constants";
 import { toast } from "react-toastify";
 import { apiClient } from "../../axios/config";
+import _ from "lodash";
 
 const TermOfUse = () => {
     const [unSavedChanges, setUnSavedChanges] = useState(false);
@@ -79,11 +80,56 @@ const TermOfUse = () => {
         const bank = await get_bank_details(tutor.AcademyId);
         const rate = await get_tutor_rates(tutor.AcademyId);
         // console.log(bank, rate);
+        const missingFields = [];
+        const tabs = { "setup": tutor, "bank": bank[0], "rate": rate[0],"edu":res?.[0] }
         applicationMandatoryFields.Accounting.map(item => {
-            console.log(bank?.[0]?.[item.column], item.column)
-            if (!bank?.[0]?.[item.column] || bank?.[0]?.[item.column] === "null") return toast.warning(`Please fill ${item.column} Field in Accounting atb`)
+            if ((!bank?.[0]?.[item.column] ||
+                bank?.[0]?.[item.column] === "null") &&
+                (item.mandatory &&
+                    item.mandatory?.tab &&
+                    item.mandatory?.values?.includes(tabs?.[item.mandatory?.tab]?.[item.mandatory?.column]))) {
+                missingFields.push({ tab: "Accounting", field: item.column })
+            }
+
+            // if(!item?.mandatory?.tab && item?.mandatory &&
+            //      item.mandatory?.values?.includes(tabs?.["bank"]?.[item.mandatory?.column]) ){
+            //         missingFields.push({ tab: "Accounting", field: item.column })
+            //      }
+            console.log(item.mandatory?.values?.includes(tabs?.["bank"]?.[item.mandatory?.column]),
+                bank[0][item.column], item.column,
+                item.mandatory?.values, item.mandatory?.tab, item.mandatory?.column)
+            // return toast.warning(`Please fill ${item.column} Field in Accounting tab`)
         })
 
+        applicationMandatoryFields.Motivate.map(item => {
+            if ((!rate?.[0]?.[item.column] ||
+                rate?.[0]?.[item.column] === "null") &&
+                (!item.mandatory || (
+                    item.mandatory?.tab &&
+                    item.mandatory?.values?.includes(tabs?.[item.mandatory?.tab]?.[item.mandatory?.column])))) {
+                missingFields.push({ tab: "Motivate", field: item.column })
+            }
+        })
+        applicationMandatoryFields.Setup.map(item => {
+            if ((!tutor?.[item.column] ||
+                tutor?.[item.column] === "null") &&
+                (!item.mandatory || (
+                    item.mandatory?.tab &&
+                    item.mandatory?.values?.includes(tabs?.[item.mandatory?.tab]?.[item.mandatory?.column])))) {
+                missingFields.push({ tab: "Setup", field: item.column,value:tutor[item.column] })
+            }
+        })
+
+        applicationMandatoryFields.Education.map(item => {
+            if ((!res?.[0]?.[item.column] ||
+                res?.[0]?.[item.column] === "null") &&
+                (!item.notMandatory || (
+                    !item.notMandatory?.values?.includes(tabs?.["edu"]?.[item.notMandatory?.column])))) {
+                missingFields.push({ tab: "Education", field: item.column,value:tabs["edu"][item.column] })
+            }
+        })
+        console.log(Object.keys(missingFields))
+        toast.warning(`Fields are missing from ${_.uniq(missingFields.map(item=>item.tab))} Tab`)
         // if ((!res?.[0]?.DegFileName || !res?.[0]?.DegFileName?.length)
         //     && (res?.[0]?.EducationalLevel !== "Undergraduate Student" ||
         //         (res?.[0]?.EducationalLevel !== "No Academic Record")))

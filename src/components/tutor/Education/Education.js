@@ -412,9 +412,7 @@ const Education = () => {
   // comparing DB, Local
   useEffect(() => {
     setUnSavedChanges(compareStates(dbValues, fieldValues));
-    console.log(compareStates(dbValues, fieldValues), dbValues.WorkExperience, fieldValues.WorkExperience, 101)
   }, [dbValues, fieldValues]);
-  console.log(unSavedChanges, 102)
 
   //fetching DB
   useEffect(() => {

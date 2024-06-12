@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import { toast } from 'react-toastify';
+import   moment from 'moment';
 
 export const formatName = (firstName, lastName) => {
   return `${firstName} ${lastName[0].toUpperCase()}.`;
@@ -94,32 +95,35 @@ export function getFileExtension(filename) {
  * @returns Boolean - if dbValues = localValues
  */
 export const compareStates = (dbState, currentState) => {
-// console.log(dbState, currentState)
-if (!(Object.keys(dbState).length)) return false;
+  // console.log(dbState, currentState)
+  if (!(Object.keys(dbState).length)) return false;
 
-for (const key in currentState) {
-  // console.log(currentState[key], key, dbState?.[key], currentState[key]!==undefined, currentState[key] !== dbState?.[key], !_.isEqual(currentState[key], dbState[key]))
-  if (_.isObject(currentState[key]) && currentState[key]!==undefined && !_.isEqual(currentState[key], dbState[key])) return true
- 
-  if (!_.isObject(currentState[key]) &&
-    currentState[key] !== dbState?.[key] &&  currentState[key]!==undefined) {
-    return true
+  for (const key in currentState) {
+    console.log(currentState[key], key, dbState?.[key], currentState[key] !== undefined,
+      currentState[key] !== dbState?.[key], !_.isEqual(currentState[key], dbState[key]))
+
+      if(key ==="CertificateExpiration" && moment(currentState["CertificateExpiration"]).isSame(moment(),'day')) continue;
+    if (_.isObject(currentState[key]) && currentState[key] !== undefined && !_.isEqual(currentState[key], dbState[key])) return true
+
+    if (!_.isObject(currentState[key]) &&
+      currentState[key] !== dbState?.[key] && currentState[key] !== undefined) {
+      return true
+    }
   }
-}
-return false
+  return false 
 };
 
 
 export const generateUpcomingSessionMessage = (session, fromNow) => {
   return session?.id ? `The next lessson (${session.subject}) starting in ${fromNow}` : ''
-} 
+}
 
 
-export const showRevisitToast = ()=>{
+export const showRevisitToast = () => {
   toast.info("We are saving the fields you entered. You can return to this page later to complete the application.", {
     className: "setup-private-info",
-    autoClose:false
-})
+    autoClose: false
+  })
 }
 
 

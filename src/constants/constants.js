@@ -1226,9 +1226,9 @@ export const applicationMandatoryFields = {
   { column: "CityTown" }, { column: "StateProvince" },
   { column: "ZipCode" }, { column: "Country" },
   { column: "CellPhone" },
-  { column: "ResponseHrs" },
+  { column: "ResponseHrs" }, ,
   { column: "GMT" },
-  { column: "Healine" },
+  { column: "HeadLine" },
   { column: "Introduction" },
   { column: "Motivate" },
   { column: "AgreementDate" }],
@@ -1237,72 +1237,77 @@ export const applicationMandatoryFields = {
     { column: "EducationalLevelExperience" },
     {
       column: "Bach_College", notMandatory:
-        { EducationalLevel: ["Undergraduate Student", "No Academic Education"] }
+        { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education"] }
     },
-    { column: "Bach_College_State", notMandatory: { EducationalLevel: ["Undergraduate Student", "No Academic Education"] } },
+    { column: "Bach_College_State", notMandatory: { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education"] } },
     {
       column: "Bach_College_Year", notMandatory:
-        { EducationalLevel: ["Undergraduate Student", "No Academic Education"] }
+        { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education"] }
     },
     {
       column: "BachCountry", notMandatory:
-        { EducationalLevel: ["Undergraduate Student", "No Academic Education"] }
+        { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education"] }
     },
     {
       column: "Mast_College", notMandatory:
-        { EducationalLevel: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachlor Degree"] }
+        { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachelor Degree"] }
     },
     {
       column: "Mast_College_State", notMandatory:
-        { EducationalLevel: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachlor Degree"] }
+        { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachelor Degree"] }
     },
     {
       column: "Mast_College_StateYear", notMandatory:
-        { EducationalLevel: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachlor Degree"] }
+        { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachelor Degree"] }
     },
     {
       column: "MastCountry", notMandatory:
-        { EducationalLevel: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachlor Degree"] }
+        { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachelor Degree"] }
     },
     {
       column: "DoctorateCollege", notMandatory:
-        { EducationalLevel: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachlor Degree"] }
+        { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachelor Degree", "Master Degree"] }
     },
     {
       column: "DoctorateState", notMandatory:
-        { EducationalLevel: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachlor Degree"] }
+        { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachelor Degree", "Master Degree"] }
     },
     {
       column: "DoctorateGradYr", notMandatory:
-        { EducationalLevel: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachlor Degree"] }
+        { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachelor Degree", , "Master Degree"] }
     },
     {
       column: "DocCountry", notMandatory:
-        { EducationalLevel: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachlor Degree"] }
+        { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachelor Degree", , "Master Degree"] }
     },
     {
       column: "DegreeFileName", notMandatory:
-        { EducationalLevel: ["Undergraduate Student", "No Academic Education"] }
+        { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education"] }
     },
     {
-      column: "CertFileName", notMandatory:
-        { Certificate: ["Not Certified"] }
+      column: "CertFileName"
     },
     { column: "Certificate" },
     { column: "CertificateExpiration" },
-    { column: "DegreeState" },
-    { column: "DegCountry" },
+    {
+      column: "DegreeState", notMandatory:
+        { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education"] }
+    },
+    {
+      column: "DegCountry", notMandatory:
+        { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education"] }
+    },
     { column: "NativeLang" },
     { column: "WorkExperience" },
   ],
   Accounting: [
     { column: "PaymentOption" },
     { column: "Email" },
-    { column: "SSH" },
-    { column: "Routing" },
-    { column: "Account" },
-    { column: "AccountType" },
-    { column: "AccountName" },
+    { column: "SSH", mandatory: { column: "Country", values: ["USA"], tab: "setup" } },
+    { column: "Routing", mandatory: { column: "PaymentOption", values: ["Bank"], tab: "bank" } },
+    { column: "Account", mandatory: { column: "PaymentOption", values: ["Bank"], tab: "bank" } },
+    { column: "AccountType", mandatory: { column: "PaymentOption", values: ["Bank"], tab: "bank" } },
+    { column: "AccountName", mandatory: { column: "PaymentOption", values: ["Bank"], tab: "bank" } },
   ],
   Motivate: [
     { column: "CancellationPolicy" },
