@@ -6,6 +6,9 @@ import { get_bank_details, post_bank_details } from '../../../axios/student';
 import Actions from '../../common/Actions';
 import _ from "lodash";
 import { compareStates } from '../../../utils/common';
+import Input from '../../common/Input';
+import { MandatoryFieldLabel } from '../../tutor/TutorSetup';
+import Select from '../../common/Select';
 
 function BankDetails() {
     let [AccountName, set_acct_name] = useState(null)
@@ -248,13 +251,12 @@ function BankDetails() {
                     <div className='form-row row mb-2'>
                         <div className='form-group col-6'>
                             <div className='row input-group'>
-                                <label className="col-4 input-group-text">Email</label>
-
-                                <input disabled={!editMode} required
-                                    type="email"
-                                    onChange={(e) => set_email(e.target.value)}
-                                    value={email} className='form-control col-6 w-50'
+                                <Input
+                                    label={<MandatoryFieldLabel text="Email" editMode={editMode} />}
+                                    value={email}
+                                    setValue={set_email}
                                 />
+
                             </div>
                         </div>
                     </div>}
@@ -263,32 +265,28 @@ function BankDetails() {
                     <div className='form-row row mb-2'>
                         <div className='form-group col-6'>
                             <div className='row input-group'>
-                                <label className="col-4 input-group-text">Account Name</label>
-
-                                <input disabled={!editMode} required
-                                    type="text"
-                                    onChange={(e) => set_acct_name(e.target.value)}
-                                    value={AccountName} className='form-control col-6 w-50'
-
+                                <Input
+                                    value={AccountName}
+                                    setValue={set_acct_name}
+                                    editMode={editMode}
+                                    label={<MandatoryFieldLabel text={"Account Name"} editMode={editMode} />}
                                 />
                             </div>
                         </div>
 
                         <div className='form-group col-6'>
                             <div className='row input-group'>
-
-                                <label className="col-4 input-group-text">Account Type</label>
-
-                                <select
-                                    required
-                                    disabled={!editMode}
-                                    onChange={(e) => set_acct_type(e.target.value)}
-                                    value={PaymentType} className='form-select col-6 w-50'
+                                <Select
+                                    value={PaymentType}
+                                    editMode={editMode}
+                                    label={<MandatoryFieldLabel text={"Payment Type"} editMode={editMode} />}
+                                    setValue={set_acct_type}
                                 >
                                     <option value="null">Select Account Type</option>
                                     <option value="savings">Savings</option>
                                     <option value="checking">Checking</option>
-                                </select>
+
+                                </Select>
                             </div>
                         </div>
                     </div>
@@ -296,43 +294,36 @@ function BankDetails() {
                     <div className='form-row row mb-2'>
                         <div className='form-group col'>
                             <div className='row input-group'>
-
-                                <label className="col-4 input-group-text">Bank Name</label>
-
-                                <input disabled={!editMode} required
-                                    type="text"
-                                    onChange={(e) => set_bank_name(e.target.value)}
-                                    value={BankName} className='form-control col-6 w-50'
-
+                                <Input
+                                    value={BankName}
+                                    setValue={set_bank_name}
+                                    editMode={editMode}
+                                    label={<MandatoryFieldLabel text={"Bank Name"} editMode={editMode} />}
                                 />
                             </div>
                         </div>
 
                         <div className='form-group col'>
                             <div className='row input-group'>
-
-                                <label className="col-4 input-group-text">Account Number</label>
-
-                                <input disabled={!editMode} required
-                                    type="number"
-                                    onChange={(e) => set_acct(e.target.value)}
-                                    value={AccountNumber} className='form-control col-6 w-50'
+                                <Input
+                                    value={AccountNumber}
+                                    setValue={set_acct}
+                                    editMode={editMode}
+                                    label={<MandatoryFieldLabel text={"Account Number"} editMode={editMode} />}
                                 />
+
                             </div>
                         </div>
                     </div>
 
                     <div className='form-row row mb-2'>
-
                         <div className='form-group w-50'>
                             <div className='row input-group'>
-
-                                <label className="col-4 input-group-text">Routing Name</label>
-                                <input disabled={!editMode} required
-
-                                    type="text"
-                                    onChange={(e) => set_routing(e.target.value)}
-                                    value={RoutingNumber} className='form-control col-6 w-50'
+                                <Input
+                                    value={RoutingNumber}
+                                    setValue={set_routing}
+                                    editMode={editMode}
+                                    label={<MandatoryFieldLabel text={"Routing Number"} editMode={editMode} />}
                                 />
                             </div>
                         </div>

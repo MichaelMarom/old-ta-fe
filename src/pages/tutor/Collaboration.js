@@ -22,6 +22,7 @@ import { get_my_data } from "../../axios/student";
 import logo from "../../assets/images/tutoring Logo.png";
 import Loading from "../../components/common/Loading";
 import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
+import Actions from "../../components/common/Actions";
 
 const Collaboration = () => {
   const { user } = useSelector((state) => state.user);
@@ -519,6 +520,9 @@ const Collaboration = () => {
           </div>
         </div> */}
       </div>
+      {!sessionId && <Actions 
+      saveDisabled={true}
+      /> }
     </CommonLayout>
   );
 };

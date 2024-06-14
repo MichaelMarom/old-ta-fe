@@ -91,7 +91,7 @@ function BookedLessons({ events, handleRowSelect }) {
           );
         })}
       </div>
-      <div style={{ height: "57vh", overflowY: "auto" }}>
+      <div style={{ height: "calc(100vh - 280px)", overflowY: "auto" }}>
         <table>
           <thead className="thead-light d-none">
             <tr>

@@ -102,7 +102,7 @@ export const compareStates = (dbState, currentState) => {
     console.log(currentState[key], key, dbState?.[key], currentState[key] !== undefined,
       currentState[key] !== dbState?.[key], !_.isEqual(currentState[key], dbState[key]))
 
-      if(key ==="CertificateExpiration" && moment(currentState["CertificateExpiration"]).isSame(moment(),'day')) continue;
+      if(key ==="CertificateExpiration" && moment(currentState["CertificateExpiration"]).isSameOrBefore(moment(),'day')) continue;
     if (_.isObject(currentState[key]) && currentState[key] !== undefined && !_.isEqual(currentState[key], dbState[key])) return true
 
     if (!_.isObject(currentState[key]) &&

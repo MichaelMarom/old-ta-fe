@@ -12,6 +12,7 @@ import { PROFILE_STATUS, applicationMandatoryFields } from "../../constants/cons
 import { toast } from "react-toastify";
 import { apiClient } from "../../axios/config";
 import _ from "lodash";
+import { MandatoryFieldLabel } from "./TutorSetup";
 
 const TermOfUse = () => {
     const [unSavedChanges, setUnSavedChanges] = useState(false);
@@ -79,9 +80,9 @@ const TermOfUse = () => {
         const res = await get_my_edu(tutor.AcademyId);
         const bank = await get_bank_details(tutor.AcademyId);
         const rate = await get_tutor_rates(tutor.AcademyId);
-        // console.log(bank, rate);
         const missingFields = [];
-        const tabs = { "setup": tutor, "bank": bank[0], "rate": rate[0],"edu":res?.[0] }
+        const tabs = { "setup": tutor, "bank": bank[0], "rate": rate[0], "edu": res?.[0] }
+
         applicationMandatoryFields.Accounting.map(item => {
             if ((!bank?.[0]?.[item.column] ||
                 bank?.[0]?.[item.column] === "null") &&
@@ -110,13 +111,14 @@ const TermOfUse = () => {
                 missingFields.push({ tab: "Motivate", field: item.column })
             }
         })
+
         applicationMandatoryFields.Setup.map(item => {
             if ((!tutor?.[item.column] ||
                 tutor?.[item.column] === "null") &&
                 (!item.mandatory || (
                     item.mandatory?.tab &&
                     item.mandatory?.values?.includes(tabs?.[item.mandatory?.tab]?.[item.mandatory?.column])))) {
-                missingFields.push({ tab: "Setup", field: item.column,value:tutor[item.column] })
+                missingFields.push({ tab: "Setup", field: item.column, value: tutor[item.column] })
             }
         })
 
@@ -124,12 +126,16 @@ const TermOfUse = () => {
             if ((!res?.[0]?.[item.column] ||
                 res?.[0]?.[item.column] === "null") &&
                 (!item.notMandatory || (
-                    !item.notMandatory?.values?.includes(tabs?.["edu"]?.[item.notMandatory?.column])))) {
-                missingFields.push({ tab: "Education", field: item.column,value:tabs["edu"][item.column] })
+                    !item.notMandatory?.values?.includes(tabs?.["edu"]?.[item.notMandatory?.column]))) &&
+                (!item.mandatory || (
+                    item.mandatory?.values?.includes(tabs?.["edu"]?.[item.mandatory?.column])))) {
+                missingFields.push({ tab: "Education", field: item.column, value: tabs["edu"][item.column] });
             }
         })
-        console.log(Object.keys(missingFields))
-        toast.warning(`Fields are missing from ${_.uniq(missingFields.map(item=>item.tab))} Tab`)
+
+        console.log(missingFields, tutor.Video, tutor)
+        if (missingFields.length) return toast.warning(`Fields are missing from ${_.uniq(missingFields.map(item => item.tab))} Tab`)
+
         // if ((!res?.[0]?.DegFileName || !res?.[0]?.DegFileName?.length)
         //     && (res?.[0]?.EducationalLevel !== "Undergraduate Student" ||
         //         (res?.[0]?.EducationalLevel !== "No Academic Record")))
@@ -138,20 +144,19 @@ const TermOfUse = () => {
         // if (!tutor?.Photo?.length)
         //     return toast.error('Please upload your Photo in Setup Tab')
 
-        // if (videoError) return toast.error('Please upload your Video in Setup Tab')
+        if (videoError) return toast.error('Please upload your Video in Setup Tab')
 
+        setLoading(true)
+        let body = {
+            userId: tutor.userId, AgreementDate: new Date(),
+            fname: tutor.FirstName, lname: tutor.LastName, mname: tutor.MiddleName
+        }
+        if (tutor.Status === PROFILE_STATUS.PENDING)
+            body.Status = PROFILE_STATUS.UNDER_REVIEW
+        await post_tutor_setup(body)
+        setLoading(false)
 
-        // setLoading(true)
-        // let body = {
-        //     userId: tutor.userId, AgreementDate: new Date(),
-        //     fname: tutor.FirstName, lname: tutor.LastName, mname: tutor.MiddleName
-        // }
-        // if (tutor.Step === 5 && tutor.Status === PROFILE_STATUS.PENDING)
-        //     body.Status = PROFILE_STATUS.UNDER_REVIEW
-        // await post_tutor_setup(body)
-        // setLoading(false)
-
-        // dispatch(setTutor());
+        dispatch(setTutor());
     }
 
     useEffect(() => {
@@ -179,9 +184,9 @@ const TermOfUse = () => {
             />
             <form onSubmit={userRole === 'admin' ? handleSaveTerms : handleSaveAgreement}>
                 <div className="d-block p-5">
-                    <h4 style={{ fontSize: "16px" }}>CHECKING THE BOX BELOW, CONSITUTES YOUR ACCPETANCE OF THESE TERMS OF USE</h4>
+                    <h4 style={{ fontSize: "16px" }}><span className="text-danger" style={{fontWeight:"bold", fontSize:"20px"}}>*</span> CHECKING THE BOX BELOW, CONSITUTES YOUR ACCPETANCE OF THESE TERMS OF USE</h4>
 
-                    <div className="form-check " >
+                    <div className="form-check " onClick={() => !editMode && toast.info("Please click Edit button from bototm to enable editing!")}>
                         <input className="form-check-input"
                             style={{ width: "30px", height: "30px", marginRight: '10px', border: "4px solid black" }} type="checkbox" checked={agreed} onChange={() => setAgreed(true)}
                             disabled={tutor.AgreementDate || userRole !== 'tutor' || !editMode}

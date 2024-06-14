@@ -822,7 +822,7 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
-                    label={<p style={{ background: editMode ? "white" : "#e1e1e1", }}>Middle Name: <span class='text-sm'>(optional)</span></p>}
+                    label={<OptionalFieldLabel label={"Middle Name"} editMode={editMode} />}
                     required={false}
                     setValue={set_mname}
                     value={mname}
@@ -991,7 +991,7 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
-                    label={<p style={{ background: editMode ? "white" : "#e1e1e1" }}>Address 1: <span class='text-sm'>(optional)</span></p>}
+                    label={<OptionalFieldLabel label={"Adress 1"} editMode={editMode} />}
                     required={false}
                     value={add1}
                     setValue={set_add1}
@@ -1011,7 +1011,7 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
-                    label={<p>Address 2: <span class='text-sm'>(optional)</span></p>}
+                    label={<OptionalFieldLabel label={"Adress 2"} editMode={editMode} />}
                     value={add2}
                     required={false}
                     setValue={set_add2}
@@ -1031,7 +1031,7 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
-                    label={<p>City/Town: <span class='text-sm'>(optional)</span></p>}
+                    label={<OptionalFieldLabel label={"City/Town"} editMode={editMode} />}
                     value={city}
                     required={false}
                     setValue={set_city}
@@ -1103,7 +1103,7 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
-                    label={<p style={{ background: editMode ? "white" : "#e1e1e1" }}>Zip Code: <span class='text-sm'>(optional)</span></p>}
+                    label={<OptionalFieldLabel label={"Zip Code"} editMode={editMode} />}
                     value={zipCode}
                     required={false}
                     setValue={set_zipCode}
@@ -1384,7 +1384,7 @@ const TutorSetup = () => {
                     spellCheck="true"
                     disabled={!editMode}
                   ></textarea>
-                  
+
                   <span className="" style={{
                     position: "absolute",
                     top: "-10px",
@@ -1464,7 +1464,7 @@ export const MandatoryFieldLabel = ({ text, editMode = true, mandatoryFields = [
     return !filled;
   }
 
-  return <p className={ `${blinkMe() ? 'blink_me' : ''}`}>
+  return <p className={`${blinkMe() ? 'blink_me' : ''}`}>
     <span style={{
       background: editMode ? "white" : "#e1e1e1",
     }}>{text}:
@@ -1472,5 +1472,7 @@ export const MandatoryFieldLabel = ({ text, editMode = true, mandatoryFields = [
       style={{ fontSize: "26px" }}>*</span>
   </p>
 }
+
+export const OptionalFieldLabel = ({ label,editMode=true }) => <p style={{ background: editMode ? "white" : "#e1e1e1", }}>{label}: <span class='text-sm'>(optional)</span></p>
 
 export default TutorSetup;

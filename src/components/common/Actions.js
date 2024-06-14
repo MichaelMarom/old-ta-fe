@@ -15,7 +15,7 @@ const actionsStyle = {
     backgroundColor: 'white',
     borderTop: '1px solid #ccc',
     padding: '10px',
-    height:"100px"
+    height: "100px"
 };
 
 const Actions = ({
@@ -33,63 +33,67 @@ const Actions = ({
     const navigate = useNavigate();
     const location = useLocation();
     const { tutor } = useSelector(state => state.tutor)
+    const { student } = useSelector(state => state.student)
+    const { user } = useSelector(state => state.user)
     const currentTab = location.pathname.split('/')[2];
     const currentUser = location.pathname.split('/')[1];
     const isStudentSide = currentUser === 'student'
 
     const tutorTabsNavigationInfo = [
-        { next: "setup", current: "intro", back: null, withRolePrefix: true },
-        { next: "education", current: "setup", back: "intro", withRolePrefix: true },
-        { next: "rates", current: "education", back: "setup", withRolePrefix: true },
-        { next: "accounting", current: "rates", back: "education", withRolePrefix: true },
-        { next: "subjects", current: "accounting", back: "rates", withRolePrefix: true },
+        { next: "setup", current: "intro", back: null, withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
+        { next: "education", current: "setup", back: "intro", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
+        { next: "rates", current: "education", back: "setup", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
+        { next: "accounting", current: "rates", back: "education", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
+        { next: "subjects", current: "accounting", back: "rates", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
 
-        { next: "scheduling", current: "subjects", back: "accounting", withRolePrefix: true },
-        { next: "feedback", current: "scheduling", back: "subjects", withRolePrefix: true },
-        { next: "my-students", current: "feedback", back: "scheduling", withRolePrefix: true },
-        { next: "term-of-use", current: "my-students", back: "feedback", withRolePrefix: true },
-        { next: "chat", current: "term-of-use", back: "my-students", withRolePrefix: true },
-        { next: "market-place", current: "chat", back: "term-of-use", withRolePrefix: true },
-        { next: "/collab", current: "market-place", back: "chat", withRolePrefix: true },
-        { next: `tutor-profile`, current: "/collab", back: "market-place", withRolePrefix: false },
-        { next: null, current: `tutor-profile`, back: "/collab", withRolePrefix: true },
+        { next: "scheduling", current: "subjects", back: "accounting", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
+        { next: "feedback", current: "scheduling", back: "subjects", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
+        { next: "my-students", current: "feedback", back: "scheduling", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
+        { next: "term-of-use", current: "my-students", back: "feedback", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
+        { next: "chat", current: "term-of-use", back: "my-students", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
+        { next: "market-place", current: "chat", back: "term-of-use", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
+        { next: "collab", current: "market-place", back: "chat", withCurrentRolePrefix: true, withNextRolePrefix: false, withBackRolePrefix: true },
+        { next: `tutor-profile/${tutor.AcademyId}`, current: "collab", back: "market-place", withCurrentRolePrefix: false, withNextRolePrefix: true, withBackRolePrefix: true },
+        { next: null, current: `/tutor/tutor-profile/${encodeURI(tutor.AcademyId)}`, back: "collab", checkWholeUrl: true, withCurrentRolePrefix: true, withNextRolePrefix: false, withBackRolePrefix: false },
     ]
 
     const studentTabsNavigationInfo = [
-        { next: "setup", current: "intro", back: null, withRolePrefix: true },
-        { next: "faculties", current: "setup", back: "intro", withRolePrefix: true },
-        { next: "accounting", current: "faculties", back: "setup", withRolePrefix: true },
-        { next: "feedback", current: "accounting", back: "faculties", withRolePrefix: true },
-        { next: "calender", current: "feedback", back: "accounting", withRolePrefix: true },
-        { next: "term-of-use", current: "calender", back: "feedback", withRolePrefix: true },
-        { next: "chat", current: "term-of-use", back: "calender", withRolePrefix: true },
-        { next: "market-place", current: "chat", back: "term-of-use", withRolePrefix: true },
-        { next: "/collab", current: "market-place", back: "chat", withRolePrefix: true },
-        { next: `profile`, current: "/collab", back: "market-place", withRolePrefix: false },
-        { next: null, current: "profile", back: "/collab", withRolePrefix: true },
-        { next: null, current: `tutor-profile`, back: null, withRolePrefix: true },
+        { next: "setup", current: "intro", back: null, withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
+        { next: "faculties", current: "setup", back: "intro", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
+        { next: "accounting", current: "faculties", back: "setup", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
+        { next: "feedback", current: "accounting", back: "faculties", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
+        { next: "calender", current: "feedback", back: "accounting", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
+        { next: "term-of-use", current: "calender", back: "feedback", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
+        { next: "chat", current: "term-of-use", back: "calender", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
+        { next: "market-place", current: "chat", back: "term-of-use", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
+        { next: "collab", current: "market-place", back: "chat", withCurrentRolePrefix: true, withNextRolePrefix: false, withBackRolePrefix: false },
+        { next: `profile`, current: "collab", back: "market-place", withCurrentRolePrefix: false, withNextRolePrefix: true, withBackRolePrefix: true },
+        { next: null, current: "profile", back: "collab", withCurrentRolePrefix: true, withNextRolePrefix: false, withBackRolePrefix: false },
+        { next: null, current: `tutor-profile`, back: null, withCurrentRolePrefix: true, withNextRolePrefix: false, withBackRolePrefix: true },
     ]
 
-    const currentTabInfo = (isStudentSide ? studentTabsNavigationInfo : tutorTabsNavigationInfo)
-        .find(tab => tab.current === currentTab)
+    const currentTabInfo = (user.role==="student" ? studentTabsNavigationInfo : tutorTabsNavigationInfo)
+        .find(tab => tab.checkWholeUrl ? tab.current === location.pathname : !tab.withCurrentRolePrefix ? tab.current === location.pathname.split('/')[1] : tab.current === currentTab)
+
     const nextTabInfo = (isStudentSide ? studentTabsNavigationInfo : tutorTabsNavigationInfo)
         .find(tab => {
-            return tab.back === currentTab
+            return !tab.withNextRolePrefix ? tab.back === location.pathname.split('/')[1] : tab.back === currentTab
         })
     const backTabInfo = (isStudentSide ? studentTabsNavigationInfo : tutorTabsNavigationInfo)
-        .find(tab => tab.next === currentTab)
+        .find(tab => !tab.withBackRolePrefix ? tab.next === location.pathname.split('/')[1] : tab.next === currentTab)
 
-    const isNextTabExist = currentTabInfo.next;
-    const isBackTabExist = currentTabInfo.back;
+    const isNextTabExist = currentTabInfo?.next;
+    const isBackTabExist = currentTabInfo?.back;
 
     const onNext = () => {
-        nextTabInfo.withRolePrefix ? navigate(`/${currentUser}/${currentTabInfo.next}`) :
-            navigate(`${currentTabInfo.next}`)
+        // console.log(next)
+        currentTabInfo.withNextRolePrefix ? navigate(`/${user.role}/${currentTabInfo.next}`) :
+            navigate(`/${currentTabInfo.next}`)
     }
 
     const onBack = () => {
-        backTabInfo.withRolePrefix ? navigate(`/${currentUser}/${currentTabInfo.back}`) :
-            navigate(`${currentTabInfo.back}`)
+        currentTabInfo.withBackRolePrefix ? navigate(`/${user.role}/${currentTabInfo.back}`) :
+            navigate(`/${currentTabInfo.back}`)
     }
 
     return (
@@ -135,8 +139,9 @@ const Actions = ({
                     <div className="" style={{ width: "10%" }}>
                         <button onClick={onNext}
                             disabled={(!saveDisabled && (loading))
-                                || !isNextTabExist || nextDisabled ||
-                                currentTab === STEPS[tutor.Step]}
+                                || !isNextTabExist || nextDisabled
+                                // || currentTab === STEPS[tutor.Step]
+                            }
                             type='button' className="next-btn action-btn btn">
                             <div className="button__content">
                                 <div className="button__icon">

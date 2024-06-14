@@ -10,6 +10,7 @@ import { showDate } from '../../utils/moment'
 import { convertToDate } from '../../components/common/Calendar/Calendar'
 import { post_student_agreement } from '../../axios/student'
 import { setStudent } from '../../redux/student/studentData'
+import { MandatoryFieldLabel } from '../../components/tutor/TutorSetup'
 
 const TermOfUse = () => {
     const { user } = useSelector(state => state.user)
@@ -92,7 +93,8 @@ const TermOfUse = () => {
 
             <form onSubmit={user.role === 'admin' ? handleSave : handleSaveAgreement}>
                 <div className="d-block p-5">
-                    <h4 style={{fontSize:"16px"}}>CHECKING THE BOX BELOW, CONSITUTES YOUR ACCPETANCE OF THESE TERMS OF USE</h4>
+                    <h4 style={{ fontSize: "16px" }}><span className="text-danger" style={{fontWeight:"bold", fontSize:"20px"}}>*</span>CHECKING THE BOX BELOW, CONSITUTES YOUR ACCPETANCE OF THESE TERMS OF USE
+                    </h4>
                     <div className="form-check " >
                         <input className="form-check-input" style={{ width: "30px", height: "30px", marginRight: '10px' }}
                             type="checkbox" checked={agreed} onChange={() => setAgreed(true)}
@@ -115,7 +117,7 @@ const TermOfUse = () => {
                         onChange={handleEditorChange}
                         readOnly={!editMode || user.role !== 'admin' || !editMode}
                         placeholder="Enter Term Of Service here"
-                        style={{ height: "55vh" }}
+                        style={{ height: "calc(100vh - 310px)" }}
                     />
                 </div>
 

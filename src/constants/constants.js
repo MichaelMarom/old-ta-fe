@@ -1222,16 +1222,16 @@ export const DEFAULT_URL_AFTER_LOGIN = {
 
 export const applicationMandatoryFields = {
   Setup: [{ column: "Photo" },
-  { column: "Video" }, { column: "FirstName", }, { column: "LastName", },
-  { column: "CityTown" }, { column: "StateProvince" },
-  { column: "ZipCode" }, { column: "Country" },
+  { column: "FirstName", },
+  { column: "LastName", },
+  { column: "StateProvince" },
+  { column: "Country" },
   { column: "CellPhone" },
   { column: "ResponseHrs" }, ,
   { column: "GMT" },
   { column: "HeadLine" },
   { column: "Introduction" },
-  { column: "Motivate" },
-  { column: "AgreementDate" }],
+  { column: "Motivate" },],
   Education: [
     { column: "EducationalLevel" },
     { column: "EducationalLevelExperience" },
@@ -1239,7 +1239,11 @@ export const applicationMandatoryFields = {
       column: "Bach_College", notMandatory:
         { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education"] }
     },
-    { column: "Bach_College_State", notMandatory: { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education"] } },
+    {
+      column: "Bach_College_State",
+      notMandatory: { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education"] },
+      mandatory: { column: "DegCountry", values: ["Australia", "USA", "Canada", "UnitedKingdom"] }
+    },
     {
       column: "Bach_College_Year", notMandatory:
         { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education"] }
@@ -1255,6 +1259,7 @@ export const applicationMandatoryFields = {
     {
       column: "Mast_College_State", notMandatory:
         { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachelor Degree"] }
+      , mandatory: { column: "DegCountry", values: ["Australia", "USA", "Canada", "UnitedKingdom"] }
     },
     {
       column: "Mast_College_StateYear", notMandatory:
@@ -1271,6 +1276,7 @@ export const applicationMandatoryFields = {
     {
       column: "DoctorateState", notMandatory:
         { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachelor Degree", "Master Degree"] }
+      , mandatory: { column: "DegCountry", values: ["Australia", "USA", "Canada", "UnitedKingdom"] }
     },
     {
       column: "DoctorateGradYr", notMandatory:
@@ -1281,17 +1287,21 @@ export const applicationMandatoryFields = {
         { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education", "Associate Degree", "Bachelor Degree", , "Master Degree"] }
     },
     {
-      column: "DegreeFileName", notMandatory:
+      column: "DegFileName", notMandatory:
         { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education"] }
     },
     {
-      column: "CertFileName"
+      column: "CertFileName", notMandatory:
+        { column: "Certificate", values: ["Not Certified", ""] }
     },
-    { column: "Certificate" },
-    { column: "CertificateExpiration" },
+    {
+      column: "CertificateExpiration", notMandatory:
+        { column: "Certificate", values: ["Not Certified", ""] }
+    },
     {
       column: "DegreeState", notMandatory:
-        { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education"] }
+        { column: "EducationalLevel", values: ["Undergraduate Student", "No Academic Education"] },
+      mandatory: { column: "DegCountry", values: ["Australia", "USA", "Canada", "UnitedKingdom"] }
     },
     {
       column: "DegCountry", notMandatory:

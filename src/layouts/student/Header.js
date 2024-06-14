@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 // import { getBookedSlot } from "../../axios/student";
 import { useDispatch, useSelector } from "react-redux";
-import { FaSignOutAlt } from "react-icons/fa";
+import { FaArrowAltCircleLeft, FaArrowAltCircleRight, FaSignOutAlt } from "react-icons/fa";
 import Tooltip from "../../components/common/ToolTip";
 import { useClerk } from "@clerk/clerk-react";
 import { setUser } from "../../redux/auth/auth";
@@ -19,6 +19,8 @@ const Header = () => {
   const dispatch = useDispatch();
   const [filteredSessions, setFilteredSessions] = useState([]);
   const { sessions } = useSelector((state) => state.studentSessions);
+  const scrollRef = useRef();
+  const scrollStep = 100;
   let location = useLocation();
   const { student } = useSelector((state) => state.student);
   const tabs = [
@@ -54,19 +56,18 @@ const Header = () => {
     setActiveTab(location.pathname);
   }, [location]);
 
-  let handle_scroll_right = () => {
-    let div = document.querySelector(".tutor-tab-header");
-    let scroll_elem = div.children[1];
-    let w = scroll_elem.offsetWidth;
-    scroll_elem.scrollLeft = w;
+  const handleScrollLeft = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft -= scrollStep;
+    }
   };
 
-  let handle_scroll_left = () => {
-    let div = document.querySelector(".tutor-tab-header");
-    let scroll_elem = div.children[1];
-    let w = scroll_elem.offsetWidth;
-    scroll_elem.scrollLeft = -w;
+  const handleScrollRight = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft += scrollStep;
+    }
   };
+
   const handleSignOut = () => {
     localStorage.removeItem('access_token')
     localStorage.removeItem('student_user_id')
@@ -128,28 +129,13 @@ const Header = () => {
             width: "50px",
           }}
           className="scroller-left"
-          onClick={handle_scroll_left}
+          onClick={handleScrollLeft}
         >
           <div style={{ opacity: "1" }}>
-            <svg
-              width="30px"
-              height="30px"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M11 9L8 12M8 12L11 15M8 12H16M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
-                stroke="#000"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <FaArrowAltCircleLeft size={30} />
           </div>
         </div>
-        <ul
-          id=""
+        <ul ref={scrollRef}
           className={` header`}
           style={{
             background: "inherit",
@@ -204,7 +190,7 @@ const Header = () => {
         </div>
         <div
           className="scroller-right"
-          onClick={handle_scroll_right}
+          onClick={handleScrollRight}
           style={{
             margin: "0 0 0 0",
             display: "flex",
@@ -229,23 +215,8 @@ const Header = () => {
             transform: "skew(-0deg)",
           }}
           className="scroller-right"
-          onClick={handle_scroll_right}
         >
-          <svg
-            width="30px"
-            height="30px"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M13 15L16 12M16 12L13 9M16 12H8M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
-              stroke="#000000"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <FaArrowAltCircleRight size={30} />
         </div>
       </div>
     </>

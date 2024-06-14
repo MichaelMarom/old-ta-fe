@@ -31,6 +31,7 @@ import { useNavigate } from "react-router-dom";
 import Avatar from "../common/Avatar";
 import Input from "../common/Input";
 import Select from "../common/Select";
+import { MandatoryFieldLabel, OptionalFieldLabel } from "../tutor/TutorSetup";
 
 const StudentSetup = () => {
   const dispatch = useDispatch();
@@ -403,8 +404,22 @@ const StudentSetup = () => {
     setDateTime(localTime);
   }, [timeZone]);
 
+  const mandatoryFields = [{name:"fname",filled:!!fname?.length,value:fname},
+    {name:"lname", filled: !!sname?.length, value:sname},
+    {name:"phone",filled:!!cell, value:cell},
+    {name:"over18", filled:!!is_18?.length, value:is_18},
+    {name:"gmt", filled:!!timeZone?.length, value:timeZone},
+    {name:"grade", filled:!!grade?.length, value:grade},
+    {name:"nativeLang", filled: !!lang?.length, value:lang},
+    {name:"country", filled:!!country?.length, value:country},
+    {name:"parentAName", filled:!!parentAName?.length, value:parentAName},
+    {name:"parentBName", filled:!!parentBName?.length, value:parentBName},
+    {name:"parentAEmail", filled:!!parentAEmail?.length, value:parentAEmail},
+    {name:"parentBEmail", filled:!!parentBEmail?.length, value:parentBEmail},
+  ]
+
   return (
-    <form onSubmit={saver} style={{ height: "75vh", overflowY: "auto" }}>
+    <form onSubmit={saver} style={{ height: "calc(100vh - 150px)", overflowY: "auto" }}>
       <div
         className="d-flex justify-content-center container mt-4"
         style={{ height: "100%", gap: "3%" }}
@@ -444,7 +459,7 @@ const StudentSetup = () => {
               style={{ gap: "2%" }}
             >
               <div className="w-50">
-                <Input setValue={set_code} value={code} label={"Enter Code"} required={false} />
+                <Input setValue={set_code} value={code} label={"Enter Code"} />
               </div>
 
               <Button className="action-btn" handleClick={handleConnectClick}>
@@ -471,7 +486,7 @@ const StudentSetup = () => {
                 <Input
                   setValue={set_fname}
                   value={fname}
-                  label={"First Name"}
+                  label={<MandatoryFieldLabel text="First Name" editMode={editMode} name={"fname"} mandatoryFields={mandatoryFields} />}
                   editMode={!nameFieldsDisabled}
                 />
 
@@ -499,7 +514,7 @@ const StudentSetup = () => {
                   setValue={set_mname}
                   value={mname}
                   required={false}
-                  label={<p>Middle Name: <span class='text-sm'>(optional)</span></p>}
+                  label={<OptionalFieldLabel label={"Middle Name"} editMode={editMode} />}
                   editMode={!nameFieldsDisabled}
                 />
               </div>
@@ -508,7 +523,7 @@ const StudentSetup = () => {
                 <Input
                   setValue={set_sname}
                   value={sname}
-                  label={"Last Name"}
+                  label={<MandatoryFieldLabel text="Last Name" editMode={editMode} name="lname" mandatoryFields={mandatoryFields} />}
                   editMode={!nameFieldsDisabled}
                 />
               </div>
@@ -517,7 +532,7 @@ const StudentSetup = () => {
                 <Input
                   setValue={set_sname}
                   value={user.role === "student" ? user.email : email}
-                  label={"Email"}
+                  label={<MandatoryFieldLabel text="Email" editMode={editMode}  />}
                   editMode={false}
                 />
               </div>
@@ -551,7 +566,7 @@ const StudentSetup = () => {
               <div className="input-group mb-2 ">
                 <Select
                   editMode={editMode}
-                  label={"Are You Over 18 ?"}
+                  label={<MandatoryFieldLabel text="Are you over 18?" editMode={editMode} name="over18" mandatoryFields={mandatoryFields} />}
                   setValue={set_is_18}
                   value={is_18}
                 >
@@ -564,7 +579,7 @@ const StudentSetup = () => {
               <div className="input-group mb-2">
                 <Select
                   editMode={editMode}
-                  label={"GMT"}
+                  label={<MandatoryFieldLabel text="GMT" editMode={editMode} name="gmt" mandatoryFields={mandatoryFields} />}
                   setValue={set_timeZone}
                   value={timeZone}
                 >
@@ -602,7 +617,7 @@ const StudentSetup = () => {
               <div className="input-group mb-2 ">
                 <Select
                   editMode={editMode}
-                  label={"Grade"}
+                  label={<MandatoryFieldLabel text="Grade" editMode={editMode} name="grade" mandatoryFields={mandatoryFields} />}
                   setValue={set_grade}
                   value={grade}
                 >
@@ -613,7 +628,7 @@ const StudentSetup = () => {
               <div className="input-group mb-2 ">
                 <Select
                   editMode={editMode}
-                  label={" Native Language"}
+                  label={<MandatoryFieldLabel text="Native Language" editMode={editMode} name={"nativeLang"} mandatoryFields={mandatoryFields} />}
                   setValue={set_lang}
                   value={lang}
                 >
@@ -632,7 +647,7 @@ const StudentSetup = () => {
                 <Input
                   setValue={set_add1}
                   value={add1}
-                  label={<p>Address1: <span class='text-sm'>(optional)</span></p>}
+                  label={<OptionalFieldLabel label={"Address 1"} editMode={editMode} />}
                   required={false}
                   editMode={editMode}
                 />
@@ -643,7 +658,7 @@ const StudentSetup = () => {
                   setValue={set_add2}
                   value={add2}
                   required={false}
-                  label={<p>Address2: <span class='text-sm'>(optional)</span></p>}
+                  label={<OptionalFieldLabel label={"Adress 2"} editMode={editMode} />}
                   editMode={editMode}
                 />
               </div>
@@ -653,14 +668,14 @@ const StudentSetup = () => {
                   setValue={set_city}
                   value={city}
                   required={false}
-                  label={<p>City: <span class='text-sm'>(optional)</span></p>}
+                  label={<OptionalFieldLabel label={"City/Town"} editMode={editMode} />}
                   editMode={editMode}
                 />
               </div>
               <div className="input-group mb-2 ">
                 <Select
                   editMode={editMode}
-                  label={" Country"}
+                  label={<MandatoryFieldLabel text="Country" editMode={editMode} name="country" mandatoryFields={mandatoryFields} />}
                   setValue={set_country}
                   value={country}
                 >
@@ -699,7 +714,7 @@ const StudentSetup = () => {
                 <div className="input-group mb-2 ">
                   <Select
                     editMode={editMode}
-                    label={" State"}
+                    label={<MandatoryFieldLabel text="State" editMode={editMode} name="state" mandatoryFields={mandatoryFields} />}
                     setValue={set_state}
                     value={state}
                   >
@@ -719,17 +734,17 @@ const StudentSetup = () => {
                   setValue={set_zipCode}
                   value={zipCode}
                   required={false}
-                  label={<p>Zip: <span class='text-sm'>(optional)</span></p>}
+                  label={<OptionalFieldLabel label={"Zip Code"} editMode={editMode} />}
                   editMode={editMode}
                 />
               </div>
               <div className="input-group mb-2">
-                <Input value={dateTime} label={" UTC"} editMode={editMode} />
+                <Input value={dateTime} label={<MandatoryFieldLabel text="UTC" />} editMode={editMode} />
               </div>
               <div className="input-group mb-2 ">
                 <Select
                   editMode={editMode}
-                  label={"Select Secondary Language(s)"}
+                  label={<OptionalFieldLabel text="Secondry Language(s)" editMode={editMode} />}
                   setValue={setSecLang}
                   value={secLan}
                 >
@@ -757,7 +772,7 @@ const StudentSetup = () => {
                       <div className="input-group mb-2 ">
                         <Input
                           value={parentAEmail}
-                          label={"  Parent A Email"}
+                          label={<MandatoryFieldLabel text="Parent A Email" editMode={editMode} name="parentAEmail" mandatoryFields={mandatoryFields} />}
                           editMode={editMode}
                           setValue={setParentAEmail}
                           required={is_18 === "no"}
@@ -767,7 +782,7 @@ const StudentSetup = () => {
                       <div className="input-group mb-2 ">
                         <Input
                           value={parentAName}
-                          label={" Parent A Name"}
+                          label={<MandatoryFieldLabel text="Parent A Name" editMode={editMode} name="parentAName" mandatoryFields={mandatoryFields} />}
                           editMode={editMode}
                           setValue={setParentAName}
                           required={is_18 === "no"}
@@ -778,7 +793,7 @@ const StudentSetup = () => {
                       <div className="input-group mb-2">
                         <Input
                           value={parentBEmail}
-                          label={"Parent B Email"}
+                          label={<MandatoryFieldLabel text="Parent B Email" editMode={editMode} name={"parentBEmail"} mandatoryFields={mandatoryFields} />}
                           editMode={editMode}
                           setValue={setParentBEmail}
                           required={is_18 === "no"}
@@ -788,7 +803,7 @@ const StudentSetup = () => {
                       <div className="input-group mb-2 ">
                         <Input
                           value={parentBName}
-                          label={"Parent B Name"}
+                          label={<MandatoryFieldLabel text="Parent B Name" editMode={editMode} name="parentBName" mandatoryFields={mandatoryFields} />}
                           editMode={editMode}
                           setValue={setParentBName}
                           required={is_18 === "no"}

@@ -378,15 +378,14 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                     </div>
                     <div className='p-3'>
 
-                        <div className='d-flex align-items-center mb-2 justify-content-between'>
+                        {tutor.Country === "USA" && <div className='d-flex align-items-center mb-2 justify-content-between'>
                             <Input
                                 tooltipText='It is mandatory for tutors who are American citizens to provide their Social Security Number (SSN) to receive the annual Form 1099. This requirement ensures compliance with tax regulations and enables accurate reporting of income to the Internal Revenue Service (IRS)..'
                                 editMode={editMode}
-                                label={"SS# (Social Security Number)"}
+                                label={<MandatoryFieldLabel text="SS# (Social Security Number)" editMode={editMode} />}
                                 required={currentYearEarning > 600}
                                 setValue={set_ssh}
                                 value={ssh}
-                                placeholder='XXX-XX-XXXX'
                             />
                             {/* <label htmlFor="">SS# (Social Security Number) &nbsp; 
                             <Tooltip text="Tutors that are American citizens, should mandatory 
@@ -396,7 +395,7 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                                 defaultValue={ssh} type="text"
                                 placeholder='XXX-XX-XXXX'
                             /> */}
-                        </div>
+                        </div>}
 
                         <div className='d-flex align-items-center mb-2 justify-content-between'>
                             <Input

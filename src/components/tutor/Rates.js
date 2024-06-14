@@ -223,8 +223,6 @@ const Rates = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedCancellationPolicy.length)
-      return toast.warning("Please select Tutor Cancellation Policy");
 
     let Step = null;
     if (!dbState.AcademyId) Step = 4;

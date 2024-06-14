@@ -23,7 +23,7 @@ import {
   US_STATES,
   LANGUAGES,
 } from "../../../constants/constants";
-import { compareStates, showRevisitToast } from "../../../utils/common";
+import { compareStates } from "../../../utils/common";
 import Button from "../../common/Button";
 import Tooltip from "../../common/ToolTip";
 import ReactDatePicker from "react-datepicker";
@@ -72,7 +72,7 @@ const Education = () => {
   let [certificate_list, set_certificate_list] = useState("");
   let [d_list, set_d_list] = useState([]);
   const [degreeFile, setDegreeFile] = useState(null);
-  const [resumePath, set_resumePath] = useState(null);
+  const [resumePath, set_resumePath] = useState(null);  
   const [certificateFile, setCertificateFile] = useState(null);
   const [dataFetched, setDataFetched] = useState(false);
   let [db_edu_level, set_db_edu_level] = useState("");
@@ -232,7 +232,7 @@ const Education = () => {
           level !== "No Academic Education" &&
           level !== "Undergraduate Student" &&
           level !== "Associate Degree" &&
-          level !== "Bachlor Degree",
+          level !== "Bachelor Degree",
       },
       uni_mast: {
         value: uni_mast,
@@ -240,7 +240,7 @@ const Education = () => {
           level !== "No Academic Education" &&
           level !== "Undergraduate Student" &&
           level !== "Associate Degree" &&
-          level !== "Bachlor Degree",
+          level !== "Bachelor Degree",
       },
       mast_yr: {
         value: mast_yr,
@@ -248,7 +248,7 @@ const Education = () => {
           level !== "No Academic Education" &&
           level !== "Undergraduate Student" &&
           level !== "Associate Degree" &&
-          level !== "Bachlor Degree",
+          level !== "Bachelor Degree",
       },
       mast_state: {
         value: mast_state,
@@ -256,7 +256,7 @@ const Education = () => {
           level !== "No Academic Education" &&
           level !== "Undergraduate Student" &&
           level !== "Associate Degree" &&
-          level !== "Bachlor Degree" &&
+          level !== "Bachelor Degree" &&
           options[countryForAssociate],
       },
       countryForDoc: {
@@ -330,6 +330,7 @@ const Education = () => {
 
   let saver = async () => {
     let Step = 3;
+
     await post_tutor_setup({
       Step,
       fname: tutor.FirstName,
@@ -338,40 +339,6 @@ const Education = () => {
       userId: tutor.userId,
     });
     dispatch(setTutor());
-    // let response = await upload_edu_form(level,
-    //     uni_bach,
-    //     uni_mast,
-    //     doc_uni,
-    //     degree,
-    //     degreeFileContent,
-    //     certificate,
-    //     certFileContent,
-    //     JSON.stringify(language),
-    //     bach_state,
-    //     mast_state,
-    //     deg_state,
-    //     cert_state,
-    //     [],
-    //     doctorateState,
-    //     experience,
-    //     bach_yr,
-    //     mast_yr,
-    //     degree_yr,
-    //     doctorateGraduateYear,
-    //     expiration,
-    //     JSON.stringify(othelang),
-    //     workExperience,
-    //     AcademyId,
-    //     countryForDeg,
-    //     countryForMast,
-    //     countryForCert,
-    //     countryForDoc,
-    //     countryForAssociate,
-    //     resumePath,
-    //     cert_file_name,
-    //     deg_file_name,
-    //     references
-    // )
   };
 
   const handleEditClick = () => {
@@ -414,104 +381,107 @@ const Education = () => {
     setUnSavedChanges(compareStates(dbValues, fieldValues));
   }, [dbValues, fieldValues]);
 
+
+  const fetchEdu = () => {
+    get_my_edu(window.localStorage.getItem("tutor_user_id"))
+    .then((result) => {
+      if (result?.length) {
+        let data = result[0];
+        let NativeLang = JSON.parse(data.NativeLang ?? "{}");
+        let NativeLangOtherLang = JSON.parse(
+          data.NativeLangOtherLang ?? "[]"
+        );
+        setDbValues({ ...data, NativeLang, NativeLangOtherLang });
+
+        set_workExperience(data.WorkExperience);
+        set_uni_bach(data.Bach_College);
+        set_mast_uni(data.Mast_College);
+        set_doc_uni(data.DoctorateCollege);
+
+        set_language(JSON.parse(data.NativeLang ?? "{}"));
+        set_othelang(JSON.parse(data.NativeLangOtherLang ?? "[]"));
+
+        set_bach_year(data.Bach_College_Year);
+        set_mast_year(data.Mast_College_StateYear);
+        set_degree_year(data.DegreeYear);
+
+        setCountryForAssoc(data.BachCountry);
+        setCountryForCert(data.CertCountry);
+        setCountryForDeg(data.DegCountry);
+        setCountryForDoc(data.DocCountry);
+        setCountryForMast(data.MastCountry);
+        set_bach_state(data.College1State);
+        set_mast_state(data.College2State);
+        set_deg_state(data.DegreeState);
+        set_cert_state(data.CertificateState);
+        set_doctorateState(data.DoctorateState);
+
+        setDoctorateGraduateYear(data.DoctorateGradYr);
+        setReferences(data.ThingsReferences);
+        // setAddReference(data.ThingsReferences?.length)
+
+        set_doctorateState(data.DoctorateState);
+
+        set_degree(data.Degree);
+        set_certificate(data.Certificate);
+        set_db_edu_cert(data.Certificate);
+
+        // setDegreeFileContent(data.DegreeFile)
+        // setCertFileContent(data.CertificateFile)
+
+        set_level(data.EducationalLevel);
+        set_db_edu_level(data.EducationalLevel);
+
+        set_expiration(data.CertificateExpiration || moment());
+        set_experience(data.EducationalLevelExperience);
+
+        set_resumePath(data.Resume);
+        set_deg_file_name(data.DegFileName);
+        set_cert_file_name(data.CertFileName);
+
+        setDataFetched(true);
+      } else {
+        setDbValues({
+          EducationalLevel: level,
+          College1: uni_bach,
+          College2: uni_mast,
+          DoctorateCollege: doc_uni,
+          Certificate: certificate,
+          BachCountry: countryForAssociate,
+          CertCountry: countryForCert,
+          MastCountry: countryForMast,
+          DocCountry: countryForDoc,
+          DegCountry: countryForDeg,
+          College1State: bach_state,
+          College2State: mast_state,
+          DegreeState: deg_state,
+          CertificateState: cert_state,
+          DoctorateState: doctorateState,
+          EducationalLevelExperience: experience,
+          College1Year: bach_yr,
+          College2StateYear: mast_yr,
+          DegreeYear: degree_yr,
+          DoctorateGradYr: doctorateGraduateYear,
+          CertificateExpiration: expiration,
+          WorkExperience: workExperience,
+          ThingsReferences: references,
+          NativeLangOtherLang: othelang,
+          NativeLang: language,
+        });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      setFetchingEdu(false);
+      setRecordFetched(true);
+    });
+  }
   //fetching DB
   useEffect(() => {
     !editMode && setFetchingEdu(true);
-
-    get_my_edu(window.localStorage.getItem("tutor_user_id"))
-      .then((result) => {
-        if (result?.length) {
-          let data = result[0];
-          let NativeLang = JSON.parse(data.NativeLang ?? "{}");
-          let NativeLangOtherLang = JSON.parse(
-            data.NativeLangOtherLang ?? "[]"
-          );
-          setDbValues({ ...data, NativeLang, NativeLangOtherLang });
-
-          set_workExperience(data.WorkExperience);
-          set_uni_bach(data.Bach_College);
-          set_mast_uni(data.Mast_College);
-          set_doc_uni(data.DoctorateCollege);
-
-          set_language(JSON.parse(data.NativeLang ?? "{}"));
-          set_othelang(JSON.parse(data.NativeLangOtherLang ?? "[]"));
-
-          set_bach_year(data.Bach_College_Year);
-          set_mast_year(data.Mast_College_StateYear);
-          set_degree_year(data.DegreeYear);
-
-          setCountryForAssoc(data.BachCountry);
-          setCountryForCert(data.CertCountry);
-          setCountryForDeg(data.DegCountry);
-          setCountryForDoc(data.DocCountry);
-          setCountryForMast(data.MastCountry);
-          set_bach_state(data.College1State);
-          set_mast_state(data.College2State);
-          set_deg_state(data.DegreeState);
-          set_cert_state(data.CertificateState);
-          set_doctorateState(data.DoctorateState);
-
-          setDoctorateGraduateYear(data.DoctorateGradYr);
-          setReferences(data.ThingsReferences);
-          // setAddReference(data.ThingsReferences?.length)
-
-          set_doctorateState(data.DoctorateState);
-
-          set_degree(data.Degree);
-          set_certificate(data.Certificate);
-          set_db_edu_cert(data.Certificate);
-
-          // setDegreeFileContent(data.DegreeFile)
-          // setCertFileContent(data.CertificateFile)
-
-          set_level(data.EducationalLevel);
-          set_db_edu_level(data.EducationalLevel);
-
-          set_expiration(data.CertificateExpiration || moment());
-          set_experience(data.EducationalLevelExperience);
-
-          set_resumePath(data.Resume);
-          set_deg_file_name(data.DegFileName);
-          set_cert_file_name(data.CertFileName);
-
-          setDataFetched(true);
-        } else {
-          setDbValues({
-            EducationalLevel: level,
-            College1: uni_bach,
-            College2: uni_mast,
-            DoctorateCollege: doc_uni,
-            Certificate: certificate,
-            BachCountry: countryForAssociate,
-            CertCountry: countryForCert,
-            MastCountry: countryForMast,
-            DocCountry: countryForDoc,
-            DegCountry: countryForDeg,
-            College1State: bach_state,
-            College2State: mast_state,
-            DegreeState: deg_state,
-            CertificateState: cert_state,
-            DoctorateState: doctorateState,
-            EducationalLevelExperience: experience,
-            College1Year: bach_yr,
-            College2StateYear: mast_yr,
-            DegreeYear: degree_yr,
-            DoctorateGradYr: doctorateGraduateYear,
-            CertificateExpiration: expiration,
-            WorkExperience: workExperience,
-            ThingsReferences: references,
-            NativeLangOtherLang: othelang,
-            NativeLang: language,
-          });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setFetchingEdu(false);
-        setRecordFetched(true);
-      });
+    fetchEdu()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -682,11 +652,10 @@ const Education = () => {
   const handleSave = async (e) => {
     e.preventDefault();
     if (
-      !workExperience ||
-      workExperience.length === 11 ||
+      !workExperience || workExperience === '<p><br></p>' ||
       !workExperience.length || !markSecondEduStepCompleted().valid
     )
-      toast.warning(`Some mandatory fields are not filled. You can return later and complete`)
+      toast.warning(`Some mandatory fields are not filled. You can return later and complete ${markSecondEduStepCompleted().value}`)
 
     // if (!markSecondEduStepCompleted().valid) {
     //   if (!markSecondEduStepCompleted().value === 'expiration')
@@ -707,6 +676,7 @@ const Education = () => {
     setSaving(true);
     tutor.Status === "pending" && (await saver());
     setSaving(false);
+    fetchEdu()
     setEditMode(false);
   };
 
