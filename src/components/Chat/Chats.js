@@ -26,10 +26,10 @@ function DiscussionItem({ fetchingMessages, screenName, online, setSelectedChat,
 
 function DiscussionList({ selectedChat, fetchingMessages, discussions, setSelectedChat }) {
     return (
-        <div className="ks-body jspScrollable" data-auto-height=""
-            style={{ overflowY: 'auto', overflowX: "hidden", padding: '0px', width: '339px' , height:"calc(100% - 60px)" }} tabIndex="0">
-            <div className="jspContainer" style={{ width: '339px', height: '550px' }}>
-                <div className="jspPane" style={{ padding: '0px', top: '0px', width: '329px' }}>
+        <div className="ks-body jspScrollable " data-auto-height=""
+            style={{ overflowY: 'auto', overflowX: "hidden", padding: '0px' , height:"calc(100% - 60px)" }} tabIndex="0">
+            <div className="jspContainer">
+                <div className="jspPane" style={{ padding: '0px', top: '0px' }}>
                     <ul className="ks-items d-flex flex-column p-0">
                         {discussions.map((discussion, index) => (
                             <DiscussionItem
@@ -64,7 +64,7 @@ function SearchBar() {
 
 export default function Chats({ isLoading, fetchingMessages, setSelectedChat, selectedChat, discussionData }) {
     return (
-        <div className="ks-discussions">
+        <div className="ks-discussions w-25" >
             <SearchBar />
             {(!!discussionData.length) ? <DiscussionList
                 setSelectedChat={setSelectedChat}

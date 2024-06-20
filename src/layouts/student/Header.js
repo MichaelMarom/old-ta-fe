@@ -10,6 +10,7 @@ import { setTutor } from "../../redux/tutor/tutorData";
 import { setStudent } from "../../redux/student/studentData";
 import { moment } from "../../config/moment";
 import { statesColours } from "../../constants/constants";
+import Avatar from "../../components/common/Avatar";
 
 const Header = () => {
   const { signOut } = useClerk();
@@ -96,25 +97,6 @@ const Header = () => {
 
   return (
     <>
-      <div
-        className={`screen-name btn-success rounded  p-1 flex-column align-items-center`}
-        style={{
-          fontSize: "14px",
-          display: !student.ScreenName ? "none" : "flex",
-          position: "fixed",
-          top: "1px",
-          zIndex: "999",
-          left: "3%",
-          background: statesColours[student.Status]?.bg,
-          color: statesColours[student.Status]?.color,
-        }}
-      >
-        <div style={{ fontWeight: "bold" }}>{student.ScreenName}</div>
-        <div style={{ fontSize: "12px", fontWeight: "700" }}>
-          {StatusValues[student.Status]}
-        </div>
-      </div>
-
       <div className="tutor-tab-header shadow-sm">
         <div
           style={{
@@ -135,13 +117,36 @@ const Header = () => {
             <FaArrowAltCircleLeft size={30} />
           </div>
         </div>
+        <div
+          className={`screen-name rounded align-items-center px-1`}
+          style={{
+            fontSize: "14px",
+            whiteSpace:"nowrap",
+            marginLeft:"20px",
+            display: !student.ScreenName ? "none" : "flex",
+            // background: statesColours[student.Status]?.bg,
+            color: statesColours[student.Status]?.bg,
+          }}
+        >
+          <div>
+            <Avatar avatarSrc={student.Photo} size="35"  indicSize="8px" />
+          </div>
+          <div className="flex">
+
+          <div style={{ fontWeight: "bold" }}>{student.ScreenName}</div>
+          <div style={{ fontSize: "12px", fontWeight: "700" }}>
+            {StatusValues[student.Status]}
+          </div>
+          </div>
+        </div>
         <ul ref={scrollRef}
-          className={` header`}
+          className={``}
           style={{
             background: "inherit",
             pointerEvents: "auto",
             width: "calc(100% - 300px)",
-            margin: "0 150px 0 150px",
+            margin: "0 50px",
+           
           }}
         >
           {tabs.map((tab) => (
@@ -149,6 +154,7 @@ const Header = () => {
               key={tab.url}
               data-url={tab.url}
               onClick={handleTabClick}
+              className="border"
               id={
                 activeTab.includes(tab.url) ||
                   (activeTab.split("/").length > 3 &&
@@ -157,7 +163,7 @@ const Header = () => {
                   : ""
               }
             >
-              <p className="m-0" style={{ transform: "skew(41deg, 0deg)" }}>
+              <p className="m-0" style={{ transform: "skew(40deg, 0deg)", fontSize:"14px"  }}>
                 {tab.name}
                 {!!filteredSessions.length && tab.url === "/student/feedback" && (
                   <span
@@ -180,7 +186,7 @@ const Header = () => {
         </ul>
         <div
           className="d-flex border rounded p-1 justify-content-center align-items-center "
-          style={{ marginRight: "60px", cursor: "pointer" }}
+          style={{ marginRight: "20px", cursor: "pointer" }}
           onClick={() => signOut(() => handleSignOut())}
         >
           <p className="text-danger m-0">Signout</p>
@@ -189,32 +195,18 @@ const Header = () => {
           </Tooltip>
         </div>
         <div
+          style={{
+            margin: "0 0 0 0",
+            background: "#efefef",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            opacity: ".7",
+            height: "100%",
+            transform: "skew(-0deg)",
+          }}
           className="scroller-right"
           onClick={handleScrollRight}
-          style={{
-            margin: "0 0 0 0",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "#efefef",
-            opacity: ".7",
-            height: "100%",
-            transform: "skew(-0deg)",
-            width: "50px",
-          }}
-        ></div>
-        <div
-          style={{
-            margin: "0 0 0 0",
-            background: "#efefef",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            opacity: ".7",
-            height: "100%",
-            transform: "skew(-0deg)",
-          }}
-          className="scroller-right"
         >
           <FaArrowAltCircleRight size={30} />
         </div>

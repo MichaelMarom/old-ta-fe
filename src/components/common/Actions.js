@@ -66,7 +66,7 @@ const Actions = ({
         { next: "term-of-use", current: "calender", back: "feedback", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
         { next: "chat", current: "term-of-use", back: "calender", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
         { next: "market-place", current: "chat", back: "term-of-use", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
-        { next: "collab", current: "market-place", back: "chat", withCurrentRolePrefix: true, withNextRolePrefix: false, withBackRolePrefix: false },
+        { next: "collab", current: "market-place", back: "chat", withCurrentRolePrefix: true, withNextRolePrefix: false, withBackRolePrefix: true},
         { next: `profile`, current: "collab", back: "market-place", withCurrentRolePrefix: false, withNextRolePrefix: true, withBackRolePrefix: true },
         { next: null, current: "profile", back: "collab", withCurrentRolePrefix: true, withNextRolePrefix: false, withBackRolePrefix: false },
         { next: null, current: `tutor-profile`, back: null, withCurrentRolePrefix: true, withNextRolePrefix: false, withBackRolePrefix: true },

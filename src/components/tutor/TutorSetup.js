@@ -577,7 +577,7 @@ const TutorSetup = () => {
   { name: 'intro', filled: !!intro.length, value: intro },
   { name: 'headline', filled: !!headline.length, value: headline }]
 
-  if (tutorDataLoading) return <Loading height="80vh" />;
+  if (tutorDataLoading) return <Loading height="calc(100vh - 150px" />;
   return (
     <form onSubmit={saveTutorSetup}>
       <div style={{ overflowY: "auto", height: "calc(100vh - 150px)" }}>

@@ -3,6 +3,7 @@ import { showDate } from '../../../utils/moment'
 import { wholeDateFormat } from '../../../constants/constants'
 import { convertTutorIdToName } from '../../../utils/common'
 import AmountCalc from './AmountCalc'
+import Actions from '../../common/Actions'
 
 const AccountingTable = ({ paymentReportData
     , startDate
@@ -14,7 +15,7 @@ const AccountingTable = ({ paymentReportData
             <div className='row'>
                 <div className="col-md-8" style={{
                     overflowY: 'auto',
-                    height: '60vh'
+                    height: 'calc(100vh - 150px)'
                 }}>
                     <h2>Payment Report</h2>
                     {paymentReportData.length ?
@@ -49,6 +50,7 @@ const AccountingTable = ({ paymentReportData
                     setEndDate={setEndDate}
                 />
             </div>
+            <Actions saveDisabled />
         </div>
     )
 }

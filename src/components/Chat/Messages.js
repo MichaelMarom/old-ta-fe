@@ -22,7 +22,6 @@ function Messages({ messages, fetchingMessages, files }) {
       fileAboutToSend.current && fileAboutToSend.current.classList.remove('open')
     }
   }, [files.images, files.pdfs])
-console.log(messages ,'messages')
 
   if (fetchingMessages)
     return <Loading height='100%' />

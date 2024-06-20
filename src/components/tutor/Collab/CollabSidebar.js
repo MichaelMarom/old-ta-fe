@@ -327,7 +327,7 @@ const CollabSidebar = ({
   };
 
   return (
-    <div className="shadow-sm text-bg-dark" style={{ width: "100%", height: "85vh" }}>
+    <div className="shadow-sm text-bg-dark" style={{ width: "100%", height: "65vh" }}>
 
       <div className="text-center countdown p-1 m-0 d-flex">
         <div>

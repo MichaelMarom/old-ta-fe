@@ -29,7 +29,7 @@ const MessageBox = ({ message }) => {
                         boxShadow: " inset 0 0 10px rgba(0, 0, 0, 0.5)",
                         width: 'fit-content'
                     }}>
-                        <div>{message.fileName}</div>
+                        <div style={{whiteSpace:"normal"}}>{message.fileName}</div>
                         {message.fileUrl && <div className='mt-2' >
                             <img
                                 src={message.fileUrl}

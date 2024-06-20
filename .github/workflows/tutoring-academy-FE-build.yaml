@@ -38,7 +38,7 @@ jobs:
           NODE_OPTIONS: --max_old_space_size=20480
           SITE_URL: ${{ inputs.site-url }}
         run: |
-          npm ci
+          npm i
           CI=false npm run build
 
 # Please do not touch the following action

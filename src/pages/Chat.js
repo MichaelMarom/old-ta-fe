@@ -265,7 +265,7 @@ function Chat() {
       <div className="container" style={{ height: "calc(100vh - 200px)" }}>
         <div className="h-100 m-4">
           <div className="ks-page-content-body h-100">
-            <div className="border ks-messenger shadow">
+            <div className="border ks-messenger shadow" >
               <Chats
                 isLoading={isLoading}
                 setSelectedChat={setSelectedChat}
@@ -273,7 +273,7 @@ function Chat() {
                 discussionData={chats}
                 selectedChat={selectedChat}
               />
-              <div className="ks-messages  ks-messenger__messages">
+              <div className="ks-messages  ks-messenger__messages" style={{width:"50%"}}>
                 {!params.id ? (
                   <NoChatSelectedScreen />
                 ) : (

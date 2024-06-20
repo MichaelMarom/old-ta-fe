@@ -2,12 +2,13 @@ import React from 'react'
 import { showDate } from '../../../utils/moment'
 import { convertTutorIdToName } from '../../../utils/common'
 import { wholeDateFormat } from '../../../constants/constants'
+import Actions from '../../common/Actions'
 
 const Lessons = ({ paymentReportData }) => {
     return (
         <div className="container mt-4" style={{
             overflowY: 'auto',
-            height: '60vh'
+            height: 'calc(100vh - 150px)'
         }}>
             <div className='d-flex justify-content-between'>
                 <h2>Lessons</h2>
@@ -35,6 +36,7 @@ const Lessons = ({ paymentReportData }) => {
                     ))}
                 </tbody>
             </table> : <div className='text-danger'>No Record Found</div>}
+            <Actions saveDisabled />
         </div>
     )
 }

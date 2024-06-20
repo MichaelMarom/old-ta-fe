@@ -83,10 +83,11 @@ const StudentSetup = () => {
   const [editMode, setEditMode] = useState(false);
   const [nameFieldsDisabled, setNameFieldsDisabled] = useState(false);
   const [unSavedChanges, setUnSavedChanges] = useState(false);
+  const [toastShown, setToastShown] = useState(false);
 
 
   useEffect(() => {
-    user.role && (!student.Status || student.Status === 'pending') &&
+    user.role && (student.AcademyId && student.Status === 'pending') && !toastShown &&
       toast.success(`Please note that your application is currently in 'pending' status. 
     Use the 'Next' or 'Back' buttons at the page footer to navigate between pages. 
     The menu tabs will become active once your application is complete`, {
@@ -96,7 +97,8 @@ const StudentSetup = () => {
         draggable: true,
         className: "setup-private-info center-center"
       })
-  }, [user.role, student.Status])
+    setToastShown(true)
+  }, [user.role, student.Status, student.AcademyId]);
 
   let saver = async (e) => {
     e.preventDefault();
@@ -382,7 +384,8 @@ const StudentSetup = () => {
     }
   };
 
-  const handleConnectClick = async () => {
+  const handleConnectClick = async (e) => {
+    e.preventDefault();
     if (code.length) {
       const data = await get_tutor_against_code(code);
       set_code("");
@@ -404,18 +407,18 @@ const StudentSetup = () => {
     setDateTime(localTime);
   }, [timeZone]);
 
-  const mandatoryFields = [{name:"fname",filled:!!fname?.length,value:fname},
-    {name:"lname", filled: !!sname?.length, value:sname},
-    {name:"phone",filled:!!cell, value:cell},
-    {name:"over18", filled:!!is_18?.length, value:is_18},
-    {name:"gmt", filled:!!timeZone?.length, value:timeZone},
-    {name:"grade", filled:!!grade?.length, value:grade},
-    {name:"nativeLang", filled: !!lang?.length, value:lang},
-    {name:"country", filled:!!country?.length, value:country},
-    {name:"parentAName", filled:!!parentAName?.length, value:parentAName},
-    {name:"parentBName", filled:!!parentBName?.length, value:parentBName},
-    {name:"parentAEmail", filled:!!parentAEmail?.length, value:parentAEmail},
-    {name:"parentBEmail", filled:!!parentBEmail?.length, value:parentBEmail},
+  const mandatoryFields = [{ name: "fname", filled: !!fname?.length, value: fname },
+  { name: "lname", filled: !!sname?.length, value: sname },
+  { name: "phone", filled: !!cell, value: cell },
+  { name: "over18", filled: !!is_18?.length, value: is_18 },
+  { name: "gmt", filled: !!timeZone?.length, value: timeZone },
+  { name: "grade", filled: !!grade?.length, value: grade },
+  { name: "nativeLang", filled: !!lang?.length, value: lang },
+  { name: "country", filled: !!country?.length, value: country },
+  { name: "parentAName", filled: !!parentAName?.length, value: parentAName },
+  { name: "parentBName", filled: !!parentBName?.length, value: parentBName },
+  { name: "parentAEmail", filled: !!parentAEmail?.length, value: parentAEmail },
+  { name: "parentBEmail", filled: !!parentBEmail?.length, value: parentBEmail },
   ]
 
   return (
@@ -431,6 +434,7 @@ const StudentSetup = () => {
             disabled={!editMode}
             type="file"
             data-type="file"
+            required={false}
             onChange={handleImage}
             style={{ display: "none" }}
             id="photo"
@@ -453,30 +457,32 @@ const StudentSetup = () => {
           </label>
 
           <div className="rounded border shadow p-2 mt-4">
-            <h6>Type tutor's code here</h6>
-            <div
-              className="mb-2 d-flex align-items-center justify-content-center"
-              style={{ gap: "2%" }}
-            >
-              <div className="w-50">
-                <Input setValue={set_code} value={code} label={"Enter Code"} />
-              </div>
-
-              <Button className="action-btn" handleClick={handleConnectClick}>
-                <div className="button__content">
-                  <div className="button__icon">
-                    <img
-                      src={BTN_ICON}
-                      alt={"btn__icon"}
-                      style={{
-                        animation: false ? "spin 2s linear infinite" : "none",
-                      }}
-                    />
-                  </div>
-                  <p className="button__text">Connect </p>
+            <form onSubmit={handleConnectClick}>
+              <h6>Type tutor's code here</h6>
+              <div
+                className="mb-2 d-flex align-items-center justify-content-center"
+                style={{ gap: "2%" }}
+              >
+                <div className="w-50">
+                  <Input setValue={set_code} value={code} label={"Enter Code"}  />
                 </div>
-              </Button>
-            </div>
+
+                <Button className="action-btn" type="submit" >
+                  <div className="button__content">
+                    <div className="button__icon">
+                      <img
+                        src={BTN_ICON}
+                        alt={"btn__icon"}
+                        style={{
+                          animation: false ? "spin 2s linear infinite" : "none",
+                        }}
+                      />
+                    </div>
+                    <p className="button__text">Connect </p>
+                  </div>
+                </Button>
+              </div>
+            </form>
           </div>
         </div>
         <div className="d-flex flex-column" style={{ width: "66%" }}>
@@ -486,6 +492,8 @@ const StudentSetup = () => {
                 <Input
                   setValue={set_fname}
                   value={fname}
+                  
+            required={false}
                   label={<MandatoryFieldLabel text="First Name" editMode={editMode} name={"fname"} mandatoryFields={mandatoryFields} />}
                   editMode={!nameFieldsDisabled}
                 />
@@ -530,9 +538,8 @@ const StudentSetup = () => {
 
               <div className="input-group mb-2 ">
                 <Input
-                  setValue={set_sname}
                   value={user.role === "student" ? user.email : email}
-                  label={<MandatoryFieldLabel text="Email" editMode={editMode}  />}
+                  label={<MandatoryFieldLabel text="Email" editMode={editMode} />}
                   editMode={false}
                 />
               </div>
@@ -741,10 +748,10 @@ const StudentSetup = () => {
               <div className="input-group mb-2">
                 <Input value={dateTime} label={<MandatoryFieldLabel text="UTC" />} editMode={editMode} />
               </div>
-              <div className="input-group mb-2 ">
+              <div className="input-group mb-2">
                 <Select
                   editMode={editMode}
-                  label={<OptionalFieldLabel text="Secondry Language(s)" editMode={editMode} />}
+                  label={<OptionalFieldLabel label="Secondry Language(s)" editMode={editMode} />}
                   setValue={setSecLang}
                   value={secLan}
                 >
@@ -774,8 +781,10 @@ const StudentSetup = () => {
                           value={parentAEmail}
                           label={<MandatoryFieldLabel text="Parent A Email" editMode={editMode} name="parentAEmail" mandatoryFields={mandatoryFields} />}
                           editMode={editMode}
+                          
+            required={false}
                           setValue={setParentAEmail}
-                          required={is_18 === "no"}
+                          // required={is_18 === "no"}
                         />
                       </div>
 
@@ -784,8 +793,10 @@ const StudentSetup = () => {
                           value={parentAName}
                           label={<MandatoryFieldLabel text="Parent A Name" editMode={editMode} name="parentAName" mandatoryFields={mandatoryFields} />}
                           editMode={editMode}
+                          
+            required={false}
                           setValue={setParentAName}
-                          required={is_18 === "no"}
+                          // required={is_18 === "no"}
                         />
                       </div>
                     </div>
@@ -796,7 +807,9 @@ const StudentSetup = () => {
                           label={<MandatoryFieldLabel text="Parent B Email" editMode={editMode} name={"parentBEmail"} mandatoryFields={mandatoryFields} />}
                           editMode={editMode}
                           setValue={setParentBEmail}
-                          required={is_18 === "no"}
+                          
+            required={false}
+                          // required={is_18 === "no"}
                         />
                       </div>
 
@@ -806,7 +819,9 @@ const StudentSetup = () => {
                           label={<MandatoryFieldLabel text="Parent B Name" editMode={editMode} name="parentBName" mandatoryFields={mandatoryFields} />}
                           editMode={editMode}
                           setValue={setParentBName}
-                          required={is_18 === "no"}
+                          
+            required={false}
+                          // required={is_18 === "no"}
                         />
                       </div>
                     </div>

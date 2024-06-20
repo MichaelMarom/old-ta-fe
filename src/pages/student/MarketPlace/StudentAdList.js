@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { fetch_student_ads } from "../../../axios/student";
 import Loading from "../../../components/common/Loading";
+import Actions from "../../../components/common/Actions";
 
 const StudentAdList = () => {
   const [ads, setAds] = useState([]);
@@ -74,6 +75,7 @@ const StudentAdList = () => {
           ))}
         </div>
       </div>
+      <Actions saveDisabled />
     </Layout>
   );
 };
