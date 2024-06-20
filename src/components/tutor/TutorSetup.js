@@ -52,6 +52,13 @@ const isPhoneValid = (phone) => {
     return false;
   }
 };
+export const options = {
+  Australia: AUST_STATES,
+  USA: US_STATES,
+  Canada: CAN_STATES,
+  "United Kingdom": UK_STATES,
+  "UnitedKingdom": UK_STATES,
+};
 
 const TutorSetup = () => {
   const [editMode, setEditMode] = useState(false);
@@ -124,8 +131,6 @@ const TutorSetup = () => {
   let [isRecording, setIsRecording] = useState(false);
   const [toastShown, setToastShown] = useState(false);
 
-
-
   useEffect(() => {
     user.role && (tutor.AcademyId && tutor.Status === 'pending') && !toastShown &&
       toast.success(`Please note that your application is currently in 'pending' status. 
@@ -169,12 +174,7 @@ const TutorSetup = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tutor, userId]);
 
-  const options = {
-    Australia: AUST_STATES,
-    USA: US_STATES,
-    Canada: CAN_STATES,
-    UnitedKingdom: UK_STATES,
-  };
+
 
   useEffect(() => {
     if (tutor.AcademyId) {
@@ -663,7 +663,7 @@ const TutorSetup = () => {
                   >
                     <input
                       disabled={!editMode}
-                      className="form-check-input "
+                      className="form-check-input border border-dark "
                       type="checkbox"
                       role="switch"
                       style={{
@@ -700,7 +700,7 @@ const TutorSetup = () => {
                     >
                       <input
                         disabled={!editMode}
-                        className="form-check-input "
+                        className="form-check-input border border-dark "
                         type="checkbox"
                         role="switch"
                         style={{

@@ -143,7 +143,7 @@ export const ForgetPasswordModal = ({ modalOpen, setOpenModel }) => {
       let fetchUser = async () => {
         if (token && isLoaded) {
           const userDetails = await get_user_detail(userId, token);
-          if (userDetails.role) {
+          if (userDetails?.role) {
             dispatch(setUser(userDetails));
             localStorage.setItem("user", JSON.stringify(userDetails));
             userDetails.role !== "admin"

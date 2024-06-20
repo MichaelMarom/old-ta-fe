@@ -942,6 +942,7 @@ export const AUST_STATES =
     "TAS",
     'VIC'
   ];
+  
 export const UK_STATES = [
   "BDF",
   "BKM",

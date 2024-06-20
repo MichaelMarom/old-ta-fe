@@ -28,8 +28,6 @@ const StudentAccounting = () => {
     const transformIntoPaymentReport = (item) => {
         const bookedSlots = JSON.parse(item.bookedSlots);
         const reservedSlots = JSON.parse(item.reservedSlots);
-        console.log(bookedSlots, reservedSlots, item, 'slostF');
-
         const combinedPaymentData = reservedSlots.concat(bookedSlots);
         const final = combinedPaymentData.filter(data => data.type !== 'reserved')
         return final

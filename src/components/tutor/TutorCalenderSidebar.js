@@ -118,7 +118,7 @@ function TutorCalenderSidebar({
                                 <input
                                     type="checkbox"
                                     id={day.toLowerCase()}
-                                    className="form-check-input"
+                                    className="form-check-input border border-dark"
                                     style={{
                                         accentColor: disableWeekDays?.includes(day)
                                             ? disableColor : "#fff",
@@ -212,7 +212,7 @@ function TutorCalenderSidebar({
                                                 "lightgray" : "#fff",
 
                                     }}
-                                    className={`form-check-input ${timeRange[2] === 'midnight' ? "gray-checkbox" : ""}`}
+                                    className={`form-check-input border border-dark ${timeRange[2] === 'midnight' ? "gray-checkbox" : ""}`}
                                     checked={checkboxChecked(timeRange[0], timeRange[1])}
                                     onChange={() => handleCheckboxClick(null, timeRange)}
                                 />

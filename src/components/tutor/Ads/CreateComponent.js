@@ -138,7 +138,7 @@ const CreateComponent = ({ setActiveTab }) => {
                 <div className="container mt-4">
                     <div className="d-flex justify-content-between">
                         {/* <div className="form-switch form-check w-25" style={{ marginBottom: "-10px" }}>
-                            <input className="form-check-input"
+                            <input className="form-check-input border border-dark"
                                 type="checkbox"
                                 role="switch"
                                 disabled

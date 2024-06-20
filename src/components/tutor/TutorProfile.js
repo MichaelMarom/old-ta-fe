@@ -262,7 +262,7 @@ const TutorProfile = () => {
                     style={{ marginBottom: "-10px" }}
                   >
                     <input
-                      className="form-check-input"
+                      className="form-check-input border border-dark"
                       type="checkbox"
                       role="switch"
                       disabled={true}

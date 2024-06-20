@@ -96,7 +96,7 @@ const TermOfUse = () => {
                     <h4 style={{ fontSize: "16px" }}><span className="text-danger" style={{fontWeight:"bold", fontSize:"20px"}}>*</span>CHECKING THE BOX BELOW, CONSITUTES YOUR ACCPETANCE OF THESE TERMS OF USE
                     </h4>
                     <div className="form-check " >
-                        <input className="form-check-input" style={{ width: "30px", height: "30px", marginRight: '10px' }}
+                        <input className="form-check-input border border-dark" style={{ width: "30px", height: "30px", marginRight: '10px' }}
                             type="checkbox" checked={agreed} onChange={() => setAgreed(true)}
                             disabled={student.AgreementDate || user.role !== 'student' || !editMode}
                             required={user.role === 'student'}

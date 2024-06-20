@@ -702,6 +702,11 @@ export const addDisabledDates = async (date) => {
   }
 };
 
+/**
+ * 
+ * @param {Object} data mandatory keys(fname, lname, mname, userId)
+ * @returns 
+ */
 export const post_tutor_setup = async (data) => {
   try {
     let dataObject = {};
@@ -741,12 +746,12 @@ export const post_tutor_setup = async (data) => {
 
     dataObject.TutorScreenname = data.mname.length
       ? `${capitalizeFirstLetter(data.fname)}. ${capitalizeFirstLetter(
-          data.mname[0]
-        )}. 
+        data.mname[0]
+      )}. 
             ${capitalizeFirstLetter(data.lname[0])}.`
       : `${capitalizeFirstLetter(data.fname)}. ${capitalizeFirstLetter(
-          data.lname[0]
-        )}.`;
+        data.lname[0]
+      )}.`;
 
     dataObject.AcademyId = uuidv4();
     return await apiClient.post("/tutor/setup", dataObject);

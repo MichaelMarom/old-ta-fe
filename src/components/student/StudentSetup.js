@@ -844,7 +844,7 @@ const StudentSetup = () => {
                     style={{ fontSize: "16px " }}
                   >
                     <input
-                      className="form-check-input m-1"
+                      className="form-check-input border border-dark m-1"
                       disabled={!editMode}
                       type="checkbox"
                       role="switch"
@@ -891,7 +891,7 @@ const StudentSetup = () => {
                     style={{ fontSize: "16px " }}
                   >
                     <input
-                      className="form-check-input m-1"
+                      className="form-check-input border border-dark m-1"
                       disabled={!editMode}
                       type="checkbox"
                       role="switch"

@@ -211,7 +211,7 @@ const StudentShortList = () => {
                                                 <td className='m-auto' style={{ width: multi_student_cols[0].width, border: '1px solid lightgray' }}>
                                                     <div className="form-check form-switch d-flex gap-3 justify-content-center" style={{ fontSize: "16px " }}>
                                                         <input
-                                                            className="form-check-input "
+                                                            className="form-check-input border border-dark "
                                                             type="checkbox"
                                                             role="switch"
                                                             style={{

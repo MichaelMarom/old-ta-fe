@@ -56,6 +56,24 @@ export let get_student_setup = (AcademyId) => {
     })
 }
 
+/**
+ * 
+ * @param {String} AcademyId 
+ * @param {Object} body 
+ * @returns 
+ */
+export const upload_student_setup_by_fields = async (AcademyId, body) =>{
+    try {
+        const { data } = await apiClient.put(`/student/setup/by-field/${AcademyId}`,body)
+        return data
+    }
+    catch (err) {
+        showErrorToast(err)
+        console.log(err);
+        return err
+    }
+}
+
 export const get_student_setup_by_userId = async (userId) => {
     try {
         const { data } = await apiClient.get('/student/setup', {

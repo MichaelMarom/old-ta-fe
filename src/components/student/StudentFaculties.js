@@ -297,7 +297,7 @@ const StudentFaculties = () => {
                     style={{ height: "45px" }}
                   >
                     <input
-                      className="form-check-input"
+                      className="form-check-input border border-dark"
                       type="radio"
                       disabled={!subj.tutor_count}
                       name="options"

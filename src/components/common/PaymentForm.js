@@ -2,10 +2,14 @@ import React from "react";
 // import Cards from "react-credit-cards-2";
 // import "react-credit-cards-2/dist/es/styles-compiled.css";
 import Payment from "payment";
+import Input from "./Input";
+import { MandatoryFieldLabel, options } from "../tutor/TutorSetup";
+import { Countries } from "../../constants/constants";
 
 const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, setErrors }) => {
 
     const handleInputChange = (e) => {
+        console.log("render2")
         const { name, value } = e.target;
         setCreditDebitState((prev) => ({ ...prev, [name]: value }));
         if (name === "number") {
@@ -28,13 +32,11 @@ const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, 
                 return setErrors({ cvc: 'Invalid CVC' })
             }
             setErrors({ cvc: null })
-
         }
-
-
     };
 
     const handleInputFocus = (e) => {
+        console.log("render1")
         setCreditDebitState((prev) => ({ ...prev, focus: e.target.name }));
     };
 
@@ -112,6 +114,127 @@ const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, 
                             />
                             {errors.cvc && <p className=""><b>{errors.cvc}</b></p>}
                         </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-6 mb-3">
+                            {/* <Input 
+                            
+                            /> */}
+                            <div className="input">
+
+                                <input
+                                    disabled={!editMode}
+                                    type="text"
+                                    name="add1"
+                                    className="form-control input__field"
+                                    value={creditDebitState.add1}
+                                    onChange={handleInputChange}
+                                    onFocus={handleInputFocus}
+                                    required
+                                />
+                                <span className="input__label" style={{ backgroundColor: "transparent" }}><MandatoryFieldLabel text={"Address1"} /></span>
+                            </div>
+                        </div>
+                        <div className="col-6 mb-3">
+                            <div className="input">
+                                <input
+                                    disabled={!editMode}
+                                    type="text"
+                                    name="add2"
+                                    className="form-control input__field"
+                                    value={creditDebitState.add2}
+                                    onChange={handleInputChange}
+                                    onFocus={handleInputFocus}
+                                    required
+                                />
+                                <span className="input__label" style={{ backgroundColor: "transparent" }}>
+                                    <MandatoryFieldLabel text={"Address2"} /></span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-6 mb-3">
+                            {/* <Input 
+                            
+                            /> */}
+                            <div className="input">
+
+                                <input
+                                    disabled={!editMode}
+                                    type="text"
+                                    name="city"
+                                    className="form-control input__field"
+                                    value={creditDebitState.city}
+                                    onChange={handleInputChange}
+                                    onFocus={handleInputFocus}
+                                    required
+                                />
+                                <span className="input__label" style={{ backgroundColor: "transparent" }}>
+                                    <MandatoryFieldLabel text={"City/Town"} /></span>
+                            </div>
+                        </div>
+                        <div className="col-6 mb-3">
+                            <div className="input">
+                                <input
+                                    disabled={!editMode}
+                                    type="text"
+                                    name="zip"
+                                    className="form-control input__field"
+                                    value={creditDebitState.zip}
+                                    onChange={handleInputChange}
+                                    onFocus={handleInputFocus}
+                                    required
+                                />
+                                <span className="input__label" style={{ backgroundColor: "transparent" }}>
+                                    <MandatoryFieldLabel text={"Zip"} /></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-6 mb-3">
+                            <div className="input">
+                                <select
+                                    disabled={!editMode}
+                                    type="text"
+                                    name="country"
+                                    className=" input__field"
+                                    value={creditDebitState.country}
+                                    onChange={handleInputChange}
+                                    onFocus={handleInputFocus}
+                                    style={{ fontSize: "12px", padding: "5px" }}
+                                    required
+                                >
+                                    <option value={""} >Select</option>
+                                    {Countries.map(item => {
+                                        return <option value={item.Country}>{item.Country}</option>
+                                    })}
+                                </select>
+                                <span className="input__label" style={{ backgroundColor: "transparent" }}>
+                                    <MandatoryFieldLabel text={"Country"} /></span>
+                            </div>
+                        </div>
+                        {options[creditDebitState.country] && <div className="col-6 mb-3">
+                            <div className="input">
+                                <select
+                                    disabled={!editMode}
+                                    type="text"
+                                    name="state"
+                                    className="input__field"
+                                    value={creditDebitState.state}
+                                    onChange={handleInputChange}
+                                    style={{ fontSize: "12px", padding: "5px" }}
+                                    onFocus={handleInputFocus}
+                                    required
+                                >
+                                    <option value={""}>Select</option>
+                                    {options[creditDebitState.country].map(state => <option value={state}>{state}</option>)}
+                                </select>
+                                <span className="input__label" style={{ backgroundColor: "transparent" }}>
+                                    <MandatoryFieldLabel text={"State"} /></span>
+                            </div>
+
+                        </div>}
                     </div>
                 </div>
             </div>

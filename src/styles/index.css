@@ -129,7 +129,7 @@ input[type="checkbox"] {
   accent-color: green
 }
 
-.form-check-input:checked {
+.form-check-input border border-dark:checked {
   background-color: green;
   border-color: green;
 }

@@ -182,7 +182,7 @@ const LoginPage = () => {
                       />
                       <div className=" mt-2" style={{ marginBottom: "-10px" }}>
                         <input
-                          className="form-check-input d-inline-block"
+                          className="form-check-input border border-dark d-inline-block"
                           type="checkbox"
                           id="show"
                           role="switch"

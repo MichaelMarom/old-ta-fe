@@ -381,7 +381,7 @@ const Rates = () => {
               <div className="form-check form-switch d-flex gap-3">
                 <input
                   disabled={!editMode}
-                  className="form-check-input "
+                  className="form-check-input border border-dark "
                   type="checkbox"
                   role="switch"
                   onChange={() =>
@@ -407,7 +407,7 @@ const Rates = () => {
               <div className="form-check form-switch d-flex gap-3">
                 <input
                   disabled={!editMode}
-                  className="form-check-input "
+                  className="form-check-input border border-dark "
                   type="checkbox"
                   role="switch"
                   onChange={() =>
@@ -527,7 +527,7 @@ const Rates = () => {
               <div className="form-check form-switch d-flex align-items-center gap-2">
                 <input
                   disabled={!editMode}
-                  className="form-check-input "
+                  className="form-check-input border border-dark "
                   type="checkbox"
                   role="switch"
                   id="flexSwitchCheckChecked"
@@ -637,7 +637,7 @@ const Rates = () => {
               <div className="form-check form-switch d-flex align-items-center gap-2 mt-4">
                 <input
                   disabled={!editMode}
-                  className="form-check-input "
+                  className="form-check-input border border-dark "
                   type="checkbox"
                   role="switch"
                   id="flexSwitchCheckChecked"

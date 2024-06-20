@@ -98,7 +98,7 @@
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5) !important;
 }
 
-.form-check-input.gray-checkbox:checked {
+.form-check-input border border-dark.gray-checkbox:checked {
   background-color: lightgray;
   border-color: black;
 }

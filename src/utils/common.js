@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { toast } from 'react-toastify';
-import   moment from 'moment';
+import moment from 'moment';
 
 export const formatName = (firstName, lastName) => {
   return `${firstName} ${lastName[0].toUpperCase()}.`;
@@ -99,10 +99,10 @@ export const compareStates = (dbState, currentState) => {
   if (!(Object.keys(dbState).length)) return false;
 
   for (const key in currentState) {
-    console.log(currentState[key], key, dbState?.[key], currentState[key] !== undefined,
-      currentState[key] !== dbState?.[key], !_.isEqual(currentState[key], dbState[key]))
+    // console.log(currentState[key], key, dbState?.[key], currentState[key] !== undefined,
+    // currentState[key] !== dbState?.[key], !_.isEqual(currentState[key], dbState[key]))
 
-      if(key ==="CertificateExpiration" && moment(currentState["CertificateExpiration"]).isSameOrBefore(moment(),'day')) continue;
+    if (key === "CertificateExpiration" && moment(currentState["CertificateExpiration"]).isSameOrBefore(moment(), 'day')) continue;
     if (_.isObject(currentState[key]) && currentState[key] !== undefined && !_.isEqual(currentState[key], dbState[key])) return true
 
     if (!_.isObject(currentState[key]) &&
@@ -110,7 +110,7 @@ export const compareStates = (dbState, currentState) => {
       return true
     }
   }
-  return false 
+  return false
 };
 
 
