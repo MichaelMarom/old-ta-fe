@@ -21,6 +21,7 @@ import marketplaceVideo from '../../assets/videos/marketplace.mp4'
 import { PiVideoBold } from "react-icons/pi";
 
 import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
+import Avatar from "../../components/common/Avatar";
 
 const Header = () => {
   const { signOut } = useClerk();
@@ -161,20 +162,24 @@ const Header = () => {
           <FaArrowAltCircleLeft size={30} />
         </div>
         <div
-          className={`screen-name btn-success rounded  p-1 flex-column align-items-center`}
+          className={`screen-name rounded align-items-center px-1`}
           style={{
             fontSize: "14px",
-            display: !tutor.TutorScreenname ? "none" : "flex",
-            marginLeft: "30px",
-            width: "auto",
             whiteSpace: "nowrap",
-            background: statesColours[tutorState]?.bg,
-            color: statesColours[tutorState]?.color,
+            marginLeft: "20px",
+            display: !tutor.TutorScreenname ? "none" : "flex",
+            color: statesColours[tutor.Status]?.bg,
           }}
         >
-          <div style={{ fontWeight: "bold" }}>{screen_name}</div>
-          <div style={{ fontSize: "12px", fontWeight: "700" }}>
-            {StatusValues[tutor.Status]}
+          <div>
+            <Avatar avatarSrc={tutor.Photo} size="35" indicSize="8px" />
+          </div>
+          <div className="flex">
+
+            <div style={{ fontWeight: "bold" }}>{tutor.TutorScreenname}</div>
+            <div style={{ fontSize: "12px", fontWeight: "700" }}>
+              {StatusValues[tutor.Status]}
+            </div>
           </div>
         </div>
         <ul ref={scrollRef}

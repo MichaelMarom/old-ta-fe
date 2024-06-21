@@ -542,10 +542,12 @@
 
 .input {
   position: relative;
+
 }
 
 .input__label {
   position: absolute;
+
   left: 0;
   top: 0;
   padding: calc(var(--size-bezel) * 0.75) calc(var(--size-bezel) * .5);
@@ -581,6 +583,10 @@
 .input__field:focus + .input__label, .input__field:not(:placeholder-shown) + .input__label {
   transform: translate(0.25rem, -65%) scale(0.8);
   color: var(--color-accent);
+}
+
+.input .input__field:disabled{
+  opacity: 0.5;
 }
 
 .divider{

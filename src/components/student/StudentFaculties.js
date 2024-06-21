@@ -275,12 +275,13 @@ const StudentFaculties = () => {
           {selectedSubject.SubjectName && (
             <div className="d-flex align-items-center " style={{ gap: "30px" }}>
               <div
-                className="d-flex align-items-center"
+                className="d-flex align-items-center blinking-button"
+                style={{fontSize: "16px"}}
                 onClick={() => setSelectedSubject({})}
               >
-                <IoArrowBackCircleSharp size={20} /> Back
+                <IoArrowBackCircleSharp size={30} className="" /> Back to Subjects
               </div>
-              <p className="m-0">{selectedSubject.SubjectName}</p>
+              <p className="m-0" style={{fontWeight:"bold"}}>{selectedSubject.SubjectName}</p>
             </div>
           )}
 

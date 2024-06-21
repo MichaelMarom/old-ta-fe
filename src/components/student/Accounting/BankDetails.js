@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PaymentForm from '../../common/PaymentForm';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { get_bank_details, post_bank_details, upload_student_setup_by_fields } from '../../../axios/student';
 import Actions from '../../common/Actions';
@@ -9,11 +9,12 @@ import { compareStates } from '../../../utils/common';
 import Input from '../../common/Input';
 import { MandatoryFieldLabel } from '../../tutor/TutorSetup';
 import Select from '../../common/Select';
+import { setStudent } from '../../../redux/student/studentData';
 
 function BankDetails() {
     let [AccountName, set_acct_name] = useState(null)
     const [errors, setErrors] = useState({})
-
+    const dispatch = useDispatch()
     let [PaymentType, set_acct_type] = useState(null)
     let [BankName, set_bank_name] = useState(null)
     let [AccountNumber, set_acct] = useState(null)
@@ -22,12 +23,17 @@ function BankDetails() {
     const { student } = useSelector(state => state.student)
     const [email, set_email] = useState(student.Email);
     const [loading, setLoading] = useState(false);
+    const [card, setCard] = useState("primary")
     const [editMode, setEditMode] = useState(false);
     const [creditDebitState, setCreditDebitState] = useState({
-        number: "",
-        name: "",
-        expiry: "",
-        cvc: "",
+        number_p: "",
+        name_p: "",
+        expiry_p: "",
+        cvc_p: "",
+        number_s: "",
+        name_s: "",
+        expiry_s: "",
+        cvc_s: "",
         focus: "",
         add1: "",
         add2: "",
@@ -37,20 +43,14 @@ function BankDetails() {
         state: ""
     })
     const [dbState, setDbState] = useState({})
-    const AcademyId = localStorage.getItem('student_user_id');
+    const AcademyId = student.AcademyId;
     const [UnSavedChanges, setUnSavedChanges] = useState();
-    console.log(student, creditDebitState)
+
     useEffect(() => { set_email(student.Email) }, [student])
-    useEffect(() => {
-        console.log("render")
-        setCreditDebitState({
-            ...creditDebitState, add1: student.Address1, add2: student.Address2,
-            city: student.City, zip: student.ZipCode, state: student.State, country: student.Country
-        });
-    }, [student.ZipCode, student.State, student.Country, student.Address1, student.Address2, student.City])
 
     const fetchBankDetails = async () => {
         const data = await get_bank_details(AcademyId)
+
         if (data?.length) {
             const result = data[0];
             setDbState(result)
@@ -60,68 +60,99 @@ function BankDetails() {
             set_acct(result.AccountNumber);
             set_routing(result.RoutingNumber);
             set_payment_option(result.PaymentOption);
-            setCreditDebitState({...creditDebitState,
-                number: result.CD_Number || '',
-                cvc: result.CD_Cvc || '',
-                name: result.CD_Name || '',
-                expiry: result.CD_Expiry || ''
+            setCreditDebitState({
+                add1: student.Address1,
+                add2: student.Address2,
+                city: student.City,
+                zip: student.ZipCode,
+                state: student.State,
+                country: student.Country,
+                number_p: result.CD_Number_Pri || '',
+                cvc_p: result.CD_Cvc_Pri || '',
+                name_p: result.CD_Name_Pri || '',
+                expiry_p: result.CD_Expiry_Pri || '',
+                number_s: result.CD_Number_Sec || '',
+                cvc_s: result.CD_Cvc_Sec || '',
+                name_s: result.CD_Name_Sec || '',
+                expiry_s: result.CD_Expiry_Sec || ''
             })
             set_email(result.Email)
+        }
+        else {
+            setCreditDebitState({
+                ...creditDebitState,
+                add1: student.Address1,
+                add2: student.Address2,
+                city: student.City,
+                zip: student.ZipCode,
+                state: student.State,
+                country: student.Country,
+            })
         }
     }
 
     useEffect(() => {
         fetchBankDetails()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [student]);
 
-    const validateCreditDebitInfo = () => {
-        const firstTwoNumbers = creditDebitState.number.substring(0, 2)
+    const validateCreditDebitInfo = (cardType) => {
+        const cardNumber = cardType === "primary" ? creditDebitState.number_p : creditDebitState.number_s;
+        const cardCvc = cardType === "primary" ? creditDebitState.cvc_p : creditDebitState.cvc_s;
+        const firstTwoNumbers = cardNumber.substring(0, 2);
+
         if (firstTwoNumbers === '47') {
-            if (creditDebitState.number.length !== 16) {
-                toast.warning('Visa card number length should be 16')
-                return false
+            if (cardNumber.length !== 16) {
+                toast.warning('Visa card number length should be 16');
+                return false;
             }
-            if (creditDebitState.cvc.length !== 3) {
-                toast.warning('Visa Card CVC length must be 3 digitd')
-                return false
+            if (cardCvc.length !== 3) {
+                toast.warning('Visa Card CVC length must be 3 digits');
+                return false;
             }
         }
         if (firstTwoNumbers === '51' || firstTwoNumbers === '57') {
-            if (creditDebitState.number.length !== 16) {
-                toast.warning('Visa card number length should be 16')
-                return false
-            } if (creditDebitState.cvc.length !== 3) {
-                toast.warning('Visa Card CVC length must be 3 digitd')
-                return false
+            if (cardNumber.length !== 16) {
+                toast.warning('MasterCard number length should be 16');
+                return false;
+            }
+            if (cardCvc.length !== 3) {
+                toast.warning('MasterCard CVC length must be 3 digits');
+                return false;
             }
         }
         if (firstTwoNumbers === '37') {
-            if (creditDebitState.number.length !== 15) {
-                toast.warning('Visa card number length must be 15')
-                return false
-            } if (creditDebitState.cvc.length !== 4) {
-                toast.warning('Visa Card CVC length must be 4 digitd')
-                return false
+            if (cardNumber.length !== 15) {
+                toast.warning('Amex card number length must be 15');
+                return false;
+            }
+            if (cardCvc.length !== 4) {
+                toast.warning('Amex Card CVC length must be 4 digits');
+                return false;
             }
         }
-        return true
-    }
+        return true;
+    };
 
     const onSave = async (e) => {
         e.preventDefault()
         try {
             setLoading(true)
             const allNull = _.every(errors, _.isNull);
-            if (!allNull) return
+            if (!allNull) return toast("Please fix Errors")
+            console.log('hit')
 
             if (validateCreditDebitInfo()) {
                 const data = await post_bank_details({
                     Email: email,
-                    CD_Name: creditDebitState.name,
-                    CD_Expiry: creditDebitState.expiry,
-                    CD_Number: creditDebitState.number,
-                    CD_Cvc: creditDebitState.cvc,
+                    CD_Name_Pri: creditDebitState.name_p,
+                    CD_Expiry_Pri: creditDebitState.expiry_p,
+                    CD_Number_Pri: creditDebitState.number_p,
+                    CD_Cvc_Pri: creditDebitState.cvc_p,
+                    CD_Name_Sec: creditDebitState.name_s,
+                    CD_Expiry_Sec: creditDebitState.expiry_s,
+                    CD_Number_Sec: creditDebitState.number_s,
+                    CD_Cvc_Sec: creditDebitState.cvc_s,
                     PaymentOption,
                     PaymentType,
                     AccountName,
@@ -130,13 +161,27 @@ function BankDetails() {
                     RoutingNumber,
                     AcademyId,
                 })
-                const res = await upload_student_setup_by_fields(student.AcademyId,
-                    { Address1: creditDebitState.add1, Address2: creditDebitState.add2 })
-                console.log(res)
+                await upload_student_setup_by_fields(student.AcademyId,
+                    {
+                        Address1: creditDebitState.add1,
+                        Address2: creditDebitState.add2,
+                        City: creditDebitState.city,
+                        ZipCode: creditDebitState.zip,
+                        State: creditDebitState.state,
+                        Country: creditDebitState.country,
+                    })
+                dispatch(setStudent({
+                    ...student, Address1: creditDebitState.add1,
+                    Address2: creditDebitState.add2,
+                    City: creditDebitState.city,
+                    ZipCode: creditDebitState.zip,
+                    State: creditDebitState.state,
+                    Country: creditDebitState.country
+                }))
+
                 if (data?.response?.status === 400)
                     toast.error('Error Saving the data')
                 else {
-                    fetchBankDetails();
                     setEditMode(false)
                     toast.success('Data saved succesfully')
                 }
@@ -158,16 +203,56 @@ function BankDetails() {
         "RoutingNumber": RoutingNumber,
         "PaymentOption": PaymentOption,
         "PaymentType": PaymentType,
-        "CD_Name": creditDebitState.name,
-        "CD_Expiry": creditDebitState.expiry,
-        "CD_Number": creditDebitState.number,
-        "CD_Cvc": creditDebitState.cvc,
-        "Email": email
+        "CD_Name_Pri": creditDebitState.name_p,
+        "CD_Expiry_Pri": creditDebitState.expiry_p,
+        "CD_Number_Pri": creditDebitState.number_p,
+        "CD_Cvc_Pri": creditDebitState.cvc_p,
+        "CD_Name_Sec": creditDebitState.name_s,
+        "CD_Expiry_Sec": creditDebitState.expiry_s,
+        "CD_Number_Sec": creditDebitState.number_s,
+        "CD_Cvc_Sec": creditDebitState.cvc_s,
+        "Email": email,
+        "Address1": creditDebitState.add1,
+        "Address2": creditDebitState.add2,
+        "City": creditDebitState.city,
+        "ZipCode": creditDebitState.zip,
+        "State": creditDebitState.state,
+        "Country": creditDebitState.country,
     }
 
     useEffect(() => {
-        setUnSavedChanges(compareStates(dbState, currentState))
-    }, [dbState, currentState])
+        setUnSavedChanges(compareStates({
+            ...dbState,
+            "Address1": student.Address1,
+            "Address2": student.Address2,
+            "City": student.City,
+            "ZipCode": student.ZipCode,
+            "State": student.State,
+            "Country": student.Country,
+        }, currentState))
+    }, [dbState, currentState, student])
+
+    // const setupFields = {
+    //     "Address1": creditDebitState.add1,
+    //     "Address2": creditDebitState.add2,
+    //     "City": creditDebitState.city,
+    //     "ZipCode": creditDebitState.zip,
+    //     "State": creditDebitState.state,
+    //     "Country": creditDebitState.country,
+    // }
+
+    // const setupDbState = {
+    //     "Address1": student.Address1,
+    //     "Address2": student.Address2,
+    //     "City": student.City,
+    //     "ZipCode": student.ZipCode,
+    //     "State": student.State,
+    //     "Country": student.Country,
+    // }
+
+    // useEffect(()=>{
+    //     setUnSavedChanges(compareStates(setupDbState, setupFields))
+    // },[setupDbState, setupFields])
 
     const handleOptionChange = (e) => {
         set_payment_option(e.target.value);
@@ -176,10 +261,10 @@ function BankDetails() {
     const emailPaymentOptions = ['paypal', 'payoneer', 'zelle', 'wise']
 
     return (
-        <div className='container mt-4'>
+        <div className='container mt-4 rounded' style={{ background: editMode ? "initial" : "#e9ecef" }} >
             <form onSubmit={onSave}>
                 <div className='' style={{ fontWeight: "bold" }}>
-                    <MandatoryFieldLabel text={"Select Payment Option"} />
+                    <MandatoryFieldLabel text={"Select Payment Option"} editMode={editMode} />
                 </div>
                 <div className='mb-3'>
                     <div className="form-check form-check-inline d-flex flex-column" style={{ gap: "20px" }}>
@@ -202,6 +287,35 @@ function BankDetails() {
 
                         </div>
                         <div>
+                            <div className="form-check form-check-inline">
+                                <input disabled={!editMode} required
+                                    className="form-check-input border border-dark"
+                                    type="radio"
+                                    name="inlineRadioOptions"
+                                    value="cd"
+                                    checked={PaymentOption === "cd"}
+                                    onChange={handleOptionChange}
+                                    id='credit/debit/p'
+                                />
+                                <label className="form-check-label" htmlFor='credit/debit/p'>
+                                    Credit/Debit
+                                </label>
+                            </div>
+
+                            <div className="form-check form-check-inline">
+                                <input disabled={!editMode} required
+                                    className="form-check-input border border-dark"
+                                    type="radio"
+                                    name="inlineRadioOptions"
+                                    value="wise"
+                                    checked={PaymentOption === "wise"}
+                                    onChange={handleOptionChange}
+                                    id='wise'
+                                />
+                                <label className="form-check-label" htmlFor='wise'>
+                                    Wise
+                                </label>
+                            </div>
                             <div className='form-check form-check-inline'>
 
                                 <input disabled={!editMode} required
@@ -217,6 +331,7 @@ function BankDetails() {
                                     PayPal
                                 </label>
                             </div>
+
                             <div className="form-check form-check-inline">
                                 <input disabled={!editMode} required
                                     className="form-check-input border border-dark"
@@ -247,35 +362,20 @@ function BankDetails() {
                                 </label>
                             </div>
 
-                            <div className="form-check form-check-inline">
+                            {/* <div className="form-check form-check-inline">
                                 <input disabled={!editMode} required
                                     className="form-check-input border border-dark"
                                     type="radio"
                                     name="inlineRadioOptions"
-                                    value="wise"
-                                    checked={PaymentOption === "wise"}
+                                    value="cd-secondary"
+                                    checked={PaymentOption === "cd-secondary"}
                                     onChange={handleOptionChange}
-                                    id='wise'
+                                    id='credit/debit/s'
                                 />
-                                <label className="form-check-label" htmlFor='wise'>
-                                    Wise
+                                <label className="form-check-label" htmlFor='credit/debit/s'>
+                                    Credit/Debit (3% transaction fee) (Secondary)
                                 </label>
-                            </div>
-
-                            <div className="form-check form-check-inline">
-                                <input disabled={!editMode} required
-                                    className="form-check-input border border-dark"
-                                    type="radio"
-                                    name="inlineRadioOptions"
-                                    value="credit/debit"
-                                    checked={PaymentOption === "credit/debit"}
-                                    onChange={handleOptionChange}
-                                    id='credit/debit'
-                                />
-                                <label className="form-check-label" htmlFor='credit/debit'>
-                                    Credit/Debit (3% transaction fee)
-                                </label>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
 
@@ -363,11 +463,13 @@ function BankDetails() {
                     </div>
                 </>}
 
-                {PaymentOption === 'credit/debit' &&
+                {PaymentOption === 'cd' &&
                     <PaymentForm creditDebitState={creditDebitState}
+                        card={card}
                         setCreditDebitState={setCreditDebitState}
                         editMode={editMode}
                         errors={errors}
+                        setCard={setCard}
                         setErrors={setErrors}
                     />
                 }

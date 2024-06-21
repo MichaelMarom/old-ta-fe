@@ -3,13 +3,12 @@ import React from "react";
 // import "react-credit-cards-2/dist/es/styles-compiled.css";
 import Payment from "payment";
 import Input from "./Input";
-import { MandatoryFieldLabel, options } from "../tutor/TutorSetup";
+import { MandatoryFieldLabel, OptionalFieldLabel, options } from "../tutor/TutorSetup";
 import { Countries } from "../../constants/constants";
 
-const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, setErrors }) => {
+const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, setErrors, card = "primary", setCard = () => { } }) => {
 
     const handleInputChange = (e) => {
-        console.log("render2")
         const { name, value } = e.target;
         setCreditDebitState((prev) => ({ ...prev, [name]: value }));
         if (name === "number") {
@@ -36,13 +35,13 @@ const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, 
     };
 
     const handleInputFocus = (e) => {
-        console.log("render1")
         setCreditDebitState((prev) => ({ ...prev, focus: e.target.name }));
     };
 
     return (
         <div className='container m-auto'>
-            <div className="d-flex justify-content-center align-items-center mt-4" style={{ gap: "2%" }}>
+            <div className="d-flex justify-content-center align-items-center mt-4 " style={{ gap: "2%" }}>
+
                 <div className="mt-4">
                     {/* <Cards
                         number={creditDebitState.number}
@@ -53,75 +52,116 @@ const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, 
                     /> */}
                 </div>
 
-                <div className="mt-3">
-                    <div className="mb-3">
-                        <input
-                            required
-                            disabled={!editMode}
-                            type="number"
-                            name="number"
-                            className="form-control"
-                            placeholder="Card Number"
-                            value={creditDebitState.number}
-                            onChange={handleInputChange}
-                            onFocus={handleInputFocus}
-                        />
-                        {errors.number && <p className=""><b>{errors.number}</b></p>}
-                    </div>
-                    <div className="mb-3">
-                        <input
-                            required
-                            disabled={!editMode}
-                            type="text"
-                            name="name"
-                            value={creditDebitState.name}
-                            className="form-control"
-                            placeholder="Name"
-                            onChange={handleInputChange}
-                            onFocus={handleInputFocus}
-                        />
+                <div className="mt-3 border rounded shadow p-2">
+                    <div className="d-flex justify-content-between mb-2">
+                        <div className="form-check form-check-inline">
+                            <input disabled={!editMode} required
+                                className="form-check-input border border-dark"
+                                type="radio"
+                                name="card-cat"
+                                value="primary"
+                                checked={card === "primary"}
+                                onChange={() => setCard("primary")}
+                                id='card-cat-primary'
+                            />
+                            <label className="form-check-label" htmlFor='card-cat-primary'>
+                                Primary
+                            </label>
+                        </div>
+                        <div className="form-check form-check-inline">
+                            <input disabled={!editMode} required
+                                className="form-check-input border border-dark"
+                                type="radio"
+                                name="card-cat"
+                                value="secondary"
+                                checked={card === "secondary"}
+                                onChange={() => setCard("secondary")}
+                                id='card-cat-secondary'
+                            />
+                            <label className="form-check-label" htmlFor='card-cat-secondary'>
+                                Secondary
+                            </label>
+                        </div>
 
                     </div>
-                    <div className="row">
-                        <div className="col-6 mb-3">
+                    <div className="mb-3">
+                        <div className="input">
                             <input
                                 required
                                 disabled={!editMode}
                                 type="number"
-                                name="expiry"
-                                className="form-control"
-                                placeholder="Valid Thru"
-                                pattern="\d\d/\d\d"
-                                value={creditDebitState.expiry}
+                                name={card === "primary" ? "number_p" : "number_s"}
+                                className="form-control input__field"
+                                value={card === "primary" ? creditDebitState.number_p : creditDebitState.number_s}
                                 onChange={handleInputChange}
                                 onFocus={handleInputFocus}
+                            />
+                            <span className="input__label bg-transparent">
 
-                            />
-                            {errors.expiry && <p className=""><b>{errors.expiry}</b></p>}
+                                <MandatoryFieldLabel editMode={editMode} text={"Card Number"} /></span>
                         </div>
-                        <div className="col-6 mb-3">
+
+                        {errors.number_p && <p className="text-danger"><b>{errors.number_p}</b></p>}
+                        {errors.number_s && <p className="text-danger"><b>{errors.number_s}</b></p>}
+
+                    </div>
+                    <div className="mb-3">
+                        <div className="input">
                             <input
+                                required
                                 disabled={!editMode}
-                                type="number"
-                                name="cvc"
-                                className="form-control"
-                                placeholder="CVC"
-                                pattern="\d{3,4}"
-                                value={creditDebitState.cvc}
+                                type="text"
+                                name={card === "primary" ? "name_p" : "name_s"}
+                                value={card === "primary" ? creditDebitState.name_p : creditDebitState.name_s}
+                                className="form-control input__field"
                                 onChange={handleInputChange}
                                 onFocus={handleInputFocus}
-                                required
                             />
-                            {errors.cvc && <p className=""><b>{errors.cvc}</b></p>}
+                            <span className="input__label bg-transparent"><MandatoryFieldLabel editMode={editMode} text="Name" /></span>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col-6 mb-3">
-                            {/* <Input 
-                            
-                            /> */}
                             <div className="input">
+                                <input
+                                    required
+                                    disabled={!editMode}
+                                    type="number"
+                                    name={card === "primary" ? "expiry_p" : "expiry_s"}
+                                    className="form-control input__field"
+                                    pattern="\d\d/\d\d"
+                                    value={card === "primary" ? creditDebitState.expiry_p : creditDebitState.expiry_s}
+                                    onChange={handleInputChange}
+                                    onFocus={handleInputFocus}
+                                />
+                                <span className="input__label bg-transparent"><MandatoryFieldLabel editMode={editMode} text="Valid Thru" /></span>
+                            </div>
+                            {errors.expiry_p && <p className="text-danger"><b>{errors.expiry_p}</b></p>}
+                            {errors.expiry_s && <p className="text-danger"><b>{errors.expiry_s}</b></p>}
 
+                        </div>
+                        <div className="col-6 mb-3">
+                            <div className="input">
+                                <input
+                                    disabled={!editMode}
+                                    type="number"
+                                    name={card === "primary" ? "cvc_p" : "cvc_s"}
+                                    className="form-control input__field"
+                                    pattern="\d{3,4}"
+                                    value={card === "primary" ? creditDebitState.cvc_p : creditDebitState.cvc_s}
+                                    onChange={handleInputChange}
+                                    onFocus={handleInputFocus}
+                                    required
+                                />
+                                <span className="input__label bg-transparent"><MandatoryFieldLabel editMode={editMode} text="CVC" /></span>
+                            </div>
+                            {errors.cvc_p && <p className="text-danger"><b>{errors.cvc_p}</b></p>}
+                            {errors.cvc_s && <p className="text-danger"><b>{errors.cvc_s}</b></p>}
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-6 mb-3">
+                            <div className="input">
                                 <input
                                     disabled={!editMode}
                                     type="text"
@@ -132,7 +172,9 @@ const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, 
                                     onFocus={handleInputFocus}
                                     required
                                 />
-                                <span className="input__label" style={{ backgroundColor: "transparent" }}><MandatoryFieldLabel text={"Address1"} /></span>
+                                <span className="input__label" style={{ backgroundColor: "transparent" }}>
+                                    <MandatoryFieldLabel editMode={editMode} text={"Address1"} />
+                                </span>
                             </div>
                         </div>
                         <div className="col-6 mb-3">
@@ -145,21 +187,17 @@ const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, 
                                     value={creditDebitState.add2}
                                     onChange={handleInputChange}
                                     onFocus={handleInputFocus}
-                                    required
                                 />
                                 <span className="input__label" style={{ backgroundColor: "transparent" }}>
-                                    <MandatoryFieldLabel text={"Address2"} /></span>
+                                    <OptionalFieldLabel label={"Address2"} editMode={editMode} />
+                                </span>
                             </div>
 
                         </div>
                     </div>
                     <div className="row">
                         <div className="col-6 mb-3">
-                            {/* <Input 
-                            
-                            /> */}
                             <div className="input">
-
                                 <input
                                     disabled={!editMode}
                                     type="text"
@@ -171,7 +209,8 @@ const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, 
                                     required
                                 />
                                 <span className="input__label" style={{ backgroundColor: "transparent" }}>
-                                    <MandatoryFieldLabel text={"City/Town"} /></span>
+                                    <MandatoryFieldLabel editMode={editMode} text={"City/Town"} />
+                                </span>
                             </div>
                         </div>
                         <div className="col-6 mb-3">
@@ -187,7 +226,7 @@ const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, 
                                     required
                                 />
                                 <span className="input__label" style={{ backgroundColor: "transparent" }}>
-                                    <MandatoryFieldLabel text={"Zip"} /></span>
+                                    <MandatoryFieldLabel editMode={editMode} text={"Zip"} /></span>
                             </div>
                         </div>
                     </div>
@@ -202,16 +241,17 @@ const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, 
                                     value={creditDebitState.country}
                                     onChange={handleInputChange}
                                     onFocus={handleInputFocus}
-                                    style={{ fontSize: "12px", padding: "5px" }}
+                                    style={{ fontSize: "12px", padding: "5px", background: editMode ? "white" : "#e9ecef" }}
                                     required
                                 >
                                     <option value={""} >Select</option>
                                     {Countries.map(item => {
-                                        return <option value={item.Country}>{item.Country}</option>
+                                        return <option value={item.Country} key={item.Country}>{item.Country}</option>
                                     })}
                                 </select>
                                 <span className="input__label" style={{ backgroundColor: "transparent" }}>
-                                    <MandatoryFieldLabel text={"Country"} /></span>
+                                    <MandatoryFieldLabel editMode={editMode} text={"Country"} />
+                                </span>
                             </div>
                         </div>
                         {options[creditDebitState.country] && <div className="col-6 mb-3">
@@ -223,15 +263,16 @@ const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, 
                                     className="input__field"
                                     value={creditDebitState.state}
                                     onChange={handleInputChange}
-                                    style={{ fontSize: "12px", padding: "5px" }}
+                                    style={{ fontSize: "12px", padding: "5px", backgroundColor: editMode ? "white" : "#e1e1e1" }}
                                     onFocus={handleInputFocus}
                                     required
                                 >
                                     <option value={""}>Select</option>
-                                    {options[creditDebitState.country].map(state => <option value={state}>{state}</option>)}
+                                    {options[creditDebitState.country].map(state => <option value={state} key={state}>{state}</option>)}
                                 </select>
                                 <span className="input__label" style={{ backgroundColor: "transparent" }}>
-                                    <MandatoryFieldLabel text={"State"} /></span>
+                                    <MandatoryFieldLabel editMode={editMode} text={"State"} />
+                                </span>
                             </div>
 
                         </div>}
@@ -242,3 +283,4 @@ const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, 
     );
 };
 export default PaymentForm;
+

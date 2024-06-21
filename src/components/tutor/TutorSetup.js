@@ -359,10 +359,8 @@ const TutorSetup = () => {
         response.data?.[0]?.TutorScreenname
       );
       localStorage.setItem("tutor_user_id", response.data?.[0]?.AcademyId);
-      // dispatch(setscreenNameTo(response.data?.[0]?.TutorScreenname));
       setEditMode(false);
       toast.success("Data saved successfully");
-
     } else {
       toast.error("Error saving the Data ");
     }
@@ -422,7 +420,6 @@ const TutorSetup = () => {
     ));
     let countries_select_head = (
       <option
-        key="null"
         value={""}
         style={{
           height: "50px",
@@ -431,7 +428,6 @@ const TutorSetup = () => {
           padding: "0 10px 0 10px",
           borderRadius: "0",
         }}
-        disabled
       >
         Country
       </option>
@@ -903,7 +899,7 @@ const TutorSetup = () => {
                       defaultCountry="us"
                       value={cell}
                       onChange={(cell) => set_cell(cell)}
-                      disabled={nameFieldsDisabled}
+                      disabled={!editMode}
                       style={{ width: "100%" }}
                     />
                     <span
@@ -1052,6 +1048,7 @@ const TutorSetup = () => {
                   <Select
                     setValue={set_country}
                     value={country}
+                    mandatory={true}
                     editMode={editMode}
                     label={<MandatoryFieldLabel name="country" mandatoryFields={mandatoryFields} text="Country" editMode={editMode} />}
                   >
@@ -1078,11 +1075,10 @@ const TutorSetup = () => {
                       <option value="" disabled>
                         Select State
                       </option>
-                      {(options[country] ?? []).map((item) => (
-                        <option key={item} value={item}>
+                      {(options[country] ?? []).map((item) =><option key={item} value={item}>
                           {item}
                         </option>
-                      ))}
+                      )}
 
                     </Select>
 
@@ -1466,13 +1462,13 @@ export const MandatoryFieldLabel = ({ text, editMode = true, mandatoryFields = [
 
   return <p className={`${blinkMe() ? 'blink_me' : ''}`}>
     <span style={{
-      background: editMode ? "white" : "#e1e1e1",
+      background: editMode ? "white" : "rgb(233 236 239)",
     }}>{text}:
     </span><span className="text-danger"
       style={{ fontSize: "26px" }}>*</span>
   </p>
 }
 
-export const OptionalFieldLabel = ({ label,editMode=true }) => <p style={{ background: editMode ? "white" : "#e1e1e1", }}>{label}: <span class='text-sm'>(optional)</span></p>
+export const OptionalFieldLabel = ({ label,editMode=true }) => <p style={{ background: editMode ? "white" : "rgb(233 236 239)", }}>{label}: <span className='text-sm'>(optional)</span></p>
 
 export default TutorSetup;
