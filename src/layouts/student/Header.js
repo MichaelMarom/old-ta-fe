@@ -12,10 +12,15 @@ import { moment } from "../../config/moment";
 import { statesColours } from "../../constants/constants";
 import Avatar from "../../components/common/Avatar";
 
+import collabVideo from '../../assets/videos/collaboration.mp4'
+import { PiVideoBold } from "react-icons/pi";
+import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
+
 const Header = () => {
   const { signOut } = useClerk();
   let nav = useNavigate();
   const [activeTab, setActiveTab] = useState("");
+  const [isOpen, setIsOpen] = useState(false)
 
   const dispatch = useDispatch();
   const [filteredSessions, setFilteredSessions] = useState([]);
@@ -34,7 +39,7 @@ const Header = () => {
     { name: "Terms Of Use", url: "/student/term-of-use" },
     { name: "Message Board", url: "/student/chat" },
     { name: "Market place", url: "/student/market-place" },
-    { name: "Collaboration", url: "/collab" },
+    { name: "Collaboration", url: "/collab", video: collabVideo },
     { name: "Profile", url: "/student/profile" },
   ];
   const StatusValues = {
@@ -121,22 +126,22 @@ const Header = () => {
           className={`screen-name rounded align-items-center px-1`}
           style={{
             fontSize: "14px",
-            whiteSpace:"nowrap",
-            marginLeft:"20px",
+            whiteSpace: "nowrap",
+            marginLeft: "20px",
             display: !student.ScreenName ? "none" : "flex",
             // background: statesColours[student.Status]?.bg,
             color: statesColours[student.Status]?.bg,
           }}
         >
           <div>
-            <Avatar avatarSrc={student.Photo} size="35"  indicSize="8px" />
+            <Avatar avatarSrc={student.Photo} size="35" indicSize="8px" />
           </div>
           <div className="flex">
 
-          <div style={{ fontWeight: "bold" }}>{student.ScreenName}</div>
-          <div style={{ fontSize: "12px", fontWeight: "700" }}>
-            {StatusValues[student.Status]}
-          </div>
+            <div style={{ fontWeight: "bold" }}>{student.ScreenName}</div>
+            <div style={{ fontSize: "12px", fontWeight: "700" }}>
+              {StatusValues[student.Status]}
+            </div>
           </div>
         </div>
         <ul ref={scrollRef}
@@ -146,15 +151,13 @@ const Header = () => {
             pointerEvents: "auto",
             width: "calc(100% - 300px)",
             margin: "0 50px",
-           
           }}
         >
-          {tabs.map((tab) => (
+          {tabs.map((tab) => (<>
             <li
               key={tab.url}
               data-url={tab.url}
               onClick={handleTabClick}
-              className="border"
               id={
                 activeTab.includes(tab.url) ||
                   (activeTab.split("/").length > 3 &&
@@ -163,7 +166,7 @@ const Header = () => {
                   : ""
               }
             >
-              <p className="m-0" style={{ transform: "skew(40deg, 0deg)", fontSize:"14px"  }}>
+              <p className="m-0" style={{ transform: "skew(40deg, 0deg)", fontSize: "14px" }}>
                 {tab.name}
                 {!!filteredSessions.length && tab.url === "/student/feedback" && (
                   <span
@@ -182,8 +185,18 @@ const Header = () => {
                 )}
               </p>
             </li>
+            {tab.video && <div className="cursor-pointer mx-2 video-nav-icon" style={{ transform: "skew(0)" }}
+                  onClick={() => setIsOpen(tab.url)}>
+                  <PiVideoBold color={location.pathname === tab.url ? '#ff4e4e' : "rgb(153 132 132)"}
+                    size="28" className="video-nav-icon" />
+                </div>}
+                <div className="text-light" style={{ fontWeight: "bold" }}>|</div>
+            </>
           ))}
         </ul>
+        
+        <TabInfoVideoToast video={tabs.find(tab => tab.url === isOpen)?.video} isOpen={isOpen} setIsOpen={setIsOpen} />
+
         <div
           className="d-flex border rounded p-1 justify-content-center align-items-center "
           style={{ marginRight: "20px", cursor: "pointer" }}

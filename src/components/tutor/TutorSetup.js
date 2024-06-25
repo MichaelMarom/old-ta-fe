@@ -43,6 +43,7 @@ import Avatar from "../common/Avatar";
 import Input from "../common/Input";
 import Select from "../common/Select";
 import VacationSettingModal from "./VacationSettingModal";
+import Tooltip from "../common/ToolTip";
 
 const phoneUtil = PhoneNumberUtil.getInstance();
 const isPhoneValid = (phone) => {
@@ -129,21 +130,24 @@ const TutorSetup = () => {
   );
   const [nameFieldsDisabled, setNameFieldsDisabled] = useState(false);
   let [isRecording, setIsRecording] = useState(false);
-  const [toastShown, setToastShown] = useState(false);
+  const toastId = 'pending-status-toast';
 
   useEffect(() => {
-    user.role && (tutor.AcademyId && tutor.Status === 'pending') && !toastShown &&
-      toast.success(`Please note that your application is currently in 'pending' status. 
-    Use the 'Next' or 'Back' buttons at the page footer to navigate between pages. 
-    The menu tabs will become active once your application is complete`, {
-        position: toast.POSITION.BOTTOM_CENTER,
-        hideProgressBar: true,
-        autoClose: false,
-        draggable: true,
-        className: "setup-private-info center-center"
-      })
-    setToastShown(true)
-  }, [user.role, tutor.AcademyId, tutor.Status, toastShown])
+    if (user.role && tutor.AcademyId && tutor.Status === 'pending') {
+      if (!toast.isActive(toastId)) {
+        toast.success(`Please note that your application is currently in 'pending' status. 
+          Use the 'Next' or 'Back' buttons at the page footer to navigate between pages. 
+          The menu tabs will become active once your application is complete`, {
+          position: toast.POSITION.BOTTOM_CENTER,
+          hideProgressBar: true,
+          autoClose: false,
+          draggable: true,
+          className: "setup-private-info center-center",
+          toastId: toastId
+        });
+      }
+    }
+  }, [user.role, tutor.AcademyId, tutor.Status]);
 
   useEffect(() => {
     tutor.AcademyId &&
@@ -428,6 +432,7 @@ const TutorSetup = () => {
           padding: "0 10px 0 10px",
           borderRadius: "0",
         }}
+        disabled={tutor.Status === 'active'}
       >
         Country
       </option>
@@ -463,6 +468,7 @@ const TutorSetup = () => {
           borderRadius: "0",
         }}
         value=""
+        disabled={tutor.Status === "active"}
       >
         Select
       </option>
@@ -489,7 +495,7 @@ const TutorSetup = () => {
     ));
     let response_head = (
       <option
-        key="null"
+        key=""
         style={{
           height: "50px",
           width: "100%",
@@ -498,6 +504,7 @@ const TutorSetup = () => {
           borderRadius: "0",
         }}
         value=""
+        disabled={tutor.Status === 'active'}
       >
         Select
       </option>
@@ -576,7 +583,7 @@ const TutorSetup = () => {
   if (tutorDataLoading) return <Loading height="calc(100vh - 150px" />;
   return (
     <form onSubmit={saveTutorSetup}>
-      <div style={{ overflowY: "auto", height: "calc(100vh - 150px)" }}>
+      <div style={{ overflowY: "auto", height: "calc(100vh - 150px)", background: editMode ? "inherit" : "rgb(233, 236, 239)" }}>
         <div
           className="d-flex justify-content-between flex-column"
           style={{
@@ -799,7 +806,7 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
-                    label={<MandatoryFieldLabel text="First Name" editMode={editMode} />}
+                    label={<MandatoryFieldLabel text="First Name" editMode={!nameFieldsDisabled} />}
                     setValue={set_fname}
                     value={fname}
                     editMode={!nameFieldsDisabled}
@@ -818,7 +825,7 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
-                    label={<OptionalFieldLabel label={"Middle Name"} editMode={editMode} />}
+                    label={<OptionalFieldLabel label={"Middle Name"} editMode={!nameFieldsDisabled} />}
                     required={false}
                     setValue={set_mname}
                     value={mname}
@@ -839,7 +846,7 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
-                    label={<MandatoryFieldLabel text="Last Name" editMode={editMode} />}
+                    label={<MandatoryFieldLabel text="Last Name" editMode={!nameFieldsDisabled} />}
                     setValue={set_sname}
                     value={lname}
                     editMode={!nameFieldsDisabled}
@@ -876,7 +883,7 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
-                    label={<p style={{ background: "#e1e1e1" }}>Email</p>}
+                    label={<p style={{ background: "rgb(233, 236, 239)", opacity: "0.5" }}>Email</p>}
                     value={email}
                     editMode={false}
                   />
@@ -930,10 +937,10 @@ const TutorSetup = () => {
                     setValue={set_response_zone}
                     value={response_zone}
                     editMode={editMode}
-                    label={<MandatoryFieldLabel name="rtime" mandatoryFields={mandatoryFields} text="Response Time" editMode={editMode} />}
-                    TooltipText={
+                    label={<MandatoryFieldLabel name="rtime" toolTipText={
                       "Select your response time answering the student during business time in your time zone. Please take notice that the student take this fact as one of the considurations of selecting you as tutor."
-                    }
+                    } mandatoryFields={mandatoryFields} text="Response Time" editMode={editMode} />}
+
                   >
                     {response_list}
                   </Select>
@@ -955,10 +962,9 @@ const TutorSetup = () => {
                       setValue={set_timeZone}
                       value={timeZone}
                       editMode={editMode}
-                      label={<MandatoryFieldLabel name="timezone" mandatoryFields={mandatoryFields} text="Timezone" editMode={editMode} />}
-                      TooltipText={
+                      label={<MandatoryFieldLabel toolTipText={
                         "Select the Greenwich Mean Time (GMT) zone where you reside. It will let the student configure his time availability conducting lessons with you, when in a different time zone. "
-                      }
+                      } name="timezone" mandatoryFields={mandatoryFields} text="Timezone" editMode={editMode} />}
                     >
                       {GMTList}
                     </Select>
@@ -988,7 +994,7 @@ const TutorSetup = () => {
                 >
                   <Input
                     label={<OptionalFieldLabel label={"Adress 1"} editMode={editMode} />}
-                    required={false}
+                    required={tutor.Status === 'active'}
                     value={add1}
                     setValue={set_add1}
                     editMode={editMode}
@@ -1009,7 +1015,7 @@ const TutorSetup = () => {
                   <Input
                     label={<OptionalFieldLabel label={"Adress 2"} editMode={editMode} />}
                     value={add2}
-                    required={false}
+                    required={tutor.Status === 'active'}
                     setValue={set_add2}
                     editMode={editMode}
                   />
@@ -1075,9 +1081,9 @@ const TutorSetup = () => {
                       <option value="" disabled>
                         Select State
                       </option>
-                      {(options[country] ?? []).map((item) =><option key={item} value={item}>
-                          {item}
-                        </option>
+                      {(options[country] ?? []).map((item) => <option key={item} value={item}>
+                        {item}
+                      </option>
                       )}
 
                     </Select>
@@ -1123,7 +1129,7 @@ const TutorSetup = () => {
                       label={
                         <div className="d-flex" style={{
                           gap: "5px",
-                          background: editMode ? "white" : "#e1e1e1",
+                          background: "rgb(233, 236, 239)",
                         }}>
                           <ToolTip
                             width="200px"
@@ -1330,10 +1336,11 @@ const TutorSetup = () => {
                   placeholder="Write A Catchy Headline.. Example: 21 years experienced nuclear science professor."
                   onChange={(e) => set_headline(e.target.value)}
                   type="text"
+                  required={tutor.Status === 'active'}
                 />
                 <span className="" style={{
                   position: "absolute",
-                  top: "-10px",
+                  top: "-5px",
                   left: "10px",
                   padding: "2px",
                   fontSize: "12px"
@@ -1348,7 +1355,7 @@ const TutorSetup = () => {
           <div style={{ width: "100%" }}>
 
             <div
-              className="tutor-setup-bottom-field d-flex justify-content-center "
+              className=" d-flex justify-content-center "
               style={{ gap: "20px" }}
             >
               <div
@@ -1358,35 +1365,31 @@ const TutorSetup = () => {
                     "  40%"
                 }}
               >
-                <div className="input w-100">
-                  <div className="w-100 text-end" style={{ fontWeight: "900", fontSize: "14px", float: "right" }}> {intro.length}/500</div>
+                <div className="w-100 text-end" style={{ fontWeight: "900", fontSize: "14px", float: "right" }}> {intro.length}/500</div>
+                <div className="input w-100" >
                   <textarea
                     className="form-control m-0 shadow input__field"
                     value={intro}
+                    placeholder="Type here your introduction. Can click the icon above for a guideline."
                     maxLength={500}
-                    placeholder="Type here an engaging introduction as being a tutor on an online platform 
-                  involves highlighting your qualifications, teaching philosophy, and experience 
-                  in a concise and compelling manner. Begin with your name and the subject you 
-                  specialize in, ensuring to communicate your passion for teaching and the unique 
-                  approach you bring to your lessons. It's also beneficial to mention any notable 
-                  achievements or certifications that may build credibility and trust with 
-                  potential students. Remember to keep the language simple and jargon-free, making
-                  it accessible to a broad audience. Incorporating multimedia elements like a 
-                  profile picture or a brief introductory video can also enhance your profile, 
-                  giving students a better sense of your personality and teaching style.
-                    "
                     onInput={(e) => set_intro(e.target.value)}
                     style={{ width: "100%", padding: "10px", height: "160px" }}
                     spellCheck="true"
                     disabled={!editMode}
+                    required={tutor.Status === 'active'}
                   ></textarea>
 
-                  <span className="" style={{
+                  <span className="d-flex " style={{
                     position: "absolute",
-                    top: "-10px",
+                    background: "transparent",
+                    top: "-5px",
                     left: "10px",
                     padding: "2px", fontSize: "12px"
-                  }}><MandatoryFieldLabel name="intro" mandatoryFields={mandatoryFields} text={"Introduction"} editMode={editMode} /></span>
+                  }}>
+                    <MandatoryFieldLabel name="intro" mandatoryFields={mandatoryFields} direction="bottom" text={"Introduction"} width="300px"
+                      toolTipText="Hello students, Welcome to the online course on Introduction to Programming. My name is John Smith and I will be your tutor for this course. I have been teaching programming for over 10 years and I am passionate about helping you learn the basics of coding. In this course, you will learn how to write simple programs in Python, a popular and easy-to-learn programming language. You will also learn how to use various tools and libraries to make your programs more interactive and fun. "
+                      editMode={editMode} />
+                  </span>
 
                 </div>
               </div>
@@ -1395,34 +1398,39 @@ const TutorSetup = () => {
                 className="profile-motivation"
                 style={{ textAlign: "center", float: "right", fontWeight: "bold", width: "40%" }}
               >
-                <div className="input w-100">
-                  <div className="w-100 text-end" style={{ fontWeight: "900", fontSize: "14px", float: "right" }}>{motivation.length}/500</div>
+                <div className="w-100 text-end"
+                  style={{ fontWeight: "900", fontSize: "14px", float: "right" }}>
+                  {motivation.length}/500
+                </div>
+                <div className="input w-100" >
 
                   <textarea
                     className="form-control m-0 shadow input__field"
                     value={motivation}
+                    required={tutor.Status === 'active'}
                     disabled={!editMode}
+                    placeholder="Type here your Motivation Text. Can click the icon above for a guideline."
                     maxLength={500}
-                    placeholder='Type here Something that will motivate Your Students. Use the "Motivate" tab to set up your promotions. Offering an 
-                    introductory session for half price can spark curiosity and engagement 
-                among students. Discount for multi students tutoring, or paid subscription for multi lessons, 
-                is motivating factor.
-                If you hold a teacher certificate, and wish to provide your profession to a full
-                class of students in a public school, you can charge the school a premium.'
                     onInput={(e) => set_motivation(e.target.value)}
                     spellCheck="true"
-                    style={{ width: "100%", padding: "10px", height: "160px" }}
+                    style={{ width: "100%", padding: "10px", height: "160px", }}
                     name=""
                     id=""
                   ></textarea>
                   <span className="" style={{
                     position: "absolute",
-                    top: "-10px",
+                    top: "-5px",
                     left: "10px",
-
-                    padding: "2px", fontSize: "12px"
-                  }}><MandatoryFieldLabel name="motivate" mandatoryFields={mandatoryFields} text={"Motivate"} editMode={editMode} /></span>
-
+                    padding: "2px",
+                    fontSize: "12px",
+                    background: "transparent"
+                  }}><MandatoryFieldLabel width={"300px"} toolTipText='Type here Something that will motivate Your Students. Use the "Motivate" tab to set up your promotions. Offering an 
+                    introductory session for half price can spark curiosity and engagement 
+                among students. Discount for multi students tutoring, or paid subscription for multi lessons, 
+                is motivating factor.
+                If you hold a teacher certificate, and wish to provide your profession to a full
+                class of students in a public school, you can charge the school a premium.' name="motivate"
+                    mandatoryFields={mandatoryFields} text={"Motivate"} editMode={editMode} /></span>
                 </div>
               </div>
 
@@ -1452,7 +1460,7 @@ const TutorSetup = () => {
   );
 };
 
-export const MandatoryFieldLabel = ({ text, editMode = true, mandatoryFields = [], name }) => {
+export const MandatoryFieldLabel = ({ text, editMode = true, mandatoryFields = [], name, toolTipText = "", width = "200px", direction = "bottomleft" }) => {
 
   const blinkMe = () => {
     if (!name) return false
@@ -1460,15 +1468,18 @@ export const MandatoryFieldLabel = ({ text, editMode = true, mandatoryFields = [
     return !filled;
   }
 
-  return <p className={`${blinkMe() ? 'blink_me' : ''}`}>
+  return <p >
     <span style={{
       background: editMode ? "white" : "rgb(233 236 239)",
-    }}>{text}:
+    }}>{!!toolTipText.length && <ToolTip text={toolTipText} direction={direction} width={width} />}
+      <span className={`${blinkMe() ? 'blink_me' : ''}`}> {text}</span>:
+
     </span><span className="text-danger"
       style={{ fontSize: "26px" }}>*</span>
   </p>
 }
 
-export const OptionalFieldLabel = ({ label,editMode=true }) => <p style={{ background: editMode ? "white" : "rgb(233 236 239)", }}>{label}: <span className='text-sm'>(optional)</span></p>
+export const OptionalFieldLabel = ({ label, editMode = true }) => <p
+  style={{ background: editMode ? "white" : "rgb(233 236 239)" }}>{label}: <span className='text-sm'>(optional)</span></p>
 
 export default TutorSetup;

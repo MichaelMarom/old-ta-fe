@@ -116,7 +116,7 @@ const Ads = () => {
 
     return (
         <Layout>
-            <div className="" style={{ height: "70vh", overflowY: "auto" }}>
+            <div className="" style={{ height: "calc(100vh - 200px)", overflowY: "auto" }}>
                 <form onSubmit={handleSubmit}>
                     <div className="container">
                         <div className=" d-flex justify-content-center align-items-end mb-2"

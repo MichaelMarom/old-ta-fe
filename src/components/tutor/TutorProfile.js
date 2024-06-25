@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { get_tutor_profile } from "../../axios/tutor";
 import { create_chat } from "../../axios/chat";
 import { apiClient } from "../../axios/config";
-import { IoIosCheckmarkCircle } from "react-icons/io";
+import { IoIosCheckmarkCircle, IoIosCloseCircle } from "react-icons/io";
 import { FaCalendar, FaComment, FaRegTimesCircle } from "react-icons/fa";
 
 import {
@@ -22,6 +22,8 @@ import ToolTip from "../common/ToolTip";
 import { toast } from "react-toastify";
 import Actions from "../common/Actions";
 import { monthFormatWithYYYY } from "../../constants/constants";
+import TutorScheduleModal from "./TutorScheduleModal";
+import ScreenRecording from "../common/ScreenRecording";
 
 const TutorProfile = () => {
   const params = useParams();
@@ -34,6 +36,7 @@ const TutorProfile = () => {
   const userRole = localStorage.getItem("user_role");
   const [sortedGrades, setSortedGrades] = useState([]);
   const isStudentLoggedIn = location.pathname.split("/")[1] === "student";
+  const [scheduleModalOpen, setScheduleModalOpen] = useState(false)
 
   const customSort = (a, b) => {
     if (a === "Academic") {
@@ -64,9 +67,10 @@ const TutorProfile = () => {
   };
 
   const handleScheduleClick = () => {
-    if (!studentId)
-      return toast.error("You need to select 1 student from students-list!");
-    navigate("/student/faculties");
+    setScheduleModalOpen(true)
+    // if (!studentId)
+    //   return toast.error("You need to select 1 student from students-list!");
+    // navigate("/student/faculties");
   };
 
   const handleChatClick = async () => {
@@ -119,7 +123,8 @@ const TutorProfile = () => {
       </h5>
     );
   return (
-    <div style={{ background: "lightGray", height: "83vh", overflowY: "auto" }}>
+    <div style={{ background: "lightGray", height: isStudentLoggedIn ? "calc(100vh - 50px)" : "83vh", overflowY: "auto" }}>
+      <ScreenRecording />
       <div className="container">
         <div className="">
           <div className="d-flex align-items-start justify-content-between w-100 mt-4 rounded  bg-white ">
@@ -172,7 +177,7 @@ const TutorProfile = () => {
                     <Button
                       className="action-btn btn"
                       onClick={handleChatClick}
-                      disabled={userRole === "tutor"}
+                      disabled={!isStudentLoggedIn}
                     >
                       <div className="button__content">
                         <div className="button__icon">
@@ -185,7 +190,7 @@ const TutorProfile = () => {
                       className="action-btn btn"
                       style={{ width: "50%" }}
                       onClick={handleScheduleClick}
-                      disabled={userRole === "tutor"}
+                      disabled={!isStudentLoggedIn}
                     >
                       <div className="button__content">
                         <div className="button__icon">
@@ -256,8 +261,14 @@ const TutorProfile = () => {
                   style={{ gap: "10px", fontSize: "16px", fontWeight: "bold" }}
                 >
                   <h6 className="m-0">50% Off on Intro Lesson</h6>
-
-                  <div
+                  {
+                    data.IntroSessionDiscount === "1" ? (
+                      <IoIosCheckmarkCircle size={20} color="green" />
+                    ) : (
+                      <IoIosCloseCircle size={20} color="red" />
+                    )
+                  }
+                  {/* <div
                     className="form-check form-switch"
                     style={{ marginBottom: "-10px" }}
                   >
@@ -268,7 +279,7 @@ const TutorProfile = () => {
                       disabled={true}
                       defaultChecked={data.IntroSessionDiscount === "1"}
                     />
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <div className="d-flex align-items-center" style={{ gap: "5px" }}>
@@ -340,11 +351,11 @@ const TutorProfile = () => {
               </div>
             </div>
           </div>
-          <div className="p-2 " style={{margin:"10px 0", background:"white"}}>
-          <div>
-                  <h5 className="">Headline</h5>
-                  <p className="border p-2">{data.HeadLine}</p>
-                </div>
+          <div className="p-2 " style={{ margin: "10px 0", background: "white" }}>
+            <div>
+              <h5 className="">Headline</h5>
+              <p className="border p-2">{data.HeadLine}</p>
+            </div>
 
           </div>
           <div className="d-flex mt-4" style={{ gap: "20px" }}>
@@ -406,7 +417,7 @@ const TutorProfile = () => {
                 </div>
               </div>
             </div>
-            <div className="" style={{width:"calc(100% - 33.33% - 20px)"}}>
+            <div className="" style={{ width: "calc(100% - 33.33% - 20px)" }}>
               <div className="bg-white p-4 rounded">
                 <div>
                   <h5 className="">Motivate</h5>
@@ -436,9 +447,8 @@ const TutorProfile = () => {
                     >
                       <li className="nav-item w-100 p-0">
                         <p
-                          className={`nav-link m-0 ${
-                            activeTab === "bach" ? "text-bg-primary" : ""
-                          } w-100`}
+                          className={`nav-link m-0 ${activeTab === "bach" ? "text-bg-primary" : ""
+                            } w-100`}
                           aria-current="page"
                           onClick={() => setActiveTab("bach")}
                         >
@@ -447,9 +457,8 @@ const TutorProfile = () => {
                       </li>
                       <li className="nav-item w-100 p-0">
                         <p
-                          className={`nav-link m-0 ${
-                            activeTab === "mast" ? "text-bg-primary" : ""
-                          } w-100`}
+                          className={`nav-link m-0 ${activeTab === "mast" ? "text-bg-primary" : ""
+                            } w-100`}
                           aria-current="page"
                           onClick={() => setActiveTab("mast")}
                         >
@@ -458,9 +467,8 @@ const TutorProfile = () => {
                       </li>
                       <li className="nav-item w-100 p-0">
                         <p
-                          className={`nav-link m-0 ${
-                            activeTab === "doc" ? "text-bg-primary" : ""
-                          } w-100`}
+                          className={`nav-link m-0 ${activeTab === "doc" ? "text-bg-primary" : ""
+                            } w-100`}
                           aria-current="page"
                           onClick={() => setActiveTab("doc")}
                         >
@@ -469,9 +477,8 @@ const TutorProfile = () => {
                       </li>
                       <li className="nav-item w-100 p-0">
                         <p
-                          className={`nav-link m-0 ${
-                            activeTab === "cert" ? "text-bg-primary" : ""
-                          } w-100`}
+                          className={`nav-link m-0 ${activeTab === "cert" ? "text-bg-primary" : ""
+                            } w-100`}
                           aria-current="page"
                           onClick={() => setActiveTab("cert")}
                         >
@@ -480,9 +487,8 @@ const TutorProfile = () => {
                       </li>
                       <li className="nav-item w-100 p-0">
                         <p
-                          className={`nav-link m-0 m-0 ${
-                            activeTab === "deg" ? "text-bg-primary" : ""
-                          } w-100`}
+                          className={`nav-link m-0 m-0 ${activeTab === "deg" ? "text-bg-primary" : ""
+                            } w-100`}
                           aria-current="page"
                           onClick={() => setActiveTab("deg")}
                         >
@@ -917,6 +923,9 @@ const TutorProfile = () => {
           </div>
         </div>
       </div>
+
+      <TutorScheduleModal id={params.id} isOpen={scheduleModalOpen} onClose={() => setScheduleModalOpen(false)} />
+
       {!isStudentLoggedIn && (
         <Actions saveDisabled={true} editDisabled={true} />
       )}

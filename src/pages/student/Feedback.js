@@ -35,15 +35,15 @@ export const Feedback = () => {
   useEffect(() => {
     sessions.length &&
       fetch_tutors_photos(sessions.map((session) => session.tutorId)).then((result) => {
-        setFeedbackData(
+        result?.length && setFeedbackData(
           sessions.map((session) => ({
             ...session,
             photo: result.find((tutor) => tutor.AcademyId === session.tutorId)
               ?.photo,
           }))
         );
-      });
-  }, [ sessions]);
+      }).catch((error) => { console.log(error) });
+  }, [sessions]);
 
   useEffect(() => {
     let fetchSession = async () =>

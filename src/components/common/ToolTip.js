@@ -8,6 +8,7 @@ const Tooltip = ({ text, children, iconSize = 16, direction = "top", width = "10
   const [tooltipStyle, setTooltipStye] = useState({
     width,
     whiteSpace: "normal",
+    zIndex: "9999999"
   })
 
   const handleMouseEnter = () => {

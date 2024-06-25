@@ -4,10 +4,7 @@ import { BsFillPlayFill } from 'react-icons/bs';
 import Modal from './Modal'
 
 
-const TabInfoVideoToast = ({ video, iframeVideo = false,isOpen, setIsOpen  }) => {
-    const [showToast, setShowToast] = useState(false);
-    console.log(video)
-
+const TabInfoVideoToast = ({ video, iframeVideo = false, isOpen, setIsOpen }) => {
     const closeModal = () => {
         const video = document.getElementById('tabvideo');
         if (video) {
@@ -16,7 +13,7 @@ const TabInfoVideoToast = ({ video, iframeVideo = false,isOpen, setIsOpen  }) =>
         }
         setIsOpen(false);
     };
-    
+
     useEffect(() => {
         return () => {
             closeModal()

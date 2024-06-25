@@ -195,7 +195,7 @@ const Education = () => {
   const jsonFields = ["NativeLang", "NativeLangOtherLang"];
   const dynamicSave = async (key, value) => {
     if (jsonFields.includes(key)) value = JSON.stringify(value);
-    if (key && tutor.AcademyId) {
+    if (key && tutor.AcademyId && (tutor.Status !== 'active' || value)) {
       await post_edu({
         AcademyId: tutor.AcademyId,
         [key]: value,
@@ -494,7 +494,7 @@ const Education = () => {
       </option>
     ));
     let head = (
-      <option value="">
+      <option value="" disabled={tutor.Status === 'active'}>
         Select
       </option>
     );
@@ -698,10 +698,10 @@ const Education = () => {
   { name: "degreeFile", filled: !!deg_file_name?.length, value: deg_file_name },
   { name: "degreeState", filled: !!deg_state?.length },
   { name: "degreeCountry", filled: !!countryForDeg?.length },
-  { name: "certification", filled: !!certificate.length },
+  { name: "certification", filled: !!certificate?.length },
   { name: "certificateExpire", filled: !!expiration },
   { name: "nativeLang", filled: !!language && !_.isEmpty(language) },
-  { name: "aboutExperience", filled: !!workExperience.length && workExperience !== '<p><br></p>' },
+  { name: "aboutExperience", filled: !!workExperience?.length && workExperience !== '<p><br></p>' },
   ]
 
   if (fetchingEdu) return <Loading loadingText="Fetching Tutor Eduction..." />;
@@ -719,7 +719,7 @@ const Education = () => {
         <form action="" onSubmit={handleSave}>
           <div className="tutor-tab-education-info pt-4 ">
 
-            <div className="d-flex  row border p-3 shadow " style={{ background: editMode ? "inherit" : "#e1e1e1" }}>
+            <div className="d-flex  row border p-3 shadow " style={{ background: editMode ? "inherit" : "#ebe9ec" }}>
               <h6 className="border-bottom">Experience</h6>
               <div className="d-flex justify-content-between">
                 <div className="col-md-4" style={{ fontSize: "14px" }}>
@@ -754,7 +754,7 @@ const Education = () => {
                     value={level}
                     editMode={editMode}
                   >
-                    <option value="" >
+                    <option value="" disabled={tutor.Status === 'active'}>
                       Select highest Education
                     </option>
                     {level_list}
@@ -781,7 +781,7 @@ const Education = () => {
 
             {level && level !== "No Academic Education" && level.length ? (
               <>
-                <div className="row mt-3 p-3 shadow  border shadow" style={{ background: editMode ? "inherit" : "#e1e1e1" }}>
+                <div className="row mt-3 p-3 shadow  border shadow" style={{ background: editMode ? "inherit" : "rgb(233 236 239)" }}>
                   {
                     <h6 className="border-bottom">
                       {level === "Associate Degree" ||
@@ -802,7 +802,7 @@ const Education = () => {
                           />
                         }
                         editMode={editMode}
-
+                        required={tutor.Status === 'active'}
                         delay={2000}
                         element="app-input"
                         value={uni_bach}
@@ -831,7 +831,7 @@ const Education = () => {
                           value={countryForAssociate}
                           editMode={editMode}
                         >
-                          <option value={""}>
+                          <option value={""} disabled={tutor.Status==='active'}>
                             Select Country
                           </option>
                           {Countries.map((option) => (
@@ -856,7 +856,7 @@ const Education = () => {
                             value={bach_state}
                             editMode={editMode}
                           >
-                            <option value="">Select State</option>
+                            <option value="" disabled={tutor.Status === 'active'}>Select State</option>
                             {options[countryForAssociate].map((item) => (
                               <option key={item} value={item}>
                                 {item}
@@ -885,7 +885,7 @@ const Education = () => {
                           value={bach_yr}
                           editMode={editMode}
                         >
-                          <option value="">Select Year</option>
+                          <option value="" disabled={tutor.Status === 'active'}>Select Year</option>
                           {d_list.map((item) => (
                             <option key={item} value={item}>
                               {item}
@@ -899,7 +899,7 @@ const Education = () => {
                 {level !== "Bachelor Degree" &&
                   level !== "Undergraduate Student" &&
                   level !== "Associate Degree" ? (
-                  <div className="row mt-3 border p-3 shadow " style={{ background: editMode ? "inherit" : "#e1e1e1" }}>
+                  <div className="row mt-3 border p-3 shadow " style={{ background: editMode ? "inherit" : "rgb(233 236 239)" }}>
                     <h6 className="border-bottom">Master Degree</h6>
                     <div className="d-flex justify-content-between mt-3">
                       <div className="col-md-4" style={{ fontSize: "14px" }}>
@@ -909,6 +909,7 @@ const Education = () => {
                             <MandatoryFieldLabel editMode={editMode} text="Institute Name" name="mcollege" mandatoryFields={mandatoryFields} />
                           }
                           element="app-input"
+                          required={tutor.Status === 'active'}
                           editMode={editMode}
                           delay={2000}
                           value={uni_mast}
@@ -933,7 +934,7 @@ const Education = () => {
                             editMode={editMode}
                             value={countryForMast}
                           >
-                            <option value={""}>
+                            <option value={""} disabled={tutor.Status === 'active'}>
                               Select Country
                             </option>
                             {Countries.map((option) => (
@@ -960,7 +961,7 @@ const Education = () => {
                               value={mast_state}
                               editMode={editMode}
                             >
-                              <option value="">Select State</option>
+                              <option value="" disabled={tutor.Status === 'active'}>Select State</option>
                               {options[countryForMast].map((item) => (
                                 <option key={item} value={item}>
                                   {item}
@@ -977,6 +978,7 @@ const Education = () => {
                             <MandatoryFieldLabel editMode={editMode} text="Graduation Year" name="myear" mandatoryFields={mandatoryFields} />
                           }
                           id="yr2"
+                          required={tutor.Status === 'active'}
                           className="form-select m-0 w-100"
                           onChange={(e) => {
                             set_mast_year(e.target.value);
@@ -988,7 +990,7 @@ const Education = () => {
                           value={mast_yr}
                           editMode={editMode}
                         >
-                          <option value="">Select Year</option>
+                          <option value="" disabled={tutor.Status == 'active'}>Select Year</option>
                           {d_list.map((item) => (
                             <option key={item} value={item}>
                               {item}
@@ -1003,7 +1005,7 @@ const Education = () => {
                   level !== "Bachelor Degree" &&
                   level !== "Master Degree" &&
                   level !== "Associate Degree" ? (
-                  <div className="row mt-3 border p-3 shadow " style={{ background: editMode ? "inherit" : "#e1e1e1" }}>
+                  <div className="row mt-3 border p-3 shadow " style={{ background: editMode ? "inherit" : "rgb(233 236 239)" }}>
                     <h6 className="border-bottom">Doctorate Degree</h6>
                     <div className="d-flex justify-content-between mt-3">
                       <div className="col-md-4" style={{ fontSize: "14px" }}>
@@ -1014,7 +1016,7 @@ const Education = () => {
                           }
                           element="app-input"
                           type="text"
-
+                          required = {tutor.Status === 'active'}
                           value={doc_uni}
                           setInputValue={set_doc_uni}
                           editMode={editMode}
@@ -1030,6 +1032,7 @@ const Education = () => {
                             label={
                               <MandatoryFieldLabel editMode={editMode} text="Country For Doctorate" name="dcountry" mandatoryFields={mandatoryFields} />
                             }
+                            required={tutor.Status === 'active'}
                             onChange={(e) => {
                               setCountryForDoc(e.target.value);
                               dynamicSave("DocCountry", e.target.value);
@@ -1037,7 +1040,7 @@ const Education = () => {
                             editMode={editMode}
                             value={countryForDoc}
                           >
-                            <option value={""}>
+                            <option value={""} disabled={tutor.Status === 'active'}>
                               Select Country
                             </option>
                             {Countries.map((option) => (
@@ -1062,7 +1065,7 @@ const Education = () => {
                               value={doctorateState}
                               editMode={editMode}
                             >
-                              <option value="">Select State</option>
+                              <option value="" disabled={tutor.Status === 'active'}>Select State</option>
                               {options[countryForDoc].map((item) => (
                                 <option key={item} value={item}>
                                   {item}
@@ -1087,7 +1090,7 @@ const Education = () => {
                           value={doctorateGraduateYear}
                           editMode={editMode}
                         >
-                          <option value="">Select Year</option>
+                          <option value="" disabled={tutor.Status === 'active'}>Select Year</option>
                           {d_list.map((item) => (
                             <option key={item} value={item}>
                               {item}
@@ -1099,7 +1102,7 @@ const Education = () => {
                   </div>
                 ) : null}
 
-                <div className="row mt-3 border p-3 shadow" style={{ background: editMode ? "inherit" : "#e1e1e1" }}>
+                <div className="row mt-3 border p-3 shadow" style={{ background: editMode ? "inherit" : "rgb(233 236 239)" }}>
                   <h6 className="border-bottom">Degree Document</h6>
                   <div className="d-flex justify-content-between align-items-end mt-3">
                     <div className="col-md-4" style={{ fontSize: "14px" }}>
@@ -1157,7 +1160,7 @@ const Education = () => {
                             dynamicSave("DegCountry", e.target.value);
                           }}
                         >
-                          <option value={""}>
+                          <option value={""} disabled={tutor.Status==='active'} >
                             Select Country
                           </option>
                           {Countries.map((option) => (
@@ -1182,7 +1185,7 @@ const Education = () => {
                             value={deg_state}
                             editMode={editMode}
                           >
-                            <option value="">Select State</option>
+                            <option value="" disabled={tutor.Status==='active'}>Select State</option>
                             {options[countryForDeg].map((item) => (
                               <option key={item} value={item}>
                                 {item}
@@ -1207,7 +1210,7 @@ const Education = () => {
                         value={degree_yr}
                         editMode={editMode}
                       >
-                        <option value="">
+                        <option value="" disabled={tutor.Status === 'active'}>
                           Select Year
                         </option>
                         {d_list.map((item) => (
@@ -1222,7 +1225,7 @@ const Education = () => {
               </>
             ) : null}
 
-            <div className="row mt-3 align-items-start border p-3 shadow " style={{ background: editMode ? "inherit" : "#e1e1e1" }}>
+            <div className="row mt-3 align-items-start border p-3 shadow " style={{ background: editMode ? "inherit" : "rgb(233 236 239)" }}>
               <h6 className="border-bottom">Certification</h6>
               <div className="d-flex justify-content-between align-items-end mt-3">
                 <div className="col-md-4" style={{ fontSize: "14px" }}>
@@ -1251,7 +1254,7 @@ const Education = () => {
                     value={certificate}
                     editMode={editMode}
                   >
-                    <option value="">
+                    <option value="" disabled={tutor.Status === 'active'}>
                       Select Certificate
                     </option>
                     {certificate_list}
@@ -1333,7 +1336,7 @@ const Education = () => {
               </div>
             </div>
 
-            <div className="row mt-3 justify-content-between border p-3 shadow " style={{ background: editMode ? "inherit" : "#e1e1e1" }}>
+            <div className="row mt-3 justify-content-between border p-3 shadow " style={{ background: editMode ? "inherit" : "rgb(233 236 239)" }}>
               <h6 className="border-bottom">Languages</h6>
               <div className="d-flex justify-content-between align-items-end">
                 <div className="col-md-5">
@@ -1349,6 +1352,7 @@ const Education = () => {
                       dynamicSave("NativeLang", selectedOption);
                     }}
                     defaultValue={language}
+                    required={tutor.Status === 'active'}
                     value={language}
                     options={languageOptions}
                     isDisabled={!editMode}
@@ -1387,6 +1391,7 @@ const Education = () => {
               <DebounceInput
                 delay={2000}
                 className="work-exp"
+                required={tutor.Status === 'active'}
                 value={workExperience}
                 setInputValue={set_workExperience}
                 readOnly={!editMode}

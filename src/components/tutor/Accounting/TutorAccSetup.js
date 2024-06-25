@@ -284,7 +284,7 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                                     }}>3% service charge imposed by the services listed above.
                                     <Tooltip width='200px' text={'Payoneer, Paypal, Zelle, Wise'} /></p>}
 
-                                {payment_option === "Bank" &&
+                                {payment_option === "Bank" && tutor.Country === 'USA' &&
                                     <div className=' shadow p-3 border border-2 '>
 
                                         <div className='d-flex align-items-center justify-content-between flex-wrap' style={{ gap: "10px" }}>
@@ -303,7 +303,7 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                                                     setValue={set_acct_type}
                                                     label={<MandatoryFieldLabel text={"Account Type"} name="accType" mandatoryFields={mandatoryFields} />}
                                                 >
-                                                    <option value="">Select Account Type</option>
+                                                    <option value="" disabled>Select Account Type</option>
                                                     <option value="savings">Savings</option>
                                                     <option value="checking">Checking</option>
 
@@ -317,23 +317,16 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                                                     label={<MandatoryFieldLabel text="Bank Name" name="bankName" mandatoryFields={mandatoryFields} />}
                                                 />
                                             </div>
-                                            {/* <label htmlFor="acct-name">Account Name</label>
-                                            <input disabled={!editMode} required type="text" className='form-control' 
-                                            onInput={e => set_acct_name(e.target.value)} id="acct-name" 
-                                            defaultValue={acct_name} style={{ float: 'right', width: '60%' }} /> */}
-                                            <div style={{ width: "48%" }}>
 
+                                            <div style={{ width: "48%" }}>
                                                 <Input
                                                     value={routing}
                                                     setValue={set_routing}
                                                     editMode={editMode}
                                                     label={<MandatoryFieldLabel text="Routing#" name="routing#" mandatoryFields={mandatoryFields} />}
-                                                /></div>
+                                                />
+                                            </div>
 
-                                            {/* <label htmlFor="bank-name">Bank Name</label>
-                                            <input disabled={!editMode} className='form-control' required type="text"
-                                             onInput={e => set_bank_name(e.target.value)} defaultValue={bank_name} id="bank-name" 
-                                             style={{ float: 'right', width: '60%' }} /> */}
                                             <div style={{ width: "48%" }}>
                                                 <Input
                                                     value={acct}

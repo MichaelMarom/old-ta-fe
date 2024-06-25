@@ -301,7 +301,7 @@ const Rates = () => {
                   TooltipText={"How many hours before the lesson, you allow the student to cancel without penalty?"}
                   label={<MandatoryFieldLabel text="Cancellation Policy" mandatoryFields={mandatoryFields} name={"cancPolicy"} />}
                 >
-                  <option value={""}>Select</option>
+                  <option value={""} disabled={tutor.Status === 'active'}>Select</option>
                   <option value={4} >4hr</option>
                   <option value={8} >8hr</option>
                   <option value={12} >12hr</option>

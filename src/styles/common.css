@@ -595,7 +595,9 @@
   background-color: #c4c2c2;
 }
 
-
+.form-check-input:checked{
+  background-color: green !important;
+}
 
 
 /* --------header------------- */

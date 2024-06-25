@@ -27,6 +27,7 @@ const Header = () => {
   const { signOut } = useClerk();
   let nav = useNavigate();
   let location = useLocation();
+  const { user } = useSelector(state => state.user);
   const [activeTab, setActiveTab] = useState("intro");
   const [filteredSessions, setFilteredSessions] = useState([])
   const { sessions } = useSelector(state => state.tutorSessions)
@@ -175,7 +176,6 @@ const Header = () => {
             <Avatar avatarSrc={tutor.Photo} size="35" indicSize="8px" />
           </div>
           <div className="flex">
-
             <div style={{ fontWeight: "bold" }}>{tutor.TutorScreenname}</div>
             <div style={{ fontSize: "12px", fontWeight: "700" }}>
               {StatusValues[tutor.Status]}
@@ -186,11 +186,11 @@ const Header = () => {
           className={`header`}
           style={{
             background:
-              tutor.Status === PROFILE_STATUS.PENDING || !tutor.AcademyId
+              tutor.Status === (PROFILE_STATUS.PENDING || !tutor.AcademyId) && user.role !== 'admin'
                 ? "#737476"
                 : "inherit",
             pointerEvents:
-              tutor.Status === PROFILE_STATUS.PENDING || !tutor.AcademyId
+              tutor.Status === (PROFILE_STATUS.PENDING || !tutor.AcademyId) && user.role !== 'admin'
                 ? "none"
                 : "auto",
             width: "calc(100% - 300px)",
@@ -207,14 +207,16 @@ const Header = () => {
                   id={getId(tab)}
                 >
                   <p className="m-0" style={{ transform: "skew(41deg, 0deg)" }}>
-                    {tab.name}{!!filteredSessions.length && tab.url === '/tutor/feedback' && <span className="text-bg-danger p-1 rounded-circle" style={{
-                      display: "inline-flex",
-                      width: "24px",
-                      height: "24px",
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}>{filteredSessions.length}</span>}
+                    {tab.name}
+                    {!!filteredSessions.length && tab.url === '/tutor/feedback' &&
+                      <span className="text-bg-danger p-1 rounded-circle" style={{
+                        display: "inline-flex",
+                        width: "24px",
+                        height: "24px",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}>{filteredSessions.length}</span>}
                   </p>
                 </li>
                 {tab.video && <div className="cursor-pointer mx-2 video-nav-icon" style={{ transform: "skew(0)" }}

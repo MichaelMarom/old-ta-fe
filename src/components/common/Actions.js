@@ -66,13 +66,13 @@ const Actions = ({
         { next: "term-of-use", current: "calender", back: "feedback", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
         { next: "chat", current: "term-of-use", back: "calender", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
         { next: "market-place", current: "chat", back: "term-of-use", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
-        { next: "collab", current: "market-place", back: "chat", withCurrentRolePrefix: true, withNextRolePrefix: false, withBackRolePrefix: true},
+        { next: "collab", current: "market-place", back: "chat", withCurrentRolePrefix: true, withNextRolePrefix: false, withBackRolePrefix: true },
         { next: `profile`, current: "collab", back: "market-place", withCurrentRolePrefix: false, withNextRolePrefix: true, withBackRolePrefix: true },
         { next: null, current: "profile", back: "collab", withCurrentRolePrefix: true, withNextRolePrefix: false, withBackRolePrefix: false },
         { next: null, current: `tutor-profile`, back: null, withCurrentRolePrefix: true, withNextRolePrefix: false, withBackRolePrefix: true },
     ]
 
-    const currentTabInfo = (user.role==="student" ? studentTabsNavigationInfo : tutorTabsNavigationInfo)
+    const currentTabInfo = (user.role === "student" ? studentTabsNavigationInfo : tutorTabsNavigationInfo)
         .find(tab => tab.checkWholeUrl ? tab.current === location.pathname : !tab.withCurrentRolePrefix ? tab.current === location.pathname.split('/')[1] : tab.current === currentTab)
 
     const nextTabInfo = (isStudentSide ? studentTabsNavigationInfo : tutorTabsNavigationInfo)
@@ -102,7 +102,7 @@ const Actions = ({
                 <div className="row justify-content-center">
                     <div className="" style={{ width: "10%" }}>
                         <button type='button' onClick={onBack} className="back-btn action-btn btn"
-                            disabled={!saveDisabled && (loading || backDisabled || !isBackTabExist)}>
+                            disabled={!saveDisabled && (loading || backDisabled || !isBackTabExist) || user.role === "admin"}>
                             <div className="button__content">
                                 <div className="button__icon">
                                     <img src={BTN_ICON} alt={"btn__icon"} />
@@ -140,6 +140,7 @@ const Actions = ({
                         <button onClick={onNext}
                             disabled={(!saveDisabled && (loading))
                                 || !isNextTabExist || nextDisabled
+                                || user.role === 'admin'
                                 // || currentTab === STEPS[tutor.Step]
                             }
                             type='button' className="next-btn action-btn btn">

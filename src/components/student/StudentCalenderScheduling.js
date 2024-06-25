@@ -55,12 +55,13 @@ const StudentCalenderScheduling = () => {
     const update = async () => {
       console.log(student.AcademyId);
       if (subscriptionHours && student.AcademyId?.length) {
-        await update_student_shortlist(
-          selectedTutor.academyId,
-          student.AcademyId,
-          selectedTutor.subject,
-          { DiscountHours: subscriptionHours }
-        );
+        // updating discountHours in StudentsBooking
+        // await update_student_shortlist(
+        //   selectedTutor.academyId,
+        //   student.AcademyId,
+        //   selectedTutor.subject,
+        //   { DiscountHours: subscriptionHours }
+        // );
       }
     };
     update();

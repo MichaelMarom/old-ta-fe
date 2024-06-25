@@ -10,6 +10,7 @@ const Input = ({
   type = "text",
   tooltipText = "",
   editMode = true,
+  disabled = false,
   label,
   required = true,
   mandatory = false,
@@ -19,28 +20,28 @@ const Input = ({
   const dispatch = useDispatch()
   const udpateTutorStatusToUnderRevew = async (e) => {
     console.log(tutor.Status, mandatory)
-    const value = e.taregt.value
-    if (mandatory && tutor.Status === "active" && (!value || !value.length)) {
-      await post_tutor_setup({
-        fname: tutor.FirstName,
-        lname: tutor.LastName,
-        mname: tutor.MiddleName,
-        userId: tutor.userId,
-        AgreementDate: null
-      })
-      dispatch(setTutor({ ...tutor, Status: "under-review", AgreementDate: null }))
-    }
+    const value = e?.target?.value
+    // if (mandatory && tutor.Status === "active" && (!value || !value.length)) {
+    //   await post_tutor_setup({
+    //     fname: tutor.FirstName,
+    //     lname: tutor.LastName,
+    //     mname: tutor.MiddleName,
+    //     userId: tutor.userId,
+    //     AgreementDate: null
+    //   })
+    //   dispatch(setTutor({ ...tutor, Status: "under-review", AgreementDate: null }))
+    // }
   }
   return (
     <label className="input w-100">
       <input
         className="input__field"
-        onInput={(e) => { udpateTutorStatusToUnderRevew(); setValue(e.target.value) }}
+        onInput={(e) => { udpateTutorStatusToUnderRevew(e); setValue(e.target.value) }}
         value={value}
         type={type}
         required={required}
-        style={{ background: editMode ? "white" : "#e1e1e1" }}
-        disabled={!editMode}
+        style={{ background: editMode ? "white" : "rgb(233 236 239)" }}
+        disabled={!editMode || disabled}
         {...rest}
       />
       <span className="input__label d-flex align-items-end " style={{ top: "2px", background: "transparent", color: "black" }} >

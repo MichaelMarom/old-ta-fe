@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { setStudent } from "../../redux/student/studentData";
 import Tooltip from "../common/ToolTip";
 import { FaInfoCircle } from "react-icons/fa";
+import TAButton from '../common/TAButton'
 import {
   AUST_STATES,
   CAN_STATES,
@@ -325,6 +326,7 @@ const StudentSetup = () => {
           borderRadius: "0",
         }}
         value=""
+        disabled={student.Status === 'active'}
       >
         Grade
       </option>
@@ -422,7 +424,7 @@ const StudentSetup = () => {
   ]
 
   return (
-    <form onSubmit={saver} style={{ height: "calc(100vh - 150px)", overflowY: "auto" }}>
+    <form onSubmit={saver} style={{ height: "calc(100vh - 150px)", overflowY: "auto", background: editMode ? "inherit" : "rgb(233, 236, 239)" }}>
       <div
         className="d-flex justify-content-center container mt-4"
         style={{ height: "100%", gap: "3%" }}
@@ -456,7 +458,7 @@ const StudentSetup = () => {
             </div>
           </label>
 
-          <div className="rounded border shadow p-2 mt-4">
+          <div className="rounded border shadow p-2 mt-4 bg-light">
             <form onSubmit={handleConnectClick}>
               <h6>Type tutor's code here</h6>
               <div
@@ -464,23 +466,10 @@ const StudentSetup = () => {
                 style={{ gap: "2%" }}
               >
                 <div className="w-50">
-                  <Input setValue={set_code} value={code} label={"Enter Code"}  />
+                  <Input setValue={set_code} value={code} label={<p className="bg-light p-1">Write Code </p>} />
                 </div>
 
-                <Button className="action-btn" type="submit" >
-                  <div className="button__content">
-                    <div className="button__icon">
-                      <img
-                        src={BTN_ICON}
-                        alt={"btn__icon"}
-                        style={{
-                          animation: false ? "spin 2s linear infinite" : "none",
-                        }}
-                      />
-                    </div>
-                    <p className="button__text">Connect </p>
-                  </div>
-                </Button>
+                <TAButton buttonText={"Connect"} />
               </div>
             </form>
           </div>
@@ -492,8 +481,7 @@ const StudentSetup = () => {
                 <Input
                   setValue={set_fname}
                   value={fname}
-                  
-            required={false}
+                  required={true}
                   label={<MandatoryFieldLabel text="First Name" editMode={editMode} name={"fname"} mandatoryFields={mandatoryFields} />}
                   editMode={!nameFieldsDisabled}
                 />
@@ -560,7 +548,8 @@ const StudentSetup = () => {
                       left: "5px",
                       zIndex: "99",
                       padding: "2px",
-                      color: "rgb(133, 138, 133)",
+                      color: "black",
+                      background: editMode ? "white" : "rgb(233, 236, 239)",
                       transform: " translate(0.25rem, -65%) scale(0.8)",
                     }}
                   >
@@ -577,7 +566,7 @@ const StudentSetup = () => {
                   setValue={set_is_18}
                   value={is_18}
                 >
-                  <option value="">Are You Over 18 ?</option>
+                  <option value="" disabled={student.Status === 'active'}>Are You Over 18 ?</option>
                   <option value="yes">Yes</option>
                   <option value="no">No</option>
                 </Select>
@@ -599,6 +588,7 @@ const StudentSetup = () => {
                       borderRadius: "0",
                     }}
                     value=""
+                    disabled={student.Status === 'active'}
                   >
                     GMT
                   </option>
@@ -639,7 +629,7 @@ const StudentSetup = () => {
                   setValue={set_lang}
                   value={lang}
                 >
-                  <option value="">Select Language</option>
+                  <option value="" disabled={student.Status === "active"}>Select Language</option>
                   {lang_list.map((item, index) => (
                     <option value={item} key={index}>
                       {item}
@@ -695,6 +685,7 @@ const StudentSetup = () => {
                       borderRadius: "0",
                     }}
                     value=""
+                    disabled={student.Status === "active"}
                   >
                     Country
                   </option>
@@ -725,7 +716,7 @@ const StudentSetup = () => {
                     setValue={set_state}
                     value={state}
                   >
-                    <option value="">Select State</option>
+                    <option value="" disabled={student.Status === 'active'}>Select State</option>
 
                     {options[country].map((item, index) => (
                       <option key={index} value={item}>
@@ -746,7 +737,7 @@ const StudentSetup = () => {
                 />
               </div>
               <div className="input-group mb-2">
-                <Input value={dateTime} label={<MandatoryFieldLabel text="UTC" />} editMode={editMode} />
+                <Input value={dateTime} label={<MandatoryFieldLabel text="UTC" editMode={editMode} />} editMode={false} />
               </div>
               <div className="input-group mb-2">
                 <Select
@@ -781,10 +772,8 @@ const StudentSetup = () => {
                           value={parentAEmail}
                           label={<MandatoryFieldLabel text="Parent A Email" editMode={editMode} name="parentAEmail" mandatoryFields={mandatoryFields} />}
                           editMode={editMode}
-                          
-            required={false}
                           setValue={setParentAEmail}
-                          // required={is_18 === "no"}
+                          required={is_18 === "no" && student.Status === 'active'}
                         />
                       </div>
 
@@ -793,10 +782,8 @@ const StudentSetup = () => {
                           value={parentAName}
                           label={<MandatoryFieldLabel text="Parent A Name" editMode={editMode} name="parentAName" mandatoryFields={mandatoryFields} />}
                           editMode={editMode}
-                          
-            required={false}
                           setValue={setParentAName}
-                          // required={is_18 === "no"}
+                        required={is_18 === "no" && student.Status === 'active'}
                         />
                       </div>
                     </div>
@@ -807,9 +794,7 @@ const StudentSetup = () => {
                           label={<MandatoryFieldLabel text="Parent B Email" editMode={editMode} name={"parentBEmail"} mandatoryFields={mandatoryFields} />}
                           editMode={editMode}
                           setValue={setParentBEmail}
-                          
-            required={false}
-                          // required={is_18 === "no"}
+                          required={is_18 === "no" && student.Status === 'active'}
                         />
                       </div>
 
@@ -819,9 +804,7 @@ const StudentSetup = () => {
                           label={<MandatoryFieldLabel text="Parent B Name" editMode={editMode} name="parentBName" mandatoryFields={mandatoryFields} />}
                           editMode={editMode}
                           setValue={setParentBName}
-                          
-            required={false}
-                          // required={is_18 === "no"}
+                          required={is_18 === "no" && student.Status === 'active'}
                         />
                       </div>
                     </div>

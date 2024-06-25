@@ -5,7 +5,8 @@
     border-radius: 0.5rem;
 }
 
-.profile-motivation textarea, .profile-headline textarea{
+.profile-motivation textarea,
+.profile-headline textarea {
     text-align: justify;
     white-space: wrap;
 }
@@ -88,17 +89,23 @@ label {
 .react-international-phone-input-container .react-international-phone-country-selector-button {
     border: 1px solid #686868;
     border-right: none;
-    height:50px !important
+    height: 50px !important
 }
 
 .react-international-phone-input-container .react-international-phone-input {
     border: 1px solid #686868 !important;
     border-left: none !important;
-    height:50px !important
-
+    height: 50px !important
 }
-.react-international-phone-input-container .react-international-phone-input--disabled{
-    background: #e1e1e1 !important;
+
+.react-international-phone-input-container .react-international-phone-input--disabled {
+    background: rgb(233, 236, 239) !important;
+    opacity: 0.5 !important;
+}
+
+.react-international-phone-country-selector-button.react-international-phone-country-selector-button--disabled {
+    background: rgb(233, 236, 239) !important;
+    opacity: 0.5 !important;
 }
 
 ul.vertical-tabs .nav-link :hover {

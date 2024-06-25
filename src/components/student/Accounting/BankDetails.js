@@ -261,108 +261,109 @@ function BankDetails() {
     const emailPaymentOptions = ['paypal', 'payoneer', 'zelle', 'wise']
 
     return (
-        <div className='container mt-4 rounded' style={{ background: editMode ? "initial" : "#e9ecef" }} >
-            <form onSubmit={onSave}>
-                <div className='' style={{ fontWeight: "bold" }}>
-                    <MandatoryFieldLabel text={"Select Payment Option"} editMode={editMode} />
-                </div>
-                <div className='mb-3'>
-                    <div className="form-check form-check-inline d-flex flex-column" style={{ gap: "20px" }}>
-                        <div>
+        <div style={{ background: editMode ? "initial" : "#e9ecef", height:"calc(100vh - 180px)" }} >
+            <div className='container rounded'>
+                <form onSubmit={onSave}>
+                    <div className='' style={{ fontWeight: "bold" }}>
+                        <MandatoryFieldLabel text={"Select Payment Option"} editMode={editMode} />
+                    </div>
+                    <div className='mb-3'>
+                        <div className="form-check form-check-inline d-flex flex-column" style={{ gap: "20px" }}>
+                            <div>
 
-                            <div className="form-check form-check-inline">
-                                <input disabled={!editMode} required
-                                    className="form-check-input border border-dark"
-                                    type="radio"
-                                    name="inlineRadioOptions"
-                                    value="ach"
-                                    checked={PaymentOption === "ach"}
-                                    onChange={handleOptionChange}
-                                    id='ach'
-                                />
-                                <label className="form-check-label" htmlFor='ach'>
-                                    Direct Deposit (ACH)
-                                </label>
+                                <div className="form-check form-check-inline">
+                                    <input disabled={!editMode} required
+                                        className="form-check-input border border-dark"
+                                        type="radio"
+                                        name="inlineRadioOptions"
+                                        value="ach"
+                                        checked={PaymentOption === "ach"}
+                                        onChange={handleOptionChange}
+                                        id='ach'
+                                    />
+                                    <label className="form-check-label" htmlFor='ach'>
+                                        Direct Deposit (ACH)
+                                    </label>
+                                </div>
+
                             </div>
+                            <div>
+                                <div className="form-check form-check-inline">
+                                    <input disabled={!editMode} required
+                                        className="form-check-input border border-dark"
+                                        type="radio"
+                                        name="inlineRadioOptions"
+                                        value="cd"
+                                        checked={PaymentOption === "cd"}
+                                        onChange={handleOptionChange}
+                                        id='credit/debit/p'
+                                    />
+                                    <label className="form-check-label" htmlFor='credit/debit/p'>
+                                        Credit/Debit
+                                    </label>
+                                </div>
 
-                        </div>
-                        <div>
-                            <div className="form-check form-check-inline">
-                                <input disabled={!editMode} required
-                                    className="form-check-input border border-dark"
-                                    type="radio"
-                                    name="inlineRadioOptions"
-                                    value="cd"
-                                    checked={PaymentOption === "cd"}
-                                    onChange={handleOptionChange}
-                                    id='credit/debit/p'
-                                />
-                                <label className="form-check-label" htmlFor='credit/debit/p'>
-                                    Credit/Debit
-                                </label>
-                            </div>
+                                <div className="form-check form-check-inline">
+                                    <input disabled={!editMode} required
+                                        className="form-check-input border border-dark"
+                                        type="radio"
+                                        name="inlineRadioOptions"
+                                        value="wise"
+                                        checked={PaymentOption === "wise"}
+                                        onChange={handleOptionChange}
+                                        id='wise'
+                                    />
+                                    <label className="form-check-label" htmlFor='wise'>
+                                        Wise
+                                    </label>
+                                </div>
+                                <div className='form-check form-check-inline'>
 
-                            <div className="form-check form-check-inline">
-                                <input disabled={!editMode} required
-                                    className="form-check-input border border-dark"
-                                    type="radio"
-                                    name="inlineRadioOptions"
-                                    value="wise"
-                                    checked={PaymentOption === "wise"}
-                                    onChange={handleOptionChange}
-                                    id='wise'
-                                />
-                                <label className="form-check-label" htmlFor='wise'>
-                                    Wise
-                                </label>
-                            </div>
-                            <div className='form-check form-check-inline'>
+                                    <input disabled={!editMode} required
+                                        className="form-check-input border border-dark"
+                                        type="radio"
+                                        name="inlineRadioOptions"
+                                        value="paypal"
+                                        checked={PaymentOption === "paypal"}
+                                        onChange={handleOptionChange}
+                                        id="paypal"
+                                    />
+                                    <label className="form-check-label" htmlFor='paypal'>
+                                        PayPal
+                                    </label>
+                                </div>
 
-                                <input disabled={!editMode} required
-                                    className="form-check-input border border-dark"
-                                    type="radio"
-                                    name="inlineRadioOptions"
-                                    value="paypal"
-                                    checked={PaymentOption === "paypal"}
-                                    onChange={handleOptionChange}
-                                    id="paypal"
-                                />
-                                <label className="form-check-label" htmlFor='paypal'>
-                                    PayPal
-                                </label>
-                            </div>
+                                <div className="form-check form-check-inline">
+                                    <input disabled={!editMode} required
+                                        className="form-check-input border border-dark"
+                                        type="radio"
+                                        name="inlineRadioOptions"
+                                        value="zelle"
+                                        checked={PaymentOption === "zelle"}
+                                        onChange={handleOptionChange}
+                                        id={'zelle'}
+                                    />
+                                    <label className="form-check-label" htmlFor={'zelle'}>
+                                        Zelle
+                                    </label>
+                                </div>
 
-                            <div className="form-check form-check-inline">
-                                <input disabled={!editMode} required
-                                    className="form-check-input border border-dark"
-                                    type="radio"
-                                    name="inlineRadioOptions"
-                                    value="zelle"
-                                    checked={PaymentOption === "zelle"}
-                                    onChange={handleOptionChange}
-                                    id={'zelle'}
-                                />
-                                <label className="form-check-label" htmlFor={'zelle'}>
-                                    Zelle
-                                </label>
-                            </div>
+                                <div className="form-check form-check-inline">
+                                    <input disabled={!editMode} required
+                                        className="form-check-input border border-dark"
+                                        type="radio"
+                                        name="inlineRadioOptions"
+                                        value="payoneer"
+                                        checked={PaymentOption === "payoneer"}
+                                        onChange={handleOptionChange}
+                                        id={'payoneer'}
+                                    />
+                                    <label className="form-check-label" htmlFor={'payoneer'} >
+                                        Payoneer
+                                    </label>
+                                </div>
 
-                            <div className="form-check form-check-inline">
-                                <input disabled={!editMode} required
-                                    className="form-check-input border border-dark"
-                                    type="radio"
-                                    name="inlineRadioOptions"
-                                    value="payoneer"
-                                    checked={PaymentOption === "payoneer"}
-                                    onChange={handleOptionChange}
-                                    id={'payoneer'}
-                                />
-                                <label className="form-check-label" htmlFor={'payoneer'} >
-                                    Payoneer
-                                </label>
-                            </div>
-
-                            {/* <div className="form-check form-check-inline">
+                                {/* <div className="form-check form-check-inline">
                                 <input disabled={!editMode} required
                                     className="form-check-input border border-dark"
                                     type="radio"
@@ -376,112 +377,113 @@ function BankDetails() {
                                     Credit/Debit (3% transaction fee) (Secondary)
                                 </label>
                             </div> */}
+                            </div>
                         </div>
+
                     </div>
+                    {emailPaymentOptions.includes(PaymentOption) &&
+                        <div className='form-row row mb-2'>
+                            <div className='form-group col-6'>
+                                <div className='row input-group'>
+                                    <Input
+                                        label={<MandatoryFieldLabel text="Email" editMode={editMode} />}
+                                        value={email}
+                                        setValue={set_email}
+                                    />
 
-                </div>
-                {emailPaymentOptions.includes(PaymentOption) &&
-                    <div className='form-row row mb-2'>
-                        <div className='form-group col-6'>
-                            <div className='row input-group'>
-                                <Input
-                                    label={<MandatoryFieldLabel text="Email" editMode={editMode} />}
-                                    value={email}
-                                    setValue={set_email}
-                                />
-
+                                </div>
                             </div>
-                        </div>
-                    </div>}
+                        </div>}
 
-                {PaymentOption === 'ach' && <>
-                    <div className='form-row row mb-2'>
-                        <div className='form-group col-6'>
-                            <div className='row input-group'>
-                                <Input
-                                    value={AccountName}
-                                    setValue={set_acct_name}
-                                    editMode={editMode}
-                                    label={<MandatoryFieldLabel text={"Account Name"} editMode={editMode} />}
-                                />
+                    {PaymentOption === 'ach' && <>
+                        <div className='form-row row mb-2'>
+                            <div className='form-group col-6'>
+                                <div className='row input-group'>
+                                    <Input
+                                        value={AccountName}
+                                        setValue={set_acct_name}
+                                        editMode={editMode}
+                                        label={<MandatoryFieldLabel text={"Account Name"} editMode={editMode} />}
+                                    />
+                                </div>
                             </div>
-                        </div>
 
-                        <div className='form-group col-6'>
-                            <div className='row input-group'>
-                                <Select
-                                    value={PaymentType}
-                                    editMode={editMode}
-                                    label={<MandatoryFieldLabel text={"Payment Type"} editMode={editMode} />}
-                                    setValue={set_acct_type}
-                                >
-                                    <option value="null">Select Account Type</option>
-                                    <option value="savings">Savings</option>
-                                    <option value="checking">Checking</option>
+                            <div className='form-group col-6'>
+                                <div className='row input-group'>
+                                    <Select
+                                        value={PaymentType}
+                                        editMode={editMode}
+                                        label={<MandatoryFieldLabel text={"Payment Type"} editMode={editMode} />}
+                                        setValue={set_acct_type}
+                                    >
+                                        <option value="" disabled>Select Account Type</option>
+                                        <option value="savings">Savings</option>
+                                        <option value="checking">Checking</option>
 
-                                </Select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className='form-row row mb-2'>
-                        <div className='form-group col'>
-                            <div className='row input-group'>
-                                <Input
-                                    value={BankName}
-                                    setValue={set_bank_name}
-                                    editMode={editMode}
-                                    label={<MandatoryFieldLabel text={"Bank Name"} editMode={editMode} />}
-                                />
+                                    </Select>
+                                </div>
                             </div>
                         </div>
 
-                        <div className='form-group col'>
-                            <div className='row input-group'>
-                                <Input
-                                    value={AccountNumber}
-                                    setValue={set_acct}
-                                    editMode={editMode}
-                                    label={<MandatoryFieldLabel text={"Account Number"} editMode={editMode} />}
-                                />
+                        <div className='form-row row mb-2'>
+                            <div className='form-group col'>
+                                <div className='row input-group'>
+                                    <Input
+                                        value={BankName}
+                                        setValue={set_bank_name}
+                                        editMode={editMode}
+                                        label={<MandatoryFieldLabel text={"Bank Name"} editMode={editMode} />}
+                                    />
+                                </div>
+                            </div>
 
+                            <div className='form-group col'>
+                                <div className='row input-group'>
+                                    <Input
+                                        value={AccountNumber}
+                                        setValue={set_acct}
+                                        editMode={editMode}
+                                        label={<MandatoryFieldLabel text={"Account Number"} editMode={editMode} />}
+                                    />
+
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div className='form-row row mb-2'>
-                        <div className='form-group w-50'>
-                            <div className='row input-group'>
-                                <Input
-                                    value={RoutingNumber}
-                                    setValue={set_routing}
-                                    editMode={editMode}
-                                    label={<MandatoryFieldLabel text={"Routing Number"} editMode={editMode} />}
-                                />
+                        <div className='form-row row mb-2'>
+                            <div className='form-group w-50'>
+                                <div className='row input-group'>
+                                    <Input
+                                        value={RoutingNumber}
+                                        setValue={set_routing}
+                                        editMode={editMode}
+                                        label={<MandatoryFieldLabel text={"Routing Number"} editMode={editMode} />}
+                                    />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </>}
+                    </>}
 
-                {PaymentOption === 'cd' &&
-                    <PaymentForm creditDebitState={creditDebitState}
-                        card={card}
-                        setCreditDebitState={setCreditDebitState}
-                        editMode={editMode}
-                        errors={errors}
-                        setCard={setCard}
-                        setErrors={setErrors}
+                    {PaymentOption === 'cd' &&
+                        <PaymentForm creditDebitState={creditDebitState}
+                            card={card}
+                            setCreditDebitState={setCreditDebitState}
+                            editMode={editMode}
+                            errors={errors}
+                            setCard={setCard}
+                            setErrors={setErrors}
+                        />
+                    }
+
+                    <Actions
+                        onEdit={() => setEditMode(true)}
+                        saveDisabled={!editMode}
+                        editDisabled={editMode}
+                        loading={loading}
+                        unSavedChanges={UnSavedChanges}
                     />
-                }
-
-                <Actions
-                    onEdit={() => setEditMode(true)}
-                    saveDisabled={!editMode}
-                    editDisabled={editMode}
-                    loading={loading}
-                    unSavedChanges={UnSavedChanges}
-                />
-            </form>
+                </form>
+            </div>
         </div>
     );
 }

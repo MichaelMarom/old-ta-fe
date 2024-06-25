@@ -36,7 +36,7 @@ export const SingleTutorFeedbacks = () => {
     useEffect(() => {
         const fetchTutorBookings = async () => {
             const result = await get_tutor_bookings(params.AcademyId);
-            if (result?.response?.data) {
+            if (!result?.response?.data) {
                 const events = result.map((record) => {
                     const reservedSlots = JSON.parse(record.reservedSlots ?? '[]');
                     const bookedSlots = JSON.parse(record.bookedSlots ?? '[]');
@@ -44,7 +44,6 @@ export const SingleTutorFeedbacks = () => {
 
                     return combinedSlots;
                 }).flat()
-
                 setEvents(events.filter(event => (convertToDate(event.start).getTime() <= (new Date()).getTime()) && event.rating));
             }
         }

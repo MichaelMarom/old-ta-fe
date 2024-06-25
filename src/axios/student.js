@@ -329,7 +329,6 @@ export const post_bank_details = async (payload) => {
     catch (err) {
         showErrorToast(err)
         console.log(err)
-        return err
     }
 }
 
@@ -341,7 +340,6 @@ export const get_bank_details = async (id) => {
     catch (err) {
         showErrorToast(err)
         console.log(err)
-        return err
     }
 }
 
@@ -353,7 +351,6 @@ export const get_payment_report = async (studentId, timeZone) => {
     catch (err) {
         showErrorToast(err)
         console.log(err)
-        return err
     }
 }
 
@@ -364,7 +361,6 @@ export const get_all_feedback_questions = async (isStudentLoggedIn = 1) => {
     } catch (err) {
         showErrorToast(err)
         console.log(err)
-        return err
     }
 }
 

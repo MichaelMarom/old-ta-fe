@@ -8,8 +8,8 @@ const CenteredModal = ({ show, handleClose, title, children, ...rest }) => {
         <div className={`modal-overlay ${modalDisplay}`} onClick={handleClose}>
             <div className={`modal ${modalDisplay}`} tabIndex="-1" role="dialog"
                 style={{ display: modalDisplay, background: '#00000059' }} >
-                <div className=" modal-dialog modal-dialog-centered" role="document" >
-                    <div className="modal-content" onClick={(e) => e.stopPropagation()} {...rest}>
+                <div className=" modal-dialog modal-dialog-centered" role="document"  {...rest}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-header">
                             <h5 className="modal-title" dangerouslySetInnerHTML={{__html:title}} />
                             <button type="button" className="close" onClick={handleClose} aria-label="Close">
