@@ -495,12 +495,17 @@ const Collaboration = () => {
               openedSessionTimeRemainingToStart={
                 openedSessionTimeRemainingToStart
               }
+              isChecked={isChecked}
+              setIsChecked={setIsChecked}
             />
-            {sessionTime === "current" &&
-              timeRemainingToEndCurrentSession > 620 && (
+            {/* {
+            // sessionTime === "current" &&
+            //   timeRemainingToEndCurrentSession > 620 && 
+              (
                 <>
                   <div className="d-flex align-items-center justify-content-center m-2">
-                    <Tooltip text={"You can transfer the canvas tools to the student by moving the switch to the right"} iconSize="25" />
+                    <Tooltip text={"You can transfer the canvas tools to the student by moving the switch to the right"} 
+                    iconSize="25" />
                     <Switch
                       isChecked={isChecked}
                       setIsChecked={setIsChecked}
@@ -510,7 +515,7 @@ const Collaboration = () => {
                     />
                   </div>
                 </>
-              )}
+              )} */}
           </div>
         }
 

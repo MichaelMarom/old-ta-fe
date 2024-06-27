@@ -15,8 +15,9 @@ import AudioOff from '../../../assets/images/microphoneblock.jpeg'
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 
 import _ from "lodash";
-import { HiPaperClip } from "react-icons/hi2";
 import { FaPaperclip } from "react-icons/fa";
+import Tooltip from "../../common/ToolTip";
+import Switch from '../../common/Switch'
 
 const CollabSidebar = ({
   openedSession,
@@ -24,7 +25,9 @@ const CollabSidebar = ({
   openedSessionTimeRemainingToStart,
   timeRemainingToEndCurrentSession,
   studentRecordingConsent,
-  tutorRecordingConsent
+  tutorRecordingConsent,
+  isChecked,
+  setIsChecked
 }) => {
 
   // const {
@@ -489,7 +492,7 @@ const CollabSidebar = ({
 
       <div
         className="TutorAsideChatCnt"
-        style={{ background: "rgb(225 238 242)", height: "53%" }}
+        style={{ background: "rgb(225 238 242)", height: sessionTime==="current"?"75%":"65%" }}
       >
         <div
           className="TutorAsideChatBox"
@@ -592,6 +595,24 @@ const CollabSidebar = ({
           </span>
         </div>
       </div>
+        {
+            sessionTime === "current" &&
+              timeRemainingToEndCurrentSession > 620 && 
+              (
+                <>
+                  <div className="d-flex align-items-center justify-content-center m-2">
+                    <Tooltip text={"You can transfer the canvas tools to the student by moving the switch to the right"} 
+                    iconSize="25" />
+                    <Switch
+                      isChecked={isChecked}
+                      setIsChecked={setIsChecked}
+                      authorized={
+                        user.role === "tutor" && sessionTime === "current"
+                      }
+                    />
+                  </div>
+                </>
+              )}
     </div>
   );
 };

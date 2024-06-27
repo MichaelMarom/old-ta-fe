@@ -250,7 +250,10 @@ const App = () => {
               element={<SignedIn>{route.element}</SignedIn>}
             />
           ))}
-          {user?.role && <Route path="*" element={<UnAuthorizeRoute />} />}
+          
+          {
+          // user?.role &&
+           <Route path="*" element={<UnAuthorizeRoute />} />}
     
     </Routes>
   );

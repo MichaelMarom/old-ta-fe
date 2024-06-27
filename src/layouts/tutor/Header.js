@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { PROFILE_STATUS, statesColours } from "../../constants/constants";
@@ -199,7 +199,7 @@ const Header = () => {
         >
           {tabs.map((tab) => {
             return (
-              <>
+              <Fragment key={tab.url}>
                 <li
                   key={tab.url}
                   data-url={tab.url}
@@ -225,7 +225,7 @@ const Header = () => {
                     size="28" className="video-nav-icon" />
                 </div>}
                 <div className="text-light" style={{ fontWeight: "bold" }}>|</div>
-              </>
+              </Fragment>
             );
           })}
         </ul>

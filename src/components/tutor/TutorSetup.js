@@ -1081,13 +1081,11 @@ const TutorSetup = () => {
                       <option value="" disabled>
                         Select State
                       </option>
-                      {(options[country] ?? []).map((item) => <option key={item} value={item}>
+                      {(options[country]).map((item, index) => <option key={index} value={item}>
                         {item}
                       </option>
                       )}
-
                     </Select>
-
                   </div>
                 ) : (
                   ""
@@ -1468,7 +1466,7 @@ export const MandatoryFieldLabel = ({ text, editMode = true, mandatoryFields = [
     return !filled;
   }
 
-  return <p >
+  return <div >
     <span style={{
       background: editMode ? "white" : "rgb(233 236 239)",
     }}>{!!toolTipText.length && <ToolTip text={toolTipText} direction={direction} width={width} />}
@@ -1476,7 +1474,7 @@ export const MandatoryFieldLabel = ({ text, editMode = true, mandatoryFields = [
 
     </span><span className="text-danger"
       style={{ fontSize: "26px" }}>*</span>
-  </p>
+  </div>
 }
 
 export const OptionalFieldLabel = ({ label, editMode = true }) => <p

@@ -27,7 +27,7 @@ const ClerkWithRoutes = ({ children }) => {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  <>
     <ToastContainer position="bottom-center"
       className="custom-toast-container" />
     <Provider store={store}>
@@ -37,6 +37,6 @@ root.render(
         </ClerkWithRoutes>
       </Router>
     </Provider>
-  </React.StrictMode>
+  </>
 );
 

@@ -123,7 +123,7 @@ const TutorProfile = () => {
       </h5>
     );
   return (
-    <div style={{ background: "lightGray", height: isStudentLoggedIn ? "calc(100vh - 50px)" : "83vh", overflowY: "auto" }}>
+    <div style={{ background: "lightGray", height: isStudentLoggedIn ? "calc(100vh - 50px)" : "calc(100vh - 150px)", overflowY: "auto" }}>
       <ScreenRecording />
       <div className="container">
         <div className="">

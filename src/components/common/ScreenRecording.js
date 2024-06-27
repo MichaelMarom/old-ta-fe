@@ -1,62 +1,87 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const ScreenRecording = () => {
-    const [recording, setRecording] = useState(false);
-    const [recordedChunks, setRecordedChunks] = useState([]);
-    const mediaRecorderRef = useRef(null);
+const ScreenRecording = ({ onSessionEnd }) => {
+    const [mediaRecorder, setMediaRecorder] = useState(null);
+    const [mediaBlobUrl, setMediaBlobUrl] = useState(null);
+    const [status, setStatus] = useState('idle');
 
-    const startRecording = async () => {
-        try {
-            const stream = await navigator.mediaDevices.getDisplayMedia({
-                video: true,
-                audio: true,
-            });
-            const mediaRecorder = new MediaRecorder(stream);
-            mediaRecorderRef.current = mediaRecorder;
+    const getSelectedOption = (mediaStream) => {
+        const isFirefox = typeof InstallTrigger !== 'undefined';
+        const isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+        console.log(window, isChrome, isFirefox)
+        const videoTrack = mediaStream.getVideoTracks()[0];
+        if (isFirefox) {
+            console.log(videoTrack, 'firefpx')
+            if (videoTrack.label === "Primary Monitor") {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (isChrome) {
+            const videoSetting = videoTrack.getSettings();
+            console.log(videoSetting, 'chrome')
 
-            mediaRecorder.ondataavailable = (event) => {
-                if (event.data.size > 0) {
-                    setRecordedChunks((prev) => [...prev, event.data]);
-                }
-            };
-
-            mediaRecorder.start();
-            setRecording(true);
-        } catch (err) {
-            console.error("Error: ", err);
+            if (videoSetting && videoSetting.displaySurface !== "monitor") {
+                return false;
+            } else {
+                return true;
+            }
         }
-    };
+        else return true
+    }
+    useEffect(() => {
+        const startRecording = async () => {
+            try {
+                const stream = await navigator.mediaDevices.getDisplayMedia({
+                    video: { cursor: 'always' },
+                    audio: false,
+                });
 
-    const stopRecording = () => {
-        mediaRecorderRef.current.stop();
-        setRecording(false);
-    };
+                console.log(getSelectedOption(stream))
+                const recorder = new MediaRecorder(stream);
+                setMediaRecorder(recorder);
 
-    const downloadRecording = () => {
-        const blob = new Blob(recordedChunks, {
-            type: 'video/webm',
-        });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        document.body.appendChild(a);
-        a.style = 'display: none';
-        a.href = url;
-        a.download = 'screen-recording.webm';
-        a.click();
-        window.URL.revokeObjectURL(url);
-        setRecordedChunks([]);
-    };
+                const chunks = [];
+                recorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        chunks.push(event.data);
+                    }
+                };
+
+                recorder.onstop = () => {
+                    const blob = new Blob(chunks, { type: 'video/webm' });
+                    const url = URL.createObjectURL(blob);
+                    setMediaBlobUrl(url);
+                    if (onSessionEnd) {
+                        onSessionEnd(blob); // pass the blob to the onSessionEnd handler for saving
+                    }
+                };
+
+                recorder.start();
+                setStatus('recording');
+            } catch (err) {
+                console.error('Error: ', err);
+            }
+        };
+
+        const stopRecording = () => {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                setStatus('stopped');
+            }
+        };
+
+        startRecording();
+
+        return () => {
+            stopRecording();
+        };
+    }, [onSessionEnd, mediaRecorder]);
 
     return (
         <div>
-            {!recording ? (
-                <button onClick={startRecording}>Start Recording</button>
-            ) : (
-                <button onClick={stopRecording}>Stop Recording</button>
-            )}
-            {recordedChunks.length > 0 && (
-                <button onClick={downloadRecording}>Download Recording</button>
-            )}
+            <p>{status}</p>
+            {mediaBlobUrl && <video style={{ width: "200px", height: "200px" }} src={mediaBlobUrl} controls autoPlay loop />}
         </div>
     );
 };
