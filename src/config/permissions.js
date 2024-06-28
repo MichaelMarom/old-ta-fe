@@ -1,56 +1,58 @@
-// tutor
-import Intro from "../pages/tutor/Intro";
-import TutorSetup from "../pages/tutor/TutorSetup";
-import Education from "../pages/tutor/Education";
-import Rates from "../pages/tutor/Rates";
-import Accounting from "../pages/tutor/Accounting";
-import Subjects from "../pages/tutor/Subjects";
-import MyStudents from "../pages/tutor/MyStudents";
-import Scheduling from "../pages/tutor/Scheduling";
-import TermOfUse from "../pages/tutor/TermOfUse";
-import Classified from "../pages/tutor/Add/Classified";
-import TutorProfile from "../pages/tutor/TutorProfile";
-import Edit from "../pages/tutor/Add/Edit";
-import Create from "../pages/tutor/Add/Create";
-import Bid from "../pages/tutor/Add/Bid";
-import StudentPublicProfile from '../pages/tutor/StudentProfile'
-import List from "../pages/tutor/Add/List";
-import TutorFeedback from '../pages/tutor/Feedback'
+import React, { Suspense, lazy } from 'react';
+import { Routes, Route } from 'react-router-dom';
 
-// students
-import StudentSetup from "../pages/student/StudentSetup";
-import StudentFaculty from "../pages/student/StudentFaculty";
-import StudentAccountings from "../pages/student/StudentAccounting";
-import StudentScheduling from "../pages/student/StudentScheduling";
-import StudentTermOfUse from "../pages/student/TermOfUse";
-import StudentProfile from "../pages/student/StudentProfile";
-import StudentIntro from "../pages/student/StudentIntro";
-import { Feedback } from "../pages/student/Feedback";
-import { Schedules } from "../pages/student/Schedules";
-import { SingleTutorFeedbacks } from "../pages/student/SingleTutorFeedbacks";
+// tutor components
+const Intro = lazy(() => import('../pages/tutor/Intro'));
+const TutorSetup = lazy(() => import('../pages/tutor/TutorSetup'));
+const Education = lazy(() => import('../pages/tutor/Education'));
+const Rates = lazy(() => import('../pages/tutor/Rates'));
+const Accounting = lazy(() => import('../pages/tutor/Accounting'));
+const Subjects = lazy(() => import('../pages/tutor/Subjects'));
+const MyStudents = lazy(() => import('../pages/tutor/MyStudents'));
+const Scheduling = lazy(() => import('../pages/tutor/Scheduling'));
+const TermOfUse = lazy(() => import('../pages/tutor/TermOfUse'));
+const Classified = lazy(() => import('../pages/tutor/Add/Classified'));
+const TutorProfile = lazy(() => import('../pages/tutor/TutorProfile'));
+const Edit = lazy(() => import('../pages/tutor/Add/Edit'));
+const Create = lazy(() => import('../pages/tutor/Add/Create'));
+const Bid = lazy(() => import('../pages/tutor/Add/Bid'));
+const StudentPublicProfile = lazy(() => import('../pages/tutor/StudentProfile'));
+const List = lazy(() => import('../pages/tutor/Add/List'));
+const TutorFeedback = lazy(() => import('../pages/tutor/Feedback'));
 
-//admin
-import TutorNewSubject from "../pages/admin/NewSubject";
-import TutorTable from "../pages/admin/Tutor";
-import StudentTable from "../pages/admin/Student";
-import AdminChat from '../pages/admin/Chat'
-import EmailList from "../pages/admin/EmailTemplates/List";
-import EmailTempCreate from '../pages/admin/EmailTemplates/Create'
-import EmailTempEdit from '../pages/admin/EmailTemplates/Edit'
-import Send from '../pages/admin/Marketing/Send'
-import AddTutors from '../pages/admin/Marketing/AddTutors'
+// student components
+const StudentSetup = lazy(() => import('../pages/student/StudentSetup'));
+const StudentFaculty = lazy(() => import('../pages/student/StudentFaculty'));
+const StudentAccountings = lazy(() => import('../pages/student/StudentAccounting'));
+const StudentScheduling = lazy(() => import('../pages/student/StudentScheduling'));
+const StudentTermOfUse = lazy(() => import('../pages/student/TermOfUse'));
+const StudentProfile = lazy(() => import('../pages/student/StudentProfile'));
+const StudentIntro = lazy(() => import('../pages/student/StudentIntro'));
+const Feedback = lazy(() => import('../pages/student/Feedback'));
+const Schedules = lazy(() => import('../pages/student/Schedules'));
+const SingleTutorFeedbacks = lazy(() => import('../pages/student/SingleTutorFeedbacks'));
 
+// admin components
+const TutorNewSubject = lazy(() => import('../pages/admin/NewSubject'));
+const TutorTable = lazy(() => import('../pages/admin/Tutor'));
+const StudentTable = lazy(() => import('../pages/admin/Student'));
+const AdminChat = lazy(() => import('../pages/admin/Chat'));
+const EmailList = lazy(() => import('../pages/admin/EmailTemplates/List'));
+const EmailTempCreate = lazy(() => import('../pages/admin/EmailTemplates/Create'));
+const EmailTempEdit = lazy(() => import('../pages/admin/EmailTemplates/Edit'));
+const Send = lazy(() => import('../pages/admin/Marketing/Send'));
+const AddTutors = lazy(() => import('../pages/admin/Marketing/AddTutors'));
 
-//common
-import Login from "../pages/Login";
-import Signup from "../pages/Signup";
-import Chat from "../pages/Chat";
-import Marketplace from "../pages/student/MarketPlace/Marketplace";
-import Bids from "../pages/student/MarketPlace/Bids";
-import Ads from "../pages/student/MarketPlace/Ad";
-import StudentAdList from "../pages/student/MarketPlace/StudentAdList";
-import EditAd from "../pages/student/MarketPlace/EditAd";
-import Agency from "../pages/tutor/Agency";
+// common components
+const Login = lazy(() => import('../pages/Login'));
+const Signup = lazy(() => import('../pages/Signup'));
+const Chat = lazy(() => import('../pages/Chat'));
+const Marketplace = lazy(() => import('../pages/student/MarketPlace/Marketplace'));
+const Bids = lazy(() => import('../pages/student/MarketPlace/Bids'));
+const Ads = lazy(() => import('../pages/student/MarketPlace/Ad'));
+const StudentAdList = lazy(() => import('../pages/student/MarketPlace/StudentAdList'));
+const EditAd = lazy(() => import('../pages/student/MarketPlace/EditAd'));
+const Agency = lazy(() => import('../pages/tutor/Agency'));
 
 
 const rolePermissions = {
