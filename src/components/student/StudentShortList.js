@@ -260,7 +260,7 @@ const StudentShortList = () => {
                                                         onClick={() => handleNavigateToSchedule(item)}>
                                                         <div className='button__content'>
                                                             <div className='button__icon'>
-                                                                <img src={BTN_ICON} alt={"btn__icon"} />
+                                                                <img src={BTN_ICON} alt={"btn__icon"} width={20} height={20} />
                                                             </div>
                                                             <div className='button__text  text-sm'>Book Lesson</div>
                                                         </div>
@@ -271,7 +271,7 @@ const StudentShortList = () => {
                                                         onClick={() => handleNavigateToFeedback(item.AcademyId[0])}>
                                                         <div className='button__content'>
                                                             <div className='button__icon'>
-                                                                <img src={BTN_ICON} alt={"btn__icon"} />
+                                                                <img src={BTN_ICON} alt={"btn__icon"} width={20} height={20} />
                                                             </div>
                                                             <div className='button__text'> Feedbacks</div>
                                                         </div></button>
@@ -281,7 +281,7 @@ const StudentShortList = () => {
                                                         onClick={() => redirect_to_tutor_profile(item?.AcademyId[0])}>
                                                         <div className='button__content'>
                                                             <div className='button__icon'>
-                                                                <img src={BTN_ICON} alt={"btn__icon"} />
+                                                                <img src={BTN_ICON} alt={"btn__icon"} width={20} height={20} />
                                                             </div>
                                                             <div className='button__text'> View Profile</div>
                                                         </div>

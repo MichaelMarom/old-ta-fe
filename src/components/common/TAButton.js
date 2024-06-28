@@ -14,7 +14,7 @@ function Button({ loading = false, type = "button", handleClick = () => { },
         >
             <div className="button__content">
                 <div className="button__icon">
-                    <img src={BTN_ICON} alt={"btn__icon"} style={{
+                    <img src={BTN_ICON} alt={"btn__icon"} width={20} height={20} style={{
                         animation: loading ? "spin 2s linear infinite" : 'none',
                     }} />
                 </div>

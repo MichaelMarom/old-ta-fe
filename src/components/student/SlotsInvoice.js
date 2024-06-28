@@ -37,10 +37,9 @@ const SlotsInvoice = ({
         <div className="col-12 p-2">
           <div className="card">
             <div className="card-header text-center p-0">
-              <img src={logo} style={{
-                width: "100%",
-                height: "100px"
-              }} alt="logo" />
+              <div className='w-100'>
+              <img src={logo} width={100} height={100} alt="logo" />
+              </div>
             </div>
             <div className="card-body">
               <div className="mb-4">

@@ -51,6 +51,7 @@ function Messages({ messages, fetchingMessages, files }) {
               <img
                 src={URL.createObjectURL(image)}
                 alt={image.name}
+                width={100} height={100}
                 style={{ maxWidth: '100px', maxHeight: '100px' }}
               />
             </div>

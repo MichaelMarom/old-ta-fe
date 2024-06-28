@@ -65,7 +65,7 @@ function TutorCalenderSidebar({
                 >
                     <div className="button__content">
                         <div className="button__icon">
-                            <img src={BTN_ICON} alt={"btn__icon"} />
+                            <img src={BTN_ICON} alt={"btn__icon"} width={20} height={20} />
                         </div>
                         <p className="button__text">Blocked Days</p>
                     </div>
@@ -80,7 +80,7 @@ function TutorCalenderSidebar({
                 >
                     <div className="button__content">
                         <div className="button__icon">
-                            <img src={BTN_ICON} alt={"btn__icon"} />
+                            <img src={BTN_ICON} alt={"btn__icon"} width={20} height={20} />
                         </div>
                         <p className="button__text">Blocked Hours</p>
                     </div>

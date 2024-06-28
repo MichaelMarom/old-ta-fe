@@ -418,7 +418,8 @@ const CollabSidebar = ({
               >
                 <img
                   src={screenType}
-                  style={{ height: "20px", width: "20px" }}
+                  width={20}
+                  height={20}
                   alt="..."
                 />
               </li>

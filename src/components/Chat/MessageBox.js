@@ -32,6 +32,7 @@ const MessageBox = ({ message }) => {
                         <div style={{whiteSpace:"normal"}}>{message.fileName}</div>
                         {message.fileUrl && <div className='mt-2' >
                             <img
+                             width={100} height={100}
                                 src={message.fileUrl}
                                 alt={message.file}
                                 style={{ maxWidth: '100px', maxHeight: '100px' }}

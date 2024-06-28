@@ -105,7 +105,7 @@ const Actions = ({
                             disabled={!saveDisabled && (loading || backDisabled || !isBackTabExist) || user.role === "admin"}>
                             <div className="button__content">
                                 <div className="button__icon">
-                                    <img src={BTN_ICON} alt={"btn__icon"} />
+                                    <img src={BTN_ICON} alt={"btn__icon"}  width={20} height={20}  />
                                 </div>
                                 <p className="button__text"><FaChevronLeft />Back</p>
                             </div>
@@ -116,7 +116,7 @@ const Actions = ({
                             disabled={editDisabled}>
                             <div className="button__content">
                                 <div className="button__icon">
-                                    <img src={BTN_ICON} alt={"btn__icon"} />
+                                    <img src={BTN_ICON} alt={"btn__icon"}  width={20} height={20} />
                                 </div>
                                 <p className="button__text">Edit</p>
                             </div>
@@ -128,7 +128,7 @@ const Actions = ({
                             disabled={saveDisabled || loading} >
                             <div className="button__content">
                                 <div className="button__icon">
-                                    <img src={BTN_ICON} alt={"btn__icon"} style={{
+                                    <img src={BTN_ICON} alt={"btn__icon"}  width={20} height={20} style={{
                                         animation: loading ? "spin 2s linear infinite" : 'none',
                                     }} />
                                 </div>
@@ -146,7 +146,7 @@ const Actions = ({
                             type='button' className="next-btn action-btn btn">
                             <div className="button__content">
                                 <div className="button__icon">
-                                    <img src={BTN_ICON} alt={"btn__icon"} />
+                                    <img src={BTN_ICON} alt={"btn__icon"} width={20} height={20} />
                                 </div>
                                 <p className="button__text">Next <FaChevronRight /> </p>
                             </div>

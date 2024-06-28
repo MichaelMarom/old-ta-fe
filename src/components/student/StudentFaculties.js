@@ -489,7 +489,7 @@ const StudentFaculties = () => {
                                   >
                                     <div className="button__content">
                                       <div className="button__icon">
-                                        <img src={BTN_ICON} alt={"btn__icon"} />
+                                        <img src={BTN_ICON} alt={"btn__icon"} width={20} height={20} />
                                       </div>
                                       <div className="button__text  text-sm">
                                         Book Lesson
@@ -511,7 +511,7 @@ const StudentFaculties = () => {
                                   >
                                     <div className="button__content">
                                       <div className="button__icon">
-                                        <img src={BTN_ICON} alt={"btn__icon"} />
+                                        <img src={BTN_ICON} alt={"btn__icon"} width={20} height={20} />
                                       </div>
                                       <div className="button__text">
                                         {" "}
@@ -534,7 +534,7 @@ const StudentFaculties = () => {
                                   >
                                     <div className="button__content">
                                       <div className="button__icon">
-                                        <img src={BTN_ICON} alt={"btn__icon"} />
+                                        <img src={BTN_ICON} alt={"btn__icon"} width={20} height={20} />
                                       </div>
                                       <div className="button__text">
                                         View Profile
