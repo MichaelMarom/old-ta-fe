@@ -2,7 +2,6 @@ import React from "react";
 import Tooltip from "./ToolTip";
 import { post_tutor_setup } from "../../axios/tutor";
 import { useDispatch, useSelector } from "react-redux";
-import { setTutor } from "../../redux/tutor/tutorData";
 
 const Input = ({
   setValue = () => { },
@@ -19,18 +18,6 @@ const Input = ({
   const { tutor } = useSelector(state => state.tutor)
   const dispatch = useDispatch()
   const udpateTutorStatusToUnderRevew = async (e) => {
-    console.log(tutor.Status, mandatory)
-    const value = e?.target?.value
-    // if (mandatory && tutor.Status === "active" && (!value || !value.length)) {
-    //   await post_tutor_setup({
-    //     fname: tutor.FirstName,
-    //     lname: tutor.LastName,
-    //     mname: tutor.MiddleName,
-    //     userId: tutor.userId,
-    //     AgreementDate: null
-    //   })
-    //   dispatch(setTutor({ ...tutor, Status: "under-review", AgreementDate: null }))
-    // }
   }
   return (
     <label className="input w-100">

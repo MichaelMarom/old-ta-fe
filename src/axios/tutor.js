@@ -118,80 +118,74 @@ export let get_tutor_status = (faculty, subject, reason, AcademyId) => {
   });
 };
 
-export let get_countries = () => {
-  return new Promise((resolve, reject) => {
-    apiClient
-      .get("/tutor/countries", {})
-      .then((result) => {
-        resolve(result.data);
-      })
-      .catch((error) => {
-        showErrorToast(error);
+// export let get_countries = () => {
+//   return new Promise((resolve, reject) => {
+//     apiClient
+//       .get("/tutor/countries", {})
+//       .then((result) => {
+//         resolve(result.data);
+//       })
+//       .catch((error) => {
+//         showErrorToast(error);
 
-        // reject(error)
-      });
-  });
-};
+//         // reject(error)
+//       });
+//   });
+// };
 
-export let get_state = () => {
-  return new Promise((resolve, reject) => {
-    apiClient
-      .get("/tutor/state", {})
-      .then((result) => {
-        resolve(result.data);
-      })
-      .catch((error) => {
-        showErrorToast(error);
+// export let get_state = () => {
+//   return new Promise((resolve, reject) => {
+//     apiClient
+//       .get("/tutor/state", {})
+//       .then((result) => {
+//         resolve(result.data);
+//       })
+//       .catch((error) => {
+//         showErrorToast(error);
 
-        // reject(error)
-      });
-  });
-};
+//         // reject(error)
+//       });
+//   });
+// };
 
-export let get_experience = () => {
-  return new Promise((resolve, reject) => {
-    apiClient
-      .get("/tutor/experience", {})
-      .then((result) => {
-        resolve(result.data);
-      })
-      .catch((error) => {
-        showErrorToast(error);
+// export let get_experience = () => {
+//   return new Promise((resolve, reject) => {
+//     apiClient
+//       .get("/tutor/experience", {})
+//       .then((result) => {
+//         resolve(result.data);
+//       })
+//       .catch((error) => {
+//         showErrorToast(error);
+//       });
+//   });
+// };
 
-        // reject(error)
-      });
-  });
-};
+// export let get_gmt = () => {
+//   return new Promise((resolve, reject) => {
+//     apiClient
+//       .get("/tutor/gmt", {})
+//       .then((result) => {
+//         resolve(result.data);
+//       })
+//       .catch((error) => {
+//         showErrorToast(error);
+//       });
+//   });
+// };
 
-export let get_gmt = () => {
-  return new Promise((resolve, reject) => {
-    apiClient
-      .get("/tutor/gmt", {})
-      .then((result) => {
-        resolve(result.data);
-      })
-      .catch((error) => {
-        showErrorToast(error);
-
-        // reject(error)
-      });
-  });
-};
-
-export let get_response = () => {
-  return new Promise((resolve, reject) => {
-    apiClient
-      .get("/tutor/response", {})
-      .then((result) => {
-        resolve(result.data);
-      })
-      .catch((error) => {
-        showErrorToast(error);
-
-        // reject(error)
-      });
-  });
-};
+// export let get_response = () => {
+//   return new Promise((resolve, reject) => {
+//     apiClient
+//       .get("/tutor/response", {})
+//       .then((result) => {
+//         resolve(result.data);
+//       })
+//       .catch((error) => {
+//         showErrorToast(error);
+//       });
+//   });
+// };
 
 export let upload_setup_form = (
   fname,
@@ -586,8 +580,14 @@ export let upload_tutor_bank = (
   });
 };
 
+/**
+ *
+ * @param {Object} idObject  {userId} OR {AcademyId}
+ * @returns
+ */
 export let get_tutor_setup = async (idObject) => {
   try {
+    console.log(idObject)
     const { data } = await apiClient.get("/tutor/tutor-setup", {
       params: idObject,
     });
@@ -597,33 +597,33 @@ export let get_tutor_setup = async (idObject) => {
   }
 };
 
-export let get_tutor_setup_by_userId = async (id) => {
-  try {
-    const { data } = await apiClient.get("/tutor/tutor-setup", {
-      params: {
-        userId: id,
-      },
-    });
-    return data;
-  } catch (error) {
-    console.log(error);
-    return error;
-  }
-};
+// export let get_tutor_setup_by_userId = async (id) => {
+//   try {
+//     const { data } = await apiClient.get("/tutor/tutor-setup", {
+//       params: {
+//         userId: id,
+//       },
+//     });
+//     return data;
+//   } catch (error) {
+//     console.log(error);
+//     return error;
+//   }
+// };
 
-export let get_tutor_setup_by_acaId = async (id) => {
-  try {
-    const { data } = await apiClient.get("/tutor/tutor-setup", {
-      params: {
-        AcademyId: id,
-      },
-    });
-    return data;
-  } catch (error) {
-    console.log(error);
-    return error;
-  }
-};
+// export let get_tutor_setup_by_acaId = async (id) => {
+//   try {
+//     const { data } = await apiClient.get("/tutor/tutor-setup", {
+//       params: {
+//         AcademyId: id,
+//       },
+//     });
+//     return data;
+//   } catch (error) {
+//     console.log(error);
+//     return error;
+//   }
+// };
 
 export const storeEventAPI = async (eventDetails) => {
   try {
@@ -703,9 +703,9 @@ export const addDisabledDates = async (date) => {
 };
 
 /**
- * 
+ *
  * @param {Object} data mandatory keys(fname, lname, mname, userId)
- * @returns 
+ * @returns
  */
 export const post_tutor_setup = async (data) => {
   try {
@@ -746,12 +746,12 @@ export const post_tutor_setup = async (data) => {
 
     dataObject.TutorScreenname = data.mname.length
       ? `${capitalizeFirstLetter(data.fname)}. ${capitalizeFirstLetter(
-        data.mname[0]
-      )}. 
+          data.mname[0]
+        )}. 
             ${capitalizeFirstLetter(data.lname[0])}.`
       : `${capitalizeFirstLetter(data.fname)}. ${capitalizeFirstLetter(
-        data.lname[0]
-      )}.`;
+          data.lname[0]
+        )}.`;
 
     dataObject.AcademyId = uuidv4();
     return await apiClient.post("/tutor/setup", dataObject);

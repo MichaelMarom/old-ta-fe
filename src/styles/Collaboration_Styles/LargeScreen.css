@@ -1,4 +1,3 @@
-@media screen and (min-width: 800px) {
     * {
         box-sizing: border-box;
     }
@@ -24,7 +23,7 @@
 
     /* CLASS ROOM STYLES CLASS ROOM STYLES CLASS ROOM STYLES CLASS ROOM STYLES CLASS ROOM STYLES CLASS ROOM STYLES CLASS ROOM STYLES CLASS ROOM STYLES CLASS ROOM STYLES CLASS ROOM STYLES CLASS ROOM STYLES
      CLASS ROOM STYLES */
-      .class-room {
+    .class-room {
         width: 100vw;
         height: calc(100vh - 200px);
         position: relative;
@@ -1025,7 +1024,3 @@
     .toggle.round:before {
         border-radius: 50%;
     }
-
-
-
-}

@@ -90,12 +90,16 @@ const App = () => {
   }, [userId, token, isSignedIn]);
 
   useEffect(() => {
-    if (user && user.role !== "admin" && user.SID && isSignedIn && token)
-      get_tutor_setup({ userId: user.SID }).then((result) => {
-        handleExpiredToken(result);
-        result?.data?.[0]?.AcademyId &&
-          localStorage.setItem("tutor_user_id", result?.data?.[0]?.AcademyId);
-      });
+    if (user && user.role !== "admin" && user.SID && isSignedIn && token) {
+      // get_tutor_setup({ userId: user.SID }).then((result) => {
+      //   handleExpiredToken(result);
+      //   if (result?.data?.[0]?.AcademyId) {
+      //     localStorage.setItem("tutor_user_id", result?.data?.[0]?.AcademyId);
+      //     console.log(result.data[0]);
+      //     dispatch(setTutor(result?.data?.[0]));
+      //   }
+      // });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, isSignedIn, token]);
 
@@ -105,7 +109,7 @@ const App = () => {
     }
   }, [user, isSignedIn, token]);
 
-  //dispatch
+  //setting timeZone for user
   useEffect(() => {
     if (studentLoggedIn && userId && isSignedIn) {
       moment.tz.setDefault(student.timeZone);
@@ -168,11 +172,17 @@ const App = () => {
   }, [studentUserId, userId, isSignedIn, token]);
 
   useEffect(() => {
-    if (userId && token && isSignedIn) {
+    if (
+      userId &&
+      token &&
+      isSignedIn &&
+      user.role === "admin" &&
+      localStorage.getItem("tutor_user_id")
+    ) {
       dispatch(setTutor());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tutorUserId, userId, isSignedIn, token]);
+  }, [tutorUserId, userId, isSignedIn, token, user.role]);
 
   useEffect(() => {
     if (userId && token && isSignedIn) {
@@ -229,11 +239,7 @@ const App = () => {
         localStorage.removeItem("student_user_id");
         localStorage.removeItem("tutor_user_id");
         localStorage.removeItem("user");
-
-        // localStorage.clear()();
       }
-    } else {
-      // navigate("/login");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

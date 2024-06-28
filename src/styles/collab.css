@@ -1,4 +1,3 @@
-@media screen and (min-width: 800px) {
     * {
         box-sizing: border-box;
     }
@@ -641,27 +640,27 @@
         justify-content: center;
     }
 
-}
-
-/* countdown */
-
-.flip-countdown-title {
-    display: none;
-}
 
 
-.card__top,
-.card__bottom {
-    color: limegreen !important;
-}
+    /* countdown */
 
-.flip-countdown .flip-countdown-piece .flip-countdown-card .flip-countdown-card-sec .card__top,
-.flip-countdown .flip-countdown-piece .flip-countdown-card .flip-countdown-card-sec .card__bottom,
-.flip-countdown .flip-countdown-piece .flip-countdown-card .flip-countdown-card-sec .card__back::before,
-.flip-countdown .flip-countdown-piece .flip-countdown-card .flip-countdown-card-sec .card__back::after {
-    color: rgb(41, 182, 41)
-}
+    .flip-countdown-title {
+        display: none;
+    }
 
-.excalidraw .App-menu_top {
-    margin-top: -20px !important
-}
+
+    .card__top,
+    .card__bottom {
+        color: limegreen !important;
+    }
+
+    .flip-countdown .flip-countdown-piece .flip-countdown-card .flip-countdown-card-sec .card__top,
+    .flip-countdown .flip-countdown-piece .flip-countdown-card .flip-countdown-card-sec .card__bottom,
+    .flip-countdown .flip-countdown-piece .flip-countdown-card .flip-countdown-card-sec .card__back::before,
+    .flip-countdown .flip-countdown-piece .flip-countdown-card .flip-countdown-card-sec .card__back::after {
+        color: rgb(41, 182, 41)
+    }
+
+    .excalidraw .App-menu_top {
+        margin-top: -20px !important
+    }

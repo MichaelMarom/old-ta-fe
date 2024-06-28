@@ -338,7 +338,7 @@ const Education = () => {
       mname: tutor.MiddleName,
       userId: tutor.userId,
     });
-    dispatch(setTutor());
+    dispatch(setTutor({...Step, ...tutor}));
   };
 
   const handleEditClick = () => {

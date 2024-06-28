@@ -237,7 +237,7 @@ const Rates = () => {
         mname: tutor.MiddleName,
         userId: tutor.userId,
       });
-      dispatch(setTutor());
+      dispatch(setTutor({...tutor, Step}));
     }
     if (res.bool) {
       setChangesMade(false);

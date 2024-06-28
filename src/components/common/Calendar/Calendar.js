@@ -38,11 +38,11 @@ export const convertToDate = (date) =>
   date instanceof Date ? date : new Date(date);
 
 const ShowCalendar = ({
-  setIsModalOpen = () => { }, //FOR STUDENT
+  setIsModalOpen = () => {}, //FOR STUDENT
   isModalOpen = false, //FOR STUDENT
   timeDifference = null, //FOR STUDENT
-  setActiveTab = () => { }, //FOR Tutor
-  setDisableColor = () => { }, //FOR Tutor
+  setActiveTab = () => {}, //FOR Tutor
+  setDisableColor = () => {}, //FOR Tutor
   disableColor = "", //FOR Tutor
   activeTab,
   disableWeekDays,
@@ -64,8 +64,8 @@ const ShowCalendar = ({
     user.role === "student"
       ? true
       : user.role === "admin" && isStudentRoute
-        ? true
-        : false;
+      ? true
+      : false;
   const [timeZone, setTimeZone] = useState();
 
   const [enabledDays, setEnabledDays] = useState([]);
@@ -503,8 +503,8 @@ const ShowCalendar = ({
           type === "reserved"
             ? "Reserved"
             : type === "intro"
-              ? "Intro"
-              : "Booked",
+            ? "Intro"
+            : "Booked",
         studentName: student.FirstName,
         studentId: student.AcademyId,
         createdAt: new Date(),
@@ -626,9 +626,9 @@ const ShowCalendar = ({
       ?.some(
         (event) =>
           convertToDate(convertToDate(event.start)).getTime() ===
-          clickedDate.getTime() ||
+            clickedDate.getTime() ||
           convertToDate(convertToDate(event.end)).getTime() ===
-          slotInfo.end.getTime()
+            slotInfo.end.getTime()
       );
 
     if (!isStudentRoute && !disableColor) {
@@ -646,7 +646,8 @@ const ShowCalendar = ({
       slotInfo.action === "doubleClick"
     ) {
       return toast.warning(
-        `Cannot ${!isStudentLoggedIn ? "Disable/Enable " : "Book/Reserve"
+        `Cannot ${
+          !isStudentLoggedIn ? "Disable/Enable " : "Book/Reserve"
         } Older Slots`
       );
     }
@@ -764,7 +765,7 @@ const ShowCalendar = ({
                   const removeEnableHourSlots = enableHourSlots.filter(
                     (date) =>
                       convertToDate(date).getTime() !==
-                      slotInfo.start.getTime() &&
+                        slotInfo.start.getTime() &&
                       endTime.getTime() !== convertToDate(date).getTime()
                   );
                   setEnableHourSlots(removeEnableHourSlots);
@@ -775,14 +776,14 @@ const ShowCalendar = ({
                 disableHourSlots?.some(
                   (date) =>
                     convertToDate(date).getTime() ===
-                    slotInfo.start.getTime() ||
+                      slotInfo.start.getTime() ||
                     endTime.getTime() === convertToDate(date).getTime()
                 )
               ) {
                 const removeDisableHourSlots = disableHourSlots.filter(
                   (date) =>
                     convertToDate(date).getTime() !==
-                    slotInfo.start.getTime() &&
+                      slotInfo.start.getTime() &&
                     endTime.getTime() !== convertToDate(date).getTime()
                 );
                 setDisableHourSlots(removeDisableHourSlots);
@@ -805,7 +806,7 @@ const ShowCalendar = ({
                 !disableHourSlots?.some(
                   (date) =>
                     convertToDate(date).getTime() ===
-                    slotInfo.start.getTime() ||
+                      slotInfo.start.getTime() ||
                     endTime.getTime() === convertToDate(date).getTime()
                 )
               ) {
@@ -820,7 +821,7 @@ const ShowCalendar = ({
                 const removeDisableHourSlots = disableHourSlots.filter(
                   (date) =>
                     convertToDate(date).getTime() !==
-                    slotInfo.start.getTime() &&
+                      slotInfo.start.getTime() &&
                     endTime.getTime() !== convertToDate(date).getTime()
                 );
                 setDisableHourSlots(removeDisableHourSlots);
@@ -923,7 +924,7 @@ const ShowCalendar = ({
     }
   };
 
-  console.log(selectedTutor, tutor)
+  console.log(selectedTutor, tutor);
 
   const slotPropGetter = useCallback(
     (date) => {
@@ -1161,11 +1162,11 @@ const ShowCalendar = ({
     );
     const otherStudentSession = isStudentLoggedIn
       ? reservedSlots
-        .concat(bookedSlots)
-        ?.some(
-          (slot) =>
-            slot.studentName !== student.FirstName && event.id === slot.id
-        )
+          .concat(bookedSlots)
+          ?.some(
+            (slot) =>
+              slot.studentName !== student.FirstName && event.id === slot.id
+          )
       : false;
     const deletedSession = reservedSlots
       .concat(bookedSlots)

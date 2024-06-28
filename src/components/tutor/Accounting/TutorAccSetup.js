@@ -78,7 +78,7 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                     Step, fname: tutor.FirstName,
                     lname: tutor.LastName, mname: tutor.MiddleName, userId: tutor.userId
                 })
-                dispatch(setTutor())
+                dispatch(setTutor({...tutor, Step}))
             }
             if (response) {
                 toast.success("Succesfully Saved The Bank Info.")
@@ -96,7 +96,7 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                     Step, fname: tutor.FirstName,
                     lname: tutor.LastName, mname: tutor.MiddleName, userId: tutor.userId
                 })
-                dispatch(setTutor())
+                dispatch(setTutor({...tutor, Step}))
             }
             if (response) {
                 showRevisitToast()
@@ -179,9 +179,9 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
     { name: "email", filled: !!email?.length }]
 
     return (
-        <div className="d-flex" style={{ height: "calc(100vh - 150px)", overflowY: "auto" }}>
+        <div className="d-flex" style={{ height: "calc(100vh - 185px)", overflowY: "auto" }}>
 
-            <div className="d-flex col-md-3 border h-100 p-2">
+            <div className="d-flex col-md-3 border p-2" style={{height:"fit-content"}}>
 
                 <div className="d-flex flex-column">
                     <div className="highlight m-0" >
@@ -201,12 +201,12 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
 
                 </div>
             </div>
-            <form onSubmit={saver} className='d-flex h-100'>
-                <div className="col-md-8 border h-100 p-2">
+            <form onSubmit={saver} className='d-flex h-100' >
+                <div className="col-md-8 border  p-2 h-100"   >
                     <div className="highlight" style={{ height: '150px' }}>
                         Our tutoring academy issues payments bi-weekly, every second Friday, for the lessons conducted up to the preceding Friday at midnight (GMT-5). We kindly ask you to choose your preferred method of payment from the options listed below. Please note that once the payment is processed, it may take 1-3 business days for the funds to be available in your account. We appreciate your understanding and are committed to ensuring a smooth and timely payment process.
                     </div>
-                    <div className='p-3 ' style={{ fontWeight: "bold" }}>
+                    <div className='p-3 '  style={{ fontWeight: "bold" , height:"calc(100vh - 150px)"}}>
 
                         <MandatoryFieldLabel text={'How do you want to be paid?'} name="paymentOption" mandatoryFields={mandatoryFields} />
 
@@ -363,13 +363,13 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
 
                 </div>
 
-                <div className="col-md-4 border h-100 p-2">
+                <div className="col-md-4 border p-2 h-100" >
                     <div className="highlight" style={{ height: '150px' }}>
                         Social security needs to be provided only from US residents for annual EARNING over $600.
                         Form 1099 to be issued by the academy. Therefore, no need to fill the SS number now,
                         only when your earnings exceeds $600
                     </div>
-                    <div className='p-3'>
+                    <div className='p-3' style={{height:"calc(100vh - 150px)"}}>
 
                         {tutor.Country === "USA" && <div className='d-flex align-items-center mb-2 justify-content-between'>
                             <Input
@@ -380,14 +380,6 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                                 setValue={set_ssh}
                                 value={ssh}
                             />
-                            {/* <label htmlFor="">SS# (Social Security Number) &nbsp; 
-                            <Tooltip text="Tutors that are American citizens, should mandatory 
-                            fill their SS# in order to receive annual form 1099." /> </label>
-                            <input disabled={!editMode} className='form-control m-0 w-50'
-                                onInput={e => set_ssh(e.target.value)}
-                                defaultValue={ssh} type="text"
-                                placeholder='XXX-XX-XXXX'
-                            /> */}
                         </div>}
 
                         <div className='d-flex align-items-center mb-2 justify-content-between'>
@@ -466,6 +458,7 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                     </div>
 
                 </div>
+
                 <Actions
                     loading={saving}
                     unSavedChanges={unSavedChanges}
