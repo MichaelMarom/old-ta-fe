@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { isExpired } from "react-jwt";
 import React from "react";
@@ -30,6 +30,7 @@ import { setTutorSessions } from "./redux/tutor/tutorSessions";
 import Collaboration from "./pages/tutor/Collaboration";
 import CallWithChatExperience from "./pages/tutor/Test1";
 import { setNewSubjCount } from "./redux/admin/newSubj";
+import Loading from "./components/common/Loading";
 
 const App = () => {
   let location = useLocation();
@@ -100,9 +101,9 @@ const App = () => {
 
   useEffect(() => {
     if (user && user.role === "admin" && isSignedIn && token) {
-      dispatch(setNewSubjCount())
+      dispatch(setNewSubjCount());
     }
-  }, [user, isSignedIn, token])
+  }, [user, isSignedIn, token]);
 
   //dispatch
   useEffect(() => {
@@ -224,10 +225,10 @@ const App = () => {
     if (localStorage.getItem("access_token")) {
       if (isExpired(localStorage.getItem("access_token"))) {
         navigate("/login");
-        localStorage.removeItem('access_token')
-        localStorage.removeItem('student_user_id')
-        localStorage.removeItem('tutor_user_id')
-        localStorage.removeItem('user')
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("student_user_id");
+        localStorage.removeItem("tutor_user_id");
+        localStorage.removeItem("user");
 
         // localStorage.clear()();
       }
@@ -238,24 +239,25 @@ const App = () => {
   }, []);
 
   return (
-    <Routes>        
-          <Route path={`/collab`} element={<Collaboration />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/chat-call" element={<CallWithChatExperience />} />
-          {activeRoutes.map((route) => (
-            <Route
-              key={route.path}
-              path={route.path}
-              element={<SignedIn>{route.element}</SignedIn>}
-            />
-          ))}
-          
-          {
+    <Suspense fallback={<Loading />}>
+      <Routes>
+        <Route path={"/collab"} element={<Collaboration />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/chat-call" element={<CallWithChatExperience />} />
+        {activeRoutes.map((route) => (
+          <Route
+            key={route.path}
+            path={route.path}
+            element={<SignedIn>{route.element}</SignedIn>}
+          />
+        ))}
+        {
           // user?.role &&
-           <Route path="*" element={<UnAuthorizeRoute />} />}
-    
-    </Routes>
+          <Route path="*" element={<UnAuthorizeRoute />} />
+        }
+      </Routes>
+    </Suspense>
   );
 };
 
