@@ -3,8 +3,9 @@ import Loading_Icon from "../../assets/images/button__icon.png";
 
 const Loading = ({
   height = "100vh",
-  iconSize = "100px",
+  iconSize = 140,
   loadingText = null,
+  smallerIcon=false
 }) => {
   return (
     <div
@@ -16,8 +17,8 @@ const Loading = ({
       <img
         src={Loading_Icon}
         alt="loading icon"
-        width={140}
-        height={160}
+        width={smallerIcon ? iconSize : 140}
+        height={smallerIcon ? iconSize : 160}
         style={{
         //   height: iconSize,
           animation: "spin 2s linear infinite",

@@ -44,6 +44,7 @@ import Input from "../common/Input";
 import Select from "../common/Select";
 import VacationSettingModal from "./VacationSettingModal";
 import Tooltip from "../common/ToolTip";
+import { uploadTutorImage } from "../../axios/file";
 
 const phoneUtil = PhoneNumberUtil.getInstance();
 const isPhoneValid = (phone) => {
@@ -80,26 +81,9 @@ const TutorSetup = () => {
   let [motivation, set_motivation] = useState("");
   let [headline, set_headline] = useState("");
   let [photo, set_photo] = useState("");
-  const lastNameInputRef = useRef(null);
   let [video, set_video] = useState("");
   const [videoError, setVideoError] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
-  let grades = [
-    { grade: "1st grade" },
-    { grade: "2nd grade" },
-    { grade: "3rd grade" },
-    { grade: "4th grade" },
-    { grade: "5th grade" },
-    { grade: "6th grade" },
-    { grade: "7th grade" },
-    { grade: "8th grade" },
-    { grade: "9th grade" },
-    { grade: "10th grade" },
-    { grade: "11th grade" },
-    { grade: "12th grade" },
-    { grade: "Academic" },
-  ];
 
   let [tutorGrades, setTutorGrades] = useState([]);
   const isValid = isPhoneValid(cell);
@@ -113,7 +97,6 @@ const TutorSetup = () => {
 
   let [userExist, setUserExist] = useState(false);
   const [uploadPhotoClicked, setUploadPhotoClicked] = useState(false);
-  const [uploadVideoClicked, setUploadVideoClicked] = useState(false);
   const [userId, setUserId] = useState(user.SID);
   const [picUploading, setPicUploading] = useState(false);
   const [savingRecord, setSavingRecord] = useState(false);
@@ -152,6 +135,8 @@ const TutorSetup = () => {
     }
   }, [user.role, tutor.AcademyId, tutor.Status]);
 
+
+  // video fetching from azure
   useEffect(() => {
     tutor.AcademyId &&
       apiClient
@@ -191,9 +176,9 @@ const TutorSetup = () => {
     }
   }, [tutor]);
 
-  useEffect(() => {
-    set_email(user?.email);
-  }, [user]);
+  // useEffect(() => {
+  //   set_email(user?.email);
+  // }, [user]);
 
   //reset state on country change
   useEffect(() => {
@@ -205,15 +190,7 @@ const TutorSetup = () => {
   const [selectedVideoOption, setSelectedVideoOption] = useState(null);
 
   const handleOptionClick = (option) => {
-    setUploadVideoClicked(true);
     setSelectedVideoOption(option);
-  };
-
-  let handleTutorGrade = (grade) => {
-    if (tutorGrades.some((item) => item === grade)) {
-      const removedGrades = tutorGrades.filter((item) => item !== grade);
-      setTutorGrades(removedGrades);
-    } else setTutorGrades([...tutorGrades, grade]);
   };
 
   //upload photo
@@ -236,6 +213,7 @@ const TutorSetup = () => {
     setEditMode(!editMode);
   };
 
+  // fetching tutor setup
   useEffect(() => {
     const fetchTutorSetup = async () => {
       if (tutor.AcademyId) {
@@ -540,8 +518,10 @@ const TutorSetup = () => {
     set_response_list(response_list);
   }, []);
 
-  let handleImage = () => {
+  let handleImage = (e) => {
     setUploadPhotoClicked(true);
+
+    uploadTutorImage(tutor.AcademyId, e.target.files[0]).then(()=>{}).catch(err=>console.log(err))
 
     let f = document.querySelector("#photo");
 
@@ -553,7 +533,7 @@ const TutorSetup = () => {
       let reader = new FileReader();
 
       reader.onload = (result) => {
-        set_photo(reader.result);
+        set_photo(reader.result)
       };
       reader.readAsDataURL([...f.files]?.[0]);
     }
@@ -665,7 +645,8 @@ const TutorSetup = () => {
                   <div className="mb-2">
                     <Loading
                       height="10px"
-                      iconSize="20px"
+                      iconSize={20}
+                      smallerIcon
                       loadingText="uploading picture ..."
                     />
                   </div>

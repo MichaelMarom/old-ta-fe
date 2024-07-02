@@ -222,7 +222,7 @@ const App = () => {
             element={<SignedIn>{route.element}</SignedIn>}
           />
         ))}
-        <Route path="*" element={<UnAuthorizeRoute />} />
+        <Route path="*" element={<Loading />} />
       </Routes>
     </Suspense>
   );

@@ -1,4 +1,4 @@
-import { fileUploadClient } from "./config";
+import { fileUploadClient, showErrorToast } from "./config";
 import { get_my_edu } from "./tutor";
 
 export const upload_file = async (formData, fileName) => {
@@ -34,3 +34,21 @@ export const deleteFileOnServer = async (userId) => {
     throw err;
   }
 };
+
+export const uploadTutorImage = async (tutorId, file) => {
+  try {
+    const formData = new FormData()
+    const userId = tutorId?.replace(/[\s\.\-]/g, '')
+    formData.append('file', file)
+
+    const res = await fileUploadClient.post(`/upload-image-azure/${userId}`, {
+      file
+    })
+    return res
+  }
+  catch (err) {
+    showErrorToast(err);
+    throw err;
+  }
+}
+

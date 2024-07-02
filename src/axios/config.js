@@ -9,7 +9,8 @@ const getAccessToken = () => {
 
 export const showErrorToast = (err) => {
     toast.error(err?.response?.data?.message || "Error Completing the request")
-    return err;
+    throw err;
+    // return err;
 }
 
 export const apiClient = axios.create({

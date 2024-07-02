@@ -1,8 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useState, useCallback, useEffect, useRef } from 'react'
 import './record.css'
-import { toast } from 'react-toastify'
-import { fileUploadClient } from '../../../axios/config'
 import Webcam from 'react-webcam'
 import { BsUpload } from 'react-icons/bs'
 import { IoTrash } from 'react-icons/io5'
