@@ -10,23 +10,26 @@ import { widthResolutionAllowed } from "../constants/constants";
 
 const StudentLayout = ({ children }) => {
   const navigate = useNavigate();
-  const [resolution, setResolution] = useState({ width: window.innerWidth, height: window.innerHeight });
+  const [resolution, setResolution] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
 
   useEffect(() => {
     const handleResize = () => {
       setResolution({ width: window.innerWidth, height: window.innerHeight });
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { user } = useSelector((state) => state.user);
-  const { student } = useSelector((state) => state.student);
+  const { student, isLoading } = useSelector((state) => state.student);
   const { upcomingSessionFromNow, upcomingSession, inMins, currentSession } =
     useSelector((state) => state.studentSessions);
 
@@ -75,13 +78,16 @@ const StudentLayout = ({ children }) => {
     }
   }, [currentSession.end]);
 
-  if (user.role === "admin" && !student?.AcademyId)
+
+  if (user.role === "admin" && !localStorage.getItem("student_user_id"))
     return (
       <div className="text-danger">
         Please Select Student from Student-Table to view tutor records
       </div>
     );
-  return resolution.width < widthResolutionAllowed ? <MobileScreen /> :
+  return resolution.width < widthResolutionAllowed ? (
+    <MobileScreen />
+  ) : (
     <>
       <Header />
       <SmallSideBar
@@ -90,8 +96,10 @@ const StudentLayout = ({ children }) => {
           upcomingSession,
           upcomingSessionFromNow
         )}
-      /> {children}
+      />{" "}
+      {children}
     </>
+  );
 };
 
 export default StudentLayout;

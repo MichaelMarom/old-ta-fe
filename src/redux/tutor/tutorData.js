@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { get_user_detail } from "../../axios/auth";
 import * as tutorApis from "../../axios/tutor";
 import _ from "lodash";
 
@@ -31,10 +30,10 @@ export default slice.reducer;
 // ACTIONS
 
 export function setTutor(data) {
-    return async (dispatch) => {
-      console.log(data)
+  return async (dispatch) => {
     if (_.isEmpty(data) && typeof data === "object")
       return dispatch(slice.actions.setTutor(data));
+
     dispatch(slice.actions.isLoading());
     let result;
     const nullValues = ["null", "undefined"];
@@ -44,22 +43,15 @@ export function setTutor(data) {
     ) {
       const user = JSON.parse(localStorage.getItem("user") || "{}");
       if (!user?.SID) return {};
-      console.log("calling1")
       result = await tutorApis.get_tutor_setup({ userId: user?.SID });
     } else {
-      console.log("calling2")
       result = await tutorApis.get_tutor_setup({
         AcademyId: localStorage.getItem("tutor_user_id"),
       });
     }
 
     if (result?.[0]?.userId) {
-        console.log(result)
-    //   const selectedUserId = await get_user_detail(result[0]?.userId);
-    //   !selectedUserId?.response?.data &&
-        dispatch(
-          slice.actions.setTutor({ ...result[0] })
-        );
+      dispatch(slice.actions.setTutor({ ...result[0] }));
       localStorage.setItem("tutor_screen_name", result[0].TutorScreenname);
       localStorage.setItem("tutor_user_id", result[0].AcademyId);
 

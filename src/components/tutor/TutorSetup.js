@@ -599,7 +599,7 @@ const TutorSetup = () => {
     { name: "rtime", filled: !!response_zone.length, value: response_zone },
     { name: "country", filled: !!country.length, value: country },
     { name: "state", filled: !!state.length, value: state },
-    { name: "photo", filled: !!photo.length, value: photo },
+    { name: "photo", filled: !!photo?.length, value: photo },
     { name: "video", filled: !!video.length, value: video },
     { name: "timezone", filled: !!timeZone.length, value: timeZone },
     { name: "motivate", filled: !!motivation.length, value: motivation },

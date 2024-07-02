@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 import { setStudent } from "../../redux/student/studentData";
 import Tooltip from "../common/ToolTip";
 import { FaInfoCircle } from "react-icons/fa";
-import TAButton from '../common/TAButton'
+import TAButton from "../common/TAButton";
 import {
   AUST_STATES,
   CAN_STATES,
@@ -25,14 +25,13 @@ import {
 import { PhoneInput } from "react-international-phone";
 import Actions from "../common/Actions";
 import { toast } from "react-toastify";
-import Button from "../common/Button";
-import BTN_ICON from "../../assets/images/button__icon.png";
 import { compareStates } from "../../utils/common";
 import { useNavigate } from "react-router-dom";
 import Avatar from "../common/Avatar";
 import Input from "../common/Input";
 import Select from "../common/Select";
 import { MandatoryFieldLabel, OptionalFieldLabel } from "../tutor/TutorSetup";
+import Loading from "../common/Loading";
 
 const StudentSetup = () => {
   const dispatch = useDispatch();
@@ -78,7 +77,7 @@ const StudentSetup = () => {
   const [dateTime, setDateTime] = useState("");
   const [userId, setUserId] = useState("");
   const { user } = useSelector((state) => state.user);
-  const { student } = useSelector((state) => state.student);
+  const { student, isLoading } = useSelector((state) => state.student);
   const [saving, setSaving] = useState(false);
   const [code, set_code] = useState("");
   const [editMode, setEditMode] = useState(false);
@@ -86,19 +85,24 @@ const StudentSetup = () => {
   const [unSavedChanges, setUnSavedChanges] = useState(false);
   const [toastShown, setToastShown] = useState(false);
 
-
   useEffect(() => {
-    user.role && (student.AcademyId && student.Status === 'pending') && !toastShown &&
-      toast.success(`Please note that your application is currently in 'pending' status. 
+    user.role &&
+      student.AcademyId &&
+      student.Status === "pending" &&
+      !toastShown &&
+      toast.success(
+        `Please note that your application is currently in 'pending' status. 
     Use the 'Next' or 'Back' buttons at the page footer to navigate between pages. 
-    The menu tabs will become active once your application is complete`, {
-        position: toast.POSITION.BOTTOM_CENTER,
-        hideProgressBar: true,
-        autoClose: false,
-        draggable: true,
-        className: "setup-private-info center-center"
-      })
-    setToastShown(true)
+    The menu tabs will become active once your application is complete`,
+        {
+          position: toast.POSITION.BOTTOM_CENTER,
+          hideProgressBar: true,
+          autoClose: false,
+          draggable: true,
+          className: "setup-private-info center-center",
+        }
+      );
+    setToastShown(true);
   }, [user.role, student.Status, student.AcademyId]);
 
   let saver = async (e) => {
@@ -326,7 +330,7 @@ const StudentSetup = () => {
           borderRadius: "0",
         }}
         value=""
-        disabled={student.Status === 'active'}
+        disabled={student.Status === "active"}
       >
         Grade
       </option>
@@ -409,22 +413,39 @@ const StudentSetup = () => {
     setDateTime(localTime);
   }, [timeZone]);
 
-  const mandatoryFields = [{ name: "fname", filled: !!fname?.length, value: fname },
-  { name: "lname", filled: !!sname?.length, value: sname },
-  { name: "phone", filled: !!cell, value: cell },
-  { name: "over18", filled: !!is_18?.length, value: is_18 },
-  { name: "gmt", filled: !!timeZone?.length, value: timeZone },
-  { name: "grade", filled: !!grade?.length, value: grade },
-  { name: "nativeLang", filled: !!lang?.length, value: lang },
-  { name: "country", filled: !!country?.length, value: country },
-  { name: "parentAName", filled: !!parentAName?.length, value: parentAName },
-  { name: "parentBName", filled: !!parentBName?.length, value: parentBName },
-  { name: "parentAEmail", filled: !!parentAEmail?.length, value: parentAEmail },
-  { name: "parentBEmail", filled: !!parentBEmail?.length, value: parentBEmail },
-  ]
+  const mandatoryFields = [
+    { name: "fname", filled: !!fname?.length, value: fname },
+    { name: "lname", filled: !!sname?.length, value: sname },
+    { name: "phone", filled: !!cell, value: cell },
+    { name: "over18", filled: !!is_18?.length, value: is_18 },
+    { name: "gmt", filled: !!timeZone?.length, value: timeZone },
+    { name: "grade", filled: !!grade?.length, value: grade },
+    { name: "nativeLang", filled: !!lang?.length, value: lang },
+    { name: "country", filled: !!country?.length, value: country },
+    { name: "parentAName", filled: !!parentAName?.length, value: parentAName },
+    { name: "parentBName", filled: !!parentBName?.length, value: parentBName },
+    {
+      name: "parentAEmail",
+      filled: !!parentAEmail?.length,
+      value: parentAEmail,
+    },
+    {
+      name: "parentBEmail",
+      filled: !!parentBEmail?.length,
+      value: parentBEmail,
+    },
+  ];
 
+  if (isLoading) return <Loading height="calc(100vh - 50px)" />;
   return (
-    <form onSubmit={saver} style={{ height: "calc(100vh - 150px)", overflowY: "auto", background: editMode ? "inherit" : "rgb(233, 236, 239)" }}>
+    <form
+      onSubmit={saver}
+      style={{
+        height: "calc(100vh - 150px)",
+        overflowY: "auto",
+        background: editMode ? "inherit" : "rgb(233, 236, 239)",
+      }}
+    >
       <div
         className="d-flex justify-content-center container mt-4"
         style={{ height: "100%", gap: "3%" }}
@@ -466,7 +487,11 @@ const StudentSetup = () => {
                 style={{ gap: "2%" }}
               >
                 <div className="w-50">
-                  <Input setValue={set_code} value={code} label={<p className="bg-light p-1">Write Code </p>} />
+                  <Input
+                    setValue={set_code}
+                    value={code}
+                    label={<p className="bg-light p-1">Write Code </p>}
+                  />
                 </div>
 
                 <TAButton buttonText={"Connect"} />
@@ -482,7 +507,14 @@ const StudentSetup = () => {
                   setValue={set_fname}
                   value={fname}
                   required={true}
-                  label={<MandatoryFieldLabel text="First Name" editMode={editMode} name={"fname"} mandatoryFields={mandatoryFields} />}
+                  label={
+                    <MandatoryFieldLabel
+                      text="First Name"
+                      editMode={editMode}
+                      name={"fname"}
+                      mandatoryFields={mandatoryFields}
+                    />
+                  }
                   editMode={!nameFieldsDisabled}
                 />
 
@@ -510,7 +542,12 @@ const StudentSetup = () => {
                   setValue={set_mname}
                   value={mname}
                   required={false}
-                  label={<OptionalFieldLabel label={"Middle Name"} editMode={editMode} />}
+                  label={
+                    <OptionalFieldLabel
+                      label={"Middle Name"}
+                      editMode={editMode}
+                    />
+                  }
                   editMode={!nameFieldsDisabled}
                 />
               </div>
@@ -519,7 +556,14 @@ const StudentSetup = () => {
                 <Input
                   setValue={set_sname}
                   value={sname}
-                  label={<MandatoryFieldLabel text="Last Name" editMode={editMode} name="lname" mandatoryFields={mandatoryFields} />}
+                  label={
+                    <MandatoryFieldLabel
+                      text="Last Name"
+                      editMode={editMode}
+                      name="lname"
+                      mandatoryFields={mandatoryFields}
+                    />
+                  }
                   editMode={!nameFieldsDisabled}
                 />
               </div>
@@ -527,7 +571,9 @@ const StudentSetup = () => {
               <div className="input-group mb-2 ">
                 <Input
                   value={user.role === "student" ? user.email : email}
-                  label={<MandatoryFieldLabel text="Email" editMode={editMode} />}
+                  label={
+                    <MandatoryFieldLabel text="Email" editMode={editMode} />
+                  }
                   editMode={false}
                 />
               </div>
@@ -562,11 +608,20 @@ const StudentSetup = () => {
               <div className="input-group mb-2 ">
                 <Select
                   editMode={editMode}
-                  label={<MandatoryFieldLabel text="Are you over 18?" editMode={editMode} name="over18" mandatoryFields={mandatoryFields} />}
+                  label={
+                    <MandatoryFieldLabel
+                      text="Are you over 18?"
+                      editMode={editMode}
+                      name="over18"
+                      mandatoryFields={mandatoryFields}
+                    />
+                  }
                   setValue={set_is_18}
                   value={is_18}
                 >
-                  <option value="" disabled={student.Status === 'active'}>Are You Over 18 ?</option>
+                  <option value="" disabled={student.Status === "active"}>
+                    Are You Over 18 ?
+                  </option>
                   <option value="yes">Yes</option>
                   <option value="no">No</option>
                 </Select>
@@ -575,7 +630,14 @@ const StudentSetup = () => {
               <div className="input-group mb-2">
                 <Select
                   editMode={editMode}
-                  label={<MandatoryFieldLabel text="GMT" editMode={editMode} name="gmt" mandatoryFields={mandatoryFields} />}
+                  label={
+                    <MandatoryFieldLabel
+                      text="GMT"
+                      editMode={editMode}
+                      name="gmt"
+                      mandatoryFields={mandatoryFields}
+                    />
+                  }
                   setValue={set_timeZone}
                   value={timeZone}
                 >
@@ -588,7 +650,7 @@ const StudentSetup = () => {
                       borderRadius: "0",
                     }}
                     value=""
-                    disabled={student.Status === 'active'}
+                    disabled={student.Status === "active"}
                   >
                     GMT
                   </option>
@@ -614,7 +676,14 @@ const StudentSetup = () => {
               <div className="input-group mb-2 ">
                 <Select
                   editMode={editMode}
-                  label={<MandatoryFieldLabel text="Grade" editMode={editMode} name="grade" mandatoryFields={mandatoryFields} />}
+                  label={
+                    <MandatoryFieldLabel
+                      text="Grade"
+                      editMode={editMode}
+                      name="grade"
+                      mandatoryFields={mandatoryFields}
+                    />
+                  }
                   setValue={set_grade}
                   value={grade}
                 >
@@ -625,11 +694,20 @@ const StudentSetup = () => {
               <div className="input-group mb-2 ">
                 <Select
                   editMode={editMode}
-                  label={<MandatoryFieldLabel text="Native Language" editMode={editMode} name={"nativeLang"} mandatoryFields={mandatoryFields} />}
+                  label={
+                    <MandatoryFieldLabel
+                      text="Native Language"
+                      editMode={editMode}
+                      name={"nativeLang"}
+                      mandatoryFields={mandatoryFields}
+                    />
+                  }
                   setValue={set_lang}
                   value={lang}
                 >
-                  <option value="" disabled={student.Status === "active"}>Select Language</option>
+                  <option value="" disabled={student.Status === "active"}>
+                    Select Language
+                  </option>
                   {lang_list.map((item, index) => (
                     <option value={item} key={index}>
                       {item}
@@ -644,7 +722,12 @@ const StudentSetup = () => {
                 <Input
                   setValue={set_add1}
                   value={add1}
-                  label={<OptionalFieldLabel label={"Address 1"} editMode={editMode} />}
+                  label={
+                    <OptionalFieldLabel
+                      label={"Address 1"}
+                      editMode={editMode}
+                    />
+                  }
                   required={false}
                   editMode={editMode}
                 />
@@ -655,7 +738,12 @@ const StudentSetup = () => {
                   setValue={set_add2}
                   value={add2}
                   required={false}
-                  label={<OptionalFieldLabel label={"Adress 2"} editMode={editMode} />}
+                  label={
+                    <OptionalFieldLabel
+                      label={"Adress 2"}
+                      editMode={editMode}
+                    />
+                  }
                   editMode={editMode}
                 />
               </div>
@@ -665,14 +753,26 @@ const StudentSetup = () => {
                   setValue={set_city}
                   value={city}
                   required={false}
-                  label={<OptionalFieldLabel label={"City/Town"} editMode={editMode} />}
+                  label={
+                    <OptionalFieldLabel
+                      label={"City/Town"}
+                      editMode={editMode}
+                    />
+                  }
                   editMode={editMode}
                 />
               </div>
               <div className="input-group mb-2 ">
                 <Select
                   editMode={editMode}
-                  label={<MandatoryFieldLabel text="Country" editMode={editMode} name="country" mandatoryFields={mandatoryFields} />}
+                  label={
+                    <MandatoryFieldLabel
+                      text="Country"
+                      editMode={editMode}
+                      name="country"
+                      mandatoryFields={mandatoryFields}
+                    />
+                  }
                   setValue={set_country}
                   value={country}
                 >
@@ -712,11 +812,20 @@ const StudentSetup = () => {
                 <div className="input-group mb-2 ">
                   <Select
                     editMode={editMode}
-                    label={<MandatoryFieldLabel text="State" editMode={editMode} name="state" mandatoryFields={mandatoryFields} />}
+                    label={
+                      <MandatoryFieldLabel
+                        text="State"
+                        editMode={editMode}
+                        name="state"
+                        mandatoryFields={mandatoryFields}
+                      />
+                    }
                     setValue={set_state}
                     value={state}
                   >
-                    <option value="" disabled={student.Status === 'active'}>Select State</option>
+                    <option value="" disabled={student.Status === "active"}>
+                      Select State
+                    </option>
 
                     {options[country].map((item, index) => (
                       <option key={index} value={item}>
@@ -732,17 +841,31 @@ const StudentSetup = () => {
                   setValue={set_zipCode}
                   value={zipCode}
                   required={false}
-                  label={<OptionalFieldLabel label={"Zip Code"} editMode={editMode} />}
+                  label={
+                    <OptionalFieldLabel
+                      label={"Zip Code"}
+                      editMode={editMode}
+                    />
+                  }
                   editMode={editMode}
                 />
               </div>
               <div className="input-group mb-2">
-                <Input value={dateTime} label={<MandatoryFieldLabel text="UTC" editMode={editMode} />} editMode={false} />
+                <Input
+                  value={dateTime}
+                  label={<MandatoryFieldLabel text="UTC" editMode={editMode} />}
+                  editMode={false}
+                />
               </div>
               <div className="input-group mb-2">
                 <Select
                   editMode={editMode}
-                  label={<OptionalFieldLabel label="Secondry Language(s)" editMode={editMode} />}
+                  label={
+                    <OptionalFieldLabel
+                      label="Secondry Language(s)"
+                      editMode={editMode}
+                    />
+                  }
                   setValue={setSecLang}
                   value={secLan}
                 >
@@ -764,52 +887,80 @@ const StudentSetup = () => {
               {!["Freshman", "Junior", "Senior", "Sophmore"].includes(
                 grade
               ) && (
-                  <>
-                    <h6 className="mb-3">Parent Info</h6>
-                    <div className="d-flex" style={{ gap: "2%" }}>
-                      <div className="input-group mb-2 ">
-                        <Input
-                          value={parentAEmail}
-                          label={<MandatoryFieldLabel text="Parent A Email" editMode={editMode} name="parentAEmail" mandatoryFields={mandatoryFields} />}
-                          editMode={editMode}
-                          setValue={setParentAEmail}
-                          required={is_18 === "no" && student.Status === 'active'}
-                        />
-                      </div>
-
-                      <div className="input-group mb-2 ">
-                        <Input
-                          value={parentAName}
-                          label={<MandatoryFieldLabel text="Parent A Name" editMode={editMode} name="parentAName" mandatoryFields={mandatoryFields} />}
-                          editMode={editMode}
-                          setValue={setParentAName}
-                        required={is_18 === "no" && student.Status === 'active'}
-                        />
-                      </div>
+                <>
+                  <h6 className="mb-3">Parent Info</h6>
+                  <div className="d-flex" style={{ gap: "2%" }}>
+                    <div className="input-group mb-2 ">
+                      <Input
+                        value={parentAEmail}
+                        label={
+                          <MandatoryFieldLabel
+                            text="Parent A Email"
+                            editMode={editMode}
+                            name="parentAEmail"
+                            mandatoryFields={mandatoryFields}
+                          />
+                        }
+                        editMode={editMode}
+                        setValue={setParentAEmail}
+                        required={is_18 === "no" && student.Status === "active"}
+                      />
                     </div>
-                    <div className="d-flex" style={{ gap: "2%" }}>
-                      <div className="input-group mb-2">
-                        <Input
-                          value={parentBEmail}
-                          label={<MandatoryFieldLabel text="Parent B Email" editMode={editMode} name={"parentBEmail"} mandatoryFields={mandatoryFields} />}
-                          editMode={editMode}
-                          setValue={setParentBEmail}
-                          required={is_18 === "no" && student.Status === 'active'}
-                        />
-                      </div>
 
-                      <div className="input-group mb-2 ">
-                        <Input
-                          value={parentBName}
-                          label={<MandatoryFieldLabel text="Parent B Name" editMode={editMode} name="parentBName" mandatoryFields={mandatoryFields} />}
-                          editMode={editMode}
-                          setValue={setParentBName}
-                          required={is_18 === "no" && student.Status === 'active'}
-                        />
-                      </div>
+                    <div className="input-group mb-2 ">
+                      <Input
+                        value={parentAName}
+                        label={
+                          <MandatoryFieldLabel
+                            text="Parent A Name"
+                            editMode={editMode}
+                            name="parentAName"
+                            mandatoryFields={mandatoryFields}
+                          />
+                        }
+                        editMode={editMode}
+                        setValue={setParentAName}
+                        required={is_18 === "no" && student.Status === "active"}
+                      />
                     </div>
-                  </>
-                )}
+                  </div>
+                  <div className="d-flex" style={{ gap: "2%" }}>
+                    <div className="input-group mb-2">
+                      <Input
+                        value={parentBEmail}
+                        label={
+                          <MandatoryFieldLabel
+                            text="Parent B Email"
+                            editMode={editMode}
+                            name={"parentBEmail"}
+                            mandatoryFields={mandatoryFields}
+                          />
+                        }
+                        editMode={editMode}
+                        setValue={setParentBEmail}
+                        required={is_18 === "no" && student.Status === "active"}
+                      />
+                    </div>
+
+                    <div className="input-group mb-2 ">
+                      <Input
+                        value={parentBName}
+                        label={
+                          <MandatoryFieldLabel
+                            text="Parent B Name"
+                            editMode={editMode}
+                            name="parentBName"
+                            mandatoryFields={mandatoryFields}
+                          />
+                        }
+                        editMode={editMode}
+                        setValue={setParentBName}
+                        required={is_18 === "no" && student.Status === "active"}
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
               {is_18 === "no" && (
                 <div
                   style={{

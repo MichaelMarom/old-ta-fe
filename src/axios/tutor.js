@@ -587,7 +587,6 @@ export let upload_tutor_bank = (
  */
 export let get_tutor_setup = async (idObject) => {
   try {
-    console.log(idObject)
     const { data } = await apiClient.get("/tutor/tutor-setup", {
       params: idObject,
     });
@@ -596,34 +595,6 @@ export let get_tutor_setup = async (idObject) => {
     showErrorToast(err);
   }
 };
-
-// export let get_tutor_setup_by_userId = async (id) => {
-//   try {
-//     const { data } = await apiClient.get("/tutor/tutor-setup", {
-//       params: {
-//         userId: id,
-//       },
-//     });
-//     return data;
-//   } catch (error) {
-//     console.log(error);
-//     return error;
-//   }
-// };
-
-// export let get_tutor_setup_by_acaId = async (id) => {
-//   try {
-//     const { data } = await apiClient.get("/tutor/tutor-setup", {
-//       params: {
-//         AcademyId: id,
-//       },
-//     });
-//     return data;
-//   } catch (error) {
-//     console.log(error);
-//     return error;
-//   }
-// };
 
 export const storeEventAPI = async (eventDetails) => {
   try {

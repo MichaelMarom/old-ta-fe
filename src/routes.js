@@ -15,8 +15,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import rolePermissions from "./config/permissions";
 import UnAuthorizeRoute from "./pages/UnAuthorizeRoute";
-import { get_tutor_setup } from "./axios/tutor";
-import { get_my_data, get_student_setup_by_userId } from "./axios/student";
+import { get_student_setup_by_userId } from "./axios/student";
 import { get_user_detail } from "./axios/auth";
 
 import { setStudent } from "./redux/student/studentData";
@@ -90,24 +89,10 @@ const App = () => {
   }, [userId, token, isSignedIn]);
 
   useEffect(() => {
-    if (user && user.role !== "admin" && user.SID && isSignedIn && token) {
-      // get_tutor_setup({ userId: user.SID }).then((result) => {
-      //   handleExpiredToken(result);
-      //   if (result?.data?.[0]?.AcademyId) {
-      //     localStorage.setItem("tutor_user_id", result?.data?.[0]?.AcademyId);
-      //     console.log(result.data[0]);
-      //     dispatch(setTutor(result?.data?.[0]));
-      //   }
-      // });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, isSignedIn, token]);
-
-  useEffect(() => {
-    if (user && user.role === "admin" && isSignedIn && token) {
+    if (user.role === "admin" && isSignedIn && token) {
       dispatch(setNewSubjCount());
     }
-  }, [user, isSignedIn, token]);
+  }, [user.role, isSignedIn, token]);
 
   //setting timeZone for user
   useEffect(() => {
@@ -155,31 +140,10 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [student.AcademyId, token]);
 
-  const getStudentDetails = async () => {
-    if (nullValues.includes(studentUserId)) {
-      return dispatch(setStudent({}));
-    }
-    const res = await get_my_data(studentUserId);
-    if (res?.response?.data?.message?.includes("expired"))
-      return redirect_to_login(navigate, signOut);
-
-    res && !res?.response?.data?.message && dispatch(setStudent(res));
-  };
-
   useEffect(() => {
-    if (userId && token && isSignedIn) getStudentDetails();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [studentUserId, userId, isSignedIn, token]);
-
-  useEffect(() => {
-    if (
-      userId &&
-      token &&
-      isSignedIn &&
-      user.role === "admin" &&
-      localStorage.getItem("tutor_user_id")
-    ) {
-      dispatch(setTutor());
+    if (userId && token && isSignedIn && user.role === "admin") {
+      localStorage.getItem("tutor_user_id") && dispatch(setTutor());
+      localStorage.getItem("student_user_id") && dispatch(setStudent());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tutorUserId, userId, isSignedIn, token, user.role]);
@@ -258,10 +222,7 @@ const App = () => {
             element={<SignedIn>{route.element}</SignedIn>}
           />
         ))}
-        {
-          // user?.role &&
-          <Route path="*" element={<UnAuthorizeRoute />} />
-        }
+        <Route path="*" element={<UnAuthorizeRoute />} />
       </Routes>
     </Suspense>
   );
