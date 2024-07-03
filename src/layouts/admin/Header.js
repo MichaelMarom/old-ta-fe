@@ -22,20 +22,21 @@ const Header = () => {
     const [activeTab, setActiveTab] = useState('');
 
     const tabs = [
-        { id: 'tutor-data', label: 'Tutor' },
-        { id: 'student-data', label: 'Student' },
-        { id: 'marketing', label: 'Marketing' },
-        { id: 'email-templates', label: 'Email-Templates' },
+        { id: 'tutor-data', name: 'Tutor' },
+        { id: 'student-data', name: 'Student' },
+        { id: 'marketing', name: 'Marketing' },
+        { id: 'email-templates', name: 'Email-Templates' },
 
-        { id: 'new-subject', label: 'New Subject' },
-        { id: 'accounting', label: 'Accounting' },
-        { id: 'chat', label: 'Communications' },
+        { id: 'new-subject', name: 'New Subject' },
+        { id: 'accounting', name: 'Accounting' },
+        { id: 'chat', name: 'Communications' },
         // { id: 'tos', label: 'TOS' },
         // { id: 'intro', label: 'Plateform Intro' },
     ];
 
 
     let handleTabClick = e => {
+
         nav(`/admin/${e.currentTarget.dataset.url}`)
     }
 
@@ -64,17 +65,42 @@ const Header = () => {
 
     return (
         <>
-            <div className="admin-tab-header shadow-sm">
-                <div>
-                <ul style={{ overflowX: "auto", width:"600px" }}>
-                    {tabs.map((tab) => (
-                        <li key={tab.id} data-url={tab.id} onClick={handleTabClick}
-                            className="px-4  py-0" style={{ fontSize: "14px" }}
-                            id={`${activeTab.split('/')[2] === tab.id ?
-                                'admin-tab-header-list-active' : ''}`}
-                        > <p className="m-0" style={{ transform: "skew(41deg, 0deg)" }}>
-                                {tab.label}
-                                {tab.label === 'New Subject' && <span
+            <div className="tutor-tab-header  shadow-sm d-flex" style={{ background: "rgb(33, 47, 61)" }}>
+                <div className="screen-name rounded border p-2 m-2"
+                    style={{
+                        display: screen_name === 'null' ? 'none' : 'flex',
+                        fontWeight: 'bold',
+                        fontSize:"12px",
+                        color: '#fff',
+                        whiteSpace: 'no-wrap',
+                        padding: '0 5px',
+                        height: '30px'
+                    }}>
+                    {JSON.parse(localStorage.getItem('user'))?.email}
+                </div>
+
+                <ul
+                    style={{
+                        background: "inherit",
+                        pointerEvents: "auto",
+                        width: "calc(100% - 300px)",
+                        margin: "0 50px",
+                    }}
+                >
+                    {tabs.map((tab) => (<>
+                        <li
+                            key={tab.id}
+                            data-url={tab.id}
+                            onClick={handleTabClick}
+                            id={
+                                activeTab.split('/')[2] === tab.id
+                                    ? "tutor-tab-header-list-active"
+                                    : ""
+                            }
+                        >
+                            <p className="m-0" style={{ transform: "skew(40deg, 0deg)", fontSize: "14px" }}>
+                                {tab.name}
+                                {tab.name === 'New Subject' && <span
                                     className=" text-bg-danger p-1 rounded-circle"
                                     style={{
                                         display: "inline-flex",
@@ -89,24 +115,26 @@ const Header = () => {
                                 >
                                     {count}
                                 </span>
-                                }</p>
+                                }
+                            </p>
                         </li>
+                        <div className="text-light" style={{ fontWeight: "bold" }}>|</div>
+                    </>
                     ))}
                 </ul>
-                </div>
-                <div style={{ marginRight: "230px", cursor: "pointer" }}>
+
+                <div
+                    className="d-flex border rounded p-1 justify-content-center align-items-center "
+                    style={{ marginRight: "20px", cursor: "pointer" }}
+                    onClick={() => signOut(() => handleSignOut())}
+                >
+                    <p className="text-danger m-0">Signout</p>
                     <Tooltip text={"signout"} direction="bottomright">
-                        <FaSignOutAlt color="white" onClick={() => signOut(() => handleSignOut())} />
+                        <FaSignOutAlt color="red" />
                     </Tooltip>
                 </div>
-            </div>
-            <div className="screen-name btn-success rounded"
-                style={{
-                    display: screen_name === 'null' ? 'none' : 'flex',
-                    position: 'fixed', top: '5px', zIndex: '999', fontWeight: 'bold',
-                    color: '#fff', right: '45px', padding: '3px 5px 0', height: '30px'
-                }}>
-                {JSON.parse(localStorage.getItem('user'))?.email}
+
+
             </div>
         </>
     );

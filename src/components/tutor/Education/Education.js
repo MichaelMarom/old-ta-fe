@@ -72,7 +72,7 @@ const Education = () => {
   let [certificate_list, set_certificate_list] = useState("");
   let [d_list, set_d_list] = useState([]);
   const [degreeFile, setDegreeFile] = useState(null);
-  const [resumePath, set_resumePath] = useState(null);  
+  const [resumePath, set_resumePath] = useState(null);
   const [certificateFile, setCertificateFile] = useState(null);
   const [dataFetched, setDataFetched] = useState(false);
   let [db_edu_level, set_db_edu_level] = useState("");
@@ -338,7 +338,7 @@ const Education = () => {
       mname: tutor.MiddleName,
       userId: tutor.userId,
     });
-    dispatch(setTutor({...Step, ...tutor}));
+    dispatch(setTutor({ ...Step, ...tutor }));
   };
 
   const handleEditClick = () => {
@@ -384,99 +384,99 @@ const Education = () => {
 
   const fetchEdu = () => {
     get_my_edu(window.localStorage.getItem("tutor_user_id"))
-    .then((result) => {
-      if (result?.length) {
-        let data = result[0];
-        let NativeLang = JSON.parse(data.NativeLang ?? "{}");
-        let NativeLangOtherLang = JSON.parse(
-          data.NativeLangOtherLang ?? "[]"
-        );
-        setDbValues({ ...data, NativeLang, NativeLangOtherLang });
+      .then((result) => {
+        if (result?.length) {
+          let data = result[0];
+          let NativeLang = JSON.parse(data.NativeLang ?? "{}");
+          let NativeLangOtherLang = JSON.parse(
+            data.NativeLangOtherLang ?? "[]"
+          );
+          setDbValues({ ...data, NativeLang, NativeLangOtherLang });
 
-        set_workExperience(data.WorkExperience);
-        set_uni_bach(data.Bach_College);
-        set_mast_uni(data.Mast_College);
-        set_doc_uni(data.DoctorateCollege);
+          set_workExperience(data.WorkExperience);
+          set_uni_bach(data.Bach_College);
+          set_mast_uni(data.Mast_College);
+          set_doc_uni(data.DoctorateCollege);
 
-        set_language(JSON.parse(data.NativeLang ?? "{}"));
-        set_othelang(JSON.parse(data.NativeLangOtherLang ?? "[]"));
+          set_language(JSON.parse(data.NativeLang ?? "{}"));
+          set_othelang(JSON.parse(data.NativeLangOtherLang ?? "[]"));
 
-        set_bach_year(data.Bach_College_Year);
-        set_mast_year(data.Mast_College_StateYear);
-        set_degree_year(data.DegreeYear);
+          set_bach_year(data.Bach_College_Year);
+          set_mast_year(data.Mast_College_StateYear);
+          set_degree_year(data.DegreeYear);
 
-        setCountryForAssoc(data.BachCountry);
-        setCountryForCert(data.CertCountry);
-        setCountryForDeg(data.DegCountry);
-        setCountryForDoc(data.DocCountry);
-        setCountryForMast(data.MastCountry);
-        set_bach_state(data.College1State);
-        set_mast_state(data.College2State);
-        set_deg_state(data.DegreeState);
-        set_cert_state(data.CertificateState);
-        set_doctorateState(data.DoctorateState);
+          setCountryForAssoc(data.BachCountry);
+          setCountryForCert(data.CertCountry);
+          setCountryForDeg(data.DegCountry);
+          setCountryForDoc(data.DocCountry);
+          setCountryForMast(data.MastCountry);
+          set_bach_state(data.Bach_College_State);
+          set_mast_state(data.Mast_College_State);
+          set_deg_state(data.DegreeState);
+          set_cert_state(data.CertificateState);
+          set_doctorateState(data.DoctorateState);
 
-        setDoctorateGraduateYear(data.DoctorateGradYr);
-        setReferences(data.ThingsReferences);
-        // setAddReference(data.ThingsReferences?.length)
+          setDoctorateGraduateYear(data.DoctorateGradYr);
+          setReferences(data.ThingsReferences);
+          // setAddReference(data.ThingsReferences?.length)
 
-        set_doctorateState(data.DoctorateState);
+          set_doctorateState(data.DoctorateState);
 
-        set_degree(data.Degree);
-        set_certificate(data.Certificate);
-        set_db_edu_cert(data.Certificate);
+          set_degree(data.Degree);
+          set_certificate(data.Certificate);
+          set_db_edu_cert(data.Certificate);
 
-        // setDegreeFileContent(data.DegreeFile)
-        // setCertFileContent(data.CertificateFile)
+          // setDegreeFileContent(data.DegreeFile)
+          // setCertFileContent(data.CertificateFile)
 
-        set_level(data.EducationalLevel);
-        set_db_edu_level(data.EducationalLevel);
+          set_level(data.EducationalLevel);
+          set_db_edu_level(data.EducationalLevel);
 
-        set_expiration(data.CertificateExpiration || moment());
-        set_experience(data.EducationalLevelExperience);
+          set_expiration(data.CertificateExpiration || moment());
+          set_experience(data.EducationalLevelExperience);
 
-        set_resumePath(data.Resume);
-        set_deg_file_name(data.DegFileName);
-        set_cert_file_name(data.CertFileName);
+          set_resumePath(data.Resume);
+          set_deg_file_name(data.DegFileName);
+          set_cert_file_name(data.CertFileName);
 
-        setDataFetched(true);
-      } else {
-        setDbValues({
-          EducationalLevel: level,
-          College1: uni_bach,
-          College2: uni_mast,
-          DoctorateCollege: doc_uni,
-          Certificate: certificate,
-          BachCountry: countryForAssociate,
-          CertCountry: countryForCert,
-          MastCountry: countryForMast,
-          DocCountry: countryForDoc,
-          DegCountry: countryForDeg,
-          College1State: bach_state,
-          College2State: mast_state,
-          DegreeState: deg_state,
-          CertificateState: cert_state,
-          DoctorateState: doctorateState,
-          EducationalLevelExperience: experience,
-          College1Year: bach_yr,
-          College2StateYear: mast_yr,
-          DegreeYear: degree_yr,
-          DoctorateGradYr: doctorateGraduateYear,
-          CertificateExpiration: expiration,
-          WorkExperience: workExperience,
-          ThingsReferences: references,
-          NativeLangOtherLang: othelang,
-          NativeLang: language,
-        });
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-    .finally(() => {
-      setFetchingEdu(false);
-      setRecordFetched(true);
-    });
+          setDataFetched(true);
+        } else {
+          setDbValues({
+            EducationalLevel: level,
+            College1: uni_bach,
+            College2: uni_mast,
+            DoctorateCollege: doc_uni,
+            Certificate: certificate,
+            BachCountry: countryForAssociate,
+            CertCountry: countryForCert,
+            MastCountry: countryForMast,
+            DocCountry: countryForDoc,
+            DegCountry: countryForDeg,
+            College1State: bach_state,
+            College2State: mast_state,
+            DegreeState: deg_state,
+            CertificateState: cert_state,
+            DoctorateState: doctorateState,
+            EducationalLevelExperience: experience,
+            College1Year: bach_yr,
+            College2StateYear: mast_yr,
+            DegreeYear: degree_yr,
+            DoctorateGradYr: doctorateGraduateYear,
+            CertificateExpiration: expiration,
+            WorkExperience: workExperience,
+            ThingsReferences: references,
+            NativeLangOtherLang: othelang,
+            NativeLang: language,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setFetchingEdu(false);
+        setRecordFetched(true);
+      });
   }
   //fetching DB
   useEffect(() => {
@@ -831,7 +831,7 @@ const Education = () => {
                           value={countryForAssociate}
                           editMode={editMode}
                         >
-                          <option value={""} disabled={tutor.Status==='active'}>
+                          <option value={""} disabled={tutor.Status === 'active'}>
                             Select Country
                           </option>
                           {Countries.map((option) => (
@@ -1016,7 +1016,7 @@ const Education = () => {
                           }
                           element="app-input"
                           type="text"
-                          required = {tutor.Status === 'active'}
+                          required={tutor.Status === 'active'}
                           value={doc_uni}
                           setInputValue={set_doc_uni}
                           editMode={editMode}
@@ -1160,7 +1160,7 @@ const Education = () => {
                             dynamicSave("DegCountry", e.target.value);
                           }}
                         >
-                          <option value={""} disabled={tutor.Status==='active'} >
+                          <option value={""} disabled={tutor.Status === 'active'} >
                             Select Country
                           </option>
                           {Countries.map((option) => (
@@ -1185,7 +1185,7 @@ const Education = () => {
                             value={deg_state}
                             editMode={editMode}
                           >
-                            <option value="" disabled={tutor.Status==='active'}>Select State</option>
+                            <option value="" disabled={tutor.Status === 'active'}>Select State</option>
                             {options[countryForDeg].map((item) => (
                               <option key={item} value={item}>
                                 {item}

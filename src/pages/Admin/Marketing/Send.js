@@ -113,7 +113,7 @@ const Marketing = () => {
     })
     // console.log(numbers, emails, message)
     // if (!numbers.length) return toast.warning('Please select phone number to send sms');
-    if (!emails.length) return toast.warning('Please select email(s)');
+    if (!emails.length && messageType==="email") return toast.warning('Please select email(s)');
 
 
     if (messageType === 'sms' && !message.length)
@@ -121,7 +121,8 @@ const Marketing = () => {
 
     if (messageType === 'email' && !selectedTemplate.id)
       return toast.warning('Please select email template to send')
-    // if (messageType === 'sms') { await send_sms({ numbers, message }); }
+
+    if (messageType === 'sms') { await send_sms({ number: [], message: "hehehhee" }); }
     if (messageType === 'email') {
       setSending(true)
       send_email({ emails, message: selectedTemplate.text, subject: selectedTemplate.name })

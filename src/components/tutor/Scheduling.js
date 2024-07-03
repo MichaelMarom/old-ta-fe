@@ -10,10 +10,6 @@ const Scheduling = () => {
   const [disableWeekDays, setDisabledWeekDays] = useState([]);
   const [disabledHours, setDisabledHours] = useState([]);
   const [disableColor, setDisableColor] = useState("#5ed387");
-  useEffect(() => {
-    console.log(disableColor)
-  }, [disableColor])
-
 
   return (
     <>

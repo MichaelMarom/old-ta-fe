@@ -596,6 +596,17 @@ export let get_tutor_setup = async (idObject) => {
   }
 };
 
+export const fetch_calender_detals = async(id)=>{
+  try {
+    const { data } = await apiClient.get("/tutor/tutor-setup/calender", {
+      params: {AcademyId:id},
+    });
+    return data;
+  } catch (err) {
+    showErrorToast(err);
+  }
+}
+
 export const storeEventAPI = async (eventDetails) => {
   try {
     console.log(eventDetails, "dataformat");
