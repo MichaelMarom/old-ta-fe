@@ -31,7 +31,7 @@ const Input = ({
         disabled={!editMode || disabled}
         {...rest}
       />
-      <span className="input__label d-flex align-items-end " style={{ top: "2px", background: "transparent", color: "black" }} >
+      <span className="input__label roboto-medium d-flex align-items-end roboto-regular" style={{ top: "2px", background: "transparent", color: "black" }} >
         {tooltipText && !!tooltipText.length && (
           <Tooltip
             width="200px"

@@ -1,5 +1,5 @@
-import React, { Suspense, lazy } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { lazy } from 'react';
+import {Schedules} from '../pages/student/Schedules'
 
 // tutor components
 const Intro = lazy(() => import('../pages/tutor/Intro'));
@@ -29,7 +29,6 @@ const StudentTermOfUse = lazy(() => import('../pages/student/TermOfUse'));
 const StudentProfile = lazy(() => import('../pages/student/StudentProfile'));
 const StudentIntro = lazy(() => import('../pages/student/StudentIntro'));
 const Feedback = lazy(() => import('../pages/student/Feedback'));
-const Schedules = lazy(() => import('../pages/student/Schedules'));
 const SingleTutorFeedbacks = lazy(() => import('../pages/student/SingleTutorFeedbacks'));
 
 // admin components

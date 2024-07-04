@@ -21,7 +21,6 @@ import Tooltip from "../../components/common/ToolTip";
 import Loading from "../../components/common/Loading";
 import DebounceInput from "../../components/common/DebounceInput";
 import _ from "lodash";
-import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
 
 const Feedback = () => {
   const dispatch = useDispatch();
@@ -59,8 +58,6 @@ const Feedback = () => {
     };
     getFeedback();
   }, [tutor.AcademyId, tutor.timeZone]);
-
-  const handleRowSelect = () => { };
 
   const handleEmojiClick = async (id, star) => {
     const updatedQuestions = [...questions];
@@ -212,8 +209,6 @@ const Feedback = () => {
   if (fetchingSessions) return <Loading />;
   return (
     <TutorLayout>
-      {/* <TabInfoVideoToast video={VIDEO} /> */}
-
       <div className="container mt-1">
         <div className="py-2 row">
           <div className={` ${selectedEvent.id ? "col-md-8" : "col-md-12"}`}>
@@ -222,15 +217,13 @@ const Feedback = () => {
               <>
                 <div style={{ fontSize: "14px" }}>
                   <span style={{ fontWeight: "bold", fontSize: "16px" }}>
-                    {" "}
                     Lessons blinking
-                  </span>{" "}
+                  </span>
                   by green border are ready for your feedback. Please rate your
                   student as soon as possible.
                 </div>
                 <SessionsTable
                   events={feedbackData}
-                  handleRowSelect={handleRowSelect}
                   setSelectedEvent={setSelectedEvent}
                   selectedEvent={selectedEvent}
                 />
@@ -285,14 +278,6 @@ const Feedback = () => {
                     }}
                     onChange={(e) => setComment(e.target.value)}
                   />
-                  {/* <TAButton buttonText="Save" handleClick={() => ()} /> */}
-                  {/* <textarea
-                    className="form-control"
-                    id="exampleTextarea"
-                    rows="4"
-                    value={comment}
-                    onChange={handleTextChange}
-                  /> */}
                 </div>
               </div>
             </div>

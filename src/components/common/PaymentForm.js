@@ -96,7 +96,7 @@ const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, 
                                 onChange={handleInputChange}
                                 onFocus={handleInputFocus}
                             />
-                            <span className="input__label bg-transparent">
+                            <span className="input__label roboto-medium bg-transparent">
 
                                 <MandatoryFieldLabel editMode={editMode} text={"Card Number"} /></span>
                         </div>
@@ -117,7 +117,7 @@ const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, 
                                 onChange={handleInputChange}
                                 onFocus={handleInputFocus}
                             />
-                            <span className="input__label bg-transparent"><MandatoryFieldLabel editMode={editMode} text="Name" /></span>
+                            <span className="input__label roboto-medium bg-transparent"><MandatoryFieldLabel editMode={editMode} text="Name" /></span>
                         </div>
                     </div>
                     <div className="row">
@@ -134,7 +134,7 @@ const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, 
                                     onChange={handleInputChange}
                                     onFocus={handleInputFocus}
                                 />
-                                <span className="input__label bg-transparent"><MandatoryFieldLabel editMode={editMode} text="Valid Thru" /></span>
+                                <span className="input__label roboto-medium bg-transparent"><MandatoryFieldLabel editMode={editMode} text="Valid Thru" /></span>
                             </div>
                             {errors.expiry_p && <p className="text-danger"><b>{errors.expiry_p}</b></p>}
                             {errors.expiry_s && <p className="text-danger"><b>{errors.expiry_s}</b></p>}
@@ -153,7 +153,7 @@ const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, 
                                     onFocus={handleInputFocus}
                                     required
                                 />
-                                <span className="input__label bg-transparent"><MandatoryFieldLabel editMode={editMode} text="CVC" /></span>
+                                <span className="input__label roboto-medium bg-transparent"><MandatoryFieldLabel editMode={editMode} text="CVC" /></span>
                             </div>
                             {errors.cvc_p && <p className="text-danger"><b>{errors.cvc_p}</b></p>}
                             {errors.cvc_s && <p className="text-danger"><b>{errors.cvc_s}</b></p>}
@@ -172,7 +172,7 @@ const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, 
                                     onFocus={handleInputFocus}
                                     required
                                 />
-                                <span className="input__label" style={{ backgroundColor: "transparent" }}>
+                                <span className="input__label roboto-medium" style={{ backgroundColor: "transparent" }}>
                                     <MandatoryFieldLabel editMode={editMode} text={"Address1"} />
                                 </span>
                             </div>
@@ -188,7 +188,7 @@ const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, 
                                     onChange={handleInputChange}
                                     onFocus={handleInputFocus}
                                 />
-                                <span className="input__label" style={{ backgroundColor: "transparent" }}>
+                                <span className="input__label roboto-medium" style={{ backgroundColor: "transparent" }}>
                                     <OptionalFieldLabel label={"Address2"} editMode={editMode} />
                                 </span>
                             </div>
@@ -208,7 +208,7 @@ const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, 
                                     onFocus={handleInputFocus}
                                     required
                                 />
-                                <span className="input__label" style={{ backgroundColor: "transparent" }}>
+                                <span className="input__label roboto-medium" style={{ backgroundColor: "transparent" }}>
                                     <MandatoryFieldLabel editMode={editMode} text={"City/Town"} />
                                 </span>
                             </div>
@@ -225,7 +225,7 @@ const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, 
                                     onFocus={handleInputFocus}
                                     required
                                 />
-                                <span className="input__label" style={{ backgroundColor: "transparent" }}>
+                                <span className="input__label roboto-medium" style={{ backgroundColor: "transparent" }}>
                                     <MandatoryFieldLabel editMode={editMode} text={"Zip"} /></span>
                             </div>
                         </div>
@@ -249,7 +249,7 @@ const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, 
                                         return <option value={item.Country} key={item.Country}>{item.Country}</option>
                                     })}
                                 </select>
-                                <span className="input__label" style={{ backgroundColor: "transparent" }}>
+                                <span className="input__label roboto-medium" style={{ backgroundColor: "transparent" }}>
                                     <MandatoryFieldLabel editMode={editMode} text={"Country"} />
                                 </span>
                             </div>
@@ -270,7 +270,7 @@ const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, 
                                     <option value={""}>Select</option>
                                     {options[creditDebitState.country].map(state => <option value={state} key={state}>{state}</option>)}
                                 </select>
-                                <span className="input__label" style={{ backgroundColor: "transparent" }}>
+                                <span className="input__label roboto-medium" style={{ backgroundColor: "transparent" }}>
                                     <MandatoryFieldLabel editMode={editMode} text={"State"} />
                                 </span>
                             </div>

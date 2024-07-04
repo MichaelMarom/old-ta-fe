@@ -189,7 +189,6 @@
     transition: all .2s ease-in;
     white-space: nowrap;
     font-weight: 400;
-    font-family: 'Times New Roman', Times, serif;
     align-items: center;
     justify-content: center;
     float: left;
@@ -246,7 +245,6 @@ ul li {
     font-size: 100%;
     white-space: nowrap;
     font-weight: 400;
-    font-family: 'Times New Roman', Times, serif;
     align-items: center;
     justify-content: center;
     float: left;
@@ -278,7 +276,6 @@ ul.nav.nav-tabs li {
     overflow: hidden;
     margin: 0;
     display: flex;
-    font-family: 'Times New Roman', Times, serif;
     align-items: center;
     justify-content: center;
     white-space: nowrap;
@@ -306,7 +303,6 @@ ul.nav.nav-tabs li {
 }
 
 table {
-    font-family: arial, sans-serif;
     border-collapse: collapse;
     width: 100%;
     text-align: center;
@@ -691,7 +687,6 @@ h6 {
     transition: all .2s ease-in;
     white-space: nowrap;
     font-weight: 400;
-    font-family: 'Times New Roman', Times, serif;
     align-items: center;
     justify-content: center;
     float: left;
@@ -885,7 +880,6 @@ h6 {
     transition: all .2s ease-in;
     white-space: nowrap;
     font-weight: 400;
-    font-family: 'Times New Roman', Times, serif;
     align-items: center;
     justify-content: center;
     float: left;

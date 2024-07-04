@@ -19,7 +19,7 @@ import DebounceInput from "../../components/common/DebounceInput";
 import { setStudentSessions } from "../../redux/student/studentSessions";
 import { fetch_tutors_photos } from "../../axios/tutor";
 
-export const Feedback = () => {
+const Feedback = () => {
   const { sessions } = useSelector((state) => state.studentSessions);
   const [questions, setQuestions] = useState([]);
   const [rawQuestions, setRawQuestions] = useState([]);
@@ -296,3 +296,5 @@ export const Feedback = () => {
     </StudentLayout>
   );
 };
+
+export default Feedback;

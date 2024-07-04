@@ -47,9 +47,9 @@ const Tabs = ({
             onClick={() => handleTabClick(index, tab.component)}
             className={location.pathname === tab.link ? "active" : ""}
           >
-            <p className="m-0" style={{ transform: "skew(44deg, 0deg)" }}>
-              {tab.label}{" "}
-            </p>
+            <h6 className="m-0" style={{ transform: "skew(44deg, 0deg)" }}>
+              {tab.label}
+            </h6>
           </li>
         ))}
       </ul>

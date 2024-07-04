@@ -34,7 +34,6 @@ const TutorProfile = () => {
   const [fetching, setFetching] = useState(true);
   const [activeTab, setActiveTab] = useState("bach");
   const userRole = localStorage.getItem("user_role");
-  const [sortedGrades, setSortedGrades] = useState([]);
   const isStudentLoggedIn = location.pathname.split("/")[1] === "student";
   const [scheduleModalOpen, setScheduleModalOpen] = useState(false)
 
@@ -89,13 +88,6 @@ const TutorProfile = () => {
   };
 
   useEffect(() => {
-    if (data.Grades) {
-      const grades = JSON.parse(data.Grades ?? "[]");
-      setSortedGrades(grades.sort(customSort));
-    }
-  }, [data]);
-
-  useEffect(() => {
     if (params.id) {
       const fetch_profile = async () => {
         const profileInfo = await get_tutor_profile(params.id, studentId);
@@ -124,7 +116,7 @@ const TutorProfile = () => {
     );
   return (
     <div style={{ background: "lightGray", height: isStudentLoggedIn ? "calc(100vh - 50px)" : "calc(100vh - 150px)", overflowY: "auto" }}>
-      <ScreenRecording />
+      {/* <ScreenRecording /> */}
       <div className="container">
         <div className="">
           <div className="d-flex align-items-start justify-content-between w-100 mt-4 rounded  bg-white ">
@@ -892,12 +884,12 @@ const TutorProfile = () => {
                             key={index}
                             style={{ background: "#d8d8d8" }}
                           >
-                            <p
+                            <h5
                               className="m-0 text-start col-2"
                               style={{ fontSize: "14px" }}
                             >
                               {item.Subject}
-                            </p>
+                            </h5>
                             <div className="d-flex col-9 flex-wrap">
                               {subjectGrades.map((option) => (
                                 <GradePills

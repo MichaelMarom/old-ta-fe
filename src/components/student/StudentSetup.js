@@ -588,7 +588,7 @@ const StudentSetup = () => {
                     required
                   />
                   <span
-                    className="input__label"
+                    className="input__label roboto-medium"
                     style={{
                       top: "-3px",
                       left: "5px",

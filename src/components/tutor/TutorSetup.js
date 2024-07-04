@@ -997,7 +997,7 @@ const TutorSetup = () => {
                       style={{ width: "100%" }}
                     />
                     <span
-                      className="input__label"
+                      className="input__label roboto-medium"
                       style={{
                         top: "-3px",
                         left: "5px",
@@ -1689,7 +1689,7 @@ export const MandatoryFieldLabel = ({
   };
 
   return (
-    <div>
+    <div className="roboto-medium">
       <span
         style={{
           background: editMode ? "white" : "rgb(233 236 239)",
@@ -1708,7 +1708,7 @@ export const MandatoryFieldLabel = ({
 };
 
 export const OptionalFieldLabel = ({ label, editMode = true }) => (
-  <p style={{ background: editMode ? "white" : "rgb(233 236 239)" }}>
+  <p className="roboto-medium" style={{ background: editMode ? "white" : "rgb(233 236 239)" }}>
     {label}: <span className="text-sm">(optional)</span>
   </p>
 );

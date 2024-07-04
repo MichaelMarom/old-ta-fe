@@ -39,9 +39,9 @@ export const Schedules = () => {
             const data = await get_student_events(studentId);
             setLoading(false)
 
-            if (!data?.response?.data) {
-                const reservedSlotsArray = data.map(item => JSON.parse(item.reservedSlots)).flat();
-                const bookedSlotsArray = data.map(item => JSON.parse(item.bookedSlots)).flat();
+            if (!data?.response?.data || !data) {
+                const reservedSlotsArray = data?.map(item => JSON.parse(item.reservedSlots)).flat();
+                const bookedSlotsArray = data?.map(item => JSON.parse(item.bookedSlots)).flat();
                 setReservedSlots(reservedSlotsArray);
                 setBookedSlots(bookedSlotsArray);
             }
@@ -131,3 +131,5 @@ export const Schedules = () => {
         </StudentLayout >
     );
 }
+
+// export default Schedules;

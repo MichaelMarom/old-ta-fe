@@ -182,14 +182,14 @@ const Subjects = () => {
                          mx-2 p-2"
                   style={{ color: "white", background: "#2471A3" }}
                 >
-                  <p className="m-0 col-2">
+                  <h6 className="m-0 col-2">
                     {subjectsWithRates.length} Subjects
-                  </p>
-                  <p className="m-0 col-6">
+                  </h6>
+                  <h6 className="m-0 col-6">
                     School Grades (elementary, middle, & high school)
-                  </p>
-                  <p className="m-0 col-3 text-start"> $ Rate</p>
-                  <p className="m-0 col-1"> Action</p>
+                  </h6>
+                  <h6 className="m-0 col-3 text-start"> $ Rate</h6>
+                  <h6 className="m-0 col-1"> Action</h6>
                 </div>
                 <div
                   style={{

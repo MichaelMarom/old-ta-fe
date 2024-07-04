@@ -62,9 +62,9 @@ const SubMenu = ({ faculty, selectedFaculty, setSelectedFaculty }) => {
               }}
               onClick={() => setSelectedFaculty(item.Id)}
             >
-              <p className="m-0" style={{ transform: "skew(44deg, 0deg)" }}>
+              <h6 className="m-0" style={{ transform: "skew(44deg, 0deg)" }}>
                 {item.Faculty}{" "}
-              </p>
+              </h6>
             </li>
           );
         })}

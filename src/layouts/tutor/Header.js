@@ -206,18 +206,21 @@ const Header = () => {
                   onClick={() => nav(tab.url)}
                   id={getId(tab)}
                 >
-                  <p className="m-0" style={{ transform: "skew(41deg, 0deg)" }}>
+                  <h5 className="m-0" style={{ transform: "skew(41deg, 0deg)" }}>
                     {tab.name}
                     {!!filteredSessions.length && tab.url === '/tutor/feedback' &&
                       <span className="text-bg-danger p-1 rounded-circle" style={{
                         display: "inline-flex",
-                        width: "24px",
-                        height: "24px",
+                        width: "19px",
+                        height: "19px",
+                        fontSize:"10px",
+                        position:"absolute",
+                        bottom:"7px",
                         flexDirection: "row",
                         justifyContent: "center",
                         alignItems: "center",
                       }}>{filteredSessions.length}</span>}
-                  </p>
+                  </h5>
                 </li>
                 {tab.video && <div className="cursor-pointer mx-2 video-nav-icon" style={{ transform: "skew(0)" }}
                   onClick={() => setIsOpen(tab.url)}>

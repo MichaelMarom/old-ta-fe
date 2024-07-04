@@ -1,3 +1,87 @@
+body,
+div {
+  font-family: "Roboto", sans-serif;
+}
+
+.roboto-thin,p {
+  font-family: "Roboto", sans-serif;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.roboto-light {
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.roboto-regular,
+h4,
+h5,
+h6
+ {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.roboto-medium,
+h3 {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.roboto-bold,
+h2 {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.roboto-black,
+h1 {
+  font-family: "Roboto", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.roboto-thin-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 100;
+  font-style: italic;
+}
+
+.roboto-light-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.roboto-regular-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.roboto-medium-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.roboto-bold-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.roboto-black-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 900;
+  font-style: italic;
+}
+
 :root {
   --backgroundColor: rgba(246, 241, 209);
   --colorShadeA: rgb(16, 16, 16);
@@ -183,9 +267,10 @@
   opacity: 1 !important;
 }
 
-.center-center{
+.center-center {
   bottom: 150px;
 }
+
 .edu {
   bottom: 300px
 }
@@ -513,7 +598,6 @@
 }
 
 .toggle-collab p {
-  font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
 }
 
@@ -522,6 +606,7 @@
 /*************************************INput*******************/
 
 @import url("https://rsms.me/inter/inter.css");
+
 :root {
   --color-light: white;
   --color-dark: #212121;
@@ -532,7 +617,6 @@
   --size-bezel: .5rem;
   --size-radius: 4px;
   line-height: 1.4;
-  font-family: "Inter", sans-serif;
   font-size: calc(.6rem + .4vw);
   color: var(--color-text);
   background: var(--color-background);
@@ -546,6 +630,7 @@
 }
 
 .input__label {
+  
   position: absolute;
 
   left: 0;
@@ -561,8 +646,9 @@
   font-weight: bold;
   line-height: 1.2;
 }
+
 .input__field {
-  text-align: center; 
+  text-align: center;
   box-sizing: border-box;
   display: block;
   width: 100%;
@@ -572,30 +658,34 @@
   background: transparent;
   border-radius: var(--size-radius);
 }
-.input__field:not(:-moz-placeholder-shown) + .input__label {
-  transform: translate(0.25rem, -65%) scale(0.8);
-  color: var(--color-accent);
-}
-.input__field:not(:-ms-input-placeholder) + .input__label {
-  transform: translate(0.25rem, -65%) scale(0.8);
-  color: var(--color-accent);
-}
-.input__field:focus + .input__label, .input__field:not(:placeholder-shown) + .input__label {
+
+.input__field:not(:-moz-placeholder-shown)+.input__label {
   transform: translate(0.25rem, -65%) scale(0.8);
   color: var(--color-accent);
 }
 
-.input .input__field:disabled{
+.input__field:not(:-ms-input-placeholder)+.input__label {
+  transform: translate(0.25rem, -65%) scale(0.8);
+  color: var(--color-accent);
+}
+
+.input__field:focus+.input__label,
+.input__field:not(:placeholder-shown)+.input__label {
+  transform: translate(0.25rem, -65%) scale(0.8);
+  color: var(--color-accent);
+}
+
+.input .input__field:disabled {
   opacity: 0.5;
 }
 
-.divider{
+.divider {
   margin: 20px 20px 30px;
   height: 1px;
   background-color: #c4c2c2;
 }
 
-.form-check-input:checked{
+.form-check-input:checked {
   background-color: green !important;
 }
 
@@ -604,13 +694,14 @@
 
 
 .video-nav-icon:hover {
-  transition: width 800ms ease-in-out ;
-  transform: scale(1.2); /* Enlarge the icon on hover */
+  transition: width 800ms ease-in-out;
+  transform: scale(1.2);
+  /* Enlarge the icon on hover */
 }
 
 
 .blink_me {
-  color:red;
+  color: red;
   animation: blinker 1s linear infinite;
 }
 

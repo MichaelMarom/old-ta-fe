@@ -28,8 +28,8 @@ const MyStudents = () => {
   if (loading || fetching)
     return <Loading />
   return (
-    <div className="mt-4">
-      <h2>My Students</h2>
+    <div className="mt-4 container">
+      <h1>My Students</h1>
       {(!!students.length) ? < table className="">
         <thead>
           <tr>

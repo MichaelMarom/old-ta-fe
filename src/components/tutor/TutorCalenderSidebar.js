@@ -127,8 +127,8 @@ function TutorCalenderSidebar({
                                     }}
                                     checked={disableWeekDays?.includes(day)}
                                     onChange={() => handleCheckboxClick(day)}
-                                />
-                                <label className="form-check-label small" htmlFor={day.toLowerCase()}>
+                                /> 
+                                <label className="form-check-label small roboto-bold" htmlFor={day.toLowerCase()}>
                                     {day}
                                 </label>
                             </div>

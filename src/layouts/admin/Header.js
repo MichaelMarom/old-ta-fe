@@ -98,7 +98,7 @@ const Header = () => {
                                     : ""
                             }
                         >
-                            <p className="m-0" style={{ transform: "skew(40deg, 0deg)", fontSize: "14px" }}>
+                            <h5 className="m-0" style={{ transform: "skew(40deg, 0deg)", fontSize: "14px" }}>
                                 {tab.name}
                                 {tab.name === 'New Subject' && <span
                                     className=" text-bg-danger p-1 rounded-circle"
@@ -116,7 +116,7 @@ const Header = () => {
                                     {count}
                                 </span>
                                 }
-                            </p>
+                            </h5>
                         </li>
                         <div className="text-light" style={{ fontWeight: "bold" }}>|</div>
                     </>
