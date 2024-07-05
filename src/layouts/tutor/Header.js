@@ -239,9 +239,7 @@ const Header = () => {
           onClick={() => signOut(() => handleSignOut())}
         >
           <p className="text-danger m-0">Signout</p>
-          <Tooltip text={"signout"} direction="bottomright">
             <FaSignOutAlt color="red" />
-          </Tooltip>
         </div>
         <div
           style={{

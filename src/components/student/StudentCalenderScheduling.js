@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import ShowCalendar from "../common/Calendar/Calendar";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useSelector } from "react-redux";
 import {
   capitalizeFirstLetter,
   formatName,
 } from "../../utils/common";
 import { convertGMTOffsetToLocalString } from "../../utils/moment";
-import { get_my_data, update_student_shortlist } from "../../axios/student";
+import { get_my_data } from "../../axios/student";
 import { useDispatch } from "react-redux";
 import { setStudent } from "../../redux/student/studentData";
 import { useNavigate } from "react-router-dom";

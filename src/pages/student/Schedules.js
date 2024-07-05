@@ -10,7 +10,7 @@ import Actions from '../../components/common/Actions';
 import { TutorFeedbackModal } from '../../components/student/CalenderTab/TutorFeedbackModal';
 import Loading from '../../components/common/Loading';
 
-export const Schedules = () => {
+const Schedules = () => {
     const studentId = localStorage.getItem("student_user_id");
     const [reservedSlots, setReservedSlots] = useState([]);
     const [bookedSlots, setBookedSlots] = useState([]);
@@ -132,4 +132,4 @@ export const Schedules = () => {
     );
 }
 
-// export default Schedules;
+export default Schedules;

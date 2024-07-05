@@ -1,5 +1,4 @@
 import React, { lazy } from 'react';
-import {Schedules} from '../pages/student/Schedules'
 
 // tutor components
 const Intro = lazy(() => import('../pages/tutor/Intro'));
@@ -25,6 +24,7 @@ const StudentSetup = lazy(() => import('../pages/student/StudentSetup'));
 const StudentFaculty = lazy(() => import('../pages/student/StudentFaculty'));
 const StudentAccountings = lazy(() => import('../pages/student/StudentAccounting'));
 const StudentScheduling = lazy(() => import('../pages/student/StudentScheduling'));
+const Schedules = lazy(() => import('../pages/student/Schedules'))
 const StudentTermOfUse = lazy(() => import('../pages/student/TermOfUse'));
 const StudentProfile = lazy(() => import('../pages/student/StudentProfile'));
 const StudentIntro = lazy(() => import('../pages/student/StudentIntro'));
@@ -34,13 +34,13 @@ const SingleTutorFeedbacks = lazy(() => import('../pages/student/SingleTutorFeed
 // admin components
 const TutorNewSubject = lazy(() => import('../pages/admin/NewSubject'));
 const TutorTable = lazy(() => import('../pages/admin/Tutor'));
+const AddSMSMessages = lazy(() => import('../pages/admin/Marketing/AddSMSTemps'));
 const StudentTable = lazy(() => import('../pages/admin/Student'));
 const AdminChat = lazy(() => import('../pages/admin/Chat'));
 const EmailList = lazy(() => import('../pages/admin/EmailTemplates/List'));
 const EmailTempCreate = lazy(() => import('../pages/admin/EmailTemplates/Create'));
 const EmailTempEdit = lazy(() => import('../pages/admin/EmailTemplates/Edit'));
 const Send = lazy(() => import('../pages/admin/Marketing/Send'));
-const AddTutors = lazy(() => import('../pages/admin/Marketing/AddTutors'));
 
 // common components
 const Login = lazy(() => import('../pages/Login'));
@@ -75,7 +75,7 @@ const rolePermissions = {
 
     { path: "/tutor/tutor-profile/:id", component: <TutorProfile /> },
 
-    {path: "/tutor/agency", component: <Agency /> },
+    { path: "/tutor/agency", component: <Agency /> },
 
     { path: '/tutor/chat', component: <Chat /> },
     { path: '/tutor/chat/:id', component: <Chat /> },
@@ -114,7 +114,7 @@ const rolePermissions = {
     { path: "/admin/email-templates/:id", component: <EmailTempEdit /> },
 
     { path: "/admin/marketing", component: <Send /> },
-    { path: "/admin/marketing/add", component: <AddTutors /> },
+    { path: "/admin/marketing/add-sms", component: <AddSMSMessages /> },
 
     { path: "/admin/accounting", component: null },
   ],

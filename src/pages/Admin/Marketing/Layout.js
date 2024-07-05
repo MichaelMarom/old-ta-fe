@@ -1,23 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import Tabs from '../../../components/common/Tabs'
 import AdminLayout from '../../../layouts/AdminLayout'
-import AddTutors from './AddTutors'
 import Send from './Send'
+import AddSMSMessages from './AddSMSTemps'
 
 const Layout = ({ children }) => {
     let [activeTab, setActiveTab] = useState('')
     const [activeTabIndex, setActiveTabIndex] = useState(1);
 
     useEffect(() => {
-        setActiveTab(<AddTutors />)
+        setActiveTab(<AddSMSMessages />)
     }, [])
 
     const tabs = [
         {
-            label: 'Send', component: <Send />,
+            label: 'Send',
+            component: <Send />,
             link: '/admin/marketing'
         },
-        { label: `Add`, component: <AddTutors />, link: '/admin/marketing/add' },
+        {
+            label: `Add SMS Templates`,
+            component: <AddSMSMessages />,
+            link: '/admin/marketing/add-sms'
+        },
     ];
 
     return (

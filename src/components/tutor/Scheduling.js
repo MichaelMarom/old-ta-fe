@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import ShowCalendar from "../common/Calendar/Calendar";
 import TutorCalenderSidebar from "./TutorCalenderSidebar";

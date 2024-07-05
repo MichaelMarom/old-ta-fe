@@ -70,9 +70,9 @@ const Header = () => {
                     style={{
                         display: screen_name === 'null' ? 'none' : 'flex',
                         fontWeight: 'bold',
-                        fontSize:"12px",
+                        fontSize: "12px",
                         color: '#fff',
-                        whiteSpace: 'no-wrap',
+                        whiteSpace: 'nowrap',
                         padding: '0 5px',
                         height: '30px'
                     }}>
@@ -100,17 +100,19 @@ const Header = () => {
                         >
                             <h5 className="m-0" style={{ transform: "skew(40deg, 0deg)", fontSize: "14px" }}>
                                 {tab.name}
-                                {tab.name === 'New Subject' && <span
+                                {tab.name === 'New Subject' && !!count  && <span
                                     className=" text-bg-danger p-1 rounded-circle"
                                     style={{
                                         display: "inline-flex",
-                                        width: "20px",
-                                        height: "20px",
+                                        width: "19px",
+                                        height: "19px",
                                         flexDirection: "row",
-                                        fontSize: "12px",
+                                        fontSize: "10px",
                                         justifyContent: "center",
                                         alignItems: "center",
-                                        marginLeft: "8px"
+                                        position: "absolute",
+                                        bottom: "6px",
+                                        marginRight: "5px"
                                     }}
                                 >
                                     {count}
@@ -129,9 +131,7 @@ const Header = () => {
                     onClick={() => signOut(() => handleSignOut())}
                 >
                     <p className="text-danger m-0">Signout</p>
-                    <Tooltip text={"signout"} direction="bottomright">
-                        <FaSignOutAlt color="red" />
-                    </Tooltip>
+                    <FaSignOutAlt color="red" />
                 </div>
 
 

@@ -19,6 +19,7 @@ const Marketing = () => {
   const [sending, setSending] = useState(false)
   const [fileUploaded, setFileUploaded] = useState(false)
 
+  console.log(data)
   useEffect(() => {
     get_email_temp_list().then(result => !result?.response?.data && setList(result))
   }, [])
@@ -102,17 +103,18 @@ const Marketing = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const numbers = selectedRows.map(row => {
-    //   if (row?.phone && row?.phone?.startsWith('"') && row?.phone?.endsWith('"') && row?.phone?.length >= 2) {
-    //     row.phone = row.phone.slice(1, -1);
-    //   }
-    //   return row.phone
-    // })
+    console.log(selectedRows)
+    const numbers = selectedRows?.map(row => {
+      // if (row?.phone && row?.phone?.startsWith('"') && row?.phone?.endsWith('"') && row?.phone?.length >= 2) {
+      //   row.phone = row.phone.slice(1, -1);
+      // }
+      return `${row.phone}`
+    })
     const emails = selectedRows.map(row => {
       return row.Email
     })
     // console.log(numbers, emails, message)
-    // if (!numbers.length) return toast.warning('Please select phone number to send sms');
+    if (!numbers.length && messageType === 'sms') return toast.warning('Please select phone number to send sms');
     if (!emails.length && messageType==="email") return toast.warning('Please select email(s)');
 
 
@@ -122,7 +124,7 @@ const Marketing = () => {
     if (messageType === 'email' && !selectedTemplate.id)
       return toast.warning('Please select email template to send')
 
-    if (messageType === 'sms') { await send_sms({ number: [], message: "hehehhee" }); }
+    if (messageType === 'sms') { await send_sms({ numbers, message }); }
     if (messageType === 'email') {
       setSending(true)
       send_email({ emails, message: selectedTemplate.text, subject: selectedTemplate.name })
