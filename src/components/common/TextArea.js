@@ -21,7 +21,7 @@ const TextArea = ({ value,
             </div>
             <div className="input w-100">
                 <textarea
-                    className="form-control m-0 shadow input__field"
+                    className="form-control m-0 shadow input__field text-start"
                     value={value}
                     maxLength={maxLength}
                     onInput={(e) => setValue(e.target.value)}
