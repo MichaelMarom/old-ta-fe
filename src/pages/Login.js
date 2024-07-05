@@ -60,42 +60,24 @@ const LoginPage = () => {
         // }
       }
     } catch (err) {
+      console.log(err,'error in login')
       let user = localStorage.getItem("user");
+      console.log (user)
       if (user) user = JSON.parse(user);
-      dispatch(setUser(user));
+      // dispatch(setUser(user));
       console.log(err.errors[0].message, user?.role);
-      if (err.errors[0].code.includes("session_exists")) {
+      if (err.errors[0].code.includes("session_exists") && user?.SID) {
         fetchUser(user?.SID);
         // navigate(DEFAULT_URL_AFTER_LOGIN[user.role])
         // toast.error('Please Signout First, If you want to Login!')
       } else toast.error(err.errors[0].message || err.message);
     }
-    // const result = await login(loginForm);
     localStorage.removeItem("tutor_user_id");
     localStorage.removeItem("student_user_id");
     localStorage.removeItem("student_screen_name");
     localStorage.removeItem("tutor_screen_name");
     localStorage.removeItem("user_role");
     localStorage.removeItem("logged_user");
-
-    // if (result.status === 200) {
-    //     toast.success("Login Successfull!");
-    //     setLoginForm({});
-    //     localStorage.setItem('user', JSON.stringify(result.data));
-    //     localStorage.setItem('user_role', result.data[0].role)
-
-    //     const getUserSetup = await get_user_setup_detail(result.data[0].role, result.data[0].SID);
-    //     dispatch(setUser(result.data))
-    //     if (result.data[0].role === 'admin') {
-    //         return navigate(`/${result.data[0].role}/tutor-data`);
-
-    //     }
-    //     localStorage.setItem(`${result.data[0].role}_user_id`, getUserSetup.AcademyId)
-    //     navigate(`/${result.data[0].role}/intro`);
-    // }
-    // else {
-    //     toast.warning(result.message)
-    // }
     setLoading(false);
   };
 
