@@ -596,16 +596,16 @@ export let get_tutor_setup = async (idObject) => {
   }
 };
 
-export const fetch_calender_detals = async(id)=>{
+export const fetch_calender_detals = async (id) => {
   try {
     const { data } = await apiClient.get("/tutor/tutor-setup/calender", {
-      params: {AcademyId:id},
+      params: { AcademyId: id },
     });
     return data;
   } catch (err) {
     showErrorToast(err);
   }
-}
+};
 
 export const storeEventAPI = async (eventDetails) => {
   try {
@@ -743,6 +743,17 @@ export const post_tutor_setup = async (data) => {
   }
 };
 
+export const updateTutorSetup = async (tutorAcademyId, body) => {
+  try {
+    const { data } = await apiClient.put(
+      `/tutor/setup/${tutorAcademyId}`,
+      body
+    );
+    return data;
+  } catch (err) {
+    showErrorToast(err);
+  }
+};
 export const setAgreementDateToNullForAll = async () => {
   try {
     const data = apiClient.put("/tutor/agreement-updated");
@@ -751,6 +762,7 @@ export const setAgreementDateToNullForAll = async () => {
     return error;
   }
 };
+
 export const get_tutor_students = async (AcademyId) => {
   try {
     const { data } = await apiClient.get(`/tutor/get_students/${AcademyId}`);

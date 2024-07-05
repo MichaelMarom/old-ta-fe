@@ -9,7 +9,7 @@ import { PhoneNumberUtil } from "google-libphonenumber";
 import { toast } from "react-toastify";
 import { RiRobot2Fill } from "react-icons/ri";
 
-import { post_tutor_setup } from "../../axios/tutor";
+import { post_tutor_setup, updateTutorSetup } from "../../axios/tutor";
 import { apiClient } from "../../axios/config";
 import { useDispatch } from "react-redux";
 import { convertGMTOffsetToLocalString, showDate } from "../../utils/moment";
@@ -135,7 +135,6 @@ const TutorSetup = () => {
     }
   }, [user.role, tutor.AcademyId, tutor.Status]);
 
-
   // video fetching from azure
   useEffect(() => {
     tutor.AcademyId &&
@@ -197,12 +196,10 @@ const TutorSetup = () => {
   useEffect(() => {
     const postImage = async () => {
       if (uploadPhotoClicked && userExist) {
-        setPicUploading(true);
-        await post_tutor_setup({ photo, fname, lname, mname, userId });
-        setPicUploading(false);
+        // await post_tutor_setup({ photo, fname, lname, mname, userId });
 
         setUploadPhotoClicked(false);
-        dispatch(setTutor({ ...tutor, photo }));
+        // dispatch(setTutor({ ...tutor, photo }));
       }
     };
     postImage();
@@ -518,24 +515,28 @@ const TutorSetup = () => {
     set_response_list(response_list);
   }, []);
 
-  let handleImage = (e) => {
+  let handleImage = async (e) => {
     setUploadPhotoClicked(true);
 
-    uploadTutorImage(tutor.AcademyId, e.target.files[0]).then(()=>{}).catch(err=>console.log(err))
-
-    let f = document.querySelector("#photo");
-
-    let type = [...f.files]?.[0]?.type;
-
-    if (type.split("/")?.[0] !== "image") {
+    if (e.target.files[0].type.split("/")?.[0] !== "image") {
       alert("Only Image Can Be Uploaded To This Field");
     } else {
+      setPicUploading(true);
       let reader = new FileReader();
 
       reader.onload = (result) => {
-        set_photo(reader.result)
+        set_photo(reader.result);
       };
-      reader.readAsDataURL([...f.files]?.[0]);
+      reader.readAsDataURL(e.target.files[0]);
+
+      const result = await uploadTutorImage(tutor.AcademyId, e.target.files[0]);
+
+      result.data?.url &&
+        (await updateTutorSetup(tutor.AcademyId, {
+          Photo: result.data.url,
+        }));
+
+      setPicUploading(false);
     }
   };
 
@@ -1708,7 +1709,10 @@ export const MandatoryFieldLabel = ({
 };
 
 export const OptionalFieldLabel = ({ label, editMode = true }) => (
-  <p className="roboto-medium" style={{ background: editMode ? "white" : "rgb(233 236 239)" }}>
+  <p
+    className="roboto-medium"
+    style={{ background: editMode ? "white" : "rgb(233 236 239)" }}
+  >
     {label}: <span className="text-sm">(optional)</span>
   </p>
 );
