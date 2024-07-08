@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Layout from './Layout'
 import { get_email_temp_list } from '../../../axios/admin'
 import { useNavigate } from 'react-router-dom'
+import { MdEdit } from 'react-icons/md'
 
 const EmailTemplates = () => {
   const [list, setList] = useState([])
@@ -28,6 +29,12 @@ const EmailTemplates = () => {
               <h5 className="click-elem m-0 text-decoration-underline d-inline-block">
                 {item.name}
               </h5>
+              <div
+                  className="rounded-circle border shadow click-effect-elem d-flex justify-content-center align-items-center"
+                  style={{ width: "30px", height: "30px" }}
+                >
+                  <MdEdit size={15} color="blue" />
+                </div>
             </div>
           ))}
         </div>

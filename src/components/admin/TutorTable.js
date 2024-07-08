@@ -1,13 +1,7 @@
 import { useEffect, useState } from "react";
-import { get_tutor_data, get_user_list, set_tutor_status } from "../../axios/admin";
+import { get_tutor_data, get_user_list, send_sms, set_tutor_status } from "../../axios/admin";
 import { convertGMTOffsetToLocalString } from "../../utils/moment";
 import Loading from "../common/Loading";
-import ToolTip from "../common/ToolTip";
-import Pill from "../common/Pill";
-import { FcApprove } from "react-icons/fc";
-import { FcDisapprove } from "react-icons/fc";
-import { FaUserCheck } from "react-icons/fa6";
-import { FaUserTimes } from "react-icons/fa";
 
 import { toast } from "react-toastify";
 import { statesColours } from "../../constants/constants";
@@ -99,7 +93,7 @@ const TutorTable = () => {
     // get_user_list().then(data => console.log(data))
   }, [])
 
-  let handleStatusChange = async (id, status, currentStatus) => {
+  let handleStatusChange = async (id, status, currentStatus, phone) => {
     if (currentStatus === "pending" || currentStatus === 'closed')
       return toast.warning(
         `You cannot change status of "${currentStatus}" users!`
@@ -108,6 +102,12 @@ const TutorTable = () => {
       return toast.warning(`You already on "${status}" Status`);
     setUpdatingStatus(true);
     let response = await set_tutor_status(id, status);
+    phone.startsWith("+1") && await send_sms({
+      message: `Your account is currently in "${status}" state.`,
+      numbers: [phone.replace("+", "")],
+      id
+    })
+
 
     if (response.bool) {
       setStatus(status)
@@ -313,7 +313,8 @@ const TutorTable = () => {
                         handleStatusChange(
                           item.AcademyId,
                           e.target.value,
-                          item.Status
+                          item.Status,
+                          item.CellPhone
                         )} className="form-select"
                       style={{ fontSize: "12px", padding: "5px", height: "25px" }}>
                       <option value={"pending"} disabled >Pending</option>

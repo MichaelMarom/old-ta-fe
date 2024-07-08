@@ -3,27 +3,37 @@ import Layout from "./Layout";
 import TextArea from "../../../components/common/TextArea";
 import { MandatoryFieldLabel } from "../../../components/tutor/TutorSetup";
 import TAButton from "../../../components/common/TAButton";
-import { FaCheck, FaEdit, FaPlus, FaTrash } from "react-icons/fa";
+import { FaCheck, FaPlus, FaTrashAlt } from "react-icons/fa";
 import Input from "../../../components/common/Input";
+import { MdEdit } from "react-icons/md";
+import { get_sms_mms_list, save_sms_mms_temp, update_sms_mms_temp } from "../../../axios/admin";
+import { toast } from "react-toastify";
+import FileUpload from "../../../components/common/FileUpload";
 
 function AddSMSTemps() {
   const [smsSamples, setSmsSamples] = useState([]);
   const [onUpdateSms, setOnUpdateSms] = useState("");
   const [currentSms, setCurrentSms] = useState("");
-  const [editMode, setEditMode] = useState(true); // Track edit mode for button text
   const [currentName, setCurrentName] = useState("");
+
+  useEffect(() => {
+    get_sms_mms_list().then(result => !result?.response?.data && setSmsSamples(result))
+  }, [])
 
   const handleAddSms = (e) => {
     e.preventDefault();
     if (currentSms.trim()) {
-      setSmsSamples([
-        ...smsSamples,
-        { name: currentName, text: currentSms, editMode: false },
-      ]);
-      setCurrentSms("");
-      setCurrentName("");
-
-      setEditMode(true);
+      save_sms_mms_temp({ name: currentName, text: currentSms }).then(result => {
+        if (!result?.response?.data) {
+          setSmsSamples([
+            ...smsSamples,
+            { name: currentName, text: currentSms, editMode: false },
+          ]);
+          setCurrentSms("");
+          setCurrentName("");
+          toast.success("Created Sucessfully!")
+        }
+      })
     }
   };
 
@@ -32,7 +42,7 @@ function AddSMSTemps() {
       item.text === sms.text ? { ...item, editMode: true } : item
     );
     setSmsSamples(updatedSmsSamples);
-    setOnUpdateSms(sms.text); // Clear input field after editing
+    setOnUpdateSms(sms.text);
   };
 
   const handleDeleteSms = (index) => {
@@ -42,16 +52,19 @@ function AddSMSTemps() {
   };
 
   const doneUpdatingSms = (sms) => {
-    const udpatedSms = smsSamples.map((item) =>
-      item.text === sms.text
-        ? { ...item, text: onUpdateSms, editMode: false }
-        : item
-    );
-    setOnUpdateSms("");
-    setSmsSamples(udpatedSms);
+    update_sms_mms_temp({ text: onUpdateSms }, sms.id).then(result => {
+      if (!result?.response?.data) {
+        const udpatedSms = smsSamples.map((item) =>
+          item.text === sms.text
+            ? { ...item, text: onUpdateSms, editMode: false }
+            : item
+        );
+        setOnUpdateSms("");
+        setSmsSamples(udpatedSms);
+        toast.success("Updated Sucessfully")
+      }
+    })
   };
-
-  console.log(smsSamples);
 
   return (
     <Layout>
@@ -62,15 +75,15 @@ function AddSMSTemps() {
             className="form-group mb-3 d-flex align-items-start flex-column"
             style={{ gap: "10px" }}
           >
-            <div className="w-100" style={{ margin: "10px" }}>
+            <div className="w-100 d-flex" style={{ margin: "10px" }}>
               <TextArea
                 value={currentSms}
                 setValue={setCurrentSms}
                 label={<MandatoryFieldLabel text={"Write SMS Text"} />}
-                editMode={editMode}
                 height={80}
                 required
               />
+             
             </div>
             <div className="d-flex justify-content-between w-100 m-2">
               <div className="w-50">
@@ -101,6 +114,9 @@ function AddSMSTemps() {
                     height={80}
                     required
                   />
+                  <div>
+                    <FileUpload />
+                  </div>
                 </div>
               ) : (
                 <p className="me-auto">{sms.text}</p>
@@ -121,15 +137,15 @@ function AddSMSTemps() {
                   style={{ width: "30px", height: "30px" }}
                   onClick={() => handleEditSms(sms)}
                 >
-                  <FaEdit size={15} color="blue" />
+                  <MdEdit size={15} color="blue" />
                 </div>
-                <div
+                {/* <div
                   className="rounded-circle border shadow d-flex justify-content-center align-items-center click-effect-elem"
                   style={{ width: "30px", height: "30px" }}
                   onClick={() => handleDeleteSms(index)}
                 >
-                  <FaTrash size={15} color="red" />
-                </div>
+                  <FaTrashAlt size={15} color="red" />
+                </div> */}
               </div>
             )}
           </div>

@@ -42,7 +42,27 @@ export const uploadTutorImage = async (tutorId, file) => {
     formData.append('file', file)
 
     const res = await fileUploadClient.post(`/upload-image-azure/${userId}`, {
-      file
+      file,
+      container:"tutor-profile-image"
+    })
+    return res
+  }
+  catch (err) {
+    showErrorToast(err);
+    throw err;
+  }
+}
+
+
+export const uploadStudentImages = async (studentId, file) => {
+  try {
+    const formData = new FormData()
+    const userId = studentId?.replace(/[\s\.\-]/g, '')
+    formData.append('file', file)
+
+    const res = await fileUploadClient.post(`/upload-image-azure/${userId}`, {
+      file,
+      container:"student-profile-image"
     })
     return res
   }

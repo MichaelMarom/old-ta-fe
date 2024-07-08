@@ -235,3 +235,67 @@ export const get_email_temp = async (id) => {
     showErrorToast(err)
   }
 }
+
+
+
+/**
+ * 
+ * @param {Object} body it will contain name, text and optional(fileName, attachment)
+ * @returns created data
+ */
+export const save_sms_mms_temp = async (body) => {
+  try {
+    const { data } = await apiClient.post('/admin/sms-mms-temp', body)
+    return data
+  }
+  catch (err) {
+    showErrorToast(err)
+  }
+}
+
+/**
+ * 
+ * @returns 
+ */
+export const get_sms_mms_list = async () => {
+  try {
+    const { data } = await apiClient.get('/admin/sms-mms-temp/list')
+    return data
+  }
+  catch (err) {
+    showErrorToast(err)
+  }
+}
+
+/**
+ * 
+ * @param {Object} body it will contain name, text and optional(fileName, attachment)
+ * @param {INT} id it will contain id
+ * @returns
+ */
+export const update_sms_mms_temp = async (body, id) => {
+  try {
+    const { data } = await apiClient.put(`/admin/sms-mms-temp/${id}`, body)
+    return data
+  }
+  catch (err) {
+    showErrorToast(err)
+  }
+}
+
+/**
+ * 
+ * @param {INT} id 
+ * @returns 
+ */
+export const get_sms_mms_temp = async (id) => {
+  try {
+    const { data } = await apiClient.get(`/admin/sms-mms-temp/${id}`)
+    return data
+  }
+  catch (err) {
+    showErrorToast(err)
+  }
+}
+
+

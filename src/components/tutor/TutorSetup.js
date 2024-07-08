@@ -521,22 +521,27 @@ const TutorSetup = () => {
     if (e.target.files[0].type.split("/")?.[0] !== "image") {
       alert("Only Image Can Be Uploaded To This Field");
     } else {
-      setPicUploading(true);
-      let reader = new FileReader();
+      try {
+        setPicUploading(true);
+        let reader = new FileReader();
 
-      reader.onload = (result) => {
-        set_photo(reader.result);
-      };
-      reader.readAsDataURL(e.target.files[0]);
+        reader.onload = (result) => {
+          set_photo(reader.result);
+        };
+        reader.readAsDataURL(e.target.files[0]);
 
-      const result = await uploadTutorImage(tutor.AcademyId, e.target.files[0]);
+        const result = await uploadTutorImage(tutor.AcademyId, e.target.files[0]);
 
-      result.data?.url &&
-        (await updateTutorSetup(tutor.AcademyId, {
-          Photo: result.data.url,
-        }));
+        result.data?.url &&
+          (await updateTutorSetup(tutor.AcademyId, {
+            Photo: result.data.url,
+          }));
 
-      setPicUploading(false);
+        setPicUploading(false);
+      }
+      catch (err) {
+        toast.error(err.message);
+      }
     }
   };
 
@@ -627,11 +632,10 @@ const TutorSetup = () => {
                 style={{ width: "15%" }}
               >
                 <h6
-                  className={`text-start m-0 ${
-                    mandatoryFields.find((item) => item.name === "photo").filled
+                  className={`text-start m-0 ${mandatoryFields.find((item) => item.name === "photo").filled
                       ? ""
                       : "blink_me"
-                  }`}
+                    }`}
                   style={{ whiteSpace: "nowrap" }}
                 >
                   Profile Photo
@@ -731,7 +735,7 @@ const TutorSetup = () => {
                           "Tutor must conduct 40 hours before can activate “Franchise” option."
                         )
                       }
-                      //  checked={vacation_mode}
+                    //  checked={vacation_mode}
                     />
                     <label
                       className="form-check-label mr-3"
@@ -931,11 +935,10 @@ const TutorSetup = () => {
                     editMode={!nameFieldsDisabled}
                     onBlur={() => {
                       if (fname.length && lname.length) {
-                        const screenName = `${capitalizeFirstLetter(fname)} ${
-                          mname.length
+                        const screenName = `${capitalizeFirstLetter(fname)} ${mname.length
                             ? `${capitalizeFirstLetter(mname?.[0])}.`
                             : ``
-                        } ${capitalizeFirstLetter(lname?.[0])}.`;
+                          } ${capitalizeFirstLetter(lname?.[0])}.`;
                         toast(
                           `You screen name is; ${screenName} which we use online. We do not disclose your private information online. 
                 We use your cellphone only for verification to withdraw your funds, or for events notifications like
@@ -1299,9 +1302,8 @@ const TutorSetup = () => {
                 }}
               >
                 <h6
-                  className={`${
-                    !!video.length && !videoError ? "" : "blink_me"
-                  }`}
+                  className={`${!!video.length && !videoError ? "" : "blink_me"
+                    }`}
                 >
                   Tutor's introduction video
                   <span
@@ -1408,9 +1410,8 @@ const TutorSetup = () => {
                         <button
                           style={{ width: "100%", fontSize: "10px" }}
                           type="button"
-                          className={`action-btn btn small ${
-                            selectedVideoOption === "record" ? "active" : ""
-                          }`}
+                          className={`action-btn btn small ${selectedVideoOption === "record" ? "active" : ""
+                            }`}
                           disabled={!editMode}
                           onClick={() => {
                             set_video("");
@@ -1449,9 +1450,8 @@ const TutorSetup = () => {
                             // pointerEvents: !editMode ? "none" : "auto",
                             fontSize: "10px",
                           }}
-                          className={`action-btn btn ${
-                            selectedVideoOption === "upload" ? "active" : ""
-                          }`}
+                          className={`action-btn btn ${selectedVideoOption === "upload" ? "active" : ""
+                            }`}
                         >
                           <div className="button__content">
                             <div className="button__icon">

@@ -32,11 +32,13 @@ import Input from "../common/Input";
 import Select from "../common/Select";
 import { MandatoryFieldLabel, OptionalFieldLabel } from "../tutor/TutorSetup";
 import Loading from "../common/Loading";
+import { uploadStudentImages } from "../../axios/file";
 
 const StudentSetup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let [fname, set_fname] = useState("");
+  const [picUploading, setPicUploading] = useState(false)
   let [mname, set_mname] = useState("");
   let [sname, set_sname] = useState("");
   let [email, set_email] = useState("");
@@ -373,20 +375,31 @@ const StudentSetup = () => {
     states_list.unshift(state_head);
   }, []);
 
-  let handleImage = () => {
-    let f = document.querySelector("#photo");
-
-    let type = [...f.files][0].type;
-
-    if (type.split("/")[0] !== "image") {
+  let handleImage = async (e) => {
+    if (e.target.files[0].type.split("/")?.[0] !== "image") {
       alert("Only Image Can Be Uploaded To This Field");
     } else {
-      let reader = new FileReader();
+      try {
+        setPicUploading(true);
+        let reader = new FileReader();
 
-      reader.onload = (result) => {
-        set_photo(reader.result);
-      };
-      reader.readAsDataURL([...f.files][0]);
+        reader.onload = (result) => {
+          set_photo(reader.result);
+        };
+        reader.readAsDataURL(e.target.files[0]);
+        // TODO: handle for new users with no id
+        const result = await uploadStudentImages(student.AcademyId, e.target.files[0]);
+
+        // result.data?.url &&
+        //   (await updateStudentSetup(tutor.AcademyId, {
+        //     Photo: result.data.url,
+        //   }));
+
+        setPicUploading(false);
+      }
+      catch (err) {
+        toast.error(err.message);
+      }
     }
   };
 

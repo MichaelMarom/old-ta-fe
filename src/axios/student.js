@@ -65,6 +65,16 @@ export let upload_setup_form = (
   });
 };
 
+export const update_student_setup = async (id, body) => {
+  try {
+    const { data } = await apiClient.put('/student/setup/:id', body);
+    return data
+  }
+  catch (err) {
+    showErrorToast(err)
+  }
+}
+
 export const post_student_agreement = async (userId, body) => {
   try {
     const { data } = await apiClient.put(
@@ -261,15 +271,15 @@ export const getTutorsAccordingToSubjectandFaculty = async (
   }
 };
 
-export let upload_student_short_list = async (body) => {
-  try {
-    const result = await apiClient.post("/student/short-list", body);
-    return result.data;
-  } catch (err) {
-    showErrorToast(err);
-    return err;
-  }
-};
+// export let upload_student_short_list = async (body) => {
+//   try {
+//     const result = await apiClient.post("/student/short-list", body);
+//     return result.data;
+//   } catch (err) {
+//     showErrorToast(err);
+//     return err;
+//   }
+// };
 
 export let get_student_short_list = async (student) => {
   try {
@@ -293,16 +303,16 @@ export let get_my_data = async (AcademyId) => {
   }
 };
 
-export let get_student_short_list_data = async (id) => {
-  try {
-    const { data } = await apiClient.get("/student/short-list-data", {
-      params: { id },
-    });
-    return data;
-  } catch (err) {
-    showErrorToast(err);
-  }
-};
+// export let get_student_short_list_data = async (id) => {
+//   try {
+//     const { data } = await apiClient.get("/student/short-list-data", {
+//       params: { id },
+//     });
+//     return data;
+//   } catch (err) {
+//     showErrorToast(err);
+//   }
+// };
 
 export const save_student_events = async (body) => {
   try {

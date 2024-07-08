@@ -4,7 +4,7 @@ import * as XLSX from 'xlsx';
 import TAButton from '../../../components/common/TAButton'
 import Layout from './Layout'
 import _ from 'lodash';
-import { get_email_temp_list, send_email, send_sms } from '../../../axios/admin';
+import { get_email_temp_list, get_sms_mms_list, send_email, send_sms } from '../../../axios/admin';
 import { toast } from 'react-toastify';
 
 const Marketing = () => {
@@ -14,12 +14,19 @@ const Marketing = () => {
   const [messageType, setMessageType] = useState('sms');
   const [message, setMessage] = useState('')
   const [list, setList] = useState([])
+
+  const [smsTemps, setSmsTemps] = useState([]);
+  const [selectedSmsTemp, setSelectedSmsTemp] = useState({})
+
   const [selectedTemplate, setSelectedTemplate] = useState({})
   const [sentRecords, setSentRecords] = useState([])
   const [sending, setSending] = useState(false)
   const [fileUploaded, setFileUploaded] = useState(false)
 
-  console.log(data)
+  useEffect(() => {
+    get_sms_mms_list().then(result => !result?.repsonse?.data && setSmsTemps(result))
+  }, [])
+
   useEffect(() => {
     get_email_temp_list().then(result => !result?.response?.data && setList(result))
   }, [])
@@ -113,18 +120,18 @@ const Marketing = () => {
     const emails = selectedRows.map(row => {
       return row.Email
     })
-    // console.log(numbers, emails, message)
+    console.log(numbers, messageType)
     if (!numbers.length && messageType === 'sms') return toast.warning('Please select phone number to send sms');
-    if (!emails.length && messageType==="email") return toast.warning('Please select email(s)');
+    if (!emails.length && messageType === "email") return toast.warning('Please select email(s)');
 
 
-    if (messageType === 'sms' && !message.length)
-      return toast.warning('Please type your message to send')
+    if (messageType === 'sms' && !selectedSmsTemp.text)
+      return toast.warning('Please Select Sms Template')
 
     if (messageType === 'email' && !selectedTemplate.id)
       return toast.warning('Please select email template to send')
 
-    if (messageType === 'sms') { await send_sms({ numbers, message }); }
+    if (messageType === 'sms') { await send_sms({ numbers, ...selectedSmsTemp, message: selectedSmsTemp.text, subject: selectedSmsTemp.name, }); }
     if (messageType === 'email') {
       setSending(true)
       send_email({ emails, message: selectedTemplate.text, subject: selectedTemplate.name })
@@ -269,17 +276,42 @@ const Marketing = () => {
                   ))}
                 </div> :
                 <>
-                  <div className='d-flex justify-content-between'>
+
+                  {smsTemps.map((item) => (
+                    <div
+                      key={item.id}
+                      onClick={() => setSelectedSmsTemp(item)}
+                      className="click-effect-elem rounded shadow-sm p-2 
+                        justify-content-between border m-1 d-flex border-primary"
+                    >
+
+                      <h5 className="click-elem m-0 text-decoration-underline d-inline-block">
+                        {item.name}
+                      </h5>
+
+                      <input
+                        type="checkbox"
+                        style={{
+                          height: "20selepx",
+                          width: "20px",
+                          cursor: "pointer",
+                        }}
+                        checked={item.id === selectedSmsTemp.id}
+                      />
+                    </div>
+                  ))}
+                  {/* <div className='d-flex justify-content-between'>
                     <label className='d-inline'>Message</label>
                     <p className='text-sm text-secondary text-end d-inline w-75'
                       style={{ fontSize: "12px", color: "gray" }}> {message.length}/144 </p>
-                  </div>
-                  <textarea className='form-control' value={message}
+                  </div> */}
+
+                  {/* <textarea className='form-control' value={message}
                     placeholder='Type message that you need to send to student or tutor'
                     style={{ height: "200px", width: "100%" }}
                     onChange={(e) => e.target.value.length < 145 && setMessage(e.target.value)} />
                   {message.length > 143 && <p className='text-danger w-100 text-end' style={{ fontSize: "12px" }}>
-                    Maximum limit 144 characters</p>}
+                    Maximum limit 144 characters</p>} */}
                 </>
               }
 

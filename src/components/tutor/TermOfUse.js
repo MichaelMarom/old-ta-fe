@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import RichTextEditor from "../common/RichTextEditor/RichTextEditor";
 import Actions from "../common/Actions";
-import { get_adminConstants, post_termsOfUse } from "../../axios/admin";
+import { get_adminConstants, post_termsOfUse, send_sms } from "../../axios/admin";
 import {
   get_bank_details,
   get_my_edu,
@@ -204,6 +204,7 @@ const TermOfUse = () => {
     if (tutor.Status === PROFILE_STATUS.PENDING)
       body.Status = PROFILE_STATUS.UNDER_REVIEW;
     await post_tutor_setup(body);
+    tutor.CellPhone.startsWith("+1") && await send_sms({message:"Your Account is Currently Under Review,. You will get response within 24 hrs", numbers:[tutor.CellPhone.replace("+","")], id:tutor.AcademyId})
     setLoading(false);
 
     dispatch(setTutor({ ...tutor, ...body }));
