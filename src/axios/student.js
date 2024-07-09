@@ -65,6 +65,17 @@ export let upload_setup_form = (
   });
 };
 
+
+export const post_student_setup = async(body)=>{
+  try {
+    const { data } = await apiClient.post('/student/setup', body);
+    return data
+  }
+  catch (err) {
+    showErrorToast(err)
+  }
+}
+
 export const update_student_setup = async (id, body) => {
   try {
     const { data } = await apiClient.put('/student/setup/:id', body);

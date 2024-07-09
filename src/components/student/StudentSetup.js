@@ -3,7 +3,9 @@ import { useSelector } from "react-redux";
 import {
   code_applied,
   get_my_data,
+  post_student_setup,
   upload_setup_form,
+  upload_student_setup_by_fields,
 } from "../../axios/student";
 import { get_tutor_against_code } from "../../axios/tutor";
 import { convertGMTOffsetToLocalString } from "../../utils/moment";
@@ -107,45 +109,100 @@ const StudentSetup = () => {
     setToastShown(true);
   }, [user.role, student.Status, student.AcademyId]);
 
-  let saver = async (e) => {
+  let saver = async (e, id) => {
     e.preventDefault();
     setSaving(true);
-    let response = await upload_setup_form(
-      fname,
-      mname,
-      sname,
-      user.role === "student" ? user.email : email,
-      lang,
-      secLan,
-      parentAEmail,
-      parentBEmail,
-      parentAName,
-      parentBName,
-      is_18,
-      null,
-      cell,
-      grade,
-      add1,
-      add2,
-      city,
-      state,
-      zipCode,
-      country,
-      timeZone,
-      photo,
-      acadId,
-      parentConsent,
-      user.role === "student" ? user.SID : userId
-    );
-    if (response.bool) {
-      toast.success("success");
-      const res = await get_my_data(localStorage.getItem("student_user_id"));
-      !(res?.response?.status === 400) && dispatch(setStudent(res));
-    } else {
-      toast.error("failed");
+    console.log(id)
+    if (id) {
+      upload_student_setup_by_fields(id, {
+        Language: lang,
+        SecLan: secLan,
+        Over18: is_18 === "yes" ? true : false,
+        Cell: cell,
+        Grade: grade,
+        Address1: add1,
+        Address2: add2,
+        City: city,
+        State: state,
+        ZipCode: zipCode,
+        Country: country,
+        GMT: timeZone,
+        Photo: photo,
+        ParentAEmail: parentAEmail,
+        ParentBEmail: parentBEmail,
+        ParentAName: parentAName,
+        ParentBName: parentBName,
+        ParentConsent: parentConsent,
+      }).then((response) => {
+        if (!response?.response?.data) {
+          toast.success("Updated Successfully!");
+          get_my_data(id).then((data) => {
+            dispatch(setStudent(data));
+          });
+        }
+      })
     }
+    else {
+      post_student_setup({
+        FirstName: fname,
+        MiddleName: mname,
+        LastName: sname,
+        Language: lang,
+        SecLan: secLan,
+        ParentAEmail: parentAEmail,
+        ParentBEmail: parentBEmail,
+        ParentAName: parentAName,
+        ParentBName: parentBName,
+        Over18: is_18 === "yes" ? true : false,
+        Cell: cell,
+        Grade: grade,
+        Address1: add1,
+        Address2: add2,
+        City: city,
+        State: state,
+        ZipCode: zipCode,
+        Country: country,
+        GMT: timeZone,
+        Photo: photo,
+        ParentConsent: parentConsent,
+      }).then((response) => {
+        if (!response?.response?.data) {
+          toast.success("Created Successfully!");
+          get_my_data(localStorage.getItem("student_user_id")).then((data) => {
+            dispatch(setStudent(data));
+          });
+        }
+      })
+    }
+    // let response = await upload_setup_form(
+    //   fname,
+    //   mname,
+    //   sname,
+    //   user.role === "student" ? user.email : email,
+    //   lang,
+    //   secLan,
+    //   parentAEmail,
+    //   parentBEmail,
+    //   parentAName,
+    //   parentBName,
+    //   is_18,
+    //   null,
+    //   cell,
+    //   grade,
+    //   add1,
+    //   add2,
+    //   city,
+    //   state,
+    //   zipCode,
+    //   country,
+    //   timeZone,
+    //   photo,
+    //   acadId,
+    //   parentConsent,
+    //   user.role === "student" ? user.SID : userId
+    // );
+
     setSaving(false);
-    return response;
   };
 
   useEffect(() => {
@@ -390,10 +447,10 @@ const StudentSetup = () => {
         // TODO: handle for new users with no id
         const result = await uploadStudentImages(student.AcademyId, e.target.files[0]);
 
-        // result.data?.url &&
-        //   (await updateStudentSetup(tutor.AcademyId, {
-        //     Photo: result.data.url,
-        //   }));
+        result.data?.url &&
+          upload_student_setup_by_fields(student.AcademyId, {
+            Photo: result.data.url,
+          }).then(() => toast.success("Uploaded Successfully!"));
 
         setPicUploading(false);
       }
@@ -452,7 +509,7 @@ const StudentSetup = () => {
   if (isLoading) return <Loading height="calc(100vh - 50px)" />;
   return (
     <form
-      onSubmit={saver}
+      onSubmit={(e) => saver(e, student.AcademyId)}
       style={{
         height: "calc(100vh - 150px)",
         overflowY: "auto",
@@ -493,7 +550,7 @@ const StudentSetup = () => {
           </label>
 
           <div className="rounded border shadow p-2 mt-4 bg-light">
-            <form onSubmit={handleConnectClick}>
+            <div>
               <h6>Type tutor's code here</h6>
               <div
                 className="mb-2 d-flex align-items-center justify-content-center"
@@ -501,15 +558,16 @@ const StudentSetup = () => {
               >
                 <div className="w-50">
                   <Input
+                    required={false}
                     setValue={set_code}
                     value={code}
                     label={<p className="bg-light p-1">Write Code </p>}
                   />
                 </div>
 
-                <TAButton buttonText={"Connect"} />
+                <TAButton onClick={handleConnectClick} buttonText={"Connect"} />
               </div>
-            </form>
+            </div>
           </div>
         </div>
         <div className="d-flex flex-column" style={{ width: "66%" }}>
@@ -900,80 +958,80 @@ const StudentSetup = () => {
               {!["Freshman", "Junior", "Senior", "Sophmore"].includes(
                 grade
               ) && (
-                <>
-                  <h6 className="mb-3">Parent Info</h6>
-                  <div className="d-flex" style={{ gap: "2%" }}>
-                    <div className="input-group mb-2 ">
-                      <Input
-                        value={parentAEmail}
-                        label={
-                          <MandatoryFieldLabel
-                            text="Parent A Email"
-                            editMode={editMode}
-                            name="parentAEmail"
-                            mandatoryFields={mandatoryFields}
-                          />
-                        }
-                        editMode={editMode}
-                        setValue={setParentAEmail}
-                        required={is_18 === "no" && student.Status === "active"}
-                      />
-                    </div>
+                  <>
+                    <h6 className="mb-3">Parent Info</h6>
+                    <div className="d-flex" style={{ gap: "2%" }}>
+                      <div className="input-group mb-2 ">
+                        <Input
+                          value={parentAEmail}
+                          label={
+                            <MandatoryFieldLabel
+                              text="Parent A Email"
+                              editMode={editMode}
+                              name="parentAEmail"
+                              mandatoryFields={mandatoryFields}
+                            />
+                          }
+                          editMode={editMode}
+                          setValue={setParentAEmail}
+                          required={is_18 === "no" && student.Status === "active"}
+                        />
+                      </div>
 
-                    <div className="input-group mb-2 ">
-                      <Input
-                        value={parentAName}
-                        label={
-                          <MandatoryFieldLabel
-                            text="Parent A Name"
-                            editMode={editMode}
-                            name="parentAName"
-                            mandatoryFields={mandatoryFields}
-                          />
-                        }
-                        editMode={editMode}
-                        setValue={setParentAName}
-                        required={is_18 === "no" && student.Status === "active"}
-                      />
+                      <div className="input-group mb-2 ">
+                        <Input
+                          value={parentAName}
+                          label={
+                            <MandatoryFieldLabel
+                              text="Parent A Name"
+                              editMode={editMode}
+                              name="parentAName"
+                              mandatoryFields={mandatoryFields}
+                            />
+                          }
+                          editMode={editMode}
+                          setValue={setParentAName}
+                          required={is_18 === "no" && student.Status === "active"}
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className="d-flex" style={{ gap: "2%" }}>
-                    <div className="input-group mb-2">
-                      <Input
-                        value={parentBEmail}
-                        label={
-                          <MandatoryFieldLabel
-                            text="Parent B Email"
-                            editMode={editMode}
-                            name={"parentBEmail"}
-                            mandatoryFields={mandatoryFields}
-                          />
-                        }
-                        editMode={editMode}
-                        setValue={setParentBEmail}
-                        required={is_18 === "no" && student.Status === "active"}
-                      />
-                    </div>
+                    <div className="d-flex" style={{ gap: "2%" }}>
+                      <div className="input-group mb-2">
+                        <Input
+                          value={parentBEmail}
+                          label={
+                            <MandatoryFieldLabel
+                              text="Parent B Email"
+                              editMode={editMode}
+                              name={"parentBEmail"}
+                              mandatoryFields={mandatoryFields}
+                            />
+                          }
+                          editMode={editMode}
+                          setValue={setParentBEmail}
+                          required={is_18 === "no" && student.Status === "active"}
+                        />
+                      </div>
 
-                    <div className="input-group mb-2 ">
-                      <Input
-                        value={parentBName}
-                        label={
-                          <MandatoryFieldLabel
-                            text="Parent B Name"
-                            editMode={editMode}
-                            name="parentBName"
-                            mandatoryFields={mandatoryFields}
-                          />
-                        }
-                        editMode={editMode}
-                        setValue={setParentBName}
-                        required={is_18 === "no" && student.Status === "active"}
-                      />
+                      <div className="input-group mb-2 ">
+                        <Input
+                          value={parentBName}
+                          label={
+                            <MandatoryFieldLabel
+                              text="Parent B Name"
+                              editMode={editMode}
+                              name="parentBName"
+                              mandatoryFields={mandatoryFields}
+                            />
+                          }
+                          editMode={editMode}
+                          setValue={setParentBName}
+                          required={is_18 === "no" && student.Status === "active"}
+                        />
+                      </div>
                     </div>
-                  </div>
-                </>
-              )}
+                  </>
+                )}
               {is_18 === "no" && (
                 <div
                   style={{

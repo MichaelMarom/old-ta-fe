@@ -204,7 +204,7 @@ const StudentFaculties = () => {
 
   const getFacultiesOption = async () => {
     let list = await get_faculty();
-    list?.length && set_faculties(list);
+    !list?.reposnse?.data && set_faculties(list);
   };
   useEffect(() => {
     getFacultiesOption();

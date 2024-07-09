@@ -38,8 +38,8 @@ const Schedules = () => {
             setLoading(true)
             const data = await get_student_events(studentId);
             setLoading(false)
-
-            if (!data?.response?.data || !data) {
+            console.log(data)
+            if (!data?.response?.data) {
                 const reservedSlotsArray = data?.map(item => JSON.parse(item.reservedSlots)).flat();
                 const bookedSlotsArray = data?.map(item => JSON.parse(item.bookedSlots)).flat();
                 setReservedSlots(reservedSlotsArray);
@@ -115,7 +115,7 @@ const Schedules = () => {
                         eventPropGetter={eventPropGetter}
                         startAccessor="start"
                         selectable={true}
-                        onDoubleClickEvent={(s)=>console.log(s)}
+                        onDoubleClickEvent={(s) => console.log(s)}
                         // onSelectSlot={(sloty) => console.log(sloty)}
                         endAccessor="end"
                         style={{ minHeight: "100%" }}

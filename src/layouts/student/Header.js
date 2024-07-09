@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-// import { getBookedSlot } from "../../axios/student";
 import { useDispatch, useSelector } from "react-redux";
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight, FaSignOutAlt } from "react-icons/fa";
 import Tooltip from "../../components/common/ToolTip";
@@ -12,7 +11,7 @@ import { moment } from "../../config/moment";
 import { statesColours } from "../../constants/constants";
 import Avatar from "../../components/common/Avatar";
 
-import collabVideo from '../../assets/videos/collaboration.mp4'
+import collabVideo from '../../assets/videos/collaboration.mp4';
 import { PiVideoBold } from "react-icons/pi";
 import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
 
@@ -20,7 +19,7 @@ const Header = () => {
   const { signOut } = useClerk();
   let nav = useNavigate();
   const [activeTab, setActiveTab] = useState("");
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   const dispatch = useDispatch();
   const [filteredSessions, setFilteredSessions] = useState([]);
@@ -75,10 +74,10 @@ const Header = () => {
   };
 
   const handleSignOut = () => {
-    localStorage.removeItem('access_token')
-    localStorage.removeItem('student_user_id')
-    localStorage.removeItem('tutor_user_id')
-    localStorage.removeItem('user')
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('student_user_id');
+    localStorage.removeItem('tutor_user_id');
+    localStorage.removeItem('user');
     dispatch(setUser({}));
     dispatch(setTutor({}));
     dispatch(setStudent({}));
@@ -129,7 +128,6 @@ const Header = () => {
             whiteSpace: "nowrap",
             marginLeft: "20px",
             display: !student.ScreenName ? "none" : "flex",
-            // background: statesColours[student.Status]?.bg,
             color: statesColours[student.Status]?.bg,
           }}
         >
@@ -137,7 +135,6 @@ const Header = () => {
             <Avatar avatarSrc={student.Photo} size="35" indicSize="8px" />
           </div>
           <div className="flex">
-
             <div style={{ fontWeight: "bold" }}>{student.ScreenName}</div>
             <div style={{ fontSize: "12px", fontWeight: "700" }}>
               {StatusValues[student.Status]}
@@ -153,60 +150,60 @@ const Header = () => {
             margin: "0 50px",
           }}
         >
-          {tabs.map((tab) => (<>
-            <li
-              key={tab.url}
-              data-url={tab.url}
-              onClick={handleTabClick}
-              id={
-                activeTab.includes(tab.url) ||
+          {tabs.map((tab) => (
+            <React.Fragment key={tab.url}>
+              <li
+                data-url={tab.url}
+                onClick={handleTabClick}
+                id={
+                  activeTab.includes(tab.url) ||
                   (activeTab.split("/").length > 3 &&
                     activeTab.split("/")[2] === tab.url)
-                  ? "tutor-tab-header-list-active"
-                  : ""
-              }
-            >
-              <h5 className="m-0" style={{ transform: "skew(40deg, 0deg)", fontSize: "14px" }}>
-                {tab.name}
-                {!!filteredSessions.length && tab.url === "/student/feedback" && (
-                  <span
-                    className=" text-bg-danger p-1 rounded-circle"
-                    style={{
-                      display: "inline-flex",
-                      width: "19px",
-                      height: "19px",
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      position:"absolute",
-                      fontSize:"10px",
-                      bottom:"6px"
-                    }}
-                  >
-                    {filteredSessions.length}
-                  </span>
-                )}
-              </h5>
-            </li>
-            {tab.video && <div className="cursor-pointer mx-2 video-nav-icon" style={{ transform: "skew(0)" }}
+                    ? "tutor-tab-header-list-active"
+                    : ""
+                }
+              >
+                <h5 className="m-0" style={{ transform: "skew(40deg, 0deg)", fontSize: "14px" }}>
+                  {tab.name}
+                  {!!filteredSessions.length && tab.url === "/student/feedback" && (
+                    <span
+                      className=" text-bg-danger p-1 rounded-circle"
+                      style={{
+                        display: "inline-flex",
+                        width: "19px",
+                        height: "19px",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "absolute",
+                        fontSize: "10px",
+                        bottom: "6px"
+                      }}
+                    >
+                      {filteredSessions.length}
+                    </span>
+                  )}
+                </h5>
+              </li>
+              {tab.video && (
+                <div className="cursor-pointer mx-2 video-nav-icon" style={{ transform: "skew(0)" }}
                   onClick={() => setIsOpen(tab.url)}>
                   <PiVideoBold color={location.pathname === tab.url ? '#ff4e4e' : "rgb(153 132 132)"}
                     size="28" className="video-nav-icon" />
-                </div>}
-                <div className="text-light" style={{ fontWeight: "bold" }}>|</div>
-            </>
+                </div>
+              )}
+              <div className="text-light" style={{ fontWeight: "bold" }}>|</div>
+            </React.Fragment>
           ))}
         </ul>
-        
         <TabInfoVideoToast video={tabs.find(tab => tab.url === isOpen)?.video} isOpen={isOpen} setIsOpen={setIsOpen} />
-
         <div
           className="d-flex border rounded p-1 justify-content-center align-items-center "
           style={{ marginRight: "20px", cursor: "pointer" }}
           onClick={() => signOut(() => handleSignOut())}
         >
           <p className="text-danger m-0">Signout</p>
-            <FaSignOutAlt color="red" />
+          <FaSignOutAlt color="red" />
         </div>
         <div
           style={{
