@@ -114,9 +114,9 @@ function AddSMSTemps() {
                     height={80}
                     required
                   />
-                  <div>
+                  {/* <div>
                     <FileUpload />
-                  </div>
+                  </div> */}
                 </div>
               ) : (
                 <p className="me-auto">{sms.text}</p>

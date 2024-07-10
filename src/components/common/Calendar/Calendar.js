@@ -28,6 +28,7 @@ import useDebouncedEffect from "../../../hooks/DebouceWithDeps";
 import { TutorEventModal } from "../EventModal/TutorEventModal/TutorEventModal";
 import { setStudentSessions } from "../../../redux/student/studentSessions";
 import { FeedbackMissing } from "./ToastMessages";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 
 const views = {
   WEEK: "week",

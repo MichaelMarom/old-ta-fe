@@ -102,7 +102,7 @@ const TutorTable = () => {
       return toast.warning(`You already on "${status}" Status`);
     setUpdatingStatus(true);
     let response = await set_tutor_status(id, status);
-    phone.startsWith("+1") && await send_sms({
+    !!phone && !!phone.startsWith("+1") && await send_sms({
       message: `Your account is currently in "${status}" state.`,
       numbers: [phone.replace("+", "")],
       id

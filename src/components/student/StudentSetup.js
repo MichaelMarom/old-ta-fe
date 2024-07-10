@@ -54,7 +54,7 @@ const StudentSetup = () => {
   let [zipCode, set_zipCode] = useState("");
   let [country, set_country] = useState("");
   let [timeZone, set_timeZone] = useState("");
-  let [is_18, set_is_18] = useState("");
+  let [is_18, set_is_18] = useState(false);
   let [lang, set_lang] = useState("");
   let [parentConsent, set_parentConsent] = useState(false);
   let [grade, set_grade] = useState("");
@@ -117,7 +117,7 @@ const StudentSetup = () => {
       upload_student_setup_by_fields(id, {
         Language: lang,
         SecLan: secLan,
-        Over18: is_18 === "yes" ? true : false,
+        Over18: is_18,
         Cell: cell,
         Grade: grade,
         Address1: add1,
@@ -153,7 +153,7 @@ const StudentSetup = () => {
         ParentBEmail: parentBEmail,
         ParentAName: parentAName,
         ParentBName: parentBName,
-        Over18: is_18 === "yes" ? true : false,
+        Over18: is_18,
         Cell: cell,
         Grade: grade,
         Address1: add1,
@@ -219,7 +219,7 @@ const StudentSetup = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const currentState = {
     Address2: add2,
-    AgeGrade: is_18,
+    Over18: is_18,
     Cell: cell,
     City: city,
     Country: country,
@@ -263,7 +263,7 @@ const StudentSetup = () => {
           set_zipCode(data.ZipCode);
           set_add1(data.Address1);
           set_add2(data.Address2);
-          set_is_18(data.AgeGrade);
+          set_is_18(data.Over18);
           set_lang(data.Language);
           set_grade(data.Grade);
           let list = [...document.querySelectorAll(".parentConsentOption")];
@@ -487,7 +487,7 @@ const StudentSetup = () => {
     { name: "fname", filled: !!fname?.length, value: fname },
     { name: "lname", filled: !!sname?.length, value: sname },
     { name: "phone", filled: !!cell, value: cell },
-    { name: "over18", filled: !!is_18?.length, value: is_18 },
+    // { name: "over18", filled: !!is_18?.length, value: is_18 },
     { name: "gmt", filled: !!timeZone?.length, value: timeZone },
     { name: "grade", filled: !!grade?.length, value: grade },
     { name: "nativeLang", filled: !!lang?.length, value: lang },
@@ -676,7 +676,7 @@ const StudentSetup = () => {
                 </div>
               </div>
 
-              <div className="input-group mb-2 ">
+              {/* <div className="input-group mb-2 ">
                 <Select
                   editMode={editMode}
                   label={
@@ -696,7 +696,7 @@ const StudentSetup = () => {
                   <option value="yes">Yes</option>
                   <option value="no">No</option>
                 </Select>
-              </div>
+              </div> */}
 
               <div className="input-group mb-2">
                 <Select
@@ -948,6 +948,20 @@ const StudentSetup = () => {
                   ))}
                 </Select>
               </div>
+              <div className="form-check d-flex gap-2 align-items-center" >
+                <input
+                style={{width:"20px", height:"20px"}}
+                  type="checkbox"
+                  className="form-check-input"
+                  id="exampleCheckbox"
+                  disabled={!editMode}
+                  checked={is_18}
+                  onChange={(e)=>set_is_18(e.target.value)}
+                />
+                <label className="form-check-label" htmlFor="exampleCheckbox">
+                 Are you Over 18?
+                </label>
+              </div>
             </div>
           </div>
           {
@@ -974,7 +988,7 @@ const StudentSetup = () => {
                           }
                           editMode={editMode}
                           setValue={setParentAEmail}
-                          required={is_18 === "no" && student.Status === "active"}
+                          required={!is_18  && student.Status === "active"}
                         />
                       </div>
 
@@ -991,7 +1005,7 @@ const StudentSetup = () => {
                           }
                           editMode={editMode}
                           setValue={setParentAName}
-                          required={is_18 === "no" && student.Status === "active"}
+                          required={!is_18  && student.Status === "active"}
                         />
                       </div>
                     </div>

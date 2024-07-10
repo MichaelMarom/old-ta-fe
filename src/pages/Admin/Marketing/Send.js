@@ -153,7 +153,7 @@ const Marketing = () => {
 
   return (
     <Layout>
-      <div className='container m-auto w-100'>
+      <div className='container m-auto w-100' style={{height:"calc(100vh - 80px)", overflowY:"auto"}}>
         <input type="file" onChange={handleFileUpload} />
         <div className='d-flex w-100'>
           <div className='d-flex flex-column' style={{ width: "60%" }}>
@@ -221,7 +221,7 @@ const Marketing = () => {
               {fileUploaded && !data.length && <p className='text-danger'>No record found</p>}
             </div>
           </div>
-          <div className='rounded border p-2 m-2 shadow ' style={{ width: "40%" }}>
+          <div className='rounded border p-2 m-2 shadow ' style={{ width: "40%"}}>
             <form onSubmit={handleSubmit}>
               <div className='d-flex ' style={{ gap: "5px" }}>
 
@@ -274,6 +274,10 @@ const Marketing = () => {
                       />
                     </div>
                   ))}
+                   {selectedTemplate.id&&  <div className='border p-2 m-2 shadow'>
+                 <h6 style={{fontWeight:"bold"}}> Message:</h6> 
+                 <div style={{maxHeight:"50vh", overflowY:"auto"}}  dangerouslySetInnerHTML={{__html:selectedTemplate.text}}></div>
+                  </div>}
                 </div> :
                 <>
 
@@ -300,6 +304,9 @@ const Marketing = () => {
                       />
                     </div>
                   ))}
+                {selectedSmsTemp.id&&  <div className='border p-2 m-2 shadow'>
+                 <h6 style={{fontWeight:"bold"}}> Message:</h6> {selectedSmsTemp.text}
+                  </div>}
                   {/* <div className='d-flex justify-content-between'>
                     <label className='d-inline'>Message</label>
                     <p className='text-sm text-secondary text-end d-inline w-75'

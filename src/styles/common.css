@@ -3,7 +3,8 @@ div {
   font-family: "Roboto", sans-serif;
 }
 
-.roboto-thin,p {
+.roboto-thin,
+p {
   font-family: "Roboto", sans-serif;
   font-weight: 100;
   font-style: normal;
@@ -18,8 +19,7 @@ div {
 .roboto-regular,
 h4,
 h5,
-h6
- {
+h6 {
   font-family: "Roboto", sans-serif;
   font-weight: 400;
   font-style: normal;
@@ -283,7 +283,7 @@ h1 {
   padding: 0;
   width: 100px;
   height: 50px;
-  border: 2px solid #888888;
+  border: 2px solid #e1e1e1;
   outline: none;
   background-color: #f4f5f6;
   border-radius: 40px;
@@ -388,7 +388,7 @@ h1 {
   height: 100%;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr;
-  box-shadow: inset 0px -8px 0px #dddddd, 0px -8px 0px #f4f5f6;
+  box-shadow: inset 0px -8px 0px #dddddd, 0px 0px 0px #f4f5f6;
   border-radius: 40px;
   transition: 0.13s ease-in-out;
   z-index: 1;
@@ -424,7 +424,6 @@ h1 {
   background-clip: text;
   transition: 0.13s ease-in-out;
 }
-
 
 .action-btn.saving-btn {
   position: relative;
@@ -496,6 +495,13 @@ h1 {
   -moz-background-clip: text;
   background-clip: text;
   transition: 0.13s ease-in-out;
+}
+
+
+.btn.disabled,
+.btn:disabled,
+fieldset:disabled .btn {
+  border: 2px solid #e1e1e1;
 }
 
 
@@ -630,7 +636,7 @@ h1 {
 }
 
 .input__label {
-  
+
   position: absolute;
 
   left: 0;
