@@ -1,157 +1,171 @@
-// utils/slotUtils.js
-
 import moment from "moment";
+import { convertToDate, views } from "../Calendar";
+import {
+  getSecond30MinsSlotWhenDoubleClick,
+  isEventAlreadyExist,
+  isPastDate,
+} from "./calenderUtils";
+import { toast } from "react-toastify";
 
 export const handleSlotDoubleClick = (
   slotInfo,
   reservedSlots,
   bookedSlots,
-  convertToDate,
-  toast,
   disableColor,
   isStudentLoggedIn,
   activeView,
-  views,
+
   setEnableHourSlots,
   setEnabledDays,
   setDisableDateRange,
   setDisableDates,
-  disableWeekDays
+  disableWeekDays,
+  enableHourSlots,
+  enabledDays,
+
+  setDisableHourSlots,
+  disableHourSlots,
+  disableDates
 ) => {
-  console.log(slotInfo);
-  const clickedDate = slotInfo.start;
-  const dayName = moment(clickedDate).format("dddd");
-  const formattedTime = moment(clickedDate).format("h:00 a");
+  // console.log(
+  //   slotInfo,
+  //   reservedSlots,
+  //   bookedSlots,
+  //   toast,
+  //   disableColor,
+  //   isStudentLoggedIn,
+  //   activeView,
+  //
+  //   setEnableHourSlots,
+  //   setEnabledDays,
+  //   setDisableDateRange,
+  //   setDisableDates,
+  //   disableWeekDays,
+  //   enableHourSlots,
+  //   enabledDays
+  // );
 
-  const secSlot = moment(convertToDate(slotInfo.start)).minutes() === 30;
-  let endTime = secSlot
-    ? moment(convertToDate(slotInfo.start)).subtract(30, "minutes").toDate()
-    : slotInfo.end;
+  //do nothing on single click
+  // const clickedUpperSlot =
+  //   moment(convertToDate(slotInfo.end)).diff(
+  //     moment(convertToDate(slotInfo.start)),
+  //     "days"
+  //   ) === 1;
 
-  // Check if the event already exists
-  const isEventAlreadyExist = reservedSlots
-    .concat(bookedSlots)
-    ?.some((event) =>
-      [event.start, event.end].some(
-        (date) =>
-          convertToDate(date).getTime() === clickedDate.getTime() ||
-          date.getTime() === slotInfo.end.getTime()
-      )
-    );
-
-  // Error handling and validations
-  if (!isStudentLoggedIn && !disableColor) {
-    return toast.warning("Please select a color before disabling slots!");
-  }
-
-  if (isEventAlreadyExist && slotInfo.action === "doubleClick") {
-    toast.warning(
-      "This time slot is already reserved. Please select from available slots."
-    );
-    return;
-  }
-
-  const clickedUpperSlot =
-    moment(convertToDate(slotInfo.end)).diff(
-      moment(convertToDate(slotInfo.start)),
-      "days"
-    ) === 1;
-
-  if (clickedUpperSlot && activeView !== views.MONTH) return;
-
+  // if (clickedUpperSlot && activeView !== views.MONTH) return;
   if (
-    clickedDate.getTime() < new Date().getTime() &&
-    slotInfo.action === "doubleClick"
-  ) {
-    return toast.warning(
-      `Cannot ${
-        !isStudentLoggedIn ? "Disable/Enable " : "Book/Reserve "
-      } older slots.`
-    );
-  }
+    haveErrorsWhenDoubleClick(
+      slotInfo,
+      disableColor,
+      isStudentLoggedIn,
+      reservedSlots.concat(bookedSlots)
+    )
+  )
+    return;
+
+  // const secSlot = moment(convertToDate(slotInfo.start)).minutes() === 30;
+  // let endTime = secSlot
+  //   ? moment(convertToDate(slotInfo.start)).subtract(30, "minutes").toDate()
+  //   : slotInfo.end;
+
+  const endTime = getSecond30MinsSlotWhenDoubleClick(
+    slotInfo.start,
+    slotInfo.end
+  );
 
   // Delegate further handling based on user type (student/tutor)
   if (!isStudentLoggedIn) {
     handleSlotDoubleClickForTutor(
       slotInfo,
-      dayName,
-      formattedTime,
       endTime,
       disableWeekDays,
       activeView,
-      views,
-      convertToDate,
-      setEnableHourSlots
+
+      setEnableHourSlots,
+
+      setEnabledDays,
+      enableHourSlots,
+      setDisableDates,
+      enabledDays,
+      disableDates
     );
   } else {
     handleSlotDoubleClickForStudent(
       slotInfo,
-      dayName,
-      formattedTime,
       activeView,
-      views,
-      convertToDate,
+
       setDisableDateRange,
-      setDisableDates
+      setDisableDates,
+
+      setDisableHourSlots,
+      setEnableHourSlots,
+      enableHourSlots,
+      disableHourSlots,
+      disableDates,
+      reservedSlots
     );
   }
 };
 
 export const handleSlotDoubleClickForTutor = (
   slotInfo,
-  dayName,
-  formattedTime,
   endTime,
   disableWeekDays,
   activeView,
-  views,
-  convertToDate,
+
   setEnableHourSlots,
 
-  setEnabledDays
+  setEnabledDays,
+  enableHourSlots,
+  setDisableDates,
+  enabledDays,
+
+  disableDates
 ) => {
+  const dayName = moment(slotInfo.start).format("dddd");
+  console.log(disableWeekDays, disableWeekDays.includes(dayName));
   if (disableWeekDays && disableWeekDays.includes(dayName)) {
     handleDisableWeekday(
       slotInfo,
       endTime,
       activeView,
-      views,
-      convertToDate,
-      setEnableHourSlots
+
+      setEnableHourSlots,
+      enableHourSlots,
+      setDisableDates,
+      disableDates
     );
   } else {
-    handleDisableDate(slotInfo, convertToDate, setEnabledDays);
+    handleDisableDate(slotInfo, setEnabledDays, enabledDays);
   }
 };
 
 export const handleSlotDoubleClickForStudent = (
   slotInfo,
-  dayName,
-  formattedTime,
   activeView,
-  views,
-  convertToDate,
+
   setDisableDateRange,
   setDisableDates,
 
   setDisableHourSlots,
-  setEnableHourSlots
+  setEnableHourSlots,
+  enableHourSlots,
+  disableHourSlots,
+  disableDates,
+  reservedSlots
 ) => {
   if (activeView === views.MONTH) {
-    handleSlotMonthView(
-      slotInfo,
-      convertToDate,
-      setDisableDateRange,
-      setDisableDates
-    );
+    handleSlotMonthView(slotInfo, setDisableDateRange, setDisableDates);
   } else {
     handleSlotWeekDayView(
       slotInfo,
-      dayName,
-      formattedTime,
-      convertToDate,
       setDisableHourSlots,
-      setEnableHourSlots
+      setEnableHourSlots,
+
+      disableHourSlots,
+      disableDates,
+      enableHourSlots,
+      reservedSlots
     );
   }
 };
@@ -161,14 +175,12 @@ const handleDisableWeekday = (
   slotInfo,
   endTime,
   activeView,
-  views,
-  convertToDate,
+
   setEnableHourSlots,
 
   enableHourSlots,
-  setDisableDateRange,
   setDisableDates,
-  enabledDays
+  disableDates
 ) => {
   if (activeView !== views.MONTH) {
     const slotStart = convertToDate(slotInfo.start);
@@ -182,59 +194,57 @@ const handleDisableWeekday = (
       const updatedEnableHourSlots = enableHourSlots.filter(
         (date) =>
           convertToDate(date).getTime() !== slotStart.getTime() &&
-          date.getTime() !== endTime.getTime()
+          convertToDate(date).getTime() !== endTime.getTime()
       );
       setEnableHourSlots(updatedEnableHourSlots);
     }
   } else {
-    handleMonthViewDisable(
-      slotInfo,
-      convertToDate,
-      setDisableDateRange,
-      setDisableDates
-    );
+    handleMonthViewDisable(slotInfo, setDisableDates, disableDates);
   }
 };
 
-const handleDisableDate = (slotInfo, 
-    convertToDate,
-    setEnabledDays,
+const handleDisableDate = (
+  slotInfo,
+  setEnabledDays,
 
-    enabledDays
-    ) => {
+  enabledDays
+) => {
   const slotStart = convertToDate(slotInfo.start);
   const existingEnabledDayIndex = enabledDays.findIndex(
     (date) => convertToDate(date).getTime() === slotStart.getTime()
   );
+  console.log(enabledDays, existingEnabledDayIndex)
 
   if (existingEnabledDayIndex === -1) {
     setEnabledDays([...enabledDays, slotStart]);
   } else {
+    
     const updatedEnabledDays = enabledDays.filter(
       (date) => convertToDate(date).getTime() !== slotStart.getTime()
-    );
+      );
+      console.log(enabledDays, updatedEnabledDays)
     setEnabledDays(updatedEnabledDays);
   }
 };
 
 const handleMonthViewDisable = (
   slotInfo,
-  convertToDate,
-  setDisableDateRange,
   setDisableDates,
 
   disableDates
 ) => {
   const existingDisableDateIndex = disableDates.findIndex(
     (date) => convertToDate(date).getTime() === slotInfo.start.getTime()
-  );
-
+    );
+    
+    console.log(disableDates,existingDisableDateIndex)
   if (existingDisableDateIndex === -1) {
     setDisableDates([...disableDates, slotInfo.start]);
   } else {
     const updatedDisableDates = disableDates.filter(
       (date) => convertToDate(date).getTime() !== slotInfo.start.getTime()
     );
+    console.log(disableDates,updatedDisableDates)
     setDisableDates(updatedDisableDates);
   }
 };
@@ -242,7 +252,6 @@ const handleMonthViewDisable = (
 // Handling slot actions for student
 const handleSlotMonthView = (
   slotInfo,
-  convertToDate,
   setDisableDateRange,
   setDisableDates,
 
@@ -286,14 +295,13 @@ const handleSlotMonthView = (
 
 const handleSlotWeekDayView = (
   slotInfo,
-  dayName,
-  formattedTime,
-  convertToDate,
   setDisableHourSlots,
   setEnableHourSlots,
 
   disableHourSlots,
-  disableDates
+  disableDates,
+  enableHourSlots,
+  reservedSlots
 ) => {
   const existInDisabledDate = disableDates?.some((storeDate) => {
     const slotDateMoment = moment(convertToDate(slotInfo.start));
@@ -308,20 +316,20 @@ const handleSlotWeekDayView = (
   );
 
   if (existInDisableHourSlots || existInDisabledDate) {
-    handleDisableHourSlots(slotInfo, convertToDate, setDisableHourSlots);
+    handleDisableHourSlots(slotInfo, setDisableHourSlots);
   } else {
     handleEnableHourSlots(
       slotInfo,
-      formattedTime,
-      convertToDate,
-      setEnableHourSlots
+      setEnableHourSlots,
+      disableHourSlots,
+      enableHourSlots,
+      reservedSlots
     );
   }
 };
 
 const handleDisableHourSlots = (
   slotInfo,
-  convertToDate,
   setDisableHourSlots,
 
   disableHourSlots,
@@ -358,10 +366,7 @@ const handleDisableHourSlots = (
 
 const handleEnableHourSlots = (
   slotInfo,
-  formattedTime,
-  convertToDate,
   setEnableHourSlots,
-
   disableHourSlots,
   enableHourSlots,
   reservedSlots
@@ -392,4 +397,30 @@ const handleEnableHourSlots = (
       setEnableHourSlots(updatedEnableHourSlots);
     }
   }
+};
+
+const haveErrorsWhenDoubleClick = (
+  slotInfo,
+  disableColor,
+  isStudentLoggedIn,
+  lessons
+) => {
+  if (slotInfo.action === "click") return true;
+  if (!isStudentLoggedIn && !disableColor) {
+    return toast.warning("Please select a color before disabling slots!");
+  }
+  if (isEventAlreadyExist(lessons, slotInfo)) {
+    return toast.warning(
+      "This time slot is already reserved. Please select from available slots."
+    );
+  }
+  if (isPastDate(slotInfo.start)) {
+    return toast.warning(
+      `Cannot ${
+        !isStudentLoggedIn ? "Disable/Enable " : "Book/Reserve"
+      } older slots.`
+    );
+  }
+
+  return false;
 };

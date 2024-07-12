@@ -1,5 +1,6 @@
 import moment from "moment";
-import { useCallback } from 'react';
+import { useCallback } from "react";
+import { convertToDate } from "../Calendar";
 
 export const isBetweenVacationRange = (
   date,
@@ -22,8 +23,26 @@ export const isBetweenVacationRange = (
 };
 
 export const isFutureDate = (date) => date.getTime() >= new Date().getTime();
+export const isPastDate = (date) => date.getTime() < new Date().getTime();
 
-// Add more utility functions as needed...
+export const isEventAlreadyExist = (lessons, slotInfo) => {
+  return lessons?.some((event) =>
+    [event.start, event.end].some(
+      (date) =>
+        convertToDate(date).getTime() === slotInfo.start.getTime() ||
+        convertToDate(date).getTime() === slotInfo.end.getTime()
+    )
+  );
+};
+
+export const getSecond30MinsSlotWhenDoubleClick = (start, end) =>{
+  const secSlot = moment(convertToDate(start)).minutes() === 30;
+  let endTime = secSlot
+    ? moment(convertToDate(start)).subtract(30, "minutes").toDate()
+    : end;
+
+    return endTime
+}
 
 export const convertToGmt = (date) => {
   return date;
@@ -33,19 +52,23 @@ export const filterOtherStudentAndTutorSession = (
   givenReservedSlots = [],
   givenBookedSlots,
 
-tutor,
-selectedTutor,
-isStudentLoggedIn,
-reservedSlots,
-student,
-bookedSlots,
-//   tutorId = isStudentLoggedIn ? selectedTutor.academyId : tutor.AcademyId,
+  tutorIdPassed,
+  studentIdPassed,
+
+  tutor,
+  selectedTutor,
+  isStudentLoggedIn,
+  reservedSlots,
+  student,
+  bookedSlots,
+  //   tutorId = isStudentLoggedIn ? selectedTutor.academyId : tutor.AcademyId,
 
   studentId
 ) => {
-
-  let tutorId = isStudentLoggedIn ? selectedTutor.academyId : tutor.AcademyId;
-
+  let tutorId =
+    tutorIdPassed || isStudentLoggedIn
+      ? selectedTutor.academyId
+      : tutor.AcademyId;
 
   let updatedReservedSlots = (
     givenReservedSlots.length ? givenReservedSlots : reservedSlots
@@ -73,12 +96,12 @@ bookedSlots,
   };
 };
 
-
-
-//slot prop getter
-
-
-export const checkDateBetweenVacation = (date, startVacation, endVacation, vacationMode) => {
+export const checkDateBetweenVacation = (
+  date,
+  startVacation,
+  endVacation,
+  vacationMode
+) => {
   const checkDate = moment.utc(date);
   const startDate = moment.utc(startVacation).utc();
   const endDate = moment.utc(endVacation).utc();
@@ -86,7 +109,13 @@ export const checkDateBetweenVacation = (date, startVacation, endVacation, vacat
   return vacationMode && checkDate.isBetween(startDate, endDate, null, "[]");
 };
 
-export const checkDisableWeekTimeSlots = (date, weekDaysTimeSlots, timeZone, timeDifference, isStudentLoggedIn) => {
+export const checkDisableWeekTimeSlots = (
+  date,
+  weekDaysTimeSlots,
+  timeZone,
+  timeDifference,
+  isStudentLoggedIn
+) => {
   return weekDaysTimeSlots?.some((slot) => {
     const dateMoment = moment(date).tz(timeZone);
     const slotTimeZoneMoment = isStudentLoggedIn
@@ -97,13 +126,15 @@ export const checkDisableWeekTimeSlots = (date, weekDaysTimeSlots, timeZone, tim
   });
 };
 
-export const checkReservedSlots = (date, reservedSlots, convertToDate) => {
+export const checkReservedSlots = (date, reservedSlots) => {
   return reservedSlots?.some((slot) => {
-    return convertToDate(convertToDate(slot.start)).getTime() === date.getTime();
+    return (
+      convertToDate(convertToDate(slot.start)).getTime() === date.getTime()
+    );
   });
 };
 
-export const checkSelectedSlots = (date, selectedSlots, convertToDate) => {
+export const checkSelectedSlots = (date, selectedSlots) => {
   const existInSelectedSlotStart = selectedSlots?.some(
     (slot) => slot.start.getTime() === date.getTime()
   );
@@ -117,7 +148,7 @@ export const checkSelectedSlots = (date, selectedSlots, convertToDate) => {
   return { existInSelectedSlotStart, existInSelectedSlotEnd };
 };
 
-export const checkEnableSlots = (date, enableHourSlots, convertToDate) => {
+export const checkEnableSlots = (date, enableHourSlots) => {
   return enableHourSlots?.some((dateTime) => {
     const slotUTCTime = moment.utc(date);
     const enabledSlotUTCTime = moment(convertToDate(dateTime));
@@ -125,8 +156,10 @@ export const checkEnableSlots = (date, enableHourSlots, convertToDate) => {
   });
 };
 
-export const checkDisableHourSlots = (date, disableHourSlots, convertToDate) => {
-  return disableHourSlots?.some((dateTime) => convertToDate(dateTime).getTime() === date.getTime());
+export const checkDisableHourSlots = (date, disableHourSlots) => {
+  return disableHourSlots?.some(
+    (dateTime) => convertToDate(dateTime).getTime() === date.getTime()
+  );
 };
 
 export const checkDefaultHours = (date, disabledHours, formattedTime) => {
@@ -138,8 +171,18 @@ export const checkDefaultHours = (date, disabledHours, formattedTime) => {
     if (endTime.isBefore(startTime)) {
       return (
         slot[0] === formattedTime &&
-        (momentTime.isBetween(startTime, moment("11:59 PM", "h:mm A"), undefined, "[]") ||
-          momentTime.isBetween(moment("12:00 AM", "h:mm A"), endTime, undefined, "[]"))
+        (momentTime.isBetween(
+          startTime,
+          moment("11:59 PM", "h:mm A"),
+          undefined,
+          "[]"
+        ) ||
+          momentTime.isBetween(
+            moment("12:00 AM", "h:mm A"),
+            endTime,
+            undefined,
+            "[]"
+          ))
       );
     }
 
@@ -152,5 +195,7 @@ export const checkDefaultHours = (date, disabledHours, formattedTime) => {
 
 export const checkDisableDates = (date, disableDates) => {
   const twentyFourHoursAgo = moment(date).subtract(24, "hours");
-  return disableDates?.some((slot) => moment(slot).isBetween(twentyFourHoursAgo, moment(date)));
+  return disableDates?.some((slot) =>
+    moment(slot).isBetween(twentyFourHoursAgo, moment(date))
+  );
 };

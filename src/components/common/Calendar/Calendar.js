@@ -31,12 +31,19 @@ import { FeedbackMissing } from "./ToastMessages";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { convertToGmt } from "./utils/calenderUtils";
 import useEventPropGetter from "./hooks/useEventPropGetter";
-import { handleBulkEventCreate, handleDeleteSessionByTutor, handlePostpone, handleRemoveReservedSlot, handleRescheduleSession, handleSetReservedSlots } from "./utils/actions";
+import {
+  handleBulkEventCreate,
+  handleDeleteSessionByTutor,
+  handlePostpone,
+  handleRemoveReservedSlot,
+  handleRescheduleSession,
+  handleSetReservedSlots,
+} from "./utils/actions";
 import { handleSlotDoubleClick } from "./utils/SlotDoubleClick";
 import useDayPropGetter from "./hooks/useDayPropGetter";
 import useSlotPropGetter from "./hooks/useSlotPropGetter";
 
-const views = {
+export const views = {
   WEEK: "week",
   DAY: "day",
   MONTH: "month",
@@ -95,7 +102,6 @@ const ShowCalendar = ({
   const { student } = useSelector((state) => state.student);
   const tutorId = selectedTutor.academyId;
   const studentId = student?.AcademyId;
-  console.log(studentId, selectedTutor);
   const subjectName = selectedTutor?.subject;
   const [weekDaysTimeSlots, setWeekDaysTimeSlots] = useState([]);
 
@@ -148,7 +154,6 @@ const ShowCalendar = ({
       isStudentLoggedIn ? selectedTutor.academyId : tutorAcademyId
     );
     if (Object.keys(result ? result : {}).length) {
-      console.log(result);
       const updatedEnableHours = getTimeZonedEnableHours(
         JSON.parse(
           result.enableHourSlots === "undefined" ? "[]" : result.enableHourSlots
@@ -432,14 +437,7 @@ const ShowCalendar = ({
           event: (event) => (
             <CustomEvent
               {...event}
-              handleSetReservedSlots={()=>handleSetReservedSlots(dispatch,
-                studentId,
-                tutorId,
-                subjectName,
-                reservedSlots,
-                bookedSlots,
-                isStudentLoggedIn,
-                tutor)}
+              handleSetReservedSlots={handleSetReservedSlots}
               reservedSlots={reservedSlots}
               handleEventClick={handleEventClick}
               isStudentLoggedIn={isStudentLoggedIn}
@@ -451,7 +449,27 @@ const ShowCalendar = ({
         endAccessor="end"
         style={{ minHeight: "100%", width: "100%" }}
         step={30}
-        onSelectSlot={handleSlotDoubleClick}
+        onSelectSlot={(slotInfo) =>
+          handleSlotDoubleClick(
+            slotInfo,
+            reservedSlots,
+            bookedSlots,
+            disableColor,
+            isStudentLoggedIn,
+            activeView,
+            setEnableHourSlots,
+            setEnabledDays,
+            setDisableDateRange,
+            setDisableDates,
+            disableWeekDays,
+            enableHourSlots,
+            enabledDays,
+
+            setDisableHourSlots,
+            disableHourSlots,
+            disableDates
+          )
+        }
         dayPropGetter={dayPropGetter}
         slotPropGetter={slotPropGetter}
         onView={handleViewChange}
@@ -476,9 +494,31 @@ const ShowCalendar = ({
       <TutorEventModal
         isOpen={isTutorSideSessionModalOpen}
         onClose={onTutorModalRequestClose}
-        handleDeleteSessionByTutor={handleDeleteSessionByTutor}
+        handleDeleteSessionByTutor={() =>
+          handleDeleteSessionByTutor(
+            //
+            setIsTutorSideSessionModalOpen,
+            dispatch,
+            reservedSlots,
+            bookedSlots,
+            tutor,
+            clickedSlot,
+            navigate
+          )
+        }
         clickedSlot={clickedSlot}
-        handlePostpone={handlePostpone}
+        handlePostpone={() =>
+          handlePostpone(
+            //
+            setIsTutorSideSessionModalOpen,
+            dispatch,
+            reservedSlots,
+            bookedSlots,
+            tutor,
+            clickedSlot,
+            navigate
+          )
+        }
       />
     </div>
   );

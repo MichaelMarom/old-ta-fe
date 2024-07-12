@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import moment from "moment";
 import { convertToDate } from "../Calendar";
+import { isFutureDate } from "../utils/calenderUtils";
 
 const useDayPropGetter = ({
   disableWeekDays,
@@ -12,7 +13,7 @@ const useDayPropGetter = ({
   return useCallback(
     (date) => {
       const dayName = moment(date).format("dddd");
-      const isFutureDate = date.getTime() >= new Date().getTime();
+      // const isFutureDate = date.getTime() >= new Date().getTime();
 
       const existsInEnabledInMonth = enabledDays?.some(
         (arrayDate) => convertToDate(arrayDate).getTime() === date.getTime()
@@ -24,6 +25,7 @@ const useDayPropGetter = ({
         return arrayMomentDate.isSame(slotDateMoment, "day");
       });
 
+      console.log(disableDates, enabledDays)
       const isDisableDate = disableDates?.some((storeDate) => {
         const slotDateMoment = moment(date);
         const storedMomentDate = moment(storeDate);
@@ -31,11 +33,12 @@ const useDayPropGetter = ({
       });
 
       if (
-        isFutureDate &&
-        disableWeekDays &&
-        disableWeekDays?.includes(dayName) &&
-        !existsInEnabledInMonth &&
-        !existsInEnabledInWeek
+        (isFutureDate(date) &&
+          disableWeekDays &&
+          disableWeekDays?.includes(dayName) &&
+          !existsInEnabledInMonth &&
+          !existsInEnabledInWeek) ||
+        isDisableDate
       ) {
         return {
           style: {
@@ -49,7 +52,13 @@ const useDayPropGetter = ({
       }
       return {};
     },
-    [disableWeekDays, enabledDays, disableDates, disableColor, isStudentLoggedIn]
+    [
+      disableWeekDays,
+      enabledDays,
+      disableDates,
+      disableColor,
+      isStudentLoggedIn,
+    ]
   );
 };
 

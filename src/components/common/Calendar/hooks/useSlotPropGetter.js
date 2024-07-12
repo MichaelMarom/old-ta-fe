@@ -1,140 +1,166 @@
 import { useCallback } from "react";
-import {moment} from '../../../../config/moment';
-import { checkDateBetweenVacation, checkDefaultHours, checkDisableDates, checkDisableHourSlots, checkDisableWeekTimeSlots, checkEnableSlots, checkReservedSlots, checkSelectedSlots } from "../utils/calenderUtils";
+import { moment } from "../../../../config/moment";
+import {
+  checkDateBetweenVacation,
+  checkDefaultHours,
+  checkDisableDates,
+  checkDisableHourSlots,
+  checkDisableWeekTimeSlots,
+  checkEnableSlots,
+  checkReservedSlots,
+  checkSelectedSlots,
+  isFutureDate,
+} from "../utils/calenderUtils";
 
-const useSlotPropGetter = (
-    isStudentLoggedIn,
-    selectedTutor,
-    tutor,
-    weekDaysTimeSlots,
-    reservedSlots,
-    selectedSlots,
-    timeDifference,
-    timeZone,
-    enableHourSlots,
-    disableHourSlots,
-    disableDates,
-    disabledHours,
-    disableColor,
-    convertToDate
-  ) => {
-    return useCallback(
-      (date) => {
-        if (!date) return {};
-  
-        const formattedTime = moment(date).format("h:00 a");
-        const isFutureDate = date.getTime() >= new Date().getTime();
-  
-        const existBetweenVacationRange = checkDateBetweenVacation(
-          date,
-          isStudentLoggedIn ? selectedTutor.StartVacation : tutor.StartVacation,
-          isStudentLoggedIn ? selectedTutor.EndVacation : tutor.EndVacation,
-          isStudentLoggedIn ? selectedTutor.VacationMode : tutor.VacationMode
-        );
-  
-        const existInDisableWeekTimeSlots = checkDisableWeekTimeSlots(
-          date,
-          weekDaysTimeSlots,
-          timeZone,
-          timeDifference,
-          isStudentLoggedIn
-        );
-  
-        const existsinReservedSlots = checkReservedSlots(date, reservedSlots, convertToDate);
-  
-        const { existInSelectedSlotStart, existInSelectedSlotEnd } = checkSelectedSlots(date, selectedSlots, convertToDate);
-  
-        const existInEnableSlots = checkEnableSlots(date, enableHourSlots, convertToDate);
-  
-        const existInDisableHourSlots = checkDisableHourSlots(date, disableHourSlots, convertToDate);
-  
-        const existInDefaultHours = checkDefaultHours(date, disabledHours, formattedTime);
-  
-        const existInDisableDates = checkDisableDates(date, disableDates);
-  
-        // Switch checks
-        if (existsinReservedSlots) {
-          return {
-            className: "reserved-slot",
-          };
-        } else if (existInSelectedSlotStart) {
-          return {
-            className: "place-holder-start-slot",
-          };
-        } else if (existInSelectedSlotEnd) {
-          return {
-            className: "place-holder-end-slot",
-          };
-        } else if (existBetweenVacationRange) {
-          return {
-            style: {
-              backgroundColor: "rgb(226,244,227)",
-            },
-          };
-        } else if (
-          existInDisableHourSlots ||
-          (isStudentLoggedIn && existInDisableWeekTimeSlots && isFutureDate)
-        ) {
-          return {
-            style: {
-              backgroundColor: disableColor || "red",
-            },
-            className: "disable-slot",
-          };
-        } else if (
-          isFutureDate &&
-          disabledHours &&
-          disabledHours?.some((timeRange) => {
-            const [start] = timeRange;
-            return formattedTime === start;
-          }) &&
-          !existInEnableSlots &&
-          !existInDisableHourSlots
-        ) {
-          return {
-            style: {
-              backgroundColor: existInDefaultHours ? "lightgray" : disableColor,
-            },
-            className: "disabled-slot",
-            onClick: () => {
-              window.alert("This slot is blocked, please select a white slot.");
-            },
-          };
-        } else if (existInEnableSlots) {
-          return {
-            style: {
-              backgroundColor: "orange",
-            },
-            className: "enable-slot",
-          };
-        } else if (existInDisableDates) {
-          return {
-            style: {
-              backgroundColor: disableColor,
-            },
-          };
-        }
-  
-        return {};
-      },
-      [
-        disabledHours,
-        enableHourSlots,
-        disableHourSlots,
-        reservedSlots,
-        selectedSlots,
+const useSlotPropGetter = ({
+  isStudentLoggedIn,
+  selectedTutor,
+  tutor,
+  weekDaysTimeSlots,
+  reservedSlots,
+  selectedSlots,
+  timeDifference,
+  timeZone,
+  enableHourSlots,
+  disableHourSlots,
+  disableDates,
+  disabledHours,
+  disableColor,
+  convertToDate,
+}) => {
+  return useCallback(
+    (date) => {
+      if (!date) return {};
+
+      const formattedTime = moment(date).format("h:00 a");
+      // const isFutureDate(date) = date.getTime() >= new Date().getTime();
+
+      const existBetweenVacationRange = checkDateBetweenVacation(
+        date,
+        isStudentLoggedIn ? selectedTutor.StartVacation : tutor.StartVacation,
+        isStudentLoggedIn ? selectedTutor.EndVacation : tutor.EndVacation,
+        isStudentLoggedIn ? selectedTutor.VacationMode : tutor.VacationMode
+      );
+
+      const existInDisableWeekTimeSlots = checkDisableWeekTimeSlots(
+        date,
         weekDaysTimeSlots,
-        disableColor,
-        disableDates,
-        isStudentLoggedIn,
-        selectedTutor,
-        timeDifference,
         timeZone,
-        tutor,
-        convertToDate,
-      ]
-    );
-  };
-  
-  export default useSlotPropGetter;
-  
+        timeDifference,
+        isStudentLoggedIn
+      );
+
+      const existsinReservedSlots = checkReservedSlots(
+        date,
+        reservedSlots,
+        convertToDate
+      );
+
+      const { existInSelectedSlotStart, existInSelectedSlotEnd } =
+        checkSelectedSlots(date, selectedSlots, convertToDate);
+
+      const existInEnableSlots = checkEnableSlots(
+        date,
+        enableHourSlots,
+        convertToDate
+      );
+
+      const existInDisableHourSlots = checkDisableHourSlots(
+        date,
+        disableHourSlots,
+        convertToDate
+      );
+
+      const existInDefaultHours = checkDefaultHours(
+        date,
+        disabledHours,
+        formattedTime
+      );
+
+      const existInDisableDates = checkDisableDates(date, disableDates);
+
+      // Switch checks
+      if (existsinReservedSlots) {
+        return {
+          className: "reserved-slot",
+        };
+      } else if (existInSelectedSlotStart) {
+        return {
+          className: "place-holder-start-slot",
+        };
+      } else if (existInSelectedSlotEnd) {
+        return {
+          className: "place-holder-end-slot",
+        };
+      } else if (existBetweenVacationRange) {
+        return {
+          style: {
+            backgroundColor: "rgb(226,244,227)",
+          },
+        };
+      } else if (
+        existInDisableHourSlots ||
+        (isStudentLoggedIn && existInDisableWeekTimeSlots && isFutureDate(date))
+      ) {
+        return {
+          style: {
+            backgroundColor: disableColor || "red",
+          },
+          className: "disable-slot",
+        };
+      } else if (
+        isFutureDate(date) &&
+        disabledHours &&
+        disabledHours?.some((timeRange) => {
+          const [start] = timeRange;
+          return formattedTime === start;
+        }) &&
+        !existInEnableSlots &&
+        !existInDisableHourSlots
+      ) {
+        return {
+          style: {
+            backgroundColor: existInDefaultHours ? "lightgray" : disableColor,
+          },
+          className: "disabled-slot",
+          onClick: () => {
+            window.alert("This slot is blocked, please select a white slot.");
+          },
+        };
+      } else if (existInEnableSlots) {
+        return {
+          style: {
+            backgroundColor: "orange",
+          },
+          className: "enable-slot",
+        };
+      } else if (existInDisableDates) {
+        return {
+          style: {
+            backgroundColor: disableColor,
+          },
+        };
+      }
+
+      return {};
+    },
+    [
+      disabledHours,
+      enableHourSlots,
+      disableHourSlots,
+      reservedSlots,
+      selectedSlots,
+      weekDaysTimeSlots,
+      disableColor,
+      disableDates,
+      isStudentLoggedIn,
+      selectedTutor,
+      timeDifference,
+      timeZone,
+      tutor,
+      convertToDate,
+    ]
+  );
+};
+
+export default useSlotPropGetter;

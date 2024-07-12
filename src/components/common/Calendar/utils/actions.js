@@ -1,13 +1,13 @@
 // Import necessary dependencies
-import moment from 'moment';
-import { v4 as uuidv4 } from 'uuid';
-import { filterOtherStudentAndTutorSession } from './calenderUtils';
-import { convertToDate } from '../Calendar';
-import { postStudentBookings } from '../../../../redux/student/studentBookings';
+import moment from "moment";
+import { v4 as uuidv4 } from "uuid";
+import { filterOtherStudentAndTutorSession } from "./calenderUtils";
+import { convertToDate } from "../Calendar";
+import { postStudentBookings } from "../../../../redux/student/studentBookings";
+import { setStudentSessions } from "../../../../redux/student/studentSessions";
+import { isEqualTwoObjectsRoot } from "../../../../utils/common";
+import { FeedbackMissing } from "../ToastMessages";
 
-// Import API or dispatch here
-
-// Function to handle postponing sessions
 export const handlePostpone = (
   setIsTutorSideSessionModalOpen,
   dispatch,
@@ -15,19 +15,37 @@ export const handlePostpone = (
   bookedSlots,
   tutor,
   clickedSlot,
-  navigate
+  navigate,
+  setDisableHourSlots,
+  disableHourSlots,
+  //
+  selectedTutor,
+  isStudentLoggedIn,
+  student,
+  studentId
 ) => {
   setIsTutorSideSessionModalOpen(false);
-  let {
-    reservedSlots: updatedReservedSlot,
-    bookedSlots: updatedBookedSlots,
-  } = filterOtherStudentAndTutorSession(
-    reservedSlots,
-    bookedSlots,
-    tutor.AcademyId,
-    clickedSlot.studentId
+  let { reservedSlots: updatedReservedSlot, bookedSlots: updatedBookedSlots } =
+    filterOtherStudentAndTutorSession(
+      reservedSlots,
+      bookedSlots,
+      tutor.AcademyId,
+      clickedSlot.studentId,
+      //
+      tutor,
+      selectedTutor,
+      isStudentLoggedIn,
+      reservedSlots,
+      student,
+      bookedSlots,
+      studentId
+    );
+  handleDisableSlot(
+    convertToDate(clickedSlot.start),
+    //
+    setDisableHourSlots,
+    disableHourSlots
   );
-  handleDisableSlot(convertToDate(clickedSlot.start));
   if (clickedSlot.type === "booked") {
     dispatch(
       postStudentBookings({
@@ -66,19 +84,29 @@ export const handleDeleteSessionByTutor = (
   bookedSlots,
   tutor,
   clickedSlot,
-
-  navigate
+  navigate,
+  //
+  selectedTutor,
+  isStudentLoggedIn,
+  student,
+  studentId
 ) => {
   setIsTutorSideSessionModalOpen(false);
-  let {
-    reservedSlots: updatedReservedSlot,
-    bookedSlots: updatedBookedSlots,
-  } = filterOtherStudentAndTutorSession(
-    reservedSlots,
-    bookedSlots,
-    tutor.AcademyId,
-    clickedSlot.studentId
-  );
+  let { reservedSlots: updatedReservedSlot, bookedSlots: updatedBookedSlots } =
+    filterOtherStudentAndTutorSession(
+      reservedSlots,
+      bookedSlots,
+      tutor.AcademyId,
+      clickedSlot.studentId,
+      //
+      tutor,
+      selectedTutor,
+      isStudentLoggedIn,
+      reservedSlots,
+      student,
+      bookedSlots,
+      studentId
+    );
   if (clickedSlot.type === "booked") {
     dispatch(
       postStudentBookings({
@@ -110,7 +138,12 @@ export const handleDeleteSessionByTutor = (
 };
 
 // Function to handle disabling slots
-export const handleDisableSlot = (setDisableHourSlots, disableHourSlots, convertToDate, moment, start) => {
+export const handleDisableSlot = (
+  start,
+  //
+  setDisableHourSlots,
+  disableHourSlots
+) => {
   const end = moment(start).add(30, "minutes").toDate();
 
   const disableHourSlotExist = disableHourSlots?.some(
@@ -127,8 +160,12 @@ export const handleDisableSlot = (setDisableHourSlots, disableHourSlots, convert
   }
 };
 
+// TODO: check params
 // Function to handle bulk event creation
 export const handleBulkEventCreate = async (
+  type,
+  invoiceNum,
+  //
   toast,
   reservedSlots,
   dispatch,
@@ -136,25 +173,203 @@ export const handleBulkEventCreate = async (
   tutorId,
   selectedTutor,
   selectedSlots,
-  filterOtherStudentAndTutorSession,
-  setStudentSessions
+  studentId,
+  clickedSlot,
+  navigate,
+  subjectName,
+  //
+  tutor,
+  isStudentLoggedIn,
 ) => {
-  // Implement the bulk event creation logic here
-  // Make sure to use the dependencies and parameters as needed
+  if (reservedSlots?.some((slot) => isEqualTwoObjectsRoot(slot, clickedSlot))) {
+    let { reservedSlots, bookedSlots } = filterOtherStudentAndTutorSession(
+      //
+      reservedSlots,
+      bookedSlots,
+      tutorId,
+      clickedSlot.studentId,
+      //
+      tutor,
+      selectedTutor,
+      isStudentLoggedIn,
+      reservedSlots,
+      student,
+      bookedSlots,
+      studentId
+    );
+    dispatch(
+      postStudentBookings({
+        studentId,
+        tutorId,
+        subjectName,
+        bookedSlots: [
+          ...bookedSlots,
+          { ...clickedSlot, title: "Booked", type: "booked" },
+        ],
+        reservedSlots: reservedSlots.filter(
+          (slot) => slot.id !== clickedSlot.id
+        ),
+      })
+    );
+    return;
+  }
+  //intro session not conducted
+  if (
+    reservedSlots?.some((slot) => {
+      return (
+        slot.type === "intro" &&
+        slot.subject === selectedTutor.subject &&
+        slot.studentId === student.AcademyId &&
+        slot.end.getTime() > new Date().getTime()
+      );
+    })
+  ) {
+    toast.warning(
+      ` Your intro session must be conducted first for the "${selectedTutor.subject}" LESSON`
+    );
+    return;
+  }
+  //feedback missing
+  if (
+    reservedSlots?.some((slot) => {
+      return (
+        slot.type === "intro" &&
+        slot.subject === selectedTutor.subject &&
+        slot.studentId === student.AcademyId &&
+        slot.end.getTime() < new Date().getTime() &&
+        !slot.rating
+      );
+    })
+  ) {
+    return toast.warning(
+      <FeedbackMissing
+        handleButtonClick={() => navigate("/student/feedback")}
+        subject={selectedTutor.subject}
+        buttonText={"Feedback"}
+      />,
+      { autoClose: false }
+    );
+  }
+
+  //limit of max 6 lslot reservation at /bookingone time
+  if (
+    selectedSlots.length &&
+    selectedSlots[0].type === "reserved" &&
+    reservedSlots.length > 6
+  ) {
+    toast.warning("You Can Reserve no more than 6 slots");
+    return;
+  }
+
+  const updatedSelectedSlots = selectedSlots?.map((slot) => {
+    return {
+      ...slot,
+      type,
+      id: uuidv4(),
+      title:
+        type === "reserved"
+          ? "Reserved"
+          : type === "intro"
+          ? "Intro"
+          : "Booked",
+      studentName: student.FirstName,
+      studentId: student.AcademyId,
+      createdAt: new Date(),
+      subject: selectedTutor.subject,
+      invoiceNum: invoiceNum,
+      tutorId: selectedTutor.academyId,
+      rate:
+        type === "intro" && selectedTutor.introDiscountEnabled
+          ? `$${parseInt(selectedTutor.rate.split("$")[1]) / 2}.00`
+          : selectedTutor.rate,
+    };
+  });
+
+  //handle delete type later todo
+  if (type === "reserved" || type === "intro") {
+    let { reservedSlots, bookedSlots } = filterOtherStudentAndTutorSession(
+      reservedSlots,
+      bookedSlots,
+      tutor.AcademyId,
+      clickedSlot.studentId,
+      //
+      tutor,
+      selectedTutor,
+      isStudentLoggedIn,
+      reservedSlots,
+      student,
+      bookedSlots,
+      studentId
+    );
+    dispatch(
+      postStudentBookings({
+        studentId: student.AcademyId,
+        tutorId: selectedTutor.academyId,
+        reservedSlots: reservedSlots.concat(updatedSelectedSlots),
+        bookedSlots,
+        subjectName: selectedTutor.subject,
+      })
+    );
+  } else if (type === "booked") {
+    let { reservedSlots, bookedSlots } = filterOtherStudentAndTutorSession(
+      reservedSlots,
+      bookedSlots,
+      tutor.AcademyId,
+      clickedSlot.studentId,
+      //
+      tutor,
+      selectedTutor,
+      isStudentLoggedIn,
+      reservedSlots,
+      student,
+      bookedSlots,
+      studentId
+    );
+    dispatch(
+      postStudentBookings({
+        studentId: student.AcademyId,
+        tutorId: selectedTutor.academyId,
+        reservedSlots,
+        bookedSlots: bookedSlots.concat(updatedSelectedSlots),
+        subjectName: selectedTutor.subject,
+      })
+    );
+  }
+  student.AcademyId && dispatch(await setStudentSessions(student));
 };
 
 // Function to handle removing reserved slots
 export const handleRemoveReservedSlot = (
+  reservedSlots,
+  //
   dispatch,
   studentId,
   tutorId,
   subjectName,
-  reservedSlots,
   bookedSlots,
-  filterOtherStudentAndTutorSession
+
+  //
+  tutor,
+  clickedSlot,
+  selectedTutor,
+  isStudentLoggedIn,
+  student,
 ) => {
   let { reservedSlots: updatedReservedSlots, bookedSlots: updatedBookedSlots } =
-    filterOtherStudentAndTutorSession(reservedSlots, bookedSlots);
+    filterOtherStudentAndTutorSession(
+      reservedSlots,
+      bookedSlots,
+      tutor.AcademyId,
+      clickedSlot.studentId,
+      //
+      tutor,
+      selectedTutor,
+      isStudentLoggedIn,
+      reservedSlots,
+      student,
+      bookedSlots,
+      studentId
+    );
   dispatch(
     postStudentBookings({
       studentId,
@@ -168,20 +383,35 @@ export const handleRemoveReservedSlot = (
 
 // Function to handle rescheduling sessions
 export const handleRescheduleSession = (
-  dispatch,
-  studentId,
-  tutorId,
-  subjectName,
   reservedSlots,
   bookedSlots,
-  filterOtherStudentAndTutorSession,
 
-  tutor
+  //
+  dispatch,
+  studentId,
+  subjectName,
+  tutor,
+  //
+  clickedSlot,
+  selectedTutor,
+  isStudentLoggedIn,
+  student,
 ) => {
-  let {
-    reservedSlots: updatedReservedSlots,
-    bookedSlots: updatedBookedSlots,
-  } = filterOtherStudentAndTutorSession(reservedSlots, bookedSlots, tutor.AcademyId);
+  let { reservedSlots: updatedReservedSlots, bookedSlots: updatedBookedSlots } =
+    filterOtherStudentAndTutorSession(
+      reservedSlots,
+      bookedSlots,
+      tutor.AcademyId,
+      clickedSlot.studentId,
+      //
+      tutor,
+      selectedTutor,
+      isStudentLoggedIn,
+      reservedSlots,
+      student,
+      bookedSlots,
+      studentId
+    );
   dispatch(
     postStudentBookings({
       studentId,
@@ -195,8 +425,8 @@ export const handleRescheduleSession = (
 
 // Function to handle setting reserved slots
 export const handleSetReservedSlots = (
-    reservedSlots,
-    studentId,
+  reservedSlots,
+  studentId,
 
   dispatch,
   tutorId,
@@ -204,12 +434,27 @@ export const handleSetReservedSlots = (
   bookedSlots,
   isStudentLoggedIn,
 
-  tutor
+  tutor,
+  //
+  clickedSlot,
+  selectedTutor,
+  student,
 ) => {
-  let {
-    reservedSlots: updatedReservedSlots,
-    bookedSlots: updatedBookedSlots,
-  } = filterOtherStudentAndTutorSession(reservedSlots, bookedSlots);
+  let { reservedSlots: updatedReservedSlots, bookedSlots: updatedBookedSlots } =
+    filterOtherStudentAndTutorSession(
+      reservedSlots,
+      bookedSlots,
+      tutor.AcademyId,
+      clickedSlot.studentId,
+      //
+      tutor,
+      selectedTutor,
+      isStudentLoggedIn,
+      reservedSlots,
+      student,
+      bookedSlots,
+      studentId
+    );
 
   dispatch(
     postStudentBookings({

@@ -107,11 +107,11 @@ const App = () => {
   useEffect(() => {
     if (token && tutor.AcademyId) {
       const dispatchUserSessions = async () => {
-        const tutorSessions = dispatch(await setTutorSessions(tutor));
+        const tutorSessions = await dispatch(await setTutorSessions(tutor));
         handleExpiredToken(tutorSessions);
 
         const intervalId = setInterval(async () => {
-          const tutorSessions = dispatch(await setTutorSessions(tutor));
+          const tutorSessions = await dispatch(await setTutorSessions(tutor));
           handleExpiredToken(tutorSessions);
         }, 60000);
 
@@ -125,11 +125,15 @@ const App = () => {
   useEffect(() => {
     if (token && student.AcademyId) {
       const dispatchUserSessions = async () => {
-        const studentSessions = dispatch(await setStudentSessions(student));
+        const studentSessions = await dispatch(
+          await setStudentSessions(student)
+        );
         handleExpiredToken(studentSessions);
 
         const intervalId = setInterval(async () => {
-          const studentSessions = dispatch(await setStudentSessions(student));
+          const studentSessions = await dispatch(
+            await setStudentSessions(student)
+          );
           handleExpiredToken(studentSessions);
         }, 60000);
 
