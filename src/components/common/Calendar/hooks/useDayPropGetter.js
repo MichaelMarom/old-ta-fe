@@ -25,7 +25,6 @@ const useDayPropGetter = ({
         return arrayMomentDate.isSame(slotDateMoment, "day");
       });
 
-      console.log(disableDates, enabledDays)
       const isDisableDate = disableDates?.some((storeDate) => {
         const slotDateMoment = moment(date);
         const storedMomentDate = moment(storeDate);

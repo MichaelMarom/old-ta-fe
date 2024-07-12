@@ -167,7 +167,7 @@ export const handleBulkEventCreate = async (
   invoiceNum,
   //
   toast,
-  reservedSlots,
+  passedReservedSlots,
   dispatch,
   student,
   tutorId,
@@ -181,10 +181,10 @@ export const handleBulkEventCreate = async (
   tutor,
   isStudentLoggedIn,
 ) => {
-  if (reservedSlots?.some((slot) => isEqualTwoObjectsRoot(slot, clickedSlot))) {
+  if (passedReservedSlots?.some((slot) => isEqualTwoObjectsRoot(slot, clickedSlot))) {
     let { reservedSlots, bookedSlots } = filterOtherStudentAndTutorSession(
       //
-      reservedSlots,
+      passedReservedSlots,
       bookedSlots,
       tutorId,
       clickedSlot.studentId,
@@ -192,11 +192,14 @@ export const handleBulkEventCreate = async (
       tutor,
       selectedTutor,
       isStudentLoggedIn,
-      reservedSlots,
+      passedReservedSlots,
       student,
       bookedSlots,
       studentId
     );
+
+    console.log(passedReservedSlots, reservedSlots,'pas, rese')
+
     dispatch(
       postStudentBookings({
         studentId,
@@ -215,7 +218,7 @@ export const handleBulkEventCreate = async (
   }
   //intro session not conducted
   if (
-    reservedSlots?.some((slot) => {
+    passedReservedSlots?.some((slot) => {
       return (
         slot.type === "intro" &&
         slot.subject === selectedTutor.subject &&
@@ -231,7 +234,7 @@ export const handleBulkEventCreate = async (
   }
   //feedback missing
   if (
-    reservedSlots?.some((slot) => {
+    passedReservedSlots?.some((slot) => {
       return (
         slot.type === "intro" &&
         slot.subject === selectedTutor.subject &&
@@ -255,7 +258,7 @@ export const handleBulkEventCreate = async (
   if (
     selectedSlots.length &&
     selectedSlots[0].type === "reserved" &&
-    reservedSlots.length > 6
+    passedReservedSlots.length > 6
   ) {
     toast.warning("You Can Reserve no more than 6 slots");
     return;
@@ -288,7 +291,7 @@ export const handleBulkEventCreate = async (
   //handle delete type later todo
   if (type === "reserved" || type === "intro") {
     let { reservedSlots, bookedSlots } = filterOtherStudentAndTutorSession(
-      reservedSlots,
+      passedReservedSlots,
       bookedSlots,
       tutor.AcademyId,
       clickedSlot.studentId,
@@ -296,7 +299,7 @@ export const handleBulkEventCreate = async (
       tutor,
       selectedTutor,
       isStudentLoggedIn,
-      reservedSlots,
+      passedReservedSlots,
       student,
       bookedSlots,
       studentId
@@ -312,7 +315,7 @@ export const handleBulkEventCreate = async (
     );
   } else if (type === "booked") {
     let { reservedSlots, bookedSlots } = filterOtherStudentAndTutorSession(
-      reservedSlots,
+      passedReservedSlots,
       bookedSlots,
       tutor.AcademyId,
       clickedSlot.studentId,
@@ -320,11 +323,12 @@ export const handleBulkEventCreate = async (
       tutor,
       selectedTutor,
       isStudentLoggedIn,
-      reservedSlots,
+      passedReservedSlots,
       student,
       bookedSlots,
       studentId
     );
+    console.log(passedReservedSlots, reservedSlots, bookedSlots,'ded')
     dispatch(
       postStudentBookings({
         studentId: student.AcademyId,
@@ -340,7 +344,7 @@ export const handleBulkEventCreate = async (
 
 // Function to handle removing reserved slots
 export const handleRemoveReservedSlot = (
-  reservedSlots,
+  passedReservedSlots,
   //
   dispatch,
   studentId,
@@ -357,7 +361,7 @@ export const handleRemoveReservedSlot = (
 ) => {
   let { reservedSlots: updatedReservedSlots, bookedSlots: updatedBookedSlots } =
     filterOtherStudentAndTutorSession(
-      reservedSlots,
+      passedReservedSlots,
       bookedSlots,
       tutor.AcademyId,
       clickedSlot.studentId,
@@ -365,7 +369,7 @@ export const handleRemoveReservedSlot = (
       tutor,
       selectedTutor,
       isStudentLoggedIn,
-      reservedSlots,
+      passedReservedSlots,
       student,
       bookedSlots,
       studentId
@@ -383,7 +387,7 @@ export const handleRemoveReservedSlot = (
 
 // Function to handle rescheduling sessions
 export const handleRescheduleSession = (
-  reservedSlots,
+  passedReservedSlots,
   bookedSlots,
 
   //
@@ -399,7 +403,7 @@ export const handleRescheduleSession = (
 ) => {
   let { reservedSlots: updatedReservedSlots, bookedSlots: updatedBookedSlots } =
     filterOtherStudentAndTutorSession(
-      reservedSlots,
+      passedReservedSlots,
       bookedSlots,
       tutor.AcademyId,
       clickedSlot.studentId,
@@ -407,7 +411,7 @@ export const handleRescheduleSession = (
       tutor,
       selectedTutor,
       isStudentLoggedIn,
-      reservedSlots,
+      passedReservedSlots,
       student,
       bookedSlots,
       studentId

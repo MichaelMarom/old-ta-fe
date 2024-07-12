@@ -196,7 +196,7 @@ const ShowCalendar = ({
       }
     } else {
       const response = await fetchStudentsBookings(tutorAcademyId);
-      if (!!response.length) {
+      if (!!response?.length) {
         const reservedSlots = response
           ?.map((data) => JSON.parse(data.reservedSlots))
           .flat();
@@ -467,7 +467,12 @@ const ShowCalendar = ({
 
             setDisableHourSlots,
             disableHourSlots,
-            disableDates
+            disableDates,
+            disabledHours,
+            selectedSlots,
+            setSelectedSlots,
+            setIsModalOpen,
+            selectedTutor
           )
         }
         dayPropGetter={dayPropGetter}

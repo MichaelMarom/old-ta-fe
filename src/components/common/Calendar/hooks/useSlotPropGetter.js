@@ -33,7 +33,6 @@ const useSlotPropGetter = ({
       if (!date) return {};
 
       const formattedTime = moment(date).format("h:00 a");
-      // const isFutureDate(date) = date.getTime() >= new Date().getTime();
 
       const existBetweenVacationRange = checkDateBetweenVacation(
         date,
