@@ -495,33 +495,46 @@ const ShowCalendar = ({
         handleRemoveReservedSlot={handleRemoveReservedSlot}
         timeZone={timeZone}
         handleRescheduleSession={handleRescheduleSession}
+        studentId={studentId}
+        subjectName={subjectName}
+        tutorId={tutorId}
       />
       <TutorEventModal
         isOpen={isTutorSideSessionModalOpen}
         onClose={onTutorModalRequestClose}
         handleDeleteSessionByTutor={() =>
           handleDeleteSessionByTutor(
-            //
             setIsTutorSideSessionModalOpen,
             dispatch,
             reservedSlots,
             bookedSlots,
             tutor,
             clickedSlot,
-            navigate
+            navigate,
+            //
+            selectedTutor,
+            isStudentLoggedIn,
+            student,
+            studentId
           )
         }
         clickedSlot={clickedSlot}
         handlePostpone={() =>
           handlePostpone(
-            //
             setIsTutorSideSessionModalOpen,
             dispatch,
             reservedSlots,
             bookedSlots,
             tutor,
             clickedSlot,
-            navigate
+            navigate,
+            setDisableHourSlots,
+            disableHourSlots,
+            //
+            selectedTutor,
+            isStudentLoggedIn,
+            student,
+            studentId
           )
         }
       />

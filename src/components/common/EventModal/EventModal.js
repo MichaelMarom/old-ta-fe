@@ -34,12 +34,12 @@ function EventModal({
   //
   studentId,
   subjectName,
-  tutor,
   tutorId,
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [selectedType, setSelectedType] = useState(null);
+  const { tutor } = useSelector((state) => state.tutor);
   const [canPostEvents, setCanPostEvents] = useState(true);
   const { selectedTutor } = useSelector((state) => state.selectedTutor);
   const [rescheduleTime, setRescheduleTime] = useState(
@@ -113,7 +113,12 @@ function EventModal({
       dispatch,
       studentId,
       subjectName,
-      tutor
+      tutor,
+      //
+      clickedSlot,
+      selectedTutor,
+      isStudentLoggedIn,
+      student
     );
 
     //close modal
@@ -134,7 +139,6 @@ function EventModal({
       handleBulkEventCreate(
         selectedType,
         invoiceNum,
-        //
         toast,
         reservedSlots,
         dispatch,
@@ -145,7 +149,10 @@ function EventModal({
         studentId,
         clickedSlot,
         navigate,
-        subjectName
+        subjectName,
+        tutor,
+        isStudentLoggedIn,
+        bookedSlots
       );
       onRequestClose();
       setSelectedType(null);
@@ -323,7 +330,13 @@ function EventModal({
                     studentId,
                     tutorId,
                     subjectName,
-                    bookedSlots
+                    bookedSlots,
+                    //
+                    tutor,
+                    clickedSlot,
+                    selectedTutor,
+                    isStudentLoggedIn,
+                    student
                   );
                   setClickedSlot({});
                   onRequestClose();

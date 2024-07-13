@@ -1,5 +1,4 @@
-import moment from "moment";
-import { useCallback } from "react";
+import { moment } from "../../../../config/moment";
 import { convertToDate } from "../Calendar";
 
 export const isBetweenVacationRange = (
@@ -35,14 +34,14 @@ export const isEventAlreadyExist = (lessons, slotInfo) => {
   );
 };
 
-export const getSecond30MinsSlotWhenDoubleClick = (start, end) =>{
+export const getSecond30MinsSlotWhenDoubleClick = (start, end) => {
   const secSlot = moment(convertToDate(start)).minutes() === 30;
   let endTime = secSlot
     ? moment(convertToDate(start)).subtract(30, "minutes").toDate()
     : end;
 
-    return endTime
-}
+  return endTime;
+};
 
 export const convertToGmt = (date) => {
   return date;
@@ -85,14 +84,23 @@ export const filterOtherStudentAndTutorSession = (
       slot.tutorId === tutorId
   );
   console.log(
+    reservedSlots,
+    reservedSlots.length,
+    "orig rese",
+    bookedSlots.length,
+    "orig book",
     updatedReservedSlots.length,
+    "updat res",
     updatedBookedSlots.length,
+    "upda book",
     tutorId,
-    studentId ? studentId : student.AcademyId
+    "tutodi id",
+    studentId ? studentId : student.AcademyId,
+    "studentIS"
   );
   return {
-    reservedSlots: updatedReservedSlots,
-    bookedSlots: updatedBookedSlots,
+    reservedSlots: tutorId ? updatedReservedSlots : reservedSlots,
+    bookedSlots: tutorId ? updatedBookedSlots : bookedSlots,
   };
 };
 

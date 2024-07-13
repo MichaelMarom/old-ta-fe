@@ -1,5 +1,5 @@
 // Import necessary dependencies
-import moment from "moment";
+import { moment } from "../../../../config/moment";
 import { v4 as uuidv4 } from "uuid";
 import { filterOtherStudentAndTutorSession } from "./calenderUtils";
 import { convertToDate } from "../Calendar";
@@ -42,7 +42,6 @@ export const handlePostpone = (
     );
   handleDisableSlot(
     convertToDate(clickedSlot.start),
-    //
     setDisableHourSlots,
     disableHourSlots
   );
@@ -73,7 +72,7 @@ export const handlePostpone = (
       })
     );
   }
-  navigate(`/tutor/chat`);
+  // navigate(`/tutor/chat`);
 };
 
 // Function to handle deleting sessions by tutor
@@ -180,12 +179,17 @@ export const handleBulkEventCreate = async (
   //
   tutor,
   isStudentLoggedIn,
+  passedBookedSlots
 ) => {
-  if (passedReservedSlots?.some((slot) => isEqualTwoObjectsRoot(slot, clickedSlot))) {
+  if (
+    passedReservedSlots?.some((slot) =>
+      isEqualTwoObjectsRoot(slot, clickedSlot)
+    )
+  ) {
     let { reservedSlots, bookedSlots } = filterOtherStudentAndTutorSession(
       //
       passedReservedSlots,
-      bookedSlots,
+      passedBookedSlots,
       tutorId,
       clickedSlot.studentId,
       //
@@ -194,11 +198,11 @@ export const handleBulkEventCreate = async (
       isStudentLoggedIn,
       passedReservedSlots,
       student,
-      bookedSlots,
+      passedBookedSlots,
       studentId
     );
 
-    console.log(passedReservedSlots, reservedSlots,'pas, rese')
+    console.log(passedReservedSlots, reservedSlots, "pas, rese");
 
     dispatch(
       postStudentBookings({
@@ -292,7 +296,7 @@ export const handleBulkEventCreate = async (
   if (type === "reserved" || type === "intro") {
     let { reservedSlots, bookedSlots } = filterOtherStudentAndTutorSession(
       passedReservedSlots,
-      bookedSlots,
+      passedBookedSlots,
       tutor.AcademyId,
       clickedSlot.studentId,
       //
@@ -301,7 +305,7 @@ export const handleBulkEventCreate = async (
       isStudentLoggedIn,
       passedReservedSlots,
       student,
-      bookedSlots,
+      passedBookedSlots,
       studentId
     );
     dispatch(
@@ -316,7 +320,7 @@ export const handleBulkEventCreate = async (
   } else if (type === "booked") {
     let { reservedSlots, bookedSlots } = filterOtherStudentAndTutorSession(
       passedReservedSlots,
-      bookedSlots,
+      passedBookedSlots,
       tutor.AcademyId,
       clickedSlot.studentId,
       //
@@ -325,10 +329,10 @@ export const handleBulkEventCreate = async (
       isStudentLoggedIn,
       passedReservedSlots,
       student,
-      bookedSlots,
+      passedBookedSlots,
       studentId
     );
-    console.log(passedReservedSlots, reservedSlots, bookedSlots,'ded')
+    console.log(passedReservedSlots, reservedSlots, bookedSlots, "ded");
     dispatch(
       postStudentBookings({
         studentId: student.AcademyId,
@@ -357,7 +361,7 @@ export const handleRemoveReservedSlot = (
   clickedSlot,
   selectedTutor,
   isStudentLoggedIn,
-  student,
+  student
 ) => {
   let { reservedSlots: updatedReservedSlots, bookedSlots: updatedBookedSlots } =
     filterOtherStudentAndTutorSession(
@@ -399,7 +403,7 @@ export const handleRescheduleSession = (
   clickedSlot,
   selectedTutor,
   isStudentLoggedIn,
-  student,
+  student
 ) => {
   let { reservedSlots: updatedReservedSlots, bookedSlots: updatedBookedSlots } =
     filterOtherStudentAndTutorSession(
@@ -407,7 +411,6 @@ export const handleRescheduleSession = (
       bookedSlots,
       tutor.AcademyId,
       clickedSlot.studentId,
-      //
       tutor,
       selectedTutor,
       isStudentLoggedIn,
@@ -419,7 +422,7 @@ export const handleRescheduleSession = (
   dispatch(
     postStudentBookings({
       studentId,
-      tutorId: tutor.AcademyId,
+      tutorId: selectedTutor.academyId,
       subjectName,
       bookedSlots: updatedBookedSlots,
       reservedSlots: updatedReservedSlots,
@@ -442,7 +445,7 @@ export const handleSetReservedSlots = (
   //
   clickedSlot,
   selectedTutor,
-  student,
+  student
 ) => {
   let { reservedSlots: updatedReservedSlots, bookedSlots: updatedBookedSlots } =
     filterOtherStudentAndTutorSession(
