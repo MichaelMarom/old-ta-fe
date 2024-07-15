@@ -1,43 +1,73 @@
 // slice.js
 import { createSlice } from "@reduxjs/toolkit";
-import { get_student_tutor_events, save_student_events } from "../../axios/student";
+import {
+  delete_student_lesson,
+  get_student_lesson,
+  get_student_tutor_events,
+  save_student_events,
+  save_student_lesson,
+  update_student_lesson,
+} from "../../axios/student";
 import { convertToDate } from "../../components/common/Calendar/Calendar";
 
 const slice = createSlice({
-    name: "studentBookings",
-    initialState: {
-        reservedSlots: [],
-        bookedSlots: [],
-        studentId: '',
-        tutorId: '',
-        subjectName: '',
-        studentBookings: {},
-        isLoading: false,
-        error: null,
+  name: "studentBookings",
+  initialState: {
+    reservedSlots: [],
+    bookedSlots: [],
+    studentId: "",
+    tutorId: "",
+    subjectName: "",
+    studentBookings: {},
+    isLoading: false,
+    error: null,
+    lessons: [],
+  },
+  reducers: {
+    isLoading: (state) => {
+      state.isLoading = true;
     },
-    reducers: {
-        isLoading: (state) => {
-            state.isLoading = true;
-        },
-        getReservedSlots: (state, action) => {
-            state.isLoading = false;
-            state.reservedSlots = action.payload;
-        },
-        getBookedSlots: (state, action) => {
-            state.isLoading = false
-            state.bookedSlots = action.payload;
-        },
-        setReservedSlots: (state, action) => {
-            state.isLoading = false;
-            const slotsWithDateObj = action.payload.map((slot) => ({ ...slot, start: convertToDate(slot.start), end: convertToDate(slot.end), createdAt: convertToDate(slot.createdAt) }));
-            state.reservedSlots = slotsWithDateObj;
-        },
-        setBookedSlots: (state, action) => {
-            state.isLoading = false;
-            const slotsWithDateObj = action.payload.map((slot) => ({ ...slot, start: convertToDate(slot.start), end: convertToDate(slot.end), createdAt: convertToDate(slot.createdAt) }));
-            state.bookedSlots = slotsWithDateObj;
-        }
+    getReservedSlots: (state, action) => {
+      state.isLoading = false;
+      state.reservedSlots = action.payload;
     },
+    getBookedSlots: (state, action) => {
+      state.isLoading = false;
+      state.bookedSlots = action.payload;
+    },
+    setReservedSlots: (state, action) => {
+      state.isLoading = false;
+      const slotsWithDateObj = action.payload.map((slot) => ({
+        ...slot,
+        start: convertToDate(slot.start),
+        end: convertToDate(slot.end),
+        createdAt: convertToDate(slot.createdAt),
+      }));
+      state.reservedSlots = slotsWithDateObj;
+    },
+    setBookedSlots: (state, action) => {
+      state.isLoading = false;
+      const slotsWithDateObj = action.payload.map((slot) => ({
+        ...slot,
+        start: convertToDate(slot.start),
+        end: convertToDate(slot.end),
+        createdAt: convertToDate(slot.createdAt),
+      }));
+      state.bookedSlots = slotsWithDateObj;
+    },
+
+    setLessons: (state, action) => {
+      state.isLoading = false;
+      console.log(action.payload);
+      const slotsWithDateObj = action.payload.map((slot) => ({
+        ...slot,
+        start: convertToDate(slot.start),
+        end: convertToDate(slot.end),
+        createdAt: convertToDate(slot.createdAt),
+      }));
+      state.lessons = slotsWithDateObj;
+    },
+  },
 });
 
 export default slice.reducer;
@@ -45,37 +75,81 @@ export default slice.reducer;
 // ACTIONS
 
 export const setReservedSlots = (reservedSlots) => {
-    return async (dispatch) => {
-        dispatch(slice.actions.setReservedSlots(reservedSlots))
-    }
-}
+  return async (dispatch) => {
+    dispatch(slice.actions.setReservedSlots(reservedSlots));
+  };
+};
+
+export const setLessons = (lessons) => {
+  return async (dispatch) => {
+    dispatch(slice.actions.setLessons(lessons));
+  };
+};
 
 export const setBookedSlots = (bookedSlots) => {
-    return async (dispatch) => {
-        dispatch(slice.actions.setBookedSlots(bookedSlots))
-    }
-}
+  return async (dispatch) => {
+    dispatch(slice.actions.setBookedSlots(bookedSlots));
+  };
+};
 
 export function getStudentBookings(studentId, tutorId) {
-    return async (dispatch) => {
-        dispatch(slice.actions.isLoading(true));
-        const result = await get_student_tutor_events(studentId, tutorId);
-        if (result?.length) {
-            const reservedSlots = result.map(data => JSON.parse(data.reservedSlots)).flat()
-            const bookedSlots = result.map(data => JSON.parse(data.bookedSlots)).flat()
-            dispatch(slice.actions.setReservedSlots(reservedSlots))
-            dispatch(slice.actions.setBookedSlots(bookedSlots))
-        }
-        return result;
-    };
+  return async (dispatch) => {
+    dispatch(slice.actions.isLoading(true));
+    const result = await get_student_tutor_events(studentId, tutorId);
+    if (result?.length) {
+      const reservedSlots = result
+        .map((data) => JSON.parse(data.reservedSlots))
+        .flat();
+      const bookedSlots = result
+        .map((data) => JSON.parse(data.bookedSlots))
+        .flat();
+      dispatch(slice.actions.setReservedSlots(reservedSlots));
+      dispatch(slice.actions.setBookedSlots(bookedSlots));
+    }
+    return result;
+  };
 }
 
 export function postStudentBookings(data) {
+  return async (dispatch) => {
+    dispatch(slice.actions.isLoading(true));
+    await save_student_events(data);
+    return await dispatch(getStudentBookings(data.studentId, data.tutorId));
+  };
+}
+
+//lessons
+export function postStudentLesson(data) {
+  return async (dispatch) => {
+    dispatch(slice.actions.isLoading(true));
+    await save_student_lesson(data);
+    return await dispatch(getStudentLessons(data.studentId, data.tutorId));
+  };
+}
+
+export function updateStudentLesson(id, body) {
     return async (dispatch) => {
         dispatch(slice.actions.isLoading(true));
-        await save_student_events(data);
-        return await dispatch(getStudentBookings(data.studentId, data.tutorId))
+        await update_student_lesson(id, body);
+        return await dispatch(getStudentLessons(body.studentId, body.tutorId))
     };
 }
 
+export function getStudentLessons(studentId, tutorId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.isLoading(true));
+    const result = await get_student_lesson(studentId, tutorId);
+    if (result?.length) {
+      dispatch(slice.actions.setLessons(result));
+    }
+    return result;
+  };
+}
 
+export function deleteStudentLesson(event) {
+  return async (dispatch) => {
+    dispatch(slice.actions.isLoading(true));
+    const result = await delete_student_lesson(event.id);
+    return await dispatch(getStudentLessons(event.studentId, event.tutorId));
+  };
+}

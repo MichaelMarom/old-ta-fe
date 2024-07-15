@@ -15,6 +15,10 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment-timezone";
 import { useNavigate } from "react-router-dom";
+import {
+  deleteStudentLesson,
+  updateStudentLesson,
+} from "../../../redux/student/studentBookings";
 
 function EventModal({
   isStudentLoggedIn = false,
@@ -27,7 +31,7 @@ function EventModal({
   reservedSlots,
   bookedSlots,
   clickedSlot,
-  handleRemoveReservedSlot,
+  // handleRemoveReservedSlot,
   setClickedSlot,
   timeZone,
   handleRescheduleSession,
@@ -39,6 +43,7 @@ function EventModal({
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [selectedType, setSelectedType] = useState(null);
+  const { lessons } = useSelector((state) => state.bookings);
   const { tutor } = useSelector((state) => state.tutor);
   const [canPostEvents, setCanPostEvents] = useState(true);
   const { selectedTutor } = useSelector((state) => state.selectedTutor);
@@ -87,39 +92,48 @@ function EventModal({
       "hours"
     );
 
-    const updatedReservedSlot = reservedSlots
-      .concat(bookedSlots)
-      .map((slot) => {
-        if (slot.id === clickedSlot.id && slot.request)
-          return {
-            ...slot,
-            request: null,
-            start: rescheduleTime,
-            end: rescheduleEndTime.toDate(),
-          };
-        else return slot;
-      });
+    dispatch(
+      updateStudentLesson(clickedSlot.id, {
+        ...clickedSlot,
+        start: rescheduleTime,
+        end: rescheduleEndTime.toDate(),
+        request: null,
+      })
+    );
 
-    const extractedReservedSlots = updatedReservedSlot.filter(
-      (slot) => slot.type === "intro" || slot.type === "reserved"
-    );
-    const extractedBookedSlots = updatedReservedSlot.filter(
-      (slot) => slot.type === "booked"
-    );
-    handleRescheduleSession(
-      extractedReservedSlots,
-      extractedBookedSlots,
-      //
-      dispatch,
-      studentId,
-      subjectName,
-      tutor,
-      //
-      clickedSlot,
-      selectedTutor,
-      isStudentLoggedIn,
-      student
-    );
+    // const updatedReservedSlot = reservedSlots
+    //   .concat(bookedSlots)
+    //   .map((slot) => {
+    //     if (slot.id === clickedSlot.id && slot.request)
+    //       return {
+    //         ...slot,
+    //         request: null,
+    //         start: rescheduleTime,
+    //         end: rescheduleEndTime.toDate(),
+    //       };
+    //     else return slot;
+    //   });
+
+    // const extractedReservedSlots = updatedReservedSlot.filter(
+    //   (slot) => slot.type === "intro" || slot.type === "reserved"
+    // );
+    // const extractedBookedSlots = updatedReservedSlot.filter(
+    //   (slot) => slot.type === "booked"
+    // );
+    // handleRescheduleSession(
+    //   extractedReservedSlots,
+    //   extractedBookedSlots,
+    //   //
+    //   dispatch,
+    //   studentId,
+    //   subjectName,
+    //   tutor,
+    //   //
+    //   clickedSlot,
+    //   selectedTutor,
+    //   isStudentLoggedIn,
+    //   student
+    // );
 
     //close modal
     onRequestClose();
@@ -152,7 +166,8 @@ function EventModal({
         subjectName,
         tutor,
         isStudentLoggedIn,
-        bookedSlots
+        bookedSlots,
+        lessons
       );
       onRequestClose();
       setSelectedType(null);
@@ -321,23 +336,24 @@ function EventModal({
                 type="button"
                 className="action-btn btn btn-sm float-end"
                 onClick={() => {
-                  handleRemoveReservedSlot(
-                    reservedSlots.filter(
-                      (slot) => !isEqualTwoObjectsRoot(slot, clickedSlot)
-                    ),
-                    //
-                    dispatch,
-                    studentId,
-                    tutorId,
-                    subjectName,
-                    bookedSlots,
-                    //
-                    tutor,
-                    clickedSlot,
-                    selectedTutor,
-                    isStudentLoggedIn,
-                    student
-                  );
+                  dispatch(deleteStudentLesson(clickedSlot));
+                  // handleRemoveReservedSlot(
+                  //   reservedSlots.filter(
+                  //     (slot) => !isEqualTwoObjectsRoot(slot, clickedSlot)
+                  //   ),
+                  //   //
+                  //   dispatch,
+                  //   studentId,
+                  //   tutorId,
+                  //   subjectName,
+                  //   bookedSlots,
+                  //   //
+                  //   tutor,
+                  //   clickedSlot,
+                  //   selectedTutor,
+                  //   isStudentLoggedIn,
+                  //   student
+                  // );
                   setClickedSlot({});
                   onRequestClose();
                 }}

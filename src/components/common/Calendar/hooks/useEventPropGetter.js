@@ -6,21 +6,22 @@ const useEventPropGetter = ({
   bookedSlots,
   isStudentLoggedIn,
   selectedTutor,
-  student
+  student,
+  lessons
 }) => {
   return useCallback(
     (event) => {
-      const secSubject = reservedSlots?.some(
+      const secSubject = lessons?.some(
         (slot) => slot.type === "intro" && event.subject !== selectedTutor.subject
       );
 
       const otherStudentSession = isStudentLoggedIn
-        ? reservedSlots.concat(bookedSlots)?.some(
+        ? lessons?.some(
             (slot) => slot.studentName !== student.FirstName && event.id === slot.id
           )
         : false;
 
-      const deletedSession = reservedSlots.concat(bookedSlots)?.some(
+      const deletedSession = lessons?.some(
         (slot) => slot.request === "delete" && slot.start === convertToDate(event.start)
       );
 
@@ -117,7 +118,7 @@ const useEventPropGetter = ({
 
       return {};
     },
-    [reservedSlots, bookedSlots, isStudentLoggedIn, selectedTutor, student]
+    [isStudentLoggedIn, selectedTutor, student, lessons]
   );
 };
 

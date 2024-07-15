@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment-timezone";
 import EventModal from "../EventModal/EventModal";
@@ -6,18 +6,22 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchStudentsBookings,
   fetch_calender_detals,
+  getAllTutorLessons,
   get_tutor_setup,
   updateTutorDisableslots,
 } from "../../../axios/tutor";
-import { get_student_tutor_events } from "../../../axios/student";
+import {
+  get_student_lesson,
+  get_student_tutor_events,
+} from "../../../axios/student";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { v4 as uuidv4 } from "uuid";
 import CustomEvent from "./Event";
 import Loading from "../Loading";
 import {
-  postStudentBookings,
   setBookedSlots,
+  setLessons,
   setReservedSlots,
 } from "../../../redux/student/studentBookings";
 import { isEqualTwoObjectsRoot } from "../../../utils/common";
@@ -36,8 +40,8 @@ import {
   handleDeleteSessionByTutor,
   handlePostpone,
   handleRemoveReservedSlot,
-  handleRescheduleSession,
-  handleSetReservedSlots,
+  // handleRescheduleSession,
+  // handleSetReservedSlots,
 } from "./utils/actions";
 import { handleSlotDoubleClick } from "./utils/SlotDoubleClick";
 import useDayPropGetter from "./hooks/useDayPropGetter";
@@ -105,7 +109,7 @@ const ShowCalendar = ({
   const subjectName = selectedTutor?.subject;
   const [weekDaysTimeSlots, setWeekDaysTimeSlots] = useState([]);
 
-  let { reservedSlots, bookedSlots } = useSelector((state) => state.bookings);
+  let { reservedSlots, bookedSlots , lessons} = useSelector((state) => state.bookings);
 
   //apis functions
   const updateTutorDisableRecord = async () => {
@@ -179,33 +183,42 @@ const ShowCalendar = ({
 
   const fetchBookings = async () => {
     if (isStudentLoggedIn) {
-      const response = await get_student_tutor_events(
+      // const response = await get_student_tutor_events(
+      //   student.AcademyId,
+      //   selectedTutor.academyId
+      // );
+
+      const response = await get_student_lesson(
         student.AcademyId,
         selectedTutor.academyId
       );
-      if (response.length) {
-        const reservedSlots = response
-          ?.map((data) => JSON.parse(data.reservedSlots))
-          .flat();
-        const bookedSlots = response
-          ?.map((data) => JSON.parse(data.bookedSlots))
-          .flat();
 
-        dispatch(setReservedSlots(reservedSlots));
-        dispatch(setBookedSlots(bookedSlots));
+      console.log(response);
+      if (!!response && !response?.response?.data) {
+        dispatch(setLessons(response));
+        // const reservedSlots = response
+        //   ?.map((data) => JSON.parse(data.reservedSlots))
+        //   .flat();
+        // const bookedSlots = response
+        //   ?.map((data) => JSON.parse(data.bookedSlots))
+        //   .flat();
+
+        // dispatch(setReservedSlots(reservedSlots));
+        // dispatch(setBookedSlots(bookedSlots));
       }
     } else {
-      const response = await fetchStudentsBookings(tutorAcademyId);
+      const response = await getAllTutorLessons(tutorAcademyId);
       if (!!response?.length) {
-        const reservedSlots = response
-          ?.map((data) => JSON.parse(data.reservedSlots))
-          .flat();
-        const bookedSlots = response
-          ?.map((data) => JSON.parse(data.bookedSlots))
-          .flat();
+        // const reservedSlots = response
+        //   ?.map((data) => JSON.parse(data.reservedSlots))
+        //   .flat();
+        // const bookedSlots = response
+        //   ?.map((data) => JSON.parse(data.bookedSlots))
+        //   .flat();
 
-        dispatch(setReservedSlots(reservedSlots));
-        dispatch(setBookedSlots(bookedSlots));
+        dispatch(setLessons(response));
+        // dispatch(setReservedSlots(reservedSlots));
+        // dispatch(setBookedSlots(bookedSlots));
       }
     }
   };
@@ -364,7 +377,7 @@ const ShowCalendar = ({
 
   //update day end slot to 11:59PM --> 12:PM end time does not show events
   function updateDayEndSlotEndTime() {
-    const updatedEvents = bookedSlots.concat(reservedSlots).map((event) => {
+    const updatedEvents = lessons.map((event) => {
       if (
         moment(convertToDate(event.start)).hours() === 23 &&
         moment(convertToDate(event.start)).minutes() === 0
@@ -389,6 +402,7 @@ const ShowCalendar = ({
     isStudentLoggedIn,
     selectedTutor,
     student,
+    lessons
   });
 
   const dayPropGetter = useDayPropGetter({
@@ -413,6 +427,7 @@ const ShowCalendar = ({
     selectedTutor,
     weekDaysTimeSlots,
     tutor,
+    lessons
   });
 
   const localizer = momentLocalizer(moment);
@@ -437,10 +452,13 @@ const ShowCalendar = ({
           event: (event) => (
             <CustomEvent
               {...event}
-              handleSetReservedSlots={handleSetReservedSlots}
+              // handleSetReservedSlots={handleSetReservedSlots}
               reservedSlots={reservedSlots}
               handleEventClick={handleEventClick}
               isStudentLoggedIn={isStudentLoggedIn}
+              clickedSlot={clickedSlot}
+              selectedTutor={selectedTutor}
+              lessons={lessons}
             />
           ),
         }}
@@ -492,9 +510,9 @@ const ShowCalendar = ({
         bookedSlots={bookedSlots}
         clickedSlot={clickedSlot}
         setClickedSlot={setClickedSlot}
-        handleRemoveReservedSlot={handleRemoveReservedSlot}
+        // handleRemoveReservedSlot={handleRemoveReservedSlot}
         timeZone={timeZone}
-        handleRescheduleSession={handleRescheduleSession}
+        // handleRescheduleSession={handleRescheduleSession}
         studentId={studentId}
         subjectName={subjectName}
         tutorId={tutorId}
@@ -534,7 +552,8 @@ const ShowCalendar = ({
             selectedTutor,
             isStudentLoggedIn,
             student,
-            studentId
+            studentId,
+            lessons
           )
         }
       />

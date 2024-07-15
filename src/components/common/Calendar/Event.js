@@ -4,18 +4,23 @@ import StarRating from "../StarRating";
 import { useDispatch, useSelector } from "react-redux";
 import { convertToDate } from "./Calendar";
 import { convertTutorIdToName } from "../../../utils/common";
+import { delete_student_lesson } from "../../../axios/student";
+import { deleteStudentLesson } from "../../../redux/student/studentBookings";
 
 function CustomEvent({
   event,
   isStudentLoggedIn,
   handleEventClick = () => {},
-  handleSetReservedSlots,
+  // handleSetReservedSlots,
   reservedSlots,
   //
   tutorId,
   subjectName,
   bookedSlots,
   tutor,
+  clickedSlot,
+  selectedTutor,
+  lessons
 }) {
   const dispatch = useDispatch();
   const [remainingTime, setRemainingTime] = useState(
@@ -48,27 +53,33 @@ function CustomEvent({
 
   useEffect(() => {
     let intervalId;
-    const checkIfOlderThan65Minutes = () => {
+    const checkIfOlderThan65Minutes = async () => {
       const currentTime = moment();
       const inputTime = moment(event.createdAt);
       const diffInMinutes = currentTime.diff(inputTime, "minutes");
       //5 min extra after expire
       console.log(event, convertToDate(event.createdAt).toLocaleString());
       if (diffInMinutes >= 65 && event.type === "reserved") {
-        handleSetReservedSlots(
-          reservedSlots.filter((slot) => {
-            if (slot.type === "reserved") console.log(event, slot);
-            return event.id !== slot.id;
-          }),
-          reservedSlots[0].studentId,
+        // await delete_student_lesson(event.id)
+        dispatch(deleteStudentLesson(event))
 
-          dispatch,
-          tutorId,
-          subjectName,
-          bookedSlots,
-          isStudentLoggedIn,
-          tutor
-        );
+
+        // handleSetReservedSlots(
+        //   lessons.filter((slot) => {
+        //     return event.id !== slot.id;
+        //   }),
+        //   lessons[0].studentId,
+
+        //   dispatch,
+        //   tutorId,
+        //   subjectName,
+        //   bookedSlots,
+        //   isStudentLoggedIn,
+        //   tutor,
+        //   clickedSlot,
+        //   selectedTutor,
+        //   student
+        // );
         setExtraFiveMinStart(false);
       }
     };

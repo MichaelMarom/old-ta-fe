@@ -17,7 +17,7 @@ const useSlotPropGetter = ({
   selectedTutor,
   tutor,
   weekDaysTimeSlots,
-  reservedSlots,
+  // reservedSlots,
   selectedSlots,
   timeDifference,
   timeZone,
@@ -27,6 +27,7 @@ const useSlotPropGetter = ({
   disabledHours,
   disableColor,
   convertToDate,
+  lessons
 }) => {
   return useCallback(
     (date) => {
@@ -51,7 +52,7 @@ const useSlotPropGetter = ({
 
       const existsinReservedSlots = checkReservedSlots(
         date,
-        reservedSlots,
+        lessons,
         convertToDate
       );
 
@@ -147,7 +148,7 @@ const useSlotPropGetter = ({
       disabledHours,
       enableHourSlots,
       disableHourSlots,
-      reservedSlots,
+      // reservedSlots,
       selectedSlots,
       weekDaysTimeSlots,
       disableColor,
@@ -158,6 +159,7 @@ const useSlotPropGetter = ({
       timeZone,
       tutor,
       convertToDate,
+      lessons
     ]
   );
 };

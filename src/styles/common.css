@@ -317,7 +317,7 @@ h1 {
   outline: none;
   background-color: #f4f5f6;
   border-radius: 10px;
-  box-shadow: -6px -12px 10px #ffffff, -6px -10px 15px #ffffff, -21px 0px 6px #ffffff, 6px 6px 11px rgba(0, 0, 0, 0.2);
+  /* box-shadow: -6px -12px 10px #ffffff, -6px -10px 15px #ffffff, -21px 0px 6px #ffffff, 6px 6px 11px rgba(0, 0, 0, 0.2); */
   transition: 0.13s ease-in-out;
   cursor: pointer;
 }
@@ -500,7 +500,8 @@ h1 {
 
 .btn.disabled,
 .btn:disabled,
-fieldset:disabled .btn {
+fieldset:disabled .btn,
+.btn:hover {
   border: 2px solid #e1e1e1;
 }
 
