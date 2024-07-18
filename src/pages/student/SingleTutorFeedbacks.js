@@ -44,7 +44,7 @@ export const SingleTutorFeedbacks = () => {
 
                     return combinedSlots;
                 }).flat()
-                setEvents(events.filter(event => (convertToDate(event.start).getTime() <= (new Date()).getTime()) && event.rating));
+                setEvents(events.filter(event => (convertToDate(event.start).getTime() <= (new Date()).getTime()) && event.ratingByStudent));
             }
         }
         fetchTutorBookings();

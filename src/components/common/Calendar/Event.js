@@ -152,14 +152,14 @@ function CustomEvent({
           {<div>"{event.subject}"</div>}
           {event.request === "postpone" && <div>Postpone Request</div>}
           {event.request === "delete" && <div>Deleted</div>}
-          {!isStudentLoggedIn && event.rating && (
+          {!isStudentLoggedIn && event.ratingByStudent && (
             <div>
-              <StarRating rating={event.rating} />
+              <StarRating rating={event.ratingByStudent} />
             </div>
           )}
-          {isStudentLoggedIn && event.tutorRating && (
+          {isStudentLoggedIn && event.ratingByTutor && (
             <div>
-              <StarRating rating={event.tutorRating} />
+              <StarRating rating={event.ratingByTutor} />
             </div>
           )}
         </div>

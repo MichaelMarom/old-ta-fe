@@ -62,7 +62,7 @@ export const TutorFeedbackModal = ({
         </div>
         {
           // (convertToDate(clickedSlot.end).getTime() <= (new Date()).getTime()) ?
-          !clickedSlot.tutorRating ? (
+          !clickedSlot.ratingByTutor ? (
             <div
               className="p-3 text-danger text-center"
               style={{ fontWeight: "700" }}

@@ -137,7 +137,7 @@ const Header = () => {
     const filteredSessions = sessions.filter(session => {
       const sessionEndDate = moment(session.end);
       const diffMinutes = sessionEndDate.diff(currentTime, 'minutes');
-      return diffMinutes <= 10 && !session.tutorRating;
+      return diffMinutes <= 10 && !session.ratingByTutor;
     });
     setFilteredSessions(filteredSessions)
   }, [sessions])

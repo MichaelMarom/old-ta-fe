@@ -10,9 +10,9 @@ export const SessionFeedback = ({ clickedSlot, questions, questionLoading, showT
                 <h5 className='text-center'>{showTutorFeedback ? convertTutorIdToName(clickedSlot.tutorId) : clickedSlot.studentName} Reviews</h5>
                 <div className='rounded-pill border border-secondary px-3 d-flex' style={{ width: "100%", height: "30px" }}>
                     <div style={{ width: "60%" }}>
-                        <StarRating rating={showTutorFeedback ? clickedSlot.tutorRating : clickedSlot.rating} />
+                        <StarRating rating={showTutorFeedback ? clickedSlot.ratingByTutor : clickedSlot.ratingByStudent} />
                     </div>
-                    <p className='float-end m-0 mt-1' style={{ fontSize: "12px", width: "40%" }}>{showTutorFeedback ? clickedSlot.tutorRating : clickedSlot.rating} out of 5.00</p>
+                    <p className='float-end m-0 mt-1' style={{ fontSize: "12px", width: "40%" }}>{showTutorFeedback ? clickedSlot.ratingByTutor : clickedSlot.ratingByStudent} out of 5.00</p>
                 </div>
                 {
                     questionLoading ? <Loading height='50px' /> :
@@ -31,7 +31,7 @@ export const SessionFeedback = ({ clickedSlot, questions, questionLoading, showT
             <div className='m-4'>
                 <h6>{showTutorFeedback ? convertTutorIdToName(clickedSlot.tutorId) : clickedSlot.studentName} - Comment</h6>
                 <pre className='rounded p-2 border border-secondary m-0' style={{ fontSize: "14px", height: "auto" }}>
-                    {showTutorFeedback ? clickedSlot.tutorComment : clickedSlot.comment}
+                    {showTutorFeedback ? clickedSlot.commentByTutor : clickedSlot.commentByStudent}
                 </pre>
             </div>
         </div>

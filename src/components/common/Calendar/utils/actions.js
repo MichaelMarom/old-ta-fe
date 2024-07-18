@@ -258,7 +258,7 @@ export const handleBulkEventCreate = async (
   //       slot.subject === selectedTutor.subject &&
   //       slot.studentId === student.AcademyId &&
   //       slot.end.getTime() < new Date().getTime() &&
-  //       !slot.rating
+  //       !slot.ratingByStudent
   //     );
   //   })
   // ) {

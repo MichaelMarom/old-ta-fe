@@ -93,7 +93,7 @@ function BookedLessons({ events, handleRowSelect }) {
       </div>
       <div style={{ height: "calc(100vh - 270px)", overflowY: "auto" }}>
         <table>
-          <thead className="thead-light d-none">
+          {/* <thead className="thead-light d-none">
             <tr>
               <th>Photo</th>
               <th scope="col" className="col-md-1">
@@ -112,7 +112,7 @@ function BookedLessons({ events, handleRowSelect }) {
               <th scope="col">Comment</th>
               <th scope="col">Action</th>
             </tr>
-          </thead>
+          </thead> */}
           <tbody>
             {sortedEvents.map((event, index) => (
               <tr
@@ -134,10 +134,10 @@ function BookedLessons({ events, handleRowSelect }) {
                 </td>
 
                 <td style={{ width: Header[0].width }}>
-                  <StarRating rating={event.rating} />
+                  <StarRating rating={event.ratingByStudent} />
                 </td>
                 <td style={{ width: Header[0].width }}>
-                  <Comment comment={event.comment} />
+                  <Comment comment={event.commentByStudent} />
                 </td>
 
                 <td style={{ width: Header[0].width }}>
@@ -146,7 +146,7 @@ function BookedLessons({ events, handleRowSelect }) {
                     buttonText={"Select"}
                     style={{
                       animation:
-                       ( eligibleForFeedback(event) && !event.rating)
+                       ( eligibleForFeedback(event) && !event.ratingByStudent)
                           ? "blinking 1s infinite"
                           : "none",
                     }}
@@ -154,7 +154,7 @@ function BookedLessons({ events, handleRowSelect }) {
                     disabled={!eligibleForFeedback(event)}
                   />
                   {/* <button className={`btn ${selectedEvent.id === event.id ? 'btn-success' : 'btn-primary'} `}
-                style={{ animation: (event.feedbackEligible && !event.rating) ? 'blinking 1s infinite' : 'none' }}
+                style={{ animation: (event.feedbackEligible && !event.ratingByStudent) ? 'blinking 1s infinite' : 'none' }}
                 onClick={() => handleRowSelect(event)} disabled={!event.feedbackEligible}>Select</button> */}
                 </td>
               </tr>
