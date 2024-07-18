@@ -3,7 +3,6 @@ import { showDate } from '../../utils/moment';
 import { slotPillDateFormat } from '../../constants/constants';
 
 const SlotPill = ({ selectedSlots, handleRemoveSlot, selectedType }) => {
-    console.log(selectedSlots)
     return (
         <div className='d-flex flex-wrap' style={{ width: '100%' }}>
             {selectedSlots.map((item, index) => (

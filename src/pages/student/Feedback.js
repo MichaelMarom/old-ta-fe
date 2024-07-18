@@ -7,17 +7,21 @@ import {
   get_feedback_to_question,
   post_feedback_to_question,
 } from "../../axios/student";
+import { fetch_tutors_photos } from "../../axios/tutor";
+
 import { showDate } from "../../utils/moment";
 import { wholeDateFormat } from "../../constants/constants";
 import { useDispatch, useSelector } from "react-redux";
-import { postStudentBookings } from "../../redux/student/studentBookings";
+import { updateStudentLesson } from "../../redux/student/studentBookings";
 import Actions from "../../components/common/Actions";
 import { toast } from "react-toastify";
 import Loading from "../../components/common/Loading";
 import _ from "lodash";
 import DebounceInput from "../../components/common/DebounceInput";
-import { setStudentSessions } from "../../redux/student/studentSessions";
-import { fetch_tutors_photos } from "../../axios/tutor";
+import {
+  setOnlySessions,
+  setStudentSessions,
+} from "../../redux/student/studentSessions";
 
 const Feedback = () => {
   const { sessions } = useSelector((state) => state.studentSessions);
@@ -34,16 +38,23 @@ const Feedback = () => {
 
   useEffect(() => {
     sessions.length &&
-      fetch_tutors_photos(sessions.map((session) => session.tutorId)).then((result) => {
-        result?.length && setFeedbackData(
-          sessions.map((session) => ({
-            ...session,
-            photo: result.find((tutor) => tutor.AcademyId === session.tutorId)
-              ?.photo,
-          }))
-        );
-      }).catch((error) => { console.log(error) });
+      fetch_tutors_photos(sessions.map((session) => session.tutorId))
+        .then((result) => {
+          result?.length &&
+            setFeedbackData(
+              sessions.map((session) => ({
+                ...session,
+                photo: result.find(
+                  (tutor) => tutor.AcademyId === session.tutorId
+                )?.photo,
+              }))
+            );
+        })
+        .catch((error) => {
+          console.log(error);
+        });
   }, [sessions]);
+  console.log(sessions);
 
   useEffect(() => {
     let fetchSession = async () =>
@@ -79,63 +90,36 @@ const Feedback = () => {
       );
       updatedQuestions[questionIndex].star = star;
       setQuestions([...updatedQuestions]);
-      const updatedSlots = feedbackData.map((slot) => {
-        if (slot.id === selectedEvent.id) {
-          return {
-            ...slot,
-            rating:
-              questions.reduce((sum, question) => {
-                sum = question.star + sum;
-                return sum;
-              }, 0) / questions.length,
-          };
-        }
-        return slot;
-      });
 
-      const removedPhotoSessions = updatedSlots.map((sessions) => {
-        const { photo, ...rest } = sessions;
-        return rest;
-      });
+      const rating =
+        questions.reduce((sum, question) => {
+          return question.star? sum + question.star : sum;
+        }, 0) / questions.length;
 
+      const withoutPhotoSession = { ...selectedEvent };
+      delete withoutPhotoSession.photo;
       console.log(
-        selectedEvent.tutorId,
-        student.AcademyId,
-        removedPhotoSessions
+        questions,rating
       );
       dispatch(
-        postStudentBookings({
-          studentId: student.AcademyId,
-          tutorId: selectedEvent.tutorId,
-          bookedSlots: removedPhotoSessions.filter(
-            (slot) =>
-              slot.type === "booked" &&
-              slot.studentId === student.AcademyId &&
-              slot.tutorId === selectedEvent.tutorId
-          ),
-          reservedSlots: removedPhotoSessions.filter(
-            (slot) =>
-              slot.type !== "booked" &&
-              slot.studentId === student.AcademyId &&
-              slot.tutorId === selectedEvent.tutorId
-          ),
+        updateStudentLesson(withoutPhotoSession.id, {
+          ...withoutPhotoSession,
+          ratingByStudent: rating,
         })
       );
 
-      setFeedbackData(
-        feedbackData.map((slot) => {
-          if (slot.id === selectedEvent.id) {
-            return {
-              ...slot,
-              rating:
-                questions.reduce((sum, question) => {
-                  sum = question.star + sum;
-                  return sum;
-                }, 0) / questions.length,
-            };
-          }
-          return slot;
-        })
+      dispatch(
+        await setOnlySessions(
+          [...feedbackData].map((slot) => {
+            if (slot.id === selectedEvent.id) {
+              return {
+                ...slot,
+                ratingByStudent: rating,
+              };
+            }
+            return slot;
+          })
+        )
       );
     }
   };
@@ -144,39 +128,30 @@ const Feedback = () => {
     setSelectedEvent(event);
   };
 
-  const handleDynamicSave = async (updatedSlots) => {
-    const removedPhotoSessions = updatedSlots.map((sessions) => {
-      const { photo, ...rest } = sessions;
-      return rest;
-    });
-    const data = dispatch(
-      postStudentBookings({
-        studentId: student.AcademyId,
-        tutorId: selectedEvent.tutorId,
-        bookedSlots: removedPhotoSessions.filter(
-          (slot) =>
-            slot.id === "booked" &&
-            slot.studentId === student.AcademyId &&
-            slot.tutorId === selectedEvent.tutorId
-        ),
-        reservedSlots: removedPhotoSessions.filter(
-          (slot) =>
-            slot.id !== "booked" &&
-            slot.studentId === student.AcademyId &&
-            slot.tutorId === selectedEvent.tutorId
-        ),
-      })
-    );
+  const handleDynamicSave = async (updatedSlot) => {
+    
+    const withoutPhotoSession = { ...updatedSlot };
+    delete withoutPhotoSession.photo;
+    console.log(withoutPhotoSession);
 
-    data?.response?.status === 400 &&
-      toast.error("Error while saving the data");
+    const updatedSessionsData = [...feedbackData].map((slot) => {
+      if (slot.id === withoutPhotoSession.id) {
+        return withoutPhotoSession;
+      }
+      return slot;
+    });
+    dispatch(setOnlySessions(updatedSessionsData));
+    dispatch(updateStudentLesson(withoutPhotoSession.id, withoutPhotoSession));
   };
 
   useEffect(() => {
-    if (!!selectedEvent?.comment?.length) {
-      setComment(selectedEvent?.comment);
+    if (!!selectedEvent?.commentByStudent?.length) {
+      setComment(selectedEvent?.commentByStudent);
     }
-  }, [selectedEvent.comment]);
+    else{
+      setComment("");
+    }
+  }, [selectedEvent.commentByStudent]);
 
   useEffect(() => {
     if (selectedEvent.id) {
@@ -271,17 +246,12 @@ const Feedback = () => {
                     value={comment}
                     style={{ height: "150px" }}
                     setInputValue={setComment}
-                    debounceCallback={() => {
-                      const updatedSlots = feedbackData.map((slot) => {
-                        if (slot.id === selectedEvent.id) {
-                          return { ...slot, comment };
-                        }
-                        return slot;
+                    debounceCallback={(val) => {
+                      console.log(selectedEvent);
+                      handleDynamicSave({
+                        ...selectedEvent,
+                        commentByStudent: comment,
                       });
-
-                      setFeedbackData(updatedSlots);
-                      setSelectedEvent({ ...selectedEvent, comment });
-                      handleDynamicSave(updatedSlots);
                     }}
                     onChange={(e) => setComment(e.target.value)}
                   />

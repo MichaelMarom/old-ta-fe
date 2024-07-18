@@ -333,6 +333,40 @@ export const save_student_events = async (body) => {
   }
 };
 
+export const save_student_lesson = async (body) => {
+  try {
+    await apiClient.post("/student/lesson", body);
+  } catch (e) {
+    showErrorToast(e);
+  }
+};
+
+export const update_student_lesson = async (id, body) => {
+  try {
+    await apiClient.put(`/student/lesson/${id}`, body);
+  } catch (e) {
+    showErrorToast(e);
+  }
+};
+
+export const get_student_lesson = async (studentId, tutorId) => {
+  try {
+   const {data} =  await apiClient.get("/student/lesson", {params:{studentId, tutorId}});
+   return data
+  } catch (e) {
+    showErrorToast(e);
+  }
+};
+
+export const delete_student_lesson = async (id) => {
+  try {
+   const {data} =  await apiClient.delete(`/student/lesson/${id}`);
+   return data
+  } catch (e) {
+    showErrorToast(e);
+  }
+};
+
 export const get_student_tutor_events = async (studentId, tutorId) => {
   try {
     const { data } = await apiClient.get(

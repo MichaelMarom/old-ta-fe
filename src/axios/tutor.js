@@ -636,6 +636,17 @@ export const fetchStudentsBookings = async (tutorId) => {
   }
 };
 
+export const getAllTutorLessons = async (tutorId) => {
+  try {
+    const {data} = await apiClient.get(`/tutor/lesson`, {
+      params: { tutorId },
+    });
+    return data;
+  } catch (error) {
+    showErrorToast(error);
+  }
+};
+
 export const new_subj_request_exist = async (subject) => {
   try {
     const response = await apiClient.get(`/tutor/newsubject/${subject}`);

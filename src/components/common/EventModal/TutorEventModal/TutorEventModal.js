@@ -56,7 +56,7 @@ export const TutorEventModal = ({ isOpen, onClose, clickedSlot, handlePostpone,
                 </div>
                 {
                     (convertToDate(clickedSlot.end).getTime() <= (new Date()).getTime()) ?
-                        !clickedSlot.rating ? <div className='p-3 text-danger text-center' style={{ fontWeight: "700" }}>
+                        !clickedSlot.ratingByStudent ? <div className='p-3 text-danger text-center' style={{ fontWeight: "700" }}>
                             No feedback given for this session!</div> :
                             <SessionFeedback clickedSlot={clickedSlot} questions={questions} questionLoading={questionLoading} /> :
                         <SessionActions

@@ -25,12 +25,30 @@ const slice = createSlice({
 
             state.upcomingSessionFromNow = action.payload.upcomingSessionFromNow || '';
         },
+        setOnlySessions: (state, action) => {
+            console.log(state, action)
+            state.isLoading = false;
+            state.sessions = action.payload || [];
+                    },
     },
 });
 
 export default slice.reducer;
+export const { setTutorSession, isLoading,setOnlySessions } = slice.actions;
+
 
 // ACTIONS
+
+export const setSessionsManually = async(data)=>{
+    return async (dispatch) => {
+        try {
+            dispatch(slice.actions.setTutorSession(data));
+        }
+        catch (err) {
+            return err
+        }
+    };
+}
 
 export const setTutorSessions = async (tutor) => {
     return async (dispatch) => {

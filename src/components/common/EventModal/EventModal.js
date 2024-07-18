@@ -2,14 +2,23 @@ import React, { useEffect, useState } from "react";
 import LeftSideBar from "../LeftSideBar";
 import SlotPill from "../../student/SlotPill";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import SlotsInvoice from "../../student/SlotsInvoice";
-import { convertTutorIdToName, formatName, isEqualTwoObjectsRoot } from "../../../utils/common";
+import {
+  convertTutorIdToName,
+  formatName,
+  isEqualTwoObjectsRoot,
+} from "../../../utils/common";
 import { convertToDate } from "../Calendar/Calendar";
 import Button from "../Button";
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import moment from 'moment-timezone'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment-timezone";
+import { useNavigate } from "react-router-dom";
+import {
+  deleteStudentLesson,
+  updateStudentLesson,
+} from "../../../redux/student/studentBookings";
 
 function EventModal({
   isStudentLoggedIn = false,
@@ -22,19 +31,31 @@ function EventModal({
   reservedSlots,
   bookedSlots,
   clickedSlot,
-  handleRemoveReservedSlot,
+  // handleRemoveReservedSlot,
   setClickedSlot,
   timeZone,
-  handleRescheduleSession
+  handleRescheduleSession,
+  //
+  studentId,
+  subjectName,
+  tutorId,
 }) {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [selectedType, setSelectedType] = useState(null);
-  const [canPostEvents, setCanPostEvents] = useState(true)
-  const { selectedTutor } = useSelector(state => state.selectedTutor);
-  const [rescheduleTime, setRescheduleTime] = useState(timeZone ? (moment().add(1, 'hours').set({ minute: 0 }).tz(timeZone)).toDate() : moment().toDate())
-  const [invoiceNum, setInvoiceNum] = useState(null)
+  const { lessons } = useSelector((state) => state.bookings);
+  const { tutor } = useSelector((state) => state.tutor);
+  const [canPostEvents, setCanPostEvents] = useState(true);
+  const { selectedTutor } = useSelector((state) => state.selectedTutor);
+  const [rescheduleTime, setRescheduleTime] = useState(
+    timeZone
+      ? moment().add(1, "hours").set({ minute: 0 }).tz(timeZone).toDate()
+      : moment().toDate()
+  );
+  const [invoiceNum, setInvoiceNum] = useState(null);
 
   const formatUTC = (dateInt, addOffset = false) => {
-    let date = (!dateInt || dateInt.length < 1) ? new Date() : new Date(dateInt);
+    let date = !dateInt || dateInt.length < 1 ? new Date() : new Date(dateInt);
     const currentDate = new Date();
     if (date < currentDate) {
       return null; // You can also throw an error here if you prefer
@@ -42,162 +63,298 @@ function EventModal({
     if (typeof dateInt === "string") {
       return date;
     } else {
-      const offset = addOffset ? date.getTimezoneOffset() : -(date.getTimezoneOffset());
+      const offset = addOffset
+        ? date.getTimezoneOffset()
+        : -date.getTimezoneOffset();
       const offsetDate = new Date();
-      offsetDate.setTime(date.getTime() + offset * 60000)
+      offsetDate.setTime(date.getTime() + offset * 60000);
       return offsetDate;
     }
-  }
+  };
 
   const handleReschedule = () => {
-    const sessionOnSameTime = convertToDate(clickedSlot.start).getTime() === convertToDate(rescheduleTime).getTime()
+    const sessionOnSameTime =
+      convertToDate(clickedSlot.start).getTime() ===
+      convertToDate(rescheduleTime).getTime();
     const sessionExistOnSelectedTime = reservedSlots.filter((slot) =>
-      moment.utc(convertToDate(slot.start)).isSame(moment.utc(convertToDate(rescheduleTime))));
+      moment
+        .utc(convertToDate(slot.start))
+        .isSame(moment.utc(convertToDate(rescheduleTime)))
+    );
 
     if (sessionOnSameTime)
-      return toast.warning('Session is already on the same time!')
+      return toast.warning("Session is already on the same time!");
     if (sessionExistOnSelectedTime.length)
-      return toast.warning('Session is already exist for that time!')
+      return toast.warning("Session is already exist for that time!");
 
-    const rescheduleEndTime = moment(convertToDate(rescheduleTime)).add(1, 'hours');
+    const rescheduleEndTime = moment(convertToDate(rescheduleTime)).add(
+      1,
+      "hours"
+    );
 
-    const updatedReservedSlot = (reservedSlots.concat(bookedSlots)).map(slot => {
-      if (slot.id === clickedSlot.id && slot.request)
-        return { ...slot, request: null, start: rescheduleTime, end: rescheduleEndTime.toDate() }
-      else
-        return slot
-    })
+    dispatch(
+      updateStudentLesson(clickedSlot.id, {
+        ...clickedSlot,
+        start: rescheduleTime,
+        end: rescheduleEndTime.toDate(),
+        request: null,
+      })
+    );
 
-    const extractedReservedSlots = updatedReservedSlot.filter(slot => slot.type === 'intro' || slot.type === 'reserved');
-    const extractedBookedSlots = updatedReservedSlot.filter(slot => slot.type === 'booked')
-    handleRescheduleSession(extractedReservedSlots, extractedBookedSlots)
+    // const updatedReservedSlot = reservedSlots
+    //   .concat(bookedSlots)
+    //   .map((slot) => {
+    //     if (slot.id === clickedSlot.id && slot.request)
+    //       return {
+    //         ...slot,
+    //         request: null,
+    //         start: rescheduleTime,
+    //         end: rescheduleEndTime.toDate(),
+    //       };
+    //     else return slot;
+    //   });
+
+    // const extractedReservedSlots = updatedReservedSlot.filter(
+    //   (slot) => slot.type === "intro" || slot.type === "reserved"
+    // );
+    // const extractedBookedSlots = updatedReservedSlot.filter(
+    //   (slot) => slot.type === "booked"
+    // );
+    // handleRescheduleSession(
+    //   extractedReservedSlots,
+    //   extractedBookedSlots,
+    //   //
+    //   dispatch,
+    //   studentId,
+    //   subjectName,
+    //   tutor,
+    //   //
+    //   clickedSlot,
+    //   selectedTutor,
+    //   isStudentLoggedIn,
+    //   student
+    // );
 
     //close modal
-    onRequestClose()
-    setSelectedType(null)
-  }
+    onRequestClose();
+    setSelectedType(null);
+  };
 
   const handleRemoveSlot = (startTime) => {
-    setSelectedSlots(selectedSlots.filter((slot) =>
-      slot.start.getTime() !== startTime.getTime()))
-  }
+    setSelectedSlots(
+      selectedSlots.filter(
+        (slot) => slot.start.getTime() !== startTime.getTime()
+      )
+    );
+  };
 
   const handleAccept = () => {
     if (canPostEvents) {
-      handleBulkEventCreate(selectedType, invoiceNum);
+      handleBulkEventCreate(
+        selectedType,
+        invoiceNum,
+        toast,
+        reservedSlots,
+        dispatch,
+        student,
+        tutorId,
+        selectedTutor,
+        selectedSlots,
+        studentId,
+        clickedSlot,
+        navigate,
+        subjectName,
+        tutor,
+        isStudentLoggedIn,
+        bookedSlots,
+        lessons
+      );
       onRequestClose();
-      setSelectedType(null)
+      setSelectedType(null);
     }
-  }
+  };
 
   const generateNumberWithDate = () => {
     const today = moment();
-    const datePart = today.format('DDMMYY');
+    const datePart = today.format("DDMMYY");
     const randomTwoDigitNumber = Math.floor(Math.random() * 90) + 10;
     const generatedNumber = `${datePart}${randomTwoDigitNumber}`;
     return generatedNumber;
   };
 
   useEffect(() => {
-    if (selectedType === 'intro' || selectedType === 'booked')
-      setInvoiceNum(generateNumberWithDate())
+    if (selectedType === "intro" || selectedType === "booked")
+      setInvoiceNum(generateNumberWithDate());
     else {
-      setInvoiceNum(null)
+      setInvoiceNum(null);
     }
-  }, [selectedType])
+  }, [selectedType]);
 
   useEffect(() => {
-    const existIntroSession = reservedSlots?.some(slot => slot.type === 'intro' &&
-      selectedTutor.subject === slot.subject && (!isStudentLoggedIn || slot.studentId === student.AcademyId))
-    if (existIntroSession && selectedType === 'intro' && selectedSlots[0]?.start) {
-      toast.warning('Cannot add more than 1 Intro Session!')
-      setCanPostEvents(false)
+    const existIntroSession = reservedSlots?.some(
+      (slot) =>
+        slot.type === "intro" &&
+        selectedTutor.subject === slot.subject &&
+        (!isStudentLoggedIn || slot.studentId === student.AcademyId)
+    );
+    if (
+      existIntroSession &&
+      selectedType === "intro" &&
+      selectedSlots[0]?.start
+    ) {
+      toast.warning("Cannot add more than 1 Intro Session!");
+      setCanPostEvents(false);
+    } else if (
+      !existIntroSession &&
+      selectedType !== "intro" &&
+      selectedSlots[0]?.start
+    ) {
+      setCanPostEvents(false);
+      toast.warning(
+        `Your first Session must be Introduction session for ${selectedTutor.subject}!`
+      );
+    } else if (
+      existIntroSession &&
+      selectedType === "intro" &&
+      selectedSlots.length > 1
+    ) {
+      setCanPostEvents(false);
+      toast.warning("Cannot book the same subject intro session twice!");
+    } else {
+      setCanPostEvents(true);
     }
-    else if ((!existIntroSession && selectedType !== 'intro') && selectedSlots[0]?.start) {
-      setCanPostEvents(false)
-      toast.warning(`Your first Session must be Introduction session for ${selectedTutor.subject}!`)
-    }
-    else if (existIntroSession && selectedType === 'intro' && selectedSlots.length > 1) {
-      setCanPostEvents(false)
-      toast.warning('Cannot book the same subject intro session twice!')
-    }
-    else {
-      setCanPostEvents(true)
-    }
-  }, [selectedSlots, selectedType, reservedSlots, isStudentLoggedIn, selectedTutor, student,])
+  }, [
+    selectedSlots,
+    selectedType,
+    reservedSlots,
+    isStudentLoggedIn,
+    selectedTutor,
+    student,
+  ]);
 
   return (
     <LeftSideBar
       isOpen={isOpen}
       onClose={() => {
-        onRequestClose()
-        setSelectedType(null)
+        onRequestClose();
+        setSelectedType(null);
       }}
     >
       <div className="">
         <div className="modal-header">
-          <h4 className="modal-title text-center" style={{ width: '100%' }}>Selected Slots</h4>
+          <h4 className="modal-title text-center" style={{ width: "100%" }}>
+            Selected Slots
+          </h4>
         </div>
         <div className="">
-          {clickedSlot.request === 'postpone' &&
+          {clickedSlot.request === "postpone" && (
             <h5 className="text-danger font-weight-bold text-center m-2">
-              {convertTutorIdToName(clickedSlot.tutorId)} is requesting Reschedule
+              {convertTutorIdToName(clickedSlot.tutorId)} is requesting
+              Reschedule
             </h5>
-          }
-          {clickedSlot.start ?
+          )}
+          {clickedSlot.start ? (
             <div>
-              <SlotPill selectedSlots={[clickedSlot]} handleRemoveSlot={() => setClickedSlot({})} selectedType={selectedType} />
-            </div> :
+              <SlotPill
+                selectedSlots={[clickedSlot]}
+                handleRemoveSlot={() => setClickedSlot({})}
+                selectedType={selectedType}
+              />
+            </div>
+          ) : (
             <div>
               <SlotPill
                 selectedSlots={selectedSlots}
                 handleRemoveSlot={handleRemoveSlot}
-                selectedType={selectedType} />
+                selectedType={selectedType}
+              />
             </div>
-          }
+          )}
           <div className="form-group d-flex flex-column">
-            <button type="button" className={` btn btn-sm btn-primary`}
+            <button
+              type="button"
+              className={` btn btn-sm btn-primary`}
               disabled={clickedSlot.start}
-              onClick={() => setSelectedType("intro")} >Mark as Intro Session</button>
+              onClick={() => setSelectedType("intro")}
+            >
+              Mark as Intro Session
+            </button>
 
-            <button type="button" className=" btn btn-sm btn-success"
-              onClick={() => setSelectedType("booked")}>Mark as Booking Session</button>
-            <button type="button" className="btn  btn-sm btn-warning" style={{ background: "yellow" }}
+            <button
+              type="button"
+              className=" btn btn-sm btn-success"
+              onClick={() => setSelectedType("booked")}
+            >
+              Mark as Booking Session
+            </button>
+            <button
+              type="button"
+              className="btn  btn-sm btn-warning"
+              style={{ background: "yellow" }}
               disabled={clickedSlot.start}
-              onClick={() => setSelectedType("reserved")}>Mark as Reserved Session</button>
-            <button type="button" className=" btn btn-sm btn-danger"
-              onClick={() => setSelectedType("delete")}>Delete</button>
-            {clickedSlot.request === 'postpone' &&
-              <div className='d-flex justify-content-between align-items-center h-100'>
+              onClick={() => setSelectedType("reserved")}
+            >
+              Mark as Reserved Session
+            </button>
+            <button
+              type="button"
+              className=" btn btn-sm btn-danger"
+              onClick={() => setSelectedType("delete")}
+            >
+              Delete
+            </button>
+            {clickedSlot.request === "postpone" && (
+              <div className="d-flex justify-content-between align-items-center h-100">
                 <DatePicker
                   selected={formatUTC(rescheduleTime, true)}
-                  onChange={date => setRescheduleTime(formatUTC(date))}
+                  onChange={(date) => setRescheduleTime(formatUTC(date))}
                   showTimeSelect
                   dateFormat="MMM d, yyyy hh:mm aa"
                   className="form-control m-2 w-80"
                   timeIntervals={60}
                 />
-                <Button className='btn-success btn-sm' onClick={() => handleReschedule()}>Postpone</Button>
+                <Button
+                  className="btn-success btn-sm"
+                  onClick={() => handleReschedule()}
+                >
+                  Postpone
+                </Button>
               </div>
-            }
-
+            )}
           </div>
         </div>
 
-        {
-          selectedType === 'delete' &&
+        {selectedType === "delete" && (
           <div className=" p-4">
             <hr />
-            <p className="text-danger">Are you sure you want to delete your reservation?!</p>
+            <p className="text-danger">
+              Are you sure you want to delete your reservation?!
+            </p>
             <hr />
             <div>
-
               <button
                 type="button"
                 className="action-btn btn btn-sm float-end"
                 onClick={() => {
-                  handleRemoveReservedSlot(reservedSlots.filter(slot => !isEqualTwoObjectsRoot(slot, clickedSlot)));
-                  setClickedSlot({})
+                  dispatch(deleteStudentLesson(clickedSlot));
+                  // handleRemoveReservedSlot(
+                  //   reservedSlots.filter(
+                  //     (slot) => !isEqualTwoObjectsRoot(slot, clickedSlot)
+                  //   ),
+                  //   //
+                  //   dispatch,
+                  //   studentId,
+                  //   tutorId,
+                  //   subjectName,
+                  //   bookedSlots,
+                  //   //
+                  //   tutor,
+                  //   clickedSlot,
+                  //   selectedTutor,
+                  //   isStudentLoggedIn,
+                  //   student
+                  // );
+                  setClickedSlot({});
                   onRequestClose();
                 }}
               >
@@ -205,9 +362,8 @@ function EventModal({
               </button>
             </div>
           </div>
-        }
-        {
-          (selectedType === 'reserved') &&
+        )}
+        {selectedType === "reserved" && (
           <div className="modal-footer">
             <button
               type="button"
@@ -220,21 +376,24 @@ function EventModal({
               type="button"
               className="btn btn-secondary btn-sm"
               onClick={() => {
-                onRequestClose()
-                setSelectedType(null)
+                onRequestClose();
+                setSelectedType(null);
               }}
             >
               Cancel
             </button>
-          </div>}
-        {
-          (selectedType === 'intro' || selectedType === 'booked') &&
+          </div>
+        )}
+        {(selectedType === "intro" || selectedType === "booked") && (
           <div>
             <SlotsInvoice
               timeZone={timeZone}
               selectedType={selectedType}
               studentName={formatName(student.FirstName, student.LastName)}
-              tutorName={formatName(selectedTutor.firstName, selectedTutor.lastName)}
+              tutorName={formatName(
+                selectedTutor.firstName,
+                selectedTutor.lastName
+              )}
               invoiceNum={invoiceNum}
               selectedSlots={clickedSlot.start ? [clickedSlot] : selectedSlots}
               subject={selectedTutor.subject}
@@ -244,9 +403,9 @@ function EventModal({
               handleClose={onRequestClose}
             />
           </div>
-        }
+        )}
       </div>
-    </LeftSideBar >
+    </LeftSideBar>
   );
 }
 

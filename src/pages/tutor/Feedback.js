@@ -5,7 +5,6 @@ import QuestionFeedback from "../../components/tutor/Feedback/QuestionFeedback";
 import SessionsTable from "../../components/tutor/Feedback/SessionsTable";
 import { wholeDateFormat } from "../../constants/constants";
 import {
-  feedback_records,
   get_tutor_feedback_questions,
 } from "../../axios/tutor";
 import {
@@ -14,17 +13,22 @@ import {
 } from "../../axios/student";
 
 import { useDispatch, useSelector } from "react-redux";
-import { postStudentBookings } from "../../redux/student/studentBookings";
+import {
+  updateStudentLesson,
+} from "../../redux/student/studentBookings";
 import { toast } from "react-toastify";
 import Actions from "../../components/common/Actions";
 import Tooltip from "../../components/common/ToolTip";
 import Loading from "../../components/common/Loading";
 import DebounceInput from "../../components/common/DebounceInput";
 import _ from "lodash";
+import { setOnlySessions } from "../../redux/tutor/tutorSessions";
 
 const Feedback = () => {
   const dispatch = useDispatch();
   const [selectedEvent, setSelectedEvent] = useState({});
+
+  const { sessions } = useSelector((state) => state.tutorSessions);
   const [questionLoading, setQuestionLoading] = useState(false);
   const [feedbackData, setFeedbackData] = useState([]);
   const [comment, setComment] = useState("");
@@ -36,6 +40,10 @@ const Feedback = () => {
   const [fetchingSessions, setFetchingFeedbackSessions] = useState(false);
 
   useEffect(() => {
+    setFeedbackData(sessions);
+  }, [sessions]);
+
+  useEffect(() => {
     const getAllFeedbackQuestion = async () => {
       const data = await get_tutor_feedback_questions();
       if (!!data?.length) {
@@ -45,19 +53,6 @@ const Feedback = () => {
     };
     getAllFeedbackQuestion();
   }, []);
-
-  useEffect(() => {
-    const getFeedback = async () => {
-      if (tutor.AcademyId && tutor.timeZone) {
-        setFetchingFeedbackSessions(true);
-        const records = await feedback_records(tutor.AcademyId, tutor.timeZone);
-        setFetchingFeedbackSessions(false);
-
-        !!records?.length && setFeedbackData(records);
-      }
-    };
-    getFeedback();
-  }, [tutor.AcademyId, tutor.timeZone]);
 
   const handleEmojiClick = async (id, star) => {
     const updatedQuestions = [...questions];
@@ -74,98 +69,48 @@ const Feedback = () => {
         star,
         0
       );
+
       updatedQuestions[questionIndex].star = star;
       setQuestions([...updatedQuestions]);
-      const updatedSlots = feedbackData.map((slot) => {
-        if (slot.id === selectedEvent.id) {
-          slot.tutorRating =
-            questions.reduce((sum, question) => {
-              sum = question.star + sum;
-              return sum;
-            }, 0) / questions.length;
-        }
-        return slot;
+
+      setSelectedEvent({
+        ...selectedEvent,
+        ratingByTutor:
+          questions.reduce((sum, question) => {
+            sum = question.star + sum;
+            return sum;
+          }, 0) / questions.length,
       });
 
-      const removedPhotoSessions = updatedSlots.map((sessions) => {
-        const { photo, ...rest } = sessions;
-        return rest;
-      });
+      dispatch(updateStudentLesson(selectedEvent.id, selectedEvent));
+
       dispatch(
-        postStudentBookings({
-          studentId: selectedEvent.studentId,
-          tutorId: tutor.AcademyId,
-          bookedSlots: removedPhotoSessions.filter(
-            (slot) =>
-              slot.type === "booked" &&
-              slot.studentId === selectedEvent.studentId &&
-              slot.tutorId === tutor.AcademyId
-          ),
-          reservedSlots: removedPhotoSessions.filter(
-            (slot) =>
-              slot.type !== "booked" &&
-              slot.studentId === selectedEvent.studentId &&
-              slot.tutorId === tutor.AcademyId
-          ),
-        })
-      );
-      setFeedbackData(
-        feedbackData.map((slot) => {
-          if (slot.id === selectedEvent.id) {
-            slot.tutorRating =
-              questions.reduce((sum, question) => {
-                sum = question.star + sum;
-                return sum;
-              }, 0) / questions.length;
-          }
-          return slot;
-        })
+       await setOnlySessions(
+          [...feedbackData].map((slot) => {
+            if (slot.id === selectedEvent.id) {
+             return {...slot, ratingByTutor:
+                questions.reduce((sum, question) => {
+                  sum = question.star + sum;
+                  return sum;
+                }, 0) / questions.length}
+            }
+            return slot;
+          })
+        )
       );
     }
   };
 
-  const handleDynamicSave = async (updatedSlots) => {
-    const removedPhotoSessions = updatedSlots.map((sessions) => {
-      const { photo, ...rest } = sessions;
-      return rest;
+  const handleDynamicSave = async (updatedSlot) => {
+    const updatedSessionsData = [...feedbackData].map((slot) => {
+      if (slot.id === updatedSlot.id) {
+        return updatedSlot;
+      }
+      return slot;
     });
-    const data = dispatch(
-      postStudentBookings({
-        studentId: selectedEvent.studentId,
-        tutorId: tutor.AcademyId,
-        bookedSlots: removedPhotoSessions.filter(
-          (slot) =>
-            slot.id === "booked" &&
-            slot.studentId === selectedEvent.studentId &&
-            slot.tutorId === tutor.AcademyId
-        ),
-        reservedSlots: removedPhotoSessions.filter(
-          (slot) =>
-            slot.id !== "booked" &&
-            slot.studentId === selectedEvent.studentId &&
-            slot.tutorId === tutor.AcademyId
-        ),
-      })
-    );
-    data?.response?.status === 400 &&
-      toast.error("Error while saving the data");
-  };
-
-  useEffect(() => {
-    // Show loading toast when loadingState is true
-    if (isLoading) {
-      toast.info("Loading...", {
-        closeOnClick: false,
-        closeButton: false,
-        draggable: false,
-        bodyClassName: "loading-toast-body",
-        autoClose: 500,
-      });
-    } else {
-      // Hide the loading toast when isLoading is false
-      // toast.dismiss();
-    }
-  }, [isLoading]);
+    dispatch(setOnlySessions(updatedSessionsData));
+    dispatch(updateStudentLesson(updatedSlot.id, updatedSlot));
+    };
 
   useEffect(() => {
     if (selectedEvent.id) {
@@ -199,19 +144,22 @@ const Feedback = () => {
         setQuestionLoading(false);
       };
       fetchFeedbackToQuestion();
-      setComment(selectedEvent.tutorComment ? selectedEvent.tutorComment : "");
+      setComment(
+        selectedEvent.commentByTutor ? selectedEvent.commentByTutor : ""
+      );
     } else setComment("");
     setQuestions((prevValue) =>
       prevValue.map((question) => ({ ...question, star: null }))
     );
-  }, [selectedEvent.id, selectedEvent.tutorComment, tutor]);
+  }, [selectedEvent.id, selectedEvent.commentByTutor, tutor]);
 
   if (fetchingSessions) return <Loading />;
   return (
+    <>
     <TutorLayout>
       <div className="container mt-1">
         <div className="py-2 row">
-          <div className={` ${selectedEvent.id ? "col-md-8" : "col-md-12"}`}>
+          <div className={ `${selectedEvent.id ? "col-md-8" : "col-md-12"}`}>
             <h2>Booked Lessons</h2>
             {feedbackData.length ? (
               <>
@@ -265,16 +213,23 @@ const Feedback = () => {
                     style={{ height: "150px" }}
                     setInputValue={setComment}
                     debounceCallback={(val) => {
-                      const updatedSlots = feedbackData.map((slot) => {
-                        if (slot.id === selectedEvent.id) {
-                          slot.tutorComment = comment;
-                        }
-                        return slot;
-                      });
+                      // const updatedSlots = feedbackData.map((slot) => {
+                      //   if (slot.id === selectedEvent.id) {
+                      //     slot.commentByTutor = comment;
+                      //   }
+                      //   return slot;
+                      // });
 
-                      setFeedbackData(updatedSlots);
-                      setSelectedEvent({ ...selectedEvent, comment });
-                      handleDynamicSave(updatedSlots);
+                      // setFeedbackData(updatedSlots);
+
+                      setSelectedEvent({
+                        ...selectedEvent,
+                        commentByTutor: comment,
+                      });
+                      handleDynamicSave({
+                        ...selectedEvent,
+                        commentByTutor: comment,
+                      });
                     }}
                     onChange={(e) => setComment(e.target.value)}
                   />
@@ -286,6 +241,7 @@ const Feedback = () => {
       </div>
       <Actions saveDisabled />
     </TutorLayout>
+    </>
   );
 };
 
