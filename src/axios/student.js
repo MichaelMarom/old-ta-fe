@@ -66,7 +66,7 @@ export let upload_setup_form = (
 };
 
 
-export const post_student_setup = async(body)=>{
+export const post_student_setup = async (body) => {
   try {
     const { data } = await apiClient.post('/student/setup', body);
     return data
@@ -255,6 +255,15 @@ export const fetch_student_ads = async (id) => {
   }
 };
 
+export const fetch_student_photos = async (ids) => {
+  try {
+    const { data } = await apiClient.get(`/student/setup/photos`, { params: { AcademyIds: ids } });
+    return data;
+  } catch (err) {
+    showErrorToast(err);
+  }
+};
+
 export let get_tutor_subject = async (subject) => {
   try {
     const { data } = await apiClient.get("/student/tutor-subject", {
@@ -351,8 +360,8 @@ export const update_student_lesson = async (id, body) => {
 
 export const get_student_lesson = async (studentId, tutorId) => {
   try {
-   const {data} =  await apiClient.get("/student/lesson", {params:{studentId, tutorId}});
-   return data
+    const { data } = await apiClient.get("/student/lesson", { params: { studentId, tutorId } });
+    return data
   } catch (e) {
     showErrorToast(e);
   }
@@ -360,8 +369,8 @@ export const get_student_lesson = async (studentId, tutorId) => {
 
 export const delete_student_lesson = async (id) => {
   try {
-   const {data} =  await apiClient.delete(`/student/lesson/${id}`);
-   return data
+    const { data } = await apiClient.delete(`/student/lesson/${id}`);
+    return data
   } catch (e) {
     showErrorToast(e);
   }

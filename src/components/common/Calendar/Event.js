@@ -4,23 +4,13 @@ import StarRating from "../StarRating";
 import { useDispatch, useSelector } from "react-redux";
 import { convertToDate } from "./Calendar";
 import { convertTutorIdToName } from "../../../utils/common";
-import { delete_student_lesson } from "../../../axios/student";
 import { deleteStudentLesson } from "../../../redux/student/studentBookings";
 
 function CustomEvent({
   event,
   isStudentLoggedIn,
   handleEventClick = () => {},
-  // handleSetReservedSlots,
-  reservedSlots,
-  //
-  tutorId,
-  subjectName,
-  bookedSlots,
-  tutor,
-  clickedSlot,
-  selectedTutor,
-  lessons
+  sessions=[]
 }) {
   const dispatch = useDispatch();
   const [remainingTime, setRemainingTime] = useState(
@@ -95,7 +85,7 @@ function CustomEvent({
       clearInterval(intervalId);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [event, extraFiveMinStart, reservedSlots]);
+  }, [event, extraFiveMinStart, sessions]);
 
   function calculateRemainingTime(createdAt) {
     const createdAtMoment = moment(createdAt);

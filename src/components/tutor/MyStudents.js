@@ -42,6 +42,7 @@ const MyStudents = () => {
             <th>Total Hours</th>
             <th>Date Start</th>
             <th>Date last</th>
+            <th>Rate(1hour)</th>
             <th>Total $ Gros</th>
             <th>Total $ Net</th>
           </tr>
@@ -60,8 +61,9 @@ const MyStudents = () => {
               <td>{student.totalHours}</td>
               <td className='col-2'>{showDate(student.dateStart, wholeDateFormat)}</td>
               <td className='col-2'>{showDate(student.dateLast, wholeDateFormat)}</td>
-              <td>{student.totalNet.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+              <td>{student.rate.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
               <td></td>
+              <td>{student.totalNet.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
             </tr>
           ))}
         </tbody>

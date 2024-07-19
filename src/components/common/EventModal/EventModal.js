@@ -28,20 +28,13 @@ function EventModal({
   selectedSlots,
   setSelectedSlots,
   handleBulkEventCreate,
-  reservedSlots,
-  bookedSlots,
   clickedSlot,
-  // handleRemoveReservedSlot,
   setClickedSlot,
   timeZone,
-  handleRescheduleSession,
-  //
-  studentId,
-  subjectName,
-  tutorId,
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const [selectedType, setSelectedType] = useState(null);
   const { lessons } = useSelector((state) => state.bookings);
   const { tutor } = useSelector((state) => state.tutor);
@@ -76,7 +69,7 @@ function EventModal({
     const sessionOnSameTime =
       convertToDate(clickedSlot.start).getTime() ===
       convertToDate(rescheduleTime).getTime();
-    const sessionExistOnSelectedTime = reservedSlots.filter((slot) =>
+    const sessionExistOnSelectedTime = lessons.filter((slot) =>
       moment
         .utc(convertToDate(slot.start))
         .isSame(moment.utc(convertToDate(rescheduleTime)))
@@ -101,40 +94,6 @@ function EventModal({
       })
     );
 
-    // const updatedReservedSlot = reservedSlots
-    //   .concat(bookedSlots)
-    //   .map((slot) => {
-    //     if (slot.id === clickedSlot.id && slot.request)
-    //       return {
-    //         ...slot,
-    //         request: null,
-    //         start: rescheduleTime,
-    //         end: rescheduleEndTime.toDate(),
-    //       };
-    //     else return slot;
-    //   });
-
-    // const extractedReservedSlots = updatedReservedSlot.filter(
-    //   (slot) => slot.type === "intro" || slot.type === "reserved"
-    // );
-    // const extractedBookedSlots = updatedReservedSlot.filter(
-    //   (slot) => slot.type === "booked"
-    // );
-    // handleRescheduleSession(
-    //   extractedReservedSlots,
-    //   extractedBookedSlots,
-    //   //
-    //   dispatch,
-    //   studentId,
-    //   subjectName,
-    //   tutor,
-    //   //
-    //   clickedSlot,
-    //   selectedTutor,
-    //   isStudentLoggedIn,
-    //   student
-    // );
-
     //close modal
     onRequestClose();
     setSelectedType(null);
@@ -152,21 +111,11 @@ function EventModal({
     if (canPostEvents) {
       handleBulkEventCreate(
         selectedType,
-        invoiceNum,
-        toast,
-        reservedSlots,
         dispatch,
         student,
-        tutorId,
         selectedTutor,
         selectedSlots,
-        studentId,
-        clickedSlot,
         navigate,
-        subjectName,
-        tutor,
-        isStudentLoggedIn,
-        bookedSlots,
         lessons
       );
       onRequestClose();
@@ -191,7 +140,7 @@ function EventModal({
   }, [selectedType]);
 
   useEffect(() => {
-    const existIntroSession = reservedSlots?.some(
+    const existIntroSession = lessons?.some(
       (slot) =>
         slot.type === "intro" &&
         selectedTutor.subject === slot.subject &&
@@ -226,11 +175,33 @@ function EventModal({
   }, [
     selectedSlots,
     selectedType,
-    reservedSlots,
+    lessons,
     isStudentLoggedIn,
     selectedTutor,
     student,
   ]);
+
+  const conductedAndReviewedIntroLesson = () => {
+    const introExist = lessons?.some((slot) => {
+      return (
+        slot.type === "intro" &&
+        slot.subject === selectedTutor.subject &&
+        slot.studentId === student.AcademyId
+        // slot.end.getTime() > new Date().getTime()
+      );
+    })
+    const feedbackedIntro = lessons?.some((slot) => {
+      return (
+        slot.type === "intro" &&
+        slot.subject === selectedTutor.subject &&
+        slot.studentId === student.AcademyId &&
+        slot.end.getTime() < new Date().getTime() &&
+        !slot.ratingByStudent
+      );
+    })
+    return { introExist, feedbackedIntro }
+  }
+  console.log(lessons, clickedSlot)
 
   return (
     <LeftSideBar
@@ -271,56 +242,60 @@ function EventModal({
             </div>
           )}
           <div className="form-group d-flex flex-column">
-            <button
-              type="button"
-              className={` btn btn-sm btn-primary`}
-              disabled={clickedSlot.start}
-              onClick={() => setSelectedType("intro")}
-            >
-              Mark as Intro Session
-            </button>
-
-            <button
-              type="button"
-              className=" btn btn-sm btn-success"
-              onClick={() => setSelectedType("booked")}
-            >
-              Mark as Booking Session
-            </button>
-            <button
-              type="button"
-              className="btn  btn-sm btn-warning"
-              style={{ background: "yellow" }}
-              disabled={clickedSlot.start}
-              onClick={() => setSelectedType("reserved")}
-            >
-              Mark as Reserved Session
-            </button>
-            <button
-              type="button"
-              className=" btn btn-sm btn-danger"
-              onClick={() => setSelectedType("delete")}
-            >
-              Delete
-            </button>
-            {clickedSlot.request === "postpone" && (
-              <div className="d-flex justify-content-between align-items-center h-100">
-                <DatePicker
-                  selected={formatUTC(rescheduleTime, true)}
-                  onChange={(date) => setRescheduleTime(formatUTC(date))}
-                  showTimeSelect
-                  dateFormat="MMM d, yyyy hh:mm aa"
-                  className="form-control m-2 w-80"
-                  timeIntervals={60}
-                />
-                <Button
-                  className="btn-success btn-sm"
-                  onClick={() => handleReschedule()}
+            {(!conductedAndReviewedIntroLesson().introExist ||( clickedSlot.start && clickedSlot.type !== 'intro')) ?
+              (<button
+                type="button"
+                className={` btn btn-sm btn-primary`}
+                disabled={clickedSlot.start}
+                onClick={() => setSelectedType("intro")}
+              >
+                Mark as Intro Session
+              </button>)
+              :
+             ( (conductedAndReviewedIntroLesson().introExist && conductedAndReviewedIntroLesson().feedbackedIntro)|| clickedSlot.start) && <>
+                {(clickedSlot.type === 'reserved') && <button
+                  type="button"
+                  className=" btn btn-sm btn-success"
+                  onClick={() => setSelectedType("booked")}
                 >
-                  Postpone
-                </Button>
-              </div>
-            )}
+                  Mark as Booking Session
+                </button>}
+                {!clickedSlot.start && <button
+                  type="button"
+                  className="btn  btn-sm btn-warning"
+                  style={{ background: "yellow" }}
+                  disabled={clickedSlot.start}
+                  onClick={() => setSelectedType("reserved")}
+                >
+                  Mark as Reserved Session
+                </button>}
+                {clickedSlot.start && <button
+                  type="button"
+                  className=" btn btn-sm btn-danger"
+                  onClick={() => setSelectedType("delete")}
+                >
+                  Delete
+                </button>}
+                {clickedSlot.request === "postpone" && (
+                  <div className="d-flex justify-content-between align-items-center h-100">
+                    <DatePicker
+                      selected={formatUTC(rescheduleTime, true)}
+                      onChange={(date) => setRescheduleTime(formatUTC(date))}
+                      showTimeSelect
+                      dateFormat="MMM d, yyyy hh:mm aa"
+                      className="form-control m-2 w-80"
+                      timeIntervals={60}
+                    />
+                    <Button
+                      className="btn-success btn-sm"
+                      onClick={() => handleReschedule()}
+                    >
+                      Postpone
+                    </Button>
+                  </div>
+                )}
+              </>}
+
           </div>
         </div>
 

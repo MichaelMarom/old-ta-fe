@@ -35,6 +35,7 @@ const StudentFaculties = () => {
     dispatch(
       setTutor({
         id: item.SID,
+        photo:item.Photo,
         academyId: item.AcademyId,
         GMT: item.GMT,
         firstName: item.FirstName,

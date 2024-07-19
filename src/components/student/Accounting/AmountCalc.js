@@ -9,7 +9,7 @@ const AmountCalc = ({ paymentReportData,setStartDate, setEndDate, startDate, end
             console.log(row)
             return convertToDate(row.start) >= new Date(startDate) && convertToDate(row.start) <= new Date(endDate);
         })
-        .reduce((total, row) => total + parseFloat(row.rate.split('$')[1]), 0);
+        .reduce((total, row) => total + parseFloat(row.rate), 0);
     return (
         <div className="col-md-4">
             <h2>Filter by Date and Time</h2>

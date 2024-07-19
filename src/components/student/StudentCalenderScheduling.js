@@ -13,6 +13,7 @@ import { setStudent } from "../../redux/student/studentData";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import moment from "moment";
+import Avatar from "../common/Avatar";
 
 const StudentCalenderScheduling = () => {
   const dispatch = useDispatch();
@@ -158,16 +159,20 @@ const StudentCalenderScheduling = () => {
               className={`w-100 align-items-center justify-content-between mt-3 d-flex row flex-row m-2 border`}
             >
               <div className="d-flex col-3 card m-2">
-                <div className="card-body d-flex flex-column">
-                  <h4 className="d-inline mr-2 card-title">
-                    Tutor:{" "}
-                    {capitalizeFirstLetter(
-                      formatName(selectedTutor.firstName, selectedTutor.lastName)
-                    )}
-                  </h4>
-                  <div className="card-subtitle d-inline ml-2 card-text">
-                    {tutorTime}
-                  </div>
+                <div className="c d-flex flex-column">
+                  <div className="d-inline  card-title ">
+                    <div className="d-flex align-items-center gap-3">
+                      <h5> Tutor:</h5>
+                      <div className="d-flex align-items-center"> <Avatar avatarSrc={selectedTutor.photo} showOnlineStatus size="30" />
+                        <p>  {capitalizeFirstLetter(
+                          formatName(selectedTutor.firstName, selectedTutor.lastName)
+                        )}</p></div>
+                    </div>
+                    <div className="d-flex align-items-center gap-3">  <h5> Subject:</h5><p> {selectedTutor.subject}</p></div>
+                    <div className="card-subtitle d-inline ml-2 card-text d-flex align-items-center gap-3">
+                      <h5> Time:</h5><p> {tutorTime}</p>
+                    </div> </div>
+
                 </div>
               </div>
 

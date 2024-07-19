@@ -20,7 +20,7 @@ const Schedules = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const isStudentLoggedIn = student.AcademyId
-
+    const { sessions } = useSelector(state => state.studentSessions)
     useEffect(() => {
         moment.tz.setDefault(timeZone);
     }, [timeZone]);
@@ -35,19 +35,19 @@ const Schedules = () => {
 
     useEffect(() => {
         const fetchEvents = async () => {
-            setLoading(true)
-            const data = await get_student_events(studentId);
-            setLoading(false)
-            console.log(data)
-            if (!data?.response?.data) {
-                const reservedSlotsArray = data?.map(item => JSON.parse(item.reservedSlots)).flat();
-                const bookedSlotsArray = data?.map(item => JSON.parse(item.bookedSlots)).flat();
-                setReservedSlots(reservedSlotsArray);
-                setBookedSlots(bookedSlotsArray);
-            }
+            // setLoading(true)
+            // const data = await get_student_events(studentId);
+            // setLoading(false)
+            // console.log(data)
+            // if (!data?.response?.data) {
+            //     const reservedSlotsArray = data?.map(item => JSON.parse(item.reservedSlots)).flat();
+            //     const bookedSlotsArray = data?.map(item => JSON.parse(item.bookedSlots)).flat();
+            //     setReservedSlots(reservedSlotsArray);
+            //     setBookedSlots(bookedSlotsArray);
+            // }
         }
         fetchEvents();
-    }, [studentId])
+    }, [studentId, sessions])
 
     const handleEventClick = (event) => {
         setClickedSlot(event)
@@ -96,7 +96,7 @@ const Schedules = () => {
                 <div className='m-3 student-calender' style={{ height: "65vh" }}>
                     <Calendar
                         localizer={localizer}
-                        events={(reservedSlots.concat(bookedSlots)).map((event) => ({
+                        events={sessions.map((event) => ({
                             ...event,
                             start: convertToGmt(event.start),
                             end: convertToGmt(event.end),
@@ -105,10 +105,9 @@ const Schedules = () => {
                             event: event => (
                                 <CustomEvent
                                     {...event}
-                                    reservedSlots={reservedSlots}
                                     isStudentLoggedIn={true}
                                     handleEventClick={handleEventClick}
-                                    handleSetReservedSlots={() => { }}
+                                    sessions={sessions}
                                 />
                             )
                         }}

@@ -4,44 +4,32 @@ import moment from "moment-timezone";
 import EventModal from "../EventModal/EventModal";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchStudentsBookings,
   fetch_calender_detals,
   getAllTutorLessons,
-  get_tutor_setup,
   updateTutorDisableslots,
 } from "../../../axios/tutor";
 import {
   get_student_lesson,
-  get_student_tutor_events,
 } from "../../../axios/student";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { v4 as uuidv4 } from "uuid";
 import CustomEvent from "./Event";
 import Loading from "../Loading";
 import {
-  setBookedSlots,
   setLessons,
-  setReservedSlots,
 } from "../../../redux/student/studentBookings";
-import { isEqualTwoObjectsRoot } from "../../../utils/common";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import "../../../styles/common.css";
 import useDebouncedEffect from "../../../hooks/DebouceWithDeps";
 import { TutorEventModal } from "../EventModal/TutorEventModal/TutorEventModal";
-import { setStudentSessions } from "../../../redux/student/studentSessions";
-import { FeedbackMissing } from "./ToastMessages";
-import "react-big-calendar/lib/css/react-big-calendar.css";
+import "react-big-calendar/lib/css/react-big-calendar.css"; 
 import { convertToGmt } from "./utils/calenderUtils";
 import useEventPropGetter from "./hooks/useEventPropGetter";
 import {
   handleBulkEventCreate,
   handleDeleteSessionByTutor,
   handlePostpone,
-  handleRemoveReservedSlot,
-  // handleRescheduleSession,
-  // handleSetReservedSlots,
 } from "./utils/actions";
 import { handleSlotDoubleClick } from "./utils/SlotDoubleClick";
 import useDayPropGetter from "./hooks/useDayPropGetter";
@@ -183,10 +171,6 @@ const ShowCalendar = ({
 
   const fetchBookings = async () => {
     if (isStudentLoggedIn) {
-      // const response = await get_student_tutor_events(
-      //   student.AcademyId,
-      //   selectedTutor.academyId
-      // );
 
       const response = await get_student_lesson(
         student.AcademyId,
@@ -196,29 +180,11 @@ const ShowCalendar = ({
       console.log(response);
       if (!!response && !response?.response?.data) {
         dispatch(setLessons(response));
-        // const reservedSlots = response
-        //   ?.map((data) => JSON.parse(data.reservedSlots))
-        //   .flat();
-        // const bookedSlots = response
-        //   ?.map((data) => JSON.parse(data.bookedSlots))
-        //   .flat();
-
-        // dispatch(setReservedSlots(reservedSlots));
-        // dispatch(setBookedSlots(bookedSlots));
       }
     } else {
       const response = await getAllTutorLessons(tutorAcademyId);
       if (!!response?.length) {
-        // const reservedSlots = response
-        //   ?.map((data) => JSON.parse(data.reservedSlots))
-        //   .flat();
-        // const bookedSlots = response
-        //   ?.map((data) => JSON.parse(data.bookedSlots))
-        //   .flat();
-
         dispatch(setLessons(response));
-        // dispatch(setReservedSlots(reservedSlots));
-        // dispatch(setBookedSlots(bookedSlots));
       }
     }
   };
@@ -270,8 +236,7 @@ const ShowCalendar = ({
   }, [timeZone]);
 
   useEffect(() => {
-    fetchBookings();
-    //remove student //changes made
+    fetchBookings()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTutor, user]);
 
@@ -452,7 +417,6 @@ const ShowCalendar = ({
           event: (event) => (
             <CustomEvent
               {...event}
-              // handleSetReservedSlots={handleSetReservedSlots}
               reservedSlots={reservedSlots}
               handleEventClick={handleEventClick}
               isStudentLoggedIn={isStudentLoggedIn}
@@ -500,6 +464,7 @@ const ShowCalendar = ({
       />
       <EventModal
         isOpen={isModalOpen}
+        lessons={lessons}
         onRequestClose={onStudentModalRequestClose}
         student={student}
         isStudentLoggedIn={isStudentLoggedIn}
@@ -510,9 +475,7 @@ const ShowCalendar = ({
         bookedSlots={bookedSlots}
         clickedSlot={clickedSlot}
         setClickedSlot={setClickedSlot}
-        // handleRemoveReservedSlot={handleRemoveReservedSlot}
         timeZone={timeZone}
-        // handleRescheduleSession={handleRescheduleSession}
         studentId={studentId}
         subjectName={subjectName}
         tutorId={tutorId}
@@ -529,7 +492,6 @@ const ShowCalendar = ({
             tutor,
             clickedSlot,
             navigate,
-            //
             selectedTutor,
             isStudentLoggedIn,
             student,
@@ -548,7 +510,6 @@ const ShowCalendar = ({
             navigate,
             setDisableHourSlots,
             disableHourSlots,
-            //
             selectedTutor,
             isStudentLoggedIn,
             student,

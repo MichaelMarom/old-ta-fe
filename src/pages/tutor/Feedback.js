@@ -8,6 +8,7 @@ import {
   get_tutor_feedback_questions,
 } from "../../axios/tutor";
 import {
+  fetch_student_photos,
   get_feedback_to_question,
   post_feedback_to_question,
 } from "../../axios/student";
@@ -16,7 +17,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   updateStudentLesson,
 } from "../../redux/student/studentBookings";
-import { toast } from "react-toastify";
 import Actions from "../../components/common/Actions";
 import Tooltip from "../../components/common/ToolTip";
 import Loading from "../../components/common/Loading";
@@ -36,12 +36,26 @@ const Feedback = () => {
   const [rawQuestions, setRawQuestions] = useState([]);
 
   const { tutor } = useSelector((state) => state.tutor);
-  const { isLoading } = useSelector((state) => state.bookings);
-  const [fetchingSessions, setFetchingFeedbackSessions] = useState(false);
 
   useEffect(() => {
-    setFeedbackData(sessions);
+    sessions.length &&
+      fetch_student_photos(_.uniq(sessions.map((session) => session.studentId)))
+        .then((result) => {
+         !result?.response?.data &&
+            setFeedbackData(
+              sessions.map((session) => ({
+                ...session,
+                photo: result.find(
+                  (student) => student.AcademyId === session.studentId
+                )?.Photo || null,
+              }))
+            );
+        })
+        .catch((error) => {
+          console.log(error);
+        });
   }, [sessions]);
+
 
   useEffect(() => {
     const getAllFeedbackQuestion = async () => {
@@ -153,7 +167,6 @@ const Feedback = () => {
     );
   }, [selectedEvent.id, selectedEvent.commentByTutor, tutor]);
 
-  if (fetchingSessions) return <Loading />;
   return (
     <>
     <TutorLayout>
