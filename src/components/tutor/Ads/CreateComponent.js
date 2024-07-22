@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { fetch_tutor_ads, get_tutor_market_data, post_tutor_ad } from "../../../axios/tutor";
 import { useSelector } from "react-redux";
-import { capitalizeFirstLetter, compareStates, showRevisitToast } from "../../../utils/common";
+import { capitalizeFirstLetter, compareStates } from "../../../utils/common";
 import Pill from '../../common/Pill'
 import Loading from "../../common/Loading";
 import { RxCross2 } from "react-icons/rx";
@@ -20,16 +20,14 @@ const CreateComponent = ({ setActiveTab }) => {
     const [subjects, set_subjects] = useState([])
     const [fetching, setFetching] = useState(true);
     const [subjectAndGrade, setSubjectAndGrade] = useState({});
-    const [grades, setGrades] = useState([]);
     const [header, setHeader] = useState('');
     const [error, setErrors] = useState({})
     const [loading, setLoading] = useState(false)
     const AcademyId = localStorage.getItem('tutor_user_id');
     const [unSavedChanges, setUnSavedChanges] = useState(false);
-    console.log(subjectAndGrade)
 
     const [addText, setAddText] = useState(`Hello Students. My screen name is ${tutor.TutorScreenname ? capitalizeFirstLetter(tutor.TutorScreenname) : ''}, 
-    I teach ${subjectAndGrade.subject?.length ? subjectAndGrade.subject : "......"}  for ${grades.length ? grades.map(elem => '[' + elem + ']') : '.....'}. 
+    I teach ${subjectAndGrade.subject?.length ? subjectAndGrade.subject : "......"}. 
     I am ${education ? education?.EducationalLevel : '...'} with experience of ${education ? education?.EducationalLevelExperience : '...'}. 
     I live in ${tutor.Country}, time zone ${tutor.GMT}.  Click here to view my profile for my work experience, certificates, and Diploma.
     There you can look at my calendar-scheduling for availability, and book your lesson.`)
@@ -52,20 +50,12 @@ const CreateComponent = ({ setActiveTab }) => {
     useEffect(() => {
         if (tutor.AcademyId) {
             setAddText(`Hello Students. My screen name is ${capitalizeFirstLetter(tutor.TutorScreenname)}, 
-        I teach ${subjectAndGrade.subject?.length ? subjectAndGrade.subject : "......"}  for ${grades.length ? grades.map(elem => '[' + elem + ']') : '.....'}. 
+        I teach ${subjectAndGrade.subject?.length ? subjectAndGrade.subject : "......"}. 
         I am ${education ? education?.EducationalLevel : '...'} with experience of ${education ? education?.EducationalLevelExperience : '...'}. 
         I live in ${tutor.Country}, time zone ${tutor.GMT}.  Click here to view my profile for my work experience, certificates, and Diploma.
         There you can look at my calendar-scheduling for availability, and book your lesson.`)
         }
-    }, [subjectAndGrade.subject, tutor, education, grades])
-
-    const handleClickPill = (grade) => {
-        const gradeExist = grades.find(item => item === grade)
-        if (gradeExist) {
-            return setGrades(grades.filter(item => item !== grade))
-        }
-        return setGrades([...grades, grade])
-    }
+    }, [subjectAndGrade.subject, tutor, education])
 
     const handleSave = async (e) => {
         e.preventDefault();
@@ -95,10 +85,9 @@ const CreateComponent = ({ setActiveTab }) => {
             return toast.error(data?.response?.data?.message)
         }
         setSubjectAndGrade({})
-        setGrades([])
         setHeader('')
         setAddText(`Hello Students. My screen name is ${capitalizeFirstLetter(tutor.TutorScreenname)}, 
-        I teach ${subjectAndGrade.subject?.length ? subjectAndGrade.subject : "......"}  for ${grades.length ? grades.map(elem => '[' + elem + ']') : '.....'}. 
+        I teach ${subjectAndGrade.subject?.length ? subjectAndGrade.subject : "......"}. 
         I am ${education ? education?.EducationalLevel : '...'} with experience of ${education ? education?.EducationalLevelExperience : '...'}. 
         I live in ${tutor.Country}, time zone ${tutor.GMT}.  Click here to view my profile for my work experience, certificates, and Diploma.
         There you can look at my calendar-scheduling for availability, and book your lesson.`)
@@ -110,7 +99,6 @@ const CreateComponent = ({ setActiveTab }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps 
     const currentState = {
         Subject: subjectAndGrade.subject,
-        Grades: grades,
         AdHeader: header,
         // AdText: addText
     }
@@ -126,7 +114,7 @@ const CreateComponent = ({ setActiveTab }) => {
             // There you can look at my calendar-scheduling for availability, and book your lesson.`
         }
         setUnSavedChanges(compareStates(initialState, currentState))
-    }, [currentState, tutor, grades, education, subjectAndGrade.subject])
+    }, [currentState, tutor, education, subjectAndGrade.subject])
 
     if (fetching || !tutor.AcademyId)
         return <Loading />
@@ -248,7 +236,7 @@ const CreateComponent = ({ setActiveTab }) => {
                                 <input className="form-control" disabled type="text" value={education.EducationalLevelExperience} />
                             </div>
 
-                            {!!education.Certificate.length && <div style={{ width: "300px" }} className="d-flex flex-column justify-content-start ">
+                            {!!education?.Certificate?.length && <div style={{ width: "300px" }} className="d-flex flex-column justify-content-start ">
                                 <label htmlFor="">Tutor's Certificate</label>
                                 <input className="form-control" disabled type="text" value={education.Certificate} />
                             </div>}

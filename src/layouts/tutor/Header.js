@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { PROFILE_STATUS, statesColours } from "../../constants/constants";
 import { useClerk } from "@clerk/clerk-react";
 import Tooltip from "../../components/common/ToolTip";
-import { FaArrowAltCircleLeft, FaArrowAltCircleRight, FaSignOutAlt } from "react-icons/fa";
+import { FaArrowAltCircleLeft, FaArrowAltCircleRight, FaExclamation, FaSignOutAlt } from "react-icons/fa";
 import { setUser } from "../../redux/auth/auth";
 import { setTutor } from "../../redux/tutor/tutorData";
 import { setStudent } from "../../redux/student/studentData";
@@ -38,7 +38,8 @@ const Header = () => {
     window.localStorage.getItem("tutor_screen_name")
   );
 
-  let [tutorState, setTutorState] = useState("Pending");
+  const { missingFields } = useSelector(state => state.missingFields)
+  console.log(missingFields)
   const { tutor } = useSelector((state) => state.tutor);
   const screenname = localStorage.getItem("tutor_screen_name");
   const scrollRef = useRef(null);
@@ -76,7 +77,7 @@ const Header = () => {
 
   const tabs = [
     { url: "/tutor/intro", name: "Introduction", video: introVideo },
-    { url: "/tutor/setup", name: "Tutor Setup", video: setupVideo },
+    { url: "/tutor/setup", name: "Setup", video: setupVideo },
     { url: "/tutor/education", name: "Education", video: educationVideo },
     { url: "/tutor/rates", name: "Motivate", video: motivateVideo },
     { url: "/tutor/accounting", name: "Accounting", },
@@ -105,9 +106,6 @@ const Header = () => {
     set_screen_name(localStorage.getItem("tutor_screen_name"));
   }, [screenname]);
 
-  useEffect(() => {
-    setTutorState(tutor.Status);
-  }, [tutor]);
 
   useEffect(() => {
     const currentTab = location.pathname;
@@ -208,14 +206,15 @@ const Header = () => {
                 >
                   <h5 className="m-0" style={{ transform: "skew(41deg, 0deg)" }}>
                     {tab.name}
+                    {!!missingFields.find(field => field.tab === tab.name) && <span><FaExclamation color="#f84747" size={15} /></span>}
                     {!!filteredSessions.length && tab.url === '/tutor/feedback' &&
                       <span className="text-bg-danger p-1 rounded-circle" style={{
                         display: "inline-flex",
                         width: "19px",
                         height: "19px",
-                        fontSize:"10px",
-                        position:"absolute",
-                        bottom:"7px",
+                        fontSize: "10px",
+                        position: "absolute", 
+                        bottom: "7px",
                         flexDirection: "row",
                         justifyContent: "center",
                         alignItems: "center",
@@ -239,7 +238,7 @@ const Header = () => {
           onClick={() => signOut(() => handleSignOut())}
         >
           <p className="text-danger m-0">Signout</p>
-            <FaSignOutAlt color="red" />
+          <FaSignOutAlt color="red" />
         </div>
         <div
           style={{

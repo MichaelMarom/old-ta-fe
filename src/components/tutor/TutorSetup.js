@@ -30,7 +30,6 @@ import {
 import { setTutor } from "../../redux/tutor/tutorData";
 import {
   capitalizeFirstLetter,
-  showRevisitToast,
   unsavedChangesHelper,
 } from "../../utils/common";
 import ReactDatePicker from "react-datepicker";
@@ -45,6 +44,7 @@ import Select from "../common/Select";
 import VacationSettingModal from "./VacationSettingModal";
 import Tooltip from "../common/ToolTip";
 import { uploadTutorImage } from "../../axios/file";
+import { setMissingFeildsAndTabs } from "../../redux/tutor/missingFieldsInTabs";
 
 const phoneUtil = PhoneNumberUtil.getInstance();
 const isPhoneValid = (phone) => {
@@ -323,16 +323,11 @@ const TutorSetup = () => {
       return toast.warning("Please enter the correct phone number");
     }
 
-    // if (!tutorGrades?.length > 0) {
-    //   return toast.warning("Please select at least one School grade");
-    // }
-
     setSavingRecord(true);
     let response = await saver();
     setSavingRecord(false);
-    console.log(response, "posting tutor setup");
+    dispatch(setMissingFeildsAndTabs(tutor))
     if (response.status === 200) {
-      if (!add1 || !add2 || !city || !zipCode) showRevisitToast();
       dispatch(
         setTutor()
         //   {
@@ -633,8 +628,8 @@ const TutorSetup = () => {
               >
                 <h6
                   className={`text-start m-0 ${mandatoryFields.find((item) => item.name === "photo").filled
-                      ? ""
-                      : "blink_me"
+                    ? ""
+                    : "blink_me"
                     }`}
                   style={{ whiteSpace: "nowrap" }}
                 >
@@ -936,8 +931,8 @@ const TutorSetup = () => {
                     onBlur={() => {
                       if (fname.length && lname.length) {
                         const screenName = `${capitalizeFirstLetter(fname)} ${mname.length
-                            ? `${capitalizeFirstLetter(mname?.[0])}.`
-                            : ``
+                          ? `${capitalizeFirstLetter(mname?.[0])}.`
+                          : ``
                           } ${capitalizeFirstLetter(lname?.[0])}.`;
                         toast(
                           `You screen name is; ${screenName} which we use online. We do not disclose your private information online. 
@@ -1716,5 +1711,22 @@ export const OptionalFieldLabel = ({ label, editMode = true }) => (
     {label}: <span className="text-sm">(optional)</span>
   </p>
 );
+
+export const GeneralFieldLabel = ({ label, editMode = true, tooltipText = "", direction = 'bottomleft', width='200px' }) => {
+  return (
+    <div className="roboto-medium">
+      <span
+        style={{
+          background: editMode ? "white" : "rgb(233 236 239)",
+        }}
+      >
+        {!!tooltipText.length && (
+          <ToolTip text={tooltipText} direction={direction} width={width} />
+        )}
+        <span> {label}</span>:
+      </span>
+    </div>
+  );
+}
 
 export default TutorSetup;

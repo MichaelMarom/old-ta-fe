@@ -91,7 +91,6 @@ const StudentTable = () => {
 
         setUpdatingStatus(true);
         let response = await set_student_status(id, status);
-        console.log(response, response.data, "Data")
         if (response.data.bool) {
             setStatus(status)
             get_student_data(status)

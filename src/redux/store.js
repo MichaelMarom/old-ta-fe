@@ -12,6 +12,7 @@ import chatReducer from './chat/chat';
 import studentSessionsReducer from './student/studentSessions.js';
 import tutorSessionsReducer from './tutor/tutorSessions.js';
 import newSubj from './admin/newSubj.js';
+import missingFields from './tutor/missingFieldsInTabs.js';
 
 let store = configureStore({
   reducer: {
@@ -28,7 +29,8 @@ let store = configureStore({
     
     tutorSessions: tutorSessionsReducer,
 
-    newSubj
+    newSubj,
+    missingFields
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 })

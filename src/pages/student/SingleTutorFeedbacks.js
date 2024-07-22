@@ -11,7 +11,7 @@ import { get_tutor_bookings } from '../../axios/student';
 import { TutorEventModal } from '../../components/common/EventModal/TutorEventModal/TutorEventModal';
 
 
-export const SingleTutorFeedbacks = () => {
+const SingleTutorFeedbacks = () => {
     const params = useParams();
     const [events, setEvents] = useState([]);
     const [timeZone, setTimeZone] = useState('America/New_York');
@@ -36,15 +36,8 @@ export const SingleTutorFeedbacks = () => {
     useEffect(() => {
         const fetchTutorBookings = async () => {
             const result = await get_tutor_bookings(params.AcademyId);
-            if (!result?.response?.data) {
-                const events = result.map((record) => {
-                    const reservedSlots = JSON.parse(record.reservedSlots ?? '[]');
-                    const bookedSlots = JSON.parse(record.bookedSlots ?? '[]');
-                    const combinedSlots = reservedSlots.concat(bookedSlots);
-
-                    return combinedSlots;
-                }).flat()
-                setEvents(events.filter(event => (convertToDate(event.start).getTime() <= (new Date()).getTime()) && event.ratingByStudent));
+            if (!result?.response?.data && result) {
+                setEvents(result.filter(event => (convertToDate(event.start).getTime() <= (new Date()).getTime()) && event.ratingByStudent));
             }
         }
         fetchTutorBookings();
@@ -92,7 +85,6 @@ export const SingleTutorFeedbacks = () => {
     }
 
     const handleNavigate = (date, view, action) => {
-        console.log(date, view, action)
         if (action === 'NEXT' && date > new Date()) {
             return;
         }
@@ -100,6 +92,7 @@ export const SingleTutorFeedbacks = () => {
     }
 
     const localizer = momentLocalizer(moment);
+
     return (
         <StudentLayout  >
             <div style={{
@@ -142,5 +135,7 @@ export const SingleTutorFeedbacks = () => {
             />
         </StudentLayout>
     )
-
 }
+
+
+export default SingleTutorFeedbacks;

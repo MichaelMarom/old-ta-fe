@@ -9,7 +9,7 @@ const getAccessToken = () => {
 
 export const showErrorToast = (err) => {
     toast.error(err?.response?.data?.message || "Error Completing the request")
-    // throw err;
+    console.log(err)
     return err;
 }
 

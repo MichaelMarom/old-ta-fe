@@ -1,18 +1,19 @@
 import { useEffect, useState } from 'react';
 
-import { get_bank_details, post_tutor_setup, upload_tutor_bank } from '../../../axios/tutor';
+import { get_bank_details, updateTutorSetup, upload_tutor_bank } from '../../../axios/tutor';
 import { showDate } from '../../../utils/moment';
 import AcadCommission from './Acad_Commission._Table';
 import Actions from '../../common/Actions'
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux'
 import { COMMISSION_DATA, monthFormatWithYYYY } from '../../../constants/constants';
-import { compareStates, showRevisitToast } from '../../../utils/common';
+import { compareStates } from '../../../utils/common';
 import { setTutor } from '../../../redux/tutor/tutorData';
 import Tooltip from '../../common/ToolTip';
 import Input from '../../common/Input';
-import { MandatoryFieldLabel } from '../TutorSetup';
+import { GeneralFieldLabel, MandatoryFieldLabel } from '../TutorSetup';
 import Select from '../../common/Select';
+import { setMissingFeildsAndTabs } from '../../../redux/tutor/missingFieldsInTabs';
 
 const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, previousYearEarning }) => {
     const { tutor } = useSelector(state => state.tutor)
@@ -74,16 +75,13 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
             let response = await upload_tutor_bank(email, acct_name, acct_type, bank_name, acct, routing, ssh, payment_option, user_id);
             fetchingTutorBankRecord();
             if (Step) {
-                await post_tutor_setup({
-                    Step, fname: tutor.FirstName,
-                    lname: tutor.LastName, mname: tutor.MiddleName, userId: tutor.userId
+                await updateTutorSetup(tutor.AcademyId, {
+                    Step
                 })
-                dispatch(setTutor({...tutor, Step}))
+                dispatch(setTutor({ ...tutor, Step }))
             }
             if (response) {
                 toast.success("Succesfully Saved The Bank Info.")
-                showRevisitToast()
-
                 setEditMode(false)
             } else {
                 toast.error("Error while Saving the Bank Info.")
@@ -92,20 +90,18 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
             let response = await upload_tutor_bank(email, acct_name, acct_type, bank_name, acct, routing, ssh, payment_option, user_id);
             fetchingTutorBankRecord();
             if (Step) {
-                await post_tutor_setup({
-                    Step, fname: tutor.FirstName,
-                    lname: tutor.LastName, mname: tutor.MiddleName, userId: tutor.userId
+                await updateTutorSetup(tutor.AcademyId, {
+                    Step,
                 })
-                dispatch(setTutor({...tutor, Step}))
+                dispatch(setTutor({ ...tutor, Step }))
             }
             if (response) {
-                showRevisitToast()
-
                 toast.success("Succesfully Saved The Bank Info.");
                 setEditMode(false)
             } else {
                 toast.error("Error while Saving the Bank Info.")
             }
+            dispatch(setMissingFeildsAndTabs(tutor))
         }
         setSaving(false);
     }
@@ -181,7 +177,7 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
     return (
         <div className="d-flex" style={{ height: "calc(100vh - 185px)", overflowY: "auto" }}>
 
-            <div className="d-flex col-md-3 border p-2" style={{height:"fit-content"}}>
+            <div className="d-flex col-md-3 border p-2" style={{ height: "fit-content" }}>
 
                 <div className="d-flex flex-column">
                     <div className="highlight m-0" >
@@ -206,7 +202,7 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                     <div className="highlight" style={{ height: '150px' }}>
                         Our tutoring academy issues payments bi-weekly, every second Friday, for the lessons conducted up to the preceding Friday at midnight (GMT-5). We kindly ask you to choose your preferred method of payment from the options listed below. Please note that once the payment is processed, it may take 1-3 business days for the funds to be available in your account. We appreciate your understanding and are committed to ensuring a smooth and timely payment process.
                     </div>
-                    <div className='p-3 '  style={{ fontWeight: "bold" , height:"calc(100vh - 150px)"}}>
+                    <div className='p-3 ' style={{ fontWeight: "bold", height: "calc(100vh - 150px)" }}>
 
                         <MandatoryFieldLabel text={'How do you want to be paid?'} name="paymentOption" mandatoryFields={mandatoryFields} />
 
@@ -369,7 +365,7 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                         Form 1099 to be issued by the academy. Therefore, no need to fill the SS number now,
                         only when your earnings exceeds $600
                     </div>
-                    <div className='p-3' style={{height:"calc(100vh - 150px)"}}>
+                    <div className='p-3' style={{ height: "calc(100vh - 150px)" }}>
 
                         {tutor.Country === "USA" && <div className='d-flex align-items-center mb-2 justify-content-between'>
                             <Input
@@ -384,10 +380,10 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
 
                         <div className='d-flex align-items-center mb-2 justify-content-between'>
                             <Input
-                                tooltipText='This statement represents the total number of hours accrued annually from the commencement date of your 
-                                employment.'
+
                                 editMode={false}
-                                label={"Accumulated Hours"}
+                                label={<GeneralFieldLabel tooltipText='This statement represents the total number of hours accrued annually from the commencement date of your 
+                                employment.' label={"Accumulated Hours"} />}
                                 value={`${currentYearAccHours}:00`}
                                 placeholder='XXX-XX-XXXX'
                             />
@@ -402,11 +398,10 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                         <div className='d-flex align-items-center mb-2 justify-content-between'>
 
                             <Input
-                                tooltipText='The service charge is calculated based on the table to the left. As you increase the number of hours spent tutoring, the 
-                                academy offers a reduction in your service charge. This incentivizes tutors to commit more time, as they benefit from lower rates, making it a 
-                                mutually beneficial arrangement.'
                                 editMode={false}
-                                label={"Service charge %"}
+                                label={<GeneralFieldLabel tooltipText='The service charge is calculated based on the table to the left. As you increase the number of hours spent tutoring, the 
+                                academy offers a reduction in your service charge. This incentivizes tutors to commit more time, as they benefit from lower rates, making it a 
+                                mutually beneficial arrangement.' label={"Service charge %"} />}
                                 required={currentYearEarning > 600}
                                 value={`${commissionAccordingtoNumOfSession(currentYearAccHours)} %`}
                             />
@@ -418,12 +413,11 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
 
                         <div className='d-flex align-items-center mb-2 justify-content-between'>
                             <Input
-                                tooltipText={`The field automatically computes your total earnings annually, starting from January 1st. 
-                                 This feature ensures that you have an accurate account of your income from the beginning of each year,
-                                 providing a clear and comprehensive financial overview. It's a valuable tool for financial planning and tracking your 
-                                 earnings progress over time`}
                                 editMode={false}
-                                label={`Total Earning ${(new Date()).getFullYear()}. `}
+                                label={<GeneralFieldLabel tooltipText={`The field automatically computes your total earnings annually, starting from January 1st. 
+                                    This feature ensures that you have an accurate account of your income from the beginning of each year,
+                                    providing a clear and comprehensive financial overview. It's a valuable tool for financial planning and tracking your 
+                                    earnings progress over time`} label={`Total Earning ${(new Date()).getFullYear()}. `} />}
                                 required={currentYearEarning > 600}
                                 setValue={set_ssh}
                                 value={(currentYearEarning || 0).toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -440,10 +434,9 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                         <div className='d-flex align-items-center mb-2 justify-content-between'>
 
                             <Input
-                                tooltipText='To accurately calculate your total earnings for the previous year, you can refer to your 1099 form, which reports all non-employment
-                                 income. WE sum up the amounts you earned last year to determine your total earnings.'
                                 editMode={false}
-                                label={`Total Earning Previous Year. `}
+                                label={<GeneralFieldLabel tooltipText='To accurately calculate your total earnings for the previous year, you can refer to your 1099 form, which reports all non-employment
+                                 income. WE sum up the amounts you earned last year to determine your total earnings.' label={`Total Earning Previous Year. `} />}
                                 required={currentYearEarning > 600}
                                 value={(previousYearEarning || 0).toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             />

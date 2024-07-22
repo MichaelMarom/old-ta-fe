@@ -59,12 +59,15 @@ function BookedLessons({ events, handleRowSelect }) {
       const currentTimeInTimeZone = moment().tz(student.timeZone);
 
       const sessionEndInTimeZone = moment(session.end).tz(student.timeZone);
-      const minutesDifference = sessionEndInTimeZone?.diff(
-        currentTimeInTimeZone,
-        "minutes"
-      );
-      if (minutesDifference <= 10) {
-        return true;
+      console.log(student.timeZone, sessionEndInTimeZone, session)
+      if (moment.isMoment(sessionEndInTimeZone)) {
+        const minutesDifference = sessionEndInTimeZone?.diff(
+          currentTimeInTimeZone,
+          "minutes"
+        );
+        if (minutesDifference <= 10) {
+          return true;
+        }
       }
     }
     return false;
@@ -146,7 +149,7 @@ function BookedLessons({ events, handleRowSelect }) {
                     buttonText={"Select"}
                     style={{
                       animation:
-                       ( eligibleForFeedback(event) && !event.ratingByStudent)
+                        (eligibleForFeedback(event) && !event.ratingByStudent)
                           ? "blinking 1s infinite"
                           : "none",
                     }}

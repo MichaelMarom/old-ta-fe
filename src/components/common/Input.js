@@ -1,6 +1,5 @@
 import React from "react";
 import Tooltip from "./ToolTip";
-import { post_tutor_setup } from "../../axios/tutor";
 import { useDispatch, useSelector } from "react-redux";
 
 const Input = ({
@@ -15,8 +14,6 @@ const Input = ({
   mandatory = false,
   ...rest
 }) => {
-  const { tutor } = useSelector(state => state.tutor)
-  const dispatch = useDispatch()
   const udpateTutorStatusToUnderRevew = async (e) => {
   }
   return (

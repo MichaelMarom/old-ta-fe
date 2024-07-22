@@ -122,8 +122,6 @@ export const get_student_setup_by_userId = async (userId) => {
     return data;
   } catch (err) {
     showErrorToast(err);
-    console.log(err);
-    return err;
   }
 };
 
@@ -142,8 +140,7 @@ export const upload_student_setup_by_fields = async (AcademyId, body) => {
     return data;
   } catch (err) {
     showErrorToast(err);
-    console.log(err);
-    return err;
+     
   }
 };
 
@@ -198,8 +195,7 @@ export const post_student_ad = async (body) => {
     return data;
   } catch (err) {
     showErrorToast(err);
-    console.log(err);
-    return err;
+     
   }
 };
 /**
@@ -228,8 +224,7 @@ export const put_ad = async (id, body) => {
     return data;
   } catch (err) {
     showErrorToast(err);
-    console.log(err);
-    return err;
+     
   }
 };
 
@@ -239,8 +234,7 @@ export const get_ad = async (id) => {
     return data;
   } catch (err) {
     showErrorToast(err);
-    console.log(err);
-    return err;
+     
   }
 };
 
@@ -250,8 +244,7 @@ export const fetch_student_ads = async (id) => {
     return data;
   } catch (err) {
     showErrorToast(err);
-    console.log(err);
-    return err;
+     
   }
 };
 
@@ -269,7 +262,6 @@ export let get_tutor_subject = async (subject) => {
     const { data } = await apiClient.get("/student/tutor-subject", {
       params: { subject },
     });
-    console.log(data, "in axios123");
     return data;
   } catch (err) {
     showErrorToast(err);
@@ -413,7 +405,6 @@ export const get_tutor_bookings = async (tutorId) => {
     return data;
   } catch (err) {
     showErrorToast(err);
-    console.log(err);
   }
 };
 
@@ -423,7 +414,6 @@ export const post_bank_details = async (payload) => {
     return data;
   } catch (err) {
     showErrorToast(err);
-    console.log(err);
   }
 };
 
@@ -433,7 +423,6 @@ export const get_bank_details = async (id) => {
     return data;
   } catch (err) {
     showErrorToast(err);
-    console.log(err);
   }
 };
 
@@ -446,7 +435,6 @@ export const get_payment_report = async (studentId, timeZone) => {
     return data;
   } catch (err) {
     showErrorToast(err);
-    console.log(err);
   }
 };
 
@@ -458,7 +446,6 @@ export const get_all_feedback_questions = async (isStudentLoggedIn = 1) => {
     return data;
   } catch (err) {
     showErrorToast(err);
-    console.log(err);
   }
 };
 
@@ -475,8 +462,7 @@ export const get_feedback_to_question = async (
     return data;
   } catch (err) {
     showErrorToast(err);
-    console.log(err);
-    return err;
+     
   }
 };
 
@@ -511,8 +497,7 @@ export const post_feedback_to_question = async (
     return data;
   } catch (err) {
     showErrorToast(err);
-    console.log(err);
-    return err;
+     
   }
 };
 
@@ -562,9 +547,7 @@ export const fetch_published_ads = async () => {
     const { data } = await apiClient.get("/student/ads");
     return data;
   } catch (e) {
-    console.log(e.message);
     showErrorToast(e);
-    return e;
   }
 };
 
@@ -576,9 +559,7 @@ export const add_to_shortlist = async (adId, studentId) => {
     });
     return data;
   } catch (e) {
-    console.log(e.message);
     showErrorToast(e);
-    return e;
   }
 };
 
@@ -589,9 +570,7 @@ export const get_shortlist_ads = async (studentId) => {
     );
     return data;
   } catch (e) {
-    console.log(e.message);
     showErrorToast(e);
-    return e;
   }
 };
 
@@ -602,8 +581,6 @@ export const deleteAdFromShortlist = async (adId, studentId) => {
     );
     return data;
   } catch (e) {
-    console.log(e.message);
     showErrorToast(e);
-    return e;
   }
 };

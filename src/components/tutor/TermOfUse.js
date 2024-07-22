@@ -6,8 +6,8 @@ import {
   get_bank_details,
   get_my_edu,
   get_tutor_rates,
-  post_tutor_setup,
   setAgreementDateToNullForAll,
+  updateTutorSetup,
 } from "../../axios/tutor";
 import Loading from "../common/Loading";
 import { setTutor } from "../../redux/tutor/tutorData";
@@ -195,16 +195,12 @@ const TermOfUse = () => {
 
     setLoading(true);
     let body = {
-      userId: tutor.userId,
       AgreementDate: new Date(),
-      fname: tutor.FirstName,
-      lname: tutor.LastName,
-      mname: tutor.MiddleName,
     };
     if (tutor.Status === PROFILE_STATUS.PENDING)
       body.Status = PROFILE_STATUS.UNDER_REVIEW;
-    await post_tutor_setup(body);
-    tutor.CellPhone.startsWith("+1") && await send_sms({message:"Your Account is Currently Under Review,. You will get response within 24 hrs", numbers:[tutor.CellPhone.replace("+","")], id:tutor.AcademyId})
+    await updateTutorSetup(tutor.AcademyId, body);
+    tutor.CellPhone.startsWith("+1") && await send_sms({ message: "Your Account is Currently Under Review,. You will get response within 24 hrs", numbers: [tutor.CellPhone.replace("+", "")], id: tutor.AcademyId })
     setLoading(false);
 
     dispatch(setTutor({ ...tutor, ...body }));

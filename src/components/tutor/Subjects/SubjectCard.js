@@ -4,7 +4,6 @@ import GradePills from './../GradePills'
 import Button from '../../common/Button'
 import {  remove_subject_rates, upload_tutor_rates } from '../../../axios/tutor'
 import { toast } from 'react-toastify'
-import { showRevisitToast } from '../../../utils/common'
 
 const SubjectCard = ({ subject, rateVal, gradesVal, faculty, id }) => {
     const [rate, setRate] = useState(rateVal)
@@ -12,10 +11,6 @@ const SubjectCard = ({ subject, rateVal, gradesVal, faculty, id }) => {
     const [editable, setEditable] = useState(false);
     const tutorId = localStorage.getItem('tutor_user_id')
     const options = [
-        // {
-        //     value: 'k',
-        //     text: 'K'
-        // },
         {
             value: '1st',
             text: '1st Grade'
@@ -102,8 +97,6 @@ const SubjectCard = ({ subject, rateVal, gradesVal, faculty, id }) => {
             toast.error('Failed to Save Record')
         }
         else {
-    showRevisitToast()
-
             toast.success('Succesfully Save The Record')
         }
     }

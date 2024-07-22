@@ -119,14 +119,6 @@ export const generateUpcomingSessionMessage = (session, fromNow) => {
 }
 
 
-export const showRevisitToast = () => {
-  toast.info("We are saving the fields you entered. You can return to this page later to complete the application.", {
-    className: "setup-private-info",
-    autoClose: false
-  })
-}
-
-
 export const measureSpeed = async () => {
   const imageUrl = "https://via.placeholder.com/1000"; // URL of a small image file
   const startTime = new Date().getTime();

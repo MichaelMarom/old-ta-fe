@@ -30,6 +30,7 @@ import Collaboration from "./pages/tutor/Collaboration";
 import CallWithChatExperience from "./pages/tutor/Test1";
 import { setNewSubjCount } from "./redux/admin/newSubj";
 import Loading from "./components/common/Loading";
+import { setMissingFeildsAndTabs } from "./redux/tutor/missingFieldsInTabs";
 
 const App = () => {
   let location = useLocation();
@@ -41,14 +42,13 @@ const App = () => {
   const { user } = useSelector((state) => state.user);
   const { student } = useSelector((state) => state.student);
   const { tutor } = useSelector((state) => state.tutor);
+  const { missingFields } = useSelector((state) => state.missingFields);
 
   const [activeRoutes, setActiveRoutes] = useState([]);
-  const studentUserId = localStorage.getItem("student_user_id");
   const tutorUserId = localStorage.getItem("tutor_user_id");
   const studentLoggedIn = user?.role === "student";
   const loggedInUserDetail = studentLoggedIn ? student : tutor;
   const role = studentLoggedIn ? "student" : "tutor";
-  const nullValues = ["undefined", "null"];
 
   const handleExpiredToken = (result) => {
     const isExpired = result?.response?.data?.message?.includes("expired");
@@ -106,6 +106,7 @@ const App = () => {
   //sessions :nextsession, :allsessions, :time remaing for next lesson
   useEffect(() => {
     if (token && tutor.AcademyId) {
+      dispatch(setMissingFeildsAndTabs(tutor))
       const dispatchUserSessions = async () => {
         const tutorSessions = await dispatch(await setTutorSessions(tutor));
         handleExpiredToken(tutorSessions);
@@ -129,8 +130,9 @@ const App = () => {
           await setStudentSessions(student)
         );
         handleExpiredToken(studentSessions);
-
+        
         const intervalId = setInterval(async () => {
+          console.log(student)
           const studentSessions = await dispatch(
             await setStudentSessions(student)
           );

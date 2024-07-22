@@ -367,15 +367,15 @@ export const LEVEL = [
 ]
 
 export const EXPERIENCE = [
-  "1 Yr      ",
-  "2 Yrs     ",
-  "3 Yrs     ",
-  "4 Yrs     ",
-  "5 Yrs     ",
-  "6-9 Yrs   ",
-  "10-14 Yrs ",
-  "15-19 Yrs ",
-  "20+       "
+  "1 Yr",
+  "2 Yrs",
+  "3 Yrs",
+  "4 Yrs",
+  "5 Yrs",
+  "6-9 Yrs",
+  "10-14 Yrs",
+  "15-19 Yrs",
+  "20+"
 ]
 
 export const CERTIFICATES = [
@@ -942,7 +942,7 @@ export const AUST_STATES =
     "TAS",
     'VIC'
   ];
-  
+
 export const UK_STATES = [
   "BDF",
   "BKM",
@@ -1225,7 +1225,18 @@ export const applicationMandatoryFields = {
   Setup: [{ column: "Photo" },
   { column: "FirstName", },
   { column: "LastName", },
-  { column: "StateProvince" },
+  {
+    column: "StateProvince", mandatory: {
+      tab: "setup",
+      column: "Country", values: [
+        "Australia",
+        "USA",
+        "Canada",
+        "United Kingdom",
+        "UnitedKingdom"
+      ]
+    }
+  },
   { column: "Country" },
   { column: "CellPhone" },
   { column: "ResponseHrs" }, ,

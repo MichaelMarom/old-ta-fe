@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import {
   get_tutor_rates,
   get_tutor_subjects,
-  post_tutor_setup,
+  updateTutorSetup,
   upload_tutor_rates_form,
 } from "../../axios/tutor";
 import { IoMdCopy, IoMdRefresh } from "react-icons/io";
@@ -22,6 +22,7 @@ import { setTutor } from "../../redux/tutor/tutorData";
 import Select from "../common/Select";
 import SendCodeModal from "./SendCodeModal";
 import { MandatoryFieldLabel } from "./TutorSetup";
+import { setMissingFeildsAndTabs } from "../../redux/tutor/missingFieldsInTabs";
 
 const generateDiscountCode = () => {
   const length = 8;
@@ -229,15 +230,10 @@ const Rates = () => {
     setLoading(true);
 
     let res = await saver();
+    dispatch(setMissingFeildsAndTabs(tutor))
     if (Step) {
-      await post_tutor_setup({
-        Step,
-        fname: tutor.FirstName,
-        lname: tutor.LastName,
-        mname: tutor.MiddleName,
-        userId: tutor.userId,
-      });
-      dispatch(setTutor({...tutor, Step}));
+      await updateTutorSetup(tutor.AcademyId, { Step });
+      dispatch(setTutor({ ...tutor, Step }));
     }
     if (res.bool) {
       setChangesMade(false);
@@ -264,7 +260,7 @@ const Rates = () => {
 
 
   const mandatoryFields = [
-    {name:"cancPolicy", filled:!!selectedCancellationPolicy.length},
+    { name: "cancPolicy", filled: !!selectedCancellationPolicy.length },
   ]
 
   return (

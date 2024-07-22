@@ -76,8 +76,6 @@ export const get_tutor_feedback_questions = async () => {
     return data;
   } catch (err) {
     showErrorToast(err);
-    console.log(err);
-    return err;
   }
 };
 
@@ -419,8 +417,6 @@ export const remove_subject_rates = async (id) => {
     const { data } = await apiClient.delete(`/subject-rate/${id}`);
     return data;
   } catch (error) {
-    console.log(error);
-    return error;
   }
 };
 
@@ -609,7 +605,6 @@ export const fetch_calender_detals = async (id) => {
 
 export const storeEventAPI = async (eventDetails) => {
   try {
-    console.log(eventDetails, "dataformat");
     const newEvent = {
       title: eventDetails.title,
       allDay: eventDetails.allDay,
@@ -621,7 +616,6 @@ export const storeEventAPI = async (eventDetails) => {
   } catch (error) {
     showErrorToast(error);
 
-    console.error("Error:", error);
   }
 };
 
@@ -638,7 +632,7 @@ export const fetchStudentsBookings = async (tutorId) => {
 
 export const getAllTutorLessons = async (tutorId) => {
   try {
-    const {data} = await apiClient.get(`/tutor/lesson`, {
+    const { data } = await apiClient.get(`/tutor/lesson`, {
       params: { tutorId },
     });
     return data;
@@ -739,18 +733,17 @@ export const post_tutor_setup = async (data) => {
 
     dataObject.TutorScreenname = data.mname.length
       ? `${capitalizeFirstLetter(data.fname)}. ${capitalizeFirstLetter(
-          data.mname[0]
-        )}. 
+        data.mname[0]
+      )}. 
             ${capitalizeFirstLetter(data.lname[0])}.`
       : `${capitalizeFirstLetter(data.fname)}. ${capitalizeFirstLetter(
-          data.lname[0]
-        )}.`;
+        data.lname[0]
+      )}.`;
 
     dataObject.AcademyId = uuidv4();
     return await apiClient.post("/tutor/setup", dataObject);
   } catch (error) {
-    console.log(error);
-    return error;
+    showErrorToast(error)
   }
 };
 
@@ -781,7 +774,6 @@ export const get_tutor_students = async (AcademyId) => {
   } catch (error) {
     showErrorToast(error);
 
-    console.log(error);
   }
 };
 
@@ -790,8 +782,7 @@ export const get_sessions_details = async (AcademyId) => {
     const { data } = await apiClient.get(`/tutor/session/${AcademyId}`);
     return data;
   } catch (error) {
-    console.log(error);
-    return error;
+    showErrorToast(error);
   }
 };
 
@@ -800,7 +791,7 @@ export const get_last_pay_day = async () => {
     const { data } = await apiClient.get(`/p-payment/last_payday`);
     return data;
   } catch (error) {
-    console.log(error);
+    showErrorToast(error)
     return error;
   }
 };
@@ -810,8 +801,8 @@ export const get_tutor_profile = async (tutorId, studentId) => {
     const { data } = await apiClient.get(`/profile/${tutorId}/${studentId}`);
     return data;
   } catch (error) {
-    console.log(error);
-    return error;
+
+    showErrorToast(error)
   }
 };
 
@@ -820,8 +811,7 @@ export const post_tutor_ad = async (body) => {
     const { data } = await apiClient.post(`/tutor/market-place`, body);
     return data;
   } catch (error) {
-    console.log(error);
-    return error;
+    showErrorToast(error)
   }
 };
 
@@ -830,8 +820,7 @@ export const fetch_tutor_ads = async (id) => {
     const { data } = await apiClient.get(`/tutor/market-place/list/${id}`);
     return data;
   } catch (error) {
-    console.log(error);
-    return error;
+    showErrorToast(error)
   }
 };
 
@@ -840,8 +829,8 @@ export const fetch_students_published_ads = async () => {
     const { data } = await apiClient.get(`/tutor/market-place/classified`);
     return data;
   } catch (error) {
-    console.log(error);
-    return error;
+
+    showErrorToast(error)
   }
 };
 
@@ -852,9 +841,7 @@ export const deleteAdFromShortlist = async (adId, tutorId) => {
     );
     return data;
   } catch (e) {
-    console.log(e.message);
     showErrorToast(e);
-    return e;
   }
 };
 
@@ -866,9 +853,7 @@ export const add_to_shortlist = async (adId, studentId) => {
     });
     return data;
   } catch (e) {
-    console.log(e.message);
     showErrorToast(e);
-    return e;
   }
 };
 
@@ -879,9 +864,7 @@ export const get_shortlist_ads = async (tutorId) => {
     );
     return data;
   } catch (e) {
-    console.log(e.message);
     showErrorToast(e);
-    return e;
   }
 };
 

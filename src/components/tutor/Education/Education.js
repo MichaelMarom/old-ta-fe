@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 
-import { get_my_edu, post_edu, post_tutor_setup } from "../../../axios/tutor";
+import { get_my_edu, post_edu, updateTutorSetup } from "../../../axios/tutor";
 import { upload_file } from "../../../axios/file";
 import career from "../../../assets/images/Experience-photo50.jpg";
 
@@ -33,6 +33,7 @@ import DebounceInput from "../../common/DebounceInput";
 import { MandatoryFieldLabel } from "../TutorSetup";
 import FormSelect from '../../common/Select';
 import _ from "lodash";
+import { setMissingFeildsAndTabs } from "../../../redux/tutor/missingFieldsInTabs";
 
 const languageOptions = LANGUAGES.map((language) => ({
   value: language,
@@ -313,7 +314,6 @@ const Education = () => {
 
     Object.keys(fieldsForThirdStep).map((field) => {
       if (fieldsForThirdStep[field].validate) {
-        console.log(fieldsForThirdStep[field], field)
         const validated = jsonFields.includes(field)
           ? !!Object.keys(fieldsForThirdStep[field]?.value)?.length
           : !!fieldsForThirdStep[field].value?.length;
@@ -330,13 +330,10 @@ const Education = () => {
 
   let saver = async () => {
     let Step = 3;
-
-    await post_tutor_setup({
+    dispatch(setMissingFeildsAndTabs(tutor))
+    await updateTutorSetup(tutor.AcademyId,{
       Step,
-      fname: tutor.FirstName,
-      lname: tutor.LastName,
-      mname: tutor.MiddleName,
-      userId: tutor.userId,
+     
     });
     dispatch(setTutor({ ...Step, ...tutor }));
   };
@@ -484,8 +481,6 @@ const Education = () => {
     fetchEdu()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  console.log(workExperience)
 
   useEffect(() => {
     let experiences = EXPERIENCE.map((item, index) => (
@@ -747,7 +742,6 @@ const Education = () => {
                     }
                     className="form-select m-0"
                     onChange={(e) => {
-                      console.log(e.target.value)
                       set_level(e.target.value);
                       dynamicSave("EducationalLevel", e.target.value);
                     }}

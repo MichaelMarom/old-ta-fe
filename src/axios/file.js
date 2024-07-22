@@ -7,8 +7,7 @@ export const upload_file = async (formData, fileName) => {
     return data
   }
   catch (err) {
-    console.log(err);
-    return err
+    showErrorToast(err);
   }
 }
 

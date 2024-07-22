@@ -8,8 +8,6 @@ export const signup = async (data) => {
     }
     catch (err) {
         showErrorToast(err)
-        console.log(err)
-        return err
     }
 }
 
@@ -21,8 +19,6 @@ export const login = async (data) => {
     catch (err) {
         showErrorToast(err)
         const { response: { data } } = err
-        console.log(data)
-        return data;
     }
 }
 
@@ -47,8 +43,6 @@ export const get_user_setup_detail = async (role, userId) => {
     }
     catch (err) {
         showErrorToast(err)
-        console.log(err)
-        return err;
     }
 }
 
@@ -59,8 +53,6 @@ export const forget_password = async (email, password) => {
     }
     catch (err) {
         showErrorToast(err)
-        console.log(err)
-        return err
     }
 }
 
@@ -71,7 +63,5 @@ export const getToken = async (user) => {
     }
     catch (err) {
         showErrorToast(err)
-        console.log(err)
-        return err
     }
 }

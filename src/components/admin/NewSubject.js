@@ -86,11 +86,8 @@ const TutorTable = () => {
                         <tbody>
 
                             {
-                                data.length > 0
-                                    ?
-
+                                data.length > 0 ?
                                     data.map((item) => {
-                                        console.log(item.IsRejected, typeof (item.IsRejected))
                                         return <tr key={item.SID} >
 
                                             <td data-src={''}>{item.FirstName}</td>
