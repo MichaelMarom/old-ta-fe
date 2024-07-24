@@ -22,6 +22,7 @@ import { PiVideoBold } from "react-icons/pi";
 
 import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
 import Avatar from "../../components/common/Avatar";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
 const Header = () => {
   const { signOut } = useClerk();
@@ -158,7 +159,7 @@ const Header = () => {
           className="scroller-left"
           onClick={handleScrollLeft}
         >
-          <FaArrowAltCircleLeft size={30} />
+          <FaChevronLeft size={20} />
         </div>
         <div
           className={`screen-name rounded align-items-center px-1`}
@@ -197,7 +198,7 @@ const Header = () => {
         >
           {tabs.map((tab) => {
             return (
-              <Fragment key={tab.url}>
+              (user.role !== "admin" || tab.url !== "/collab") && <Fragment key={tab.url}>
                 <li
                   key={tab.url}
                   data-url={tab.url}
@@ -205,15 +206,16 @@ const Header = () => {
                   id={getId(tab)}
                 >
                   <h5 className="m-0" style={{ transform: "skew(41deg, 0deg)" }}>
+                    {!!missingFields.find(field => field.tab === tab.name) &&
+                      <span className="blinking-button"><FaExclamation color="#f84747" size={15} /></span>}
                     {tab.name}
-                    {!!missingFields.find(field => field.tab === tab.name) && <span><FaExclamation color="#f84747" size={15} /></span>}
                     {!!filteredSessions.length && tab.url === '/tutor/feedback' &&
                       <span className="text-bg-danger p-1 rounded-circle" style={{
                         display: "inline-flex",
                         width: "19px",
                         height: "19px",
                         fontSize: "10px",
-                        position: "absolute", 
+                        position: "absolute",
                         bottom: "7px",
                         flexDirection: "row",
                         justifyContent: "center",
@@ -254,7 +256,7 @@ const Header = () => {
           className="scroller-right"
           onClick={handleScrollRight}
         >
-          <FaArrowAltCircleRight size={30} />
+          <FaChevronRight size={20} />
         </div>
       </div>
     </>

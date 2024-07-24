@@ -224,7 +224,7 @@ const TutorSetup = () => {
         set_photo(data.Photo);
         set_cell(data.CellPhone);
         set_state(data.StateProvince);
-        set_email(data.email);
+        set_email(data.Email);
         set_city(data.CityTown);
         set_country(data.Country);
         setDBCountry(data.Country);
@@ -326,7 +326,7 @@ const TutorSetup = () => {
     setSavingRecord(true);
     let response = await saver();
     setSavingRecord(false);
-    dispatch(setMissingFeildsAndTabs(tutor))
+    dispatch(setMissingFeildsAndTabs(response?.data?.[0] || tutor))
     if (response.status === 200) {
       dispatch(
         setTutor()
@@ -394,7 +394,6 @@ const TutorSetup = () => {
     if (!tutor.AcademyId) body.Step = 2;
 
     let response = await post_tutor_setup(body);
-    console.log(response);
     return response;
   };
 
@@ -1297,7 +1296,7 @@ const TutorSetup = () => {
                 }}
               >
                 <h6
-                  className={`${!!video.length && !videoError ? "" : "blink_me"
+                  className={`${!!video.length && !videoError ? "" : "blinking-button text-success"
                     }`}
                 >
                   Tutor's introduction video

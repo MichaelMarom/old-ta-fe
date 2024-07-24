@@ -64,7 +64,7 @@ export const setMissingFeildsAndTabs = (tutor) => {
 
         applicationMandatoryFields.Setup.map((item) => {
             if (
-                (!tutor?.[item.column] || tutor?.[item.column] === "null") &&
+                (!tutor?.[item.column] || tutor?.[item.column] === "null" || !tutor?.[item.column]?.length) &&
                 (!item.mandatory ||
                     (item.mandatory?.tab &&
                         item.mandatory?.values?.includes(
