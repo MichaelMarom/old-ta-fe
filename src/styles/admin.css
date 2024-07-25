@@ -11,10 +11,6 @@
         background: #212F3D;
     }
 
-    .admin-tab-header ul::-webkit-scrollbar {
-        display: none;
-    }
-
     #active {
         background-color: #070101;
     }

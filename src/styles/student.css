@@ -178,29 +178,7 @@
     background: #2471A3;
     color: #F7F9F9;
   }
-
-  /* width */
-  ::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: #dbdbdb;
-    border-radius: 6px;
-  }
-
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #47c176;
-  }
-
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #47c176;
-  }
-
-
+  
   .student-market-place-cnt {
     height: calc(100vh - 140px);
     width: 100%;

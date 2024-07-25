@@ -222,7 +222,7 @@
     background-color: #ffffff;
 }
 
-ul {
+/* ul {
     list-style-type: none;
     margin: 0;
     display: flex;
@@ -232,14 +232,14 @@ ul {
     padding: 0 8px 0 8px;
     scroll-behavior: smooth;
     transition: cubic-bezier(0.165, 0.84, 0.44, 1);
-}
+} */
 
 ul.header {
     height: 100%;
     overflow-x: auto;
 }
 
-ul li {
+/* ul li {
     padding: 15px 15px 15px 15px;
     display: flex;
     font-size: 100%;
@@ -249,7 +249,7 @@ ul li {
     justify-content: center;
     float: left;
     cursor: pointer;
-}
+} */
 
 ul.nav.nav-tabs li {
     padding: 0 !important;
@@ -902,28 +902,6 @@ h6 {
 .tutor-acct-tab-menu ul li:hover {
     background: #2471A3;
     color: #F7F9F9;
-}
-
-
-
-::-webkit-scrollbar {
-    width: 5px;
-    border-radius: 20px;
-}
-
-::-webkit-scrollbar-track {
-    background: #e5e5e5;
-}
-
-::-webkit-scrollbar-thumb {
-    background: rgb(117, 117, 117);
-    border-radius: 200px;
-
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #555;
-    border-radius: 200px;
 }
 
 .grades-sec::-webkit-scrollbar {

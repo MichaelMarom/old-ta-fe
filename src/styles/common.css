@@ -554,7 +554,7 @@ fieldset:disabled .btn,
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #47c176;
+  background: #000000a5;
   border-radius: 200px;
 }
 
