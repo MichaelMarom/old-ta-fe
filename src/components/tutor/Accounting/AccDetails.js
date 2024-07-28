@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { IoChevronBackCircle, IoChevronForwardCircle } from "react-icons/io5";
-import { wholeDateFormat } from "../../../constants/constants";
+import { COMMISSION_DATA, wholeDateFormat } from "../../../constants/constants";
 import { showDate } from "../../../utils/moment";
 import Button from "../../common/Button";
 import { moment } from "../../../config/moment";
@@ -8,11 +8,11 @@ import { convertToDate } from "../../common/Calendar/Calendar";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useSelector } from "react-redux";
-import { get_last_pay_day } from "../../../axios/tutor";
+import { get_last_pay_day, get_sessions_details } from "../../../axios/tutor";
 import Loading from "../../common/Loading";
 import Actions from "../../common/Actions";
 
-const AccDetails = ({ sessions }) => {
+const AccDetails = () => {
   const today = moment();
   const lastFriday = today.day(-2);
   const { tutor } = useSelector((state) => state.tutor);
@@ -51,22 +51,25 @@ const AccDetails = ({ sessions }) => {
 
   useEffect(() => {
     if (startDate) {
-      const filteredSession = sessions.filter((session) => {
-        const sessionDate = moment(session.end);
-        const sessionDateWithoutTime = sessionDate.startOf("day");
+      get_sessions_details(tutor.AcademyId).then((result) => {
+        const filteredSession = result.sessions.filter((session) => {
+          // const sessionDate = moment(session.end);
+          // const sessionDateWithoutTime = sessionDate.startOf("day");
 
-        const startDateWithoutTime = moment(startDate).startOf("day");
-        const endDateWithoutTime = moment(endDate).startOf("day");
+          // const startDateWithoutTime = moment(startDate).startOf("day");
+          // const endDateWithoutTime = moment(endDate).startOf("day");
 
-        return (
-          sessionDateWithoutTime.isSameOrAfter(startDateWithoutTime) &&
-          sessionDateWithoutTime.isSameOrBefore(endDateWithoutTime)
-        );
+          // return (
+          //   sessionDateWithoutTime.isSameOrAfter(startDateWithoutTime) &&
+          //   sessionDateWithoutTime.isSameOrBefore(endDateWithoutTime)
+          // );
+          return true;
+        });
+        setStart(startDate ? moment(startDate).toDate() : moment().toDate());
+        setSelectedWeekSession(filteredSession);
       });
-      setStart(startDate ? moment(startDate).toDate() : moment().toDate());
-      setSelectedWeekSession(filteredSession);
     }
-  }, [endDate, startDate, sessions]);
+  }, [endDate, startDate]);
 
   const handleBack = () => {
     const newEndDate = moment(startDate).subtract(1, "days").toDate();
@@ -87,7 +90,7 @@ const AccDetails = ({ sessions }) => {
     setEndDate(newEndDate);
   };
 
-  const totalAmount = sessions
+  const totalAmount = selectedWeekSession
     .filter((row) => {
       if (!start || !end) return true;
       const sessionDate = moment(convertToDate(row.start));
@@ -241,7 +244,15 @@ const AccDetails = ({ sessions }) => {
                   <td className="col-2">
                     {showDate(session.start, wholeDateFormat)}
                   </td>
-                  <td>{session.rate}</td>
+                  <td>
+                    {" "}
+                    {session.rate.toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </td>
                   <td> - </td>
                   <td> - </td>
                   <td>{session.comm}%</td>

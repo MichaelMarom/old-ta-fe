@@ -256,8 +256,7 @@ export const post_edu = async (body) => {
   }
 };
 
-//not using
-export let upload_tutor_rates_form = (
+export let upload_tutor_disocunt_form = (
   MutiStudentHourlyRate,
   CancellationPolicy,
   FreeDemoLesson,
@@ -272,34 +271,38 @@ export let upload_tutor_rates_form = (
   IntroSessionDiscount,
   CodeStatus
 ) => {
-  return new Promise((resolve, reject) => {
-    apiClient
-      .post("/tutor/tutor-rates", {
-        MutiStudentHourlyRate,
-        CancellationPolicy,
-        IntroSessionDiscount,
-        FreeDemoLesson,
-        ConsentRecordingLesson,
-        ActivateSubscriptionOption,
-        SubscriptionPlan,
-        AcademyId,
-        DiscountCode,
-        CodeShareable,
-        MultiStudent,
-        CodeSubject,
-        CodeStatus,
-      })
-      .then((result) => {
-        resolve(result.data);
-      })
-      .catch((error) => {
-        showErrorToast(error);
-
-        // reject(error)
-      });
-  });
+  try {
+    const { data } = apiClient.post("/tutor/tutor-discounts", {
+      MutiStudentHourlyRate,
+      CancellationPolicy,
+      IntroSessionDiscount,
+      FreeDemoLesson,
+      ConsentRecordingLesson,
+      ActivateSubscriptionOption,
+      SubscriptionPlan,
+      AcademyId,
+      DiscountCode,
+      CodeShareable,
+      MultiStudent,
+      CodeSubject,
+      CodeStatus,
+    });
+    return data;
+  } catch (err) {
+    showErrorToast(err);
+  }
 };
 
+export const update_discount_form = async (id, body) => {
+  try {
+    const { data } = await apiClient.put(`/tutor/tutor-discounts/${id}`, body);
+    return data;
+  } catch (err) {
+    showErrorToast(err);
+  }
+};
+
+//not using
 export const formatted_tutor_sessions = async (tutorId) => {
   try {
     const { data } = await apiClient.get(
@@ -416,8 +419,7 @@ export const remove_subject_rates = async (id) => {
   try {
     const { data } = await apiClient.delete(`/subject-rate/${id}`);
     return data;
-  } catch (error) {
-  }
+  } catch (error) {}
 };
 
 export let get_my_data = (AcademyId) => {
@@ -436,23 +438,17 @@ export let get_my_data = (AcademyId) => {
   });
 };
 
-export let get_my_edu = (AcademyId) => {
-  return new Promise((resolve, reject) => {
-    apiClient
-      .get("/tutor/my-edu", {
-        params: {
-          AcademyId,
-        },
-      })
-      .then((result) => {
-        resolve(result.data);
-      })
-      .catch((error) => {
-        showErrorToast(error);
-
-        // reject(error)
-      });
-  });
+export let get_my_edu = async (AcademyId) => {
+  try {
+    const { data } = await apiClient.get("/tutor/my-edu", {
+      params: {
+        AcademyId,
+      },
+    });
+    return data;
+  } catch (err) {
+    showErrorToast(err);
+  }
 };
 
 export const get_tutor_subjects = async (id) => {
@@ -472,24 +468,18 @@ export const get_faculty_subject = async (id) => {
   }
 };
 
-export let get_rates = (AcademyId, facultyId) => {
-  return new Promise((resolve, reject) => {
-    apiClient
-      .get("/tutor/my-rate", {
-        params: {
-          AcademyId,
-          facultyId,
-        },
-      })
-      .then((result) => {
-        resolve(result.data);
-      })
-      .catch((error) => {
-        showErrorToast(error);
-
-        // reject(error)
-      });
-  });
+export let get_rates = async (AcademyId, facultyId) => {
+  try {
+    const { data } = await apiClient.get("/tutor/my-rate", {
+      params: {
+        AcademyId,
+        facultyId,
+      },
+    });
+    return data;
+  } catch (err) {
+    showErrorToast(err);
+  }
 };
 
 export let fetch_tutors_photos = async (AcademyIds) => {
@@ -505,45 +495,33 @@ export let fetch_tutors_photos = async (AcademyIds) => {
   }
 };
 
-export let get_bank_details = (AcademyId) => {
-  return new Promise((resolve, reject) => {
-    apiClient
-      .get("/tutor/tutor-bank-details", {
-        params: {
-          AcademyId,
-        },
-      })
-      .then((result) => {
-        resolve(result.data);
-      })
-      .catch((error) => {
-        showErrorToast(error);
-
-        // reject(error)
-      });
-  });
+export let get_bank_details = async (AcademyId) => {
+  try {
+    const { data } = await apiClient.get("/tutor/tutor-bank-details", {
+      params: {
+        AcademyId,
+      },
+    });
+    return data;
+  } catch (err) {
+    showErrorToast(err);
+  }
 };
 
-export let get_tutor_rates = (AcademyId) => {
-  return new Promise((resolve, reject) => {
-    apiClient
-      .get("/tutor/tutor-rate", {
-        params: {
-          AcademyId,
-        },
-      })
-      .then((result) => {
-        resolve(result.data);
-      })
-      .catch((error) => {
-        showErrorToast(error);
-
-        // reject(error)
-      });
-  });
+export let get_tutor_discount_form = async (AcademyId) => {
+  try {
+    const { data } = await apiClient.get("/tutor/tutor-discounts", {
+      params: {
+        AcademyId,
+      },
+    });
+    return data;
+  } catch (err) {
+    showErrorToast(err);
+  }
 };
 
-export let upload_tutor_bank = (
+export let upload_tutor_bank = async (
   email,
   acct_name,
   acct_type,
@@ -554,26 +532,31 @@ export let upload_tutor_bank = (
   payment_option,
   AcademyId
 ) => {
-  return new Promise((resolve, reject) => {
-    apiClient
-      .post("/tutor/payment", {
-        email,
-        acct_name,
-        acct_type,
-        bank_name,
-        acct,
-        routing,
-        ssh,
-        payment_option,
-        AcademyId,
-      })
-      .then((result) => {
-        resolve(result.data);
-      })
-      .catch((error) => {
-        showErrorToast(error);
-      });
-  });
+  try {
+    const { data } = await apiClient.post("/tutor/payment", {
+      email,
+      acct_name,
+      acct_type,
+      bank_name,
+      acct,
+      routing,
+      ssh,
+      payment_option,
+      AcademyId,
+    });
+    return data;
+  } catch (err) {
+    showErrorToast(err);
+  }
+};
+
+export const update_tutor_bank = async (id, body) => {
+  try {
+    const { data } = await apiClient.put(`/tutor/payment/${id}`, body);
+    return data;
+  } catch (err) {
+    showErrorToast(err);
+  }
 };
 
 /**
@@ -615,7 +598,6 @@ export const storeEventAPI = async (eventDetails) => {
     return response.data;
   } catch (error) {
     showErrorToast(error);
-
   }
 };
 
@@ -733,17 +715,17 @@ export const post_tutor_setup = async (data) => {
 
     dataObject.TutorScreenname = data.mname.length
       ? `${capitalizeFirstLetter(data.fname)}. ${capitalizeFirstLetter(
-        data.mname[0]
-      )}. 
+          data.mname[0]
+        )}. 
             ${capitalizeFirstLetter(data.lname[0])}.`
       : `${capitalizeFirstLetter(data.fname)}. ${capitalizeFirstLetter(
-        data.lname[0]
-      )}.`;
+          data.lname[0]
+        )}.`;
 
     dataObject.AcademyId = uuidv4();
     return await apiClient.post("/tutor/setup", dataObject);
   } catch (error) {
-    showErrorToast(error)
+    showErrorToast(error);
   }
 };
 
@@ -773,7 +755,6 @@ export const get_tutor_students = async (AcademyId) => {
     return data;
   } catch (error) {
     showErrorToast(error);
-
   }
 };
 
@@ -791,7 +772,7 @@ export const get_last_pay_day = async () => {
     const { data } = await apiClient.get(`/p-payment/last_payday`);
     return data;
   } catch (error) {
-    showErrorToast(error)
+    showErrorToast(error);
     return error;
   }
 };
@@ -801,8 +782,7 @@ export const get_tutor_profile = async (tutorId, studentId) => {
     const { data } = await apiClient.get(`/profile/${tutorId}/${studentId}`);
     return data;
   } catch (error) {
-
-    showErrorToast(error)
+    showErrorToast(error);
   }
 };
 
@@ -811,7 +791,7 @@ export const post_tutor_ad = async (body) => {
     const { data } = await apiClient.post(`/tutor/market-place`, body);
     return data;
   } catch (error) {
-    showErrorToast(error)
+    showErrorToast(error);
   }
 };
 
@@ -820,7 +800,7 @@ export const fetch_tutor_ads = async (id) => {
     const { data } = await apiClient.get(`/tutor/market-place/list/${id}`);
     return data;
   } catch (error) {
-    showErrorToast(error)
+    showErrorToast(error);
   }
 };
 
@@ -829,8 +809,7 @@ export const fetch_students_published_ads = async () => {
     const { data } = await apiClient.get(`/tutor/market-place/classified`);
     return data;
   } catch (error) {
-
-    showErrorToast(error)
+    showErrorToast(error);
   }
 };
 

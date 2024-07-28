@@ -13,6 +13,10 @@ import studentSessionsReducer from './student/studentSessions.js';
 import tutorSessionsReducer from './tutor/tutorSessions.js';
 import newSubj from './admin/newSubj.js';
 import missingFields from './tutor/missingFieldsInTabs.js';
+import bankReducer from './tutor/accounting1.js';
+import eduReducer from './tutor/education1.js';
+import discountReducer from './tutor/discount1.js';
+
 
 let store = configureStore({
   reducer: {
@@ -28,6 +32,9 @@ let store = configureStore({
     video: videoReducer,
     
     tutorSessions: tutorSessionsReducer,
+    discount: discountReducer,
+    bank:bankReducer,
+    edu: eduReducer,
 
     newSubj,
     missingFields
