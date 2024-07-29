@@ -178,13 +178,13 @@ const CreateComponent = ({ setActiveTab }) => {
                                     }} />
                                 {error.header && <p className="text-sm text-danger m-0">{error.header} </p>}
                             </div>
-                            <div className="d-flex align-items-center justify-content-end"
+                            {/* <div className="d-flex align-items-center justify-content-end"
                                 style={{ width: "10%", gap: "20px" }}>
                                 <div className="click-effect-elem rounded-circle p-3"
                                     style={{ cursor: "pointer", background: "lightGray" }}>
                                     <FaTrashCan size={32} />
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                         <div className="d-flex flex-wrap justify-content-start"
                             style={{ gap: "10px" }}>
