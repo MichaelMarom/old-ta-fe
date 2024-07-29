@@ -1,14 +1,14 @@
 import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
-import RatesComp from "../../components/tutor/Rates";
+import DiscountsComp from "../../components/tutor/Discounts";
 import TutorLayout from "../../layouts/TutorLayout";
 
-const Rates = () => {
+const Discounts = () => {
     return (
         <TutorLayout  >
             {/* <TabInfoVideoToast video={VIDEO} /> */}
-            <RatesComp />
+            <DiscountsComp />
         </TutorLayout>
     );
 }
 
-export default Rates;
+export default Discounts;

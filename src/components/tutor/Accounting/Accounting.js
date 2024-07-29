@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import Tabs from '../../common/Tabs';
 import AccDetails from './AccDetails';
 import TutorAccSetup from './TutorAccSetup';
-import { get_sessions_details } from '../../../axios/tutor';
 import { useSelector } from 'react-redux';
 
 const Accounting = () => {
@@ -44,7 +43,7 @@ const Accounting = () => {
 
     const tabs = [
         { label: 'Account Settings', component: <TutorAccSetup sessions={sessions} currentYearAccHours={currentYearHrs} currentYearEarning={currentYearEarning} previousYearEarning={previousYearEarning} /> },
-        { label: 'Lessons performed', component: <AccDetails sessions={sessions} /> },
+        { label: 'Lessons performed', component: <AccDetails /> },
         { label: 'Tutor Academy Account', component: null },
     ];
 

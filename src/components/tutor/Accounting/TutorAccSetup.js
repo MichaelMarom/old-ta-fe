@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 
-import { get_bank_details, updateTutorSetup, upload_tutor_bank } from '../../../axios/tutor';
+import {updateTutorSetup, upload_tutor_bank } from '../../../axios/tutor';
 import { showDate } from '../../../utils/moment';
-import AcadCommission from './Acad_Commission._Table';
+import AcadCommissionTable from './AcadCommissionTable';
 import Actions from '../../common/Actions'
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux'
@@ -14,6 +14,7 @@ import Input from '../../common/Input';
 import { GeneralFieldLabel, MandatoryFieldLabel } from '../TutorSetup';
 import Select from '../../common/Select';
 import { setMissingFeildsAndTabs } from '../../../redux/tutor/missingFieldsInTabs';
+import { updateAccounting } from '../../../redux/tutor/accounting';
 
 const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, previousYearEarning }) => {
     const { tutor } = useSelector(state => state.tutor)
@@ -30,6 +31,7 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
     const [editMode, setEditMode] = useState(false);
     const [unSavedChanges, setUnSavedChanges] = useState(false);
     const dispatch = useDispatch();
+    const { bank } = useSelector(state => state.bank)
 
     const emailRequiredPaymentMethods = ['Paypal', 'Payoneer', 'Wise', 'Zelle']
 
@@ -70,8 +72,12 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
         let Step = null;
         if (!dbValues.AcademyId) Step = 5
         if (validate()) setSaving(true);
-
-        if (payment_option === 'Bank') {
+        if (bank.AcademyId) dispatch(updateAccounting(bank.id, {
+            Email: email,
+            AccountName: acct_name, AccountType: acct_type,
+            SSH: ssh, Routing: routing, BankName: bank_name, PaymentOption: payment_option, Account: acct
+        }))
+        else if (payment_option === 'Bank') {
             let response = await upload_tutor_bank(email, acct_name, acct_type, bank_name, acct, routing, ssh, payment_option, user_id);
             fetchingTutorBankRecord();
             if (Step) {
@@ -86,56 +92,40 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
             } else {
                 toast.error("Error while Saving the Bank Info.")
             }
-        } else {
-            let response = await upload_tutor_bank(email, acct_name, acct_type, bank_name, acct, routing, ssh, payment_option, user_id);
-            fetchingTutorBankRecord();
-            if (Step) {
-                await updateTutorSetup(tutor.AcademyId, {
-                    Step,
-                })
-                dispatch(setTutor({ ...tutor, Step }))
-            }
-            if (response) {
-                toast.success("Succesfully Saved The Bank Info.");
-                setEditMode(false)
-            } else {
-                toast.error("Error while Saving the Bank Info.")
-            }
-            dispatch(setMissingFeildsAndTabs(tutor))
         }
+        dispatch(setMissingFeildsAndTabs(tutor))
         setSaving(false);
     }
 
     const fetchingTutorBankRecord = async () => {
-        const result = await get_bank_details(window.localStorage.getItem('tutor_user_id'));
-        if (result?.[0]) {
-            const data = result[0]
+        // const result = await get_bank_details(window.localStorage.getItem('tutor_user_id'));
+        if (bank.AcademyId) {
             setDBValues({
-                AcademyId: data.AcademyId,
-                PaymentOption: data.PaymentOption,
-                SSH: data.SSH === "null" ? null : data.SSH,
-                Routing: data.Routing === "null" ? null : data.Routing,
-                AccountName: data.AccountName === 'null' ? null : data.AccountName,
-                AccountType: data.AccountType === "null" ? null : data.AccountType,
-                BankName: data.BankName === "null" ? null : data.BankName,
-                Account: data.Account === "null" ? null : data.Account,
-                Email: data.Email,
+                AcademyId: bank.AcademyId,
+                PaymentOption: bank.PaymentOption,
+                SSH: bank.SSH === "null" ? null : bank.SSH,
+                Routing: bank.Routing === "null" ? null : bank.Routing,
+                AccountName: bank.AccountName === 'null' ? null : bank.AccountName,
+                AccountType: bank.AccountType === "null" ? null : bank.AccountType,
+                BankName: bank.BankName === "null" ? null : bank.BankName,
+                Account: bank.Account === "null" ? null : bank.Account,
+                Email: bank.Email,
             })
-            set_payment_option(data.PaymentOption);
-            set_routing(data.Routing === "null" ? null : data.Routing)
-            set_ssh(data.SSH === "null" ? null : data.SSH)
-            set_acct_name(data.AccountName === "null" ? null : data.AccountName)
-            set_acct_type(data.AccountType === "null" ? null : data.AccountType)
-            set_bank_name(data.BankName === "null" ? null : data.BankName)
-            set_acct(data.Account === "null" ? null : data.Account)
-            set_email(data.Email)
+            set_payment_option(bank.PaymentOption);
+            set_routing(bank.Routing === "null" ? null : bank.Routing)
+            set_ssh(bank.SSH === "null" ? null : bank.SSH)
+            set_acct_name(bank.AccountName === "null" ? null : bank.AccountName)
+            set_acct_type(bank.AccountType === "null" ? null : bank.AccountType)
+            set_bank_name(bank.BankName === "null" ? null : bank.BankName)
+            set_acct(bank.Account === "null" ? null : bank.Account)
+            set_email(bank.Email)
         }
     }
 
     //fetching
     useEffect(() => {
         fetchingTutorBankRecord()
-    }, [])
+    }, [bank])
 
     //compare db and local
     useEffect(() => {
@@ -192,7 +182,7 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                                 showDate(sessions?.[sessions.length - 1]?.start, monthFormatWithYYYY) : 'N/A'}</p>
                         </div>
 
-                        <AcadCommission />
+                        <AcadCommissionTable />
                     </div>
 
                 </div>

@@ -26,19 +26,20 @@ export default slice.reducer;
 export const { setFieldsAndTabs } = slice.actions
 
 
-export const setMissingFeildsAndTabs = (tutor) => {
-    return async (dispatch) => {
+export const setMissingFeildsAndTabs = () => {
+    return async (dispatch, getState) => {
 
         dispatch(slice.actions.isLoading())
-        const res = await tutorApis.get_my_edu(tutor.AcademyId);
-        const bank = await tutorApis.get_bank_details(tutor.AcademyId);
-        const rate = await tutorApis.get_tutor_rates(tutor.AcademyId);
+        const edu = getState().edu.education;
+        const tutor = getState().tutor.tutor;
+        const bank = getState().bank.bank;
+        const discount = getState().discount.discount;;
         const missingFields = [];
-        const tabs = { setup: tutor, bank: bank[0], rate: rate[0], edu: res?.[0] };
+        const tabs = {bank, discount, edu };
 
         applicationMandatoryFields.Accounting.map((item) => {
             if (
-                (!bank?.[0]?.[item.column] || bank?.[0]?.[item.column] === "null") &&
+                (!tabs.bank?.[item.column] || tabs.bank?.[item.column] === "null") &&
                 item.mandatory &&
                 item.mandatory?.tab &&
                 item.mandatory?.values?.includes(
@@ -51,7 +52,7 @@ export const setMissingFeildsAndTabs = (tutor) => {
 
         applicationMandatoryFields.Motivate.map((item) => {
             if (
-                (!rate?.[0]?.[item.column] || rate?.[0]?.[item.column] === "null") &&
+                (!tabs.discount?.[item.column] || tabs.discount?.[item.column] === "null") &&
                 (!item.mandatory ||
                     (item.mandatory?.tab &&
                         item.mandatory?.values?.includes(
@@ -81,7 +82,7 @@ export const setMissingFeildsAndTabs = (tutor) => {
 
         applicationMandatoryFields.Education.map((item) => {
             if (
-                (!res?.[0]?.[item.column] || res?.[0]?.[item.column] === "null") &&
+                (!tabs.edu?.[item.column] || tabs.edu?.[item.column] === "null") &&
                 (!item.notMandatory ||
                     !item.notMandatory?.values?.includes(
                         tabs?.["edu"]?.[item.notMandatory?.column]
@@ -98,7 +99,13 @@ export const setMissingFeildsAndTabs = (tutor) => {
                 });
             }
         });
+
+        if (!tutor.AgreementDate) missingFields.push({
+            tab: "Terms Of Use",
+            field: "AgreementDate",
+            value: tutor.AgreementDate,
+        });
+
         dispatch(slice.actions.setFieldsAndTabs(missingFields))
     };
 }
-

@@ -1,19 +1,11 @@
 import { useState } from "react";
 import { useEffect } from "react";
-import {
-  get_tutor_rates,
-  get_tutor_subjects,
-  updateTutorSetup,
-  upload_tutor_rates_form,
-} from "../../axios/tutor";
+import { get_tutor_subjects, updateTutorSetup } from "../../axios/tutor";
 import { IoMdCopy, IoMdRefresh } from "react-icons/io";
 import { FaInfoCircle } from "react-icons/fa";
 import Tooltip from "../common/ToolTip";
-import TAButton from '../common/TAButton';
-import {
-  compareStates,
-  copyToClipboard,
-} from "../../utils/common";
+import TAButton from "../common/TAButton";
+import { compareStates, copyToClipboard } from "../../utils/common";
 import Actions from "../common/Actions";
 import "../../styles/common.css";
 import { toast } from "react-toastify";
@@ -21,8 +13,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { setTutor } from "../../redux/tutor/tutorData";
 import Select from "../common/Select";
 import SendCodeModal from "./SendCodeModal";
-import { MandatoryFieldLabel } from "./TutorSetup";
+import { GeneralFieldLabel, MandatoryFieldLabel } from "./TutorSetup";
 import { setMissingFeildsAndTabs } from "../../redux/tutor/missingFieldsInTabs";
+import { postDiscount, updateDiscount } from "../../redux/tutor/discount";
 
 const generateDiscountCode = () => {
   const length = 8;
@@ -36,9 +29,9 @@ const generateDiscountCode = () => {
   return code;
 };
 
-const Rates = () => {
+const Discounts = () => {
   const { tutor } = useSelector((state) => state.tutor);
-  let [MultiStudentHourlyRate, setMultiStudentHourlyRate] = useState("");
+  let [MultiStudentHourlyRate, setMultiStudentHourlyRate] = useState(null);
   let [FreeDemoLesson, setFreeDemoLesson] = useState("");
   let [ActivateSubscriptionOption, setActivateSubscriptionOption] =
     useState("");
@@ -62,60 +55,57 @@ const Rates = () => {
   const [subject, setSubject] = useState("");
   const [codeUsed, setCodeUsed] = useState("new");
   const dispatch = useDispatch();
+  const { discount } = useSelector((state) => state.discount);
 
   const fetchTutorRateRecord = () => {
-    get_tutor_rates(window.localStorage.getItem("tutor_user_id"))
-      .then((result) => {
-        if (result?.length) {
-          setDbState(result[0]);
-          setMultiStudentHourlyRate(result[0].MutiStudentHourlyRate);
-          setSelectedCancPolicy(result[0].CancellationPolicy);
-          setFreeDemoLesson(result[0].FreeDemoLesson);
-          setConsentRecordingLesson(
-            result[0].ConsentRecordingLesson === "true"
-          );
-          setActivateSubscriptionOption(result[0].ActivateSubscriptionOption);
-          setSubscriptionPlan(result[0].SubscriptionPlan);
-          setDiscountCode(result[0].DiscountCode);
-          setClassTeaching(result[0].MultiStudent);
-          setDiscountEnabled(result[0].CodeShareable);
-          setIntroSessionDiscount(result[0].IntroSessionDiscount);
-          let subscriptionPlan = document.querySelector("#subscription-plan");
-          ActivateSubscriptionOption === "true"
-            ? (subscriptionPlan.checked = true)
-            : (subscriptionPlan.checked = false);
+    try {
+      if (discount.AcademyId) {
+        setDbState(discount);
+        setMultiStudentHourlyRate(discount.MutiStudentHourlyRate);
+        setSelectedCancPolicy(discount.CancellationPolicy);
+        setFreeDemoLesson(discount.FreeDemoLesson);
+        setConsentRecordingLesson(discount.ConsentRecordingLesson === "true");
+        setActivateSubscriptionOption(discount.ActivateSubscriptionOption);
+        setSubscriptionPlan(discount.SubscriptionPlan);
+        setDiscountCode(discount.DiscountCode);
+        setClassTeaching(discount.MultiStudent);
+        setDiscountEnabled(discount.CodeShareable);
+        setIntroSessionDiscount(discount.IntroSessionDiscount);
+        let subscriptionPlan = document.querySelector("#subscription-plan");
+        ActivateSubscriptionOption === "true"
+          ? (subscriptionPlan.checked = true)
+          : (subscriptionPlan.checked = false);
 
-          let multiStudent = [...document.querySelectorAll("#multi-student")];
+        let multiStudent = [...document.querySelectorAll("#multi-student")];
 
-          multiStudent.map((item) => {
-            if (
-              MultiStudentHourlyRate.split(" ").splice(-1)[0] ===
-              item.value.split(" ").splice(-1)[0]
-            ) {
-              item.checked = true;
-            }
-            return item;
-          });
+        multiStudent.map((item) => {
+          if (
+            MultiStudentHourlyRate.split(" ").splice(-1)[0] ===
+            item.value.split(" ").splice(-1)[0]
+          ) {
+            item.checked = true;
+          }
+          return item;
+        });
 
-          let studentSubscription = [
-            ...document.querySelectorAll("#student-subscription"),
-          ];
+        let studentSubscription = [
+          ...document.querySelectorAll("#student-subscription"),
+        ];
 
-          studentSubscription.map((item) => {
-            if (
-              SubscriptionPlan.split(" ").splice(-1)[0] ===
-              item.value.split(" ").splice(-1)[0]
-            ) {
-              item.checked = true;
-            }
-            return item;
-          });
-
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+        studentSubscription.map((item) => {
+          if (
+            SubscriptionPlan.split(" ").splice(-1)[0] ===
+            item.value.split(" ").splice(-1)[0]
+          ) {
+            item.checked = true;
+          }
+          return item;
+        });
+      }
+    } catch (err) {
+      // })
+      console.log(err);
+    }
   };
 
   useEffect(() => {
@@ -132,7 +122,7 @@ const Rates = () => {
         result?.length && setSubjects(result);
       })
       .catch((err) => toast.error(err.message));
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (discountEnabled) {
@@ -150,7 +140,7 @@ const Rates = () => {
   useEffect(() => {
     fetchTutorRateRecord();
     // eslint-disable-next-line
-  }, []);
+  }, [discount]);
 
   // eslint-disable-next-line
   const currentState = {
@@ -172,22 +162,51 @@ const Rates = () => {
   }, [currentState, dbState]);
 
   let saver = async () => {
-    let response = await upload_tutor_rates_form(
-      MultiStudentHourlyRate,
-      selectedCancellationPolicy,
-      FreeDemoLesson,
-      ConsentRecordingLesson,
-      ActivateSubscriptionOption,
-      SubscriptionPlan,
-      window.localStorage.getItem("tutor_user_id"),
-      discountCode,
-      subject,
-      discountEnabled,
-      classTeaching,
-      IntroSessionDiscount,
-      codeUsed
-    );
-    return response;
+    if (discount.AcademyId)
+      return dispatch(
+        await updateDiscount(discount.id, {
+          MutiStudentHourlyRate: MultiStudentHourlyRate,
+          CancellationPolicy: selectedCancellationPolicy,
+          ActivateSubscriptionOption,
+          SubscriptionPlan,
+          DiscountCode: discountCode,
+          CodeSubject: subject,
+          MultiStudent: classTeaching,
+          IntroSessionDiscount,
+          CodeStatus: codeUsed,
+        })
+      );
+    else {
+      return dispatch(
+        await postDiscount({
+          MutiStudentHourlyRate: MultiStudentHourlyRate,
+          CancellationPolicy: selectedCancellationPolicy,
+          ActivateSubscriptionOption,
+          SubscriptionPlan,
+          DiscountCode: discountCode,
+          CodeSubject: subject,
+          MultiStudent: classTeaching,
+          IntroSessionDiscount,
+          CodeStatus: codeUsed,
+          AcademyId: tutor.AcademyId,
+        })
+      );
+      // let response = await upload_tutor_disocunt_form(
+      //   MultiStudentHourlyRate,
+      //   selectedCancellationPolicy,
+      //   FreeDemoLesson,
+      //   ConsentRecordingLesson,
+      //   ActivateSubscriptionOption,
+      //   SubscriptionPlan,
+      //   window.localStorage.getItem("tutor_user_id"),
+      //   discountCode,
+      //   subject,
+      //   discountEnabled,
+      //   classTeaching,
+      //   IntroSessionDiscount,
+      //   codeUsed
+      // );
+    }
   };
 
   let subscription_cols = [
@@ -230,18 +249,16 @@ const Rates = () => {
     setLoading(true);
 
     let res = await saver();
-    dispatch(setMissingFeildsAndTabs(tutor))
+    dispatch(setMissingFeildsAndTabs(tutor));
     if (Step) {
       await updateTutorSetup(tutor.AcademyId, { Step });
       dispatch(setTutor({ ...tutor, Step }));
     }
-    if (res.bool) {
+    if (res) {
       setChangesMade(false);
-      fetchTutorRateRecord();
+      // fetchTutorRateRecord();
       toast.success(res.mssg);
       setEditMode(false);
-    } else {
-      toast.error("Failed to save record");
     }
     setLoading(false);
   };
@@ -258,10 +275,9 @@ const Rates = () => {
     }
   }, [dbState.CodeStatus]);
 
-
   const mandatoryFields = [
-    { name: "cancPolicy", filled: !!selectedCancellationPolicy.length },
-  ]
+    { name: "cancPolicy", filled: !!selectedCancellationPolicy },
+  ];
 
   return (
     <div className="tutor-tab-rates">
@@ -280,99 +296,30 @@ const Rates = () => {
                 className="dropdown d-flex align-items-center mb-4"
                 style={{ width: "100%" }}
               >
-                {/* <div style={{ fontWeight: "bold", fontSize: "13px" }}>
-                  <MandatoryFieldLabel text="Tutor Cancellation Policy" />
-
-                </div>
-                <Tooltip direction="bottomleft"
-                  text="How many hours before the lesson, you allow the student to cancel without penalty?"
-                  width="200px"
-                >
-                  <FaInfoCircle size={20} color="#0096ff" />
-                </Tooltip> */}
                 <Select
                   value={selectedCancellationPolicy}
                   setValue={setSelectedCancPolicy}
                   editMode={editMode}
-                  TooltipText={"How many hours before the lesson, you allow the student to cancel without penalty?"}
-                  label={<MandatoryFieldLabel text="Cancellation Policy" mandatoryFields={mandatoryFields} name={"cancPolicy"} />}
+                  TooltipText={
+                    "How many hours before the lesson, you allow the student to cancel without penalty?"
+                  }
+                  label={
+                    <MandatoryFieldLabel
+                      text="Cancellation Policy"
+                      mandatoryFields={mandatoryFields}
+                      name={"cancPolicy"}
+                    />
+                  }
                 >
-                  <option value={""} disabled={tutor.Status === 'active'}>Select</option>
-                  <option value={4} >4hr</option>
-                  <option value={8} >8hr</option>
-                  <option value={12} >12hr</option>
-                  <option value={24} >24hr</option>
-                  <option value={48} >48hr</option>
-
+                  <option value={""} disabled={tutor.Status === "active"}>
+                    Select
+                  </option>
+                  <option value={4}>4hr</option>
+                  <option value={8}>8hr</option>
+                  <option value={12}>12hr</option>
+                  <option value={24}>24hr</option>
+                  <option value={48}>48hr</option>
                 </Select>
-
-                {/* <button
-                  style={{ pointerEvents: editMode ? "auto" : "none" }}
-                  className={`btn ${selectedCancellationPolicy.length
-                    ? "btn-success"
-                    : "btn-secondary"
-                    } dropdown-toggle my-0 mx-3`}
-                  type="button"
-                  onClick={() => setIsOpen(!isOpen)}
-                >
-                  {selectedCancellationPolicy.length
-                    ? `${selectedCancellationPolicy}hr`
-                    : " Select"}
-                </button>
-
-                {isOpen && (
-                  <div
-                    className="dropdown-menu show"
-                    style={{ left: "90px", top: "43px" }}
-                  >
-                    <div
-                      className="dropdown-item"
-                      onClick={() => {
-                        setSelectedCancPolicy("4");
-                        setIsOpen(false);
-                      }}
-                    >
-                      4hr.
-                    </div>
-                    <div
-                      className="dropdown-item"
-                      onClick={() => {
-                        setSelectedCancPolicy("8");
-                        setIsOpen(false);
-                      }}
-                    >
-                      8hr.
-                    </div>
-                    <div
-                      className="dropdown-item"
-                      onClick={() => {
-                        setSelectedCancPolicy("12");
-                        setIsOpen(false);
-                      }}
-                    >
-                      12hr.
-                    </div>
-
-                    <div
-                      className="dropdown-item"
-                      onClick={() => {
-                        setSelectedCancPolicy("24");
-                        setIsOpen(false);
-                      }}
-                    >
-                      24hr
-                    </div>
-                    <div
-                      className="dropdown-item"
-                      onClick={() => {
-                        setSelectedCancPolicy("48");
-                        setIsOpen(false);
-                      }}
-                    >
-                      48 hr.
-                    </div>
-                  </div>
-                )} */}
               </div>
               <div className="form-check form-switch d-flex gap-3">
                 <input
@@ -391,7 +338,8 @@ const Rates = () => {
                 >
                   50% Intro Session
                 </label>
-                <Tooltip direction="bottomleft"
+                <Tooltip
+                  direction="bottomleft"
                   text="The academy mandate an |intro| sessions for new student as a 
                   prerequisite to book further sessions with the tutor. The 50% discount should motivate 
                   the student to select you."
@@ -417,7 +365,8 @@ const Rates = () => {
                 >
                   Consent Recording Session
                 </label>
-                <Tooltip direction="bottomleft"
+                <Tooltip
+                  direction="bottomleft"
                   width="200px"
                   text="We record the lesson for learning purpose (or complains).
                      Students or parents can view the recorded lesson. You consent to the recording of the lesson with the student. The recording be saved on the academy servers for 30 days, then be deleted."
@@ -459,10 +408,15 @@ const Rates = () => {
               </div>
 
               <div className="highlight">
-                Please ensure to select the checkbox above to enable this feature. Your student can choose a payment option from the following table to benefit
-                from savings by paying in advance for multiple sessions. The Academy will remit 50% of the discounted total to you upfront, with the remaining
-                balance provided after completion. For instance, if a student opts for the 12-hour package and your rate is $60.00 per hour, the calculation
-                would be $60.00 x 12 hours, totaling $720.00, less a 10% discount, resulting in a final amount of $648.00.
+                Please ensure to select the checkbox above to enable this
+                feature. Your student can choose a payment option from the
+                following table to benefit from savings by paying in advance for
+                multiple sessions. The Academy will remit 50% of the discounted
+                total to you upfront, with the remaining balance provided after
+                completion. For instance, if a student opts for the 12-hour
+                package and your rate is $60.00 per hour, the calculation would
+                be $60.00 x 12 hours, totaling $720.00, less a 10% discount,
+                resulting in a final amount of $648.00.
               </div>
 
               <div
@@ -470,7 +424,7 @@ const Rates = () => {
                 style={{
                   pointerEvents:
                     ActivateSubscriptionOption === "true" ||
-                      ActivateSubscriptionOption === true
+                    ActivateSubscriptionOption === true
                       ? "auto"
                       : "none",
                   opacity: "0.5",
@@ -518,7 +472,10 @@ const Rates = () => {
             <div className="p-4  float-end rounded shadow border m-2 ">
               <h6>Tutor's Own Students</h6>
               <div className="highlight">
-                To assist your current students on this platform, please provide the following code to each student for use during their registration process. It is important to generate a unique code for every student..
+                To assist your current students on this platform, please provide
+                the following code to each student for use during their
+                registration process. It is important to generate a unique code
+                for every student..
               </div>
               <div className="form-check form-switch d-flex align-items-center gap-2">
                 <input
@@ -527,8 +484,12 @@ const Rates = () => {
                   type="checkbox"
                   role="switch"
                   id="flexSwitchCheckChecked"
-                  onChange={() => !!subjects.length ? setDiscountEnabled(!discountEnabled) :
-                    toast.warning("Please select subject from Subjects Tab, after that you can share code with your students!")
+                  onChange={() =>
+                    !!subjects.length
+                      ? setDiscountEnabled(!discountEnabled)
+                      : toast.warning(
+                          "Please select subject from Subjects Tab, after that you can share code with your students!"
+                        )
                   }
                   checked={discountEnabled}
                 />
@@ -555,69 +516,79 @@ const Rates = () => {
 
               {discountEnabled && (
                 <div>
-                  <div className="d-flex w-100 justify-content-between align-items-end">
-                    <div>
+                  <div className="d-flex flex-column w-100 justify-content-end ">
+                    <div className="d-flex align-items-end">
                       <h6 className="mt-4 d-inline">Your Student's new code</h6>
                       <Tooltip text="Generate New Code">
                         <IoMdRefresh
                           size={20}
-                          className="d-inline"
+                          className="d-inline mb-2"
                           onClick={() =>
                             editMode && setDiscountCode(generateDiscountCode())
                           }
                         />
                       </Tooltip>
-                      <div className="input-group">
-                        <input
-                          disabled={!editMode}
-                          type="text"
-                          className="form-control m-0 h-100 p-2"
-                          value={discountCode}
-                          readOnly
-                        />
-
-                        <label
-                          className="m-0 input-group-text"
-                          type="button"
-                          id="inputGroupFileAddon04"
-                        >
-                          <IoMdCopy
-                            size={20}
-                            color="#0096ff"
-                            onClick={() => {
-                              copyToClipboard(discountCode);
-                              setCopied(true);
-                            }}
-                          />
-                        </label>
-                      </div>
-                      {copied && (
-                        <p className="text-success d-block">
-                          Code copied to clipboard!
-                        </p>
-                      )}
                     </div>
-                    <div className="input-group w-50">
-                      <Select
-                        editMode={editMode}
-                        label={"Subject"}
-                        value={subject}
-                        setValue={setSubject}
+                    <div className="d-flex flex-column gap-3">
+                      <div className="d-flex ">
+                        <div className="input-group">
+                          <input
+                            disabled={!editMode}
+                            type="text"
+                            className="form-control m-0 h-100 p-2"
+                            value={discountCode}
+                            readOnly
+                          />
 
-                      >
-                        <option value="" disabled>
-                          Select
-                        </option>
-                        {subjects.map((subject) => (
-                          <option value={subject}>{subject}</option>
-                        ))}
-                      </Select>
-
+                          <label
+                            className="m-0 input-group-text"
+                            type="button"
+                            id="inputGroupFileAddon04"
+                          >
+                            <IoMdCopy
+                              size={20}
+                              color="#0096ff"
+                              onClick={() => {
+                                copyToClipboard(discountCode);
+                                setCopied(true);
+                              }}
+                            />
+                          </label>
+                        </div>
+                        {copied && (
+                          <p className="text-success d-block">
+                            Code copied to clipboard!
+                          </p>
+                        )}
+                      </div>
+                      <div className="input-group ">
+                        <Select
+                          editMode={editMode}
+                          label={<GeneralFieldLabel label={"Subject"} />}
+                          value={subject}
+                          setValue={setSubject}
+                        >
+                          <option value="" disabled>
+                            Select
+                          </option>
+                          {subjects.map((subject) => (
+                            <option value={subject}>{subject}</option>
+                          ))}
+                        </Select>
+                      </div>
                     </div>
                   </div>
-                  <TAButton className="w-auto" buttonText={"Send Code"} handleClick={() => !!subject.length ?
-                    setSendCodeModalOpen(true) : toast.warning("Please Seelct subject First before sending code to your students!")} />
-
+                  <TAButton
+                    className="w-auto"
+                    buttonText={"Send Code"}
+                    handleClick={() =>
+                      !!subject.length
+                        ? setSendCodeModalOpen(true)
+                        : toast.warning(
+                            "Please Seelct subject First before sending code to your students!"
+                          )
+                    }
+                  />
                 </div>
               )}
             </div>
@@ -625,10 +596,14 @@ const Rates = () => {
               <h6>School class Students</h6>
 
               <div className="p-2 mt-4 highlight">
-                American public schools are currently experiencing a severe shortage of teachers. If you possess a teaching certificate and are willing to
-                instruct online a full class of students, you have the opportunity to advertise your services on our portal's message board. This platform allows you
-                to set a competitive rate for your expertise. Likewise, schools in need of a substitute teacher can easily locate your profile, which is marked
-                to indicate your availability.
+                American public schools are currently experiencing a severe
+                shortage of teachers. If you possess a teaching certificate and
+                are willing to instruct online a full class of students, you
+                have the opportunity to advertise your services on our portal's
+                message board. This platform allows you to set a competitive
+                rate for your expertise. Likewise, schools in need of a
+                substitute teacher can easily locate your profile, which is
+                marked to indicate your availability.
               </div>
               <div className="form-check form-switch d-flex align-items-center gap-2 mt-4">
                 <input
@@ -676,7 +651,8 @@ const Rates = () => {
                     <span className="input-group-text">.00</span>
                   </div>
                   <span className="small text-secondary bg-light">
-                    Tutor must hold teaching certificate from his state to teach in American public, private or charters' schools.{" "}
+                    Tutor must hold teaching certificate from his state to teach
+                    in American public, private or charters' schools.{" "}
                   </span>
                 </>
               )}
@@ -712,9 +688,13 @@ const Rates = () => {
               </div>
 
               <div className="highlight">
-                You or your student may form a group to take advantage of the discounts listed in the table below. For instance, if your hourly rate is $60 and
-                the group includes 6 students, each student would receive a 39% discount per hour. A single student will be accountable for managing the account.
-                Please note, if a student from the group misses a session, the payment for that session is non-refundable.
+                You or your student may form a group to take advantage of the
+                discounts listed in the table below. For instance, if your
+                hourly rate is $60 and the group includes 6 students, each
+                student would receive a 39% discount per hour. A single student
+                will be accountable for managing the account. Please note, if a
+                student from the group misses a session, the payment for that
+                session is non-refundable.
               </div>
 
               <h6>Multi Students hourly rate</h6>
@@ -723,7 +703,7 @@ const Rates = () => {
                 style={{
                   pointerEvents:
                     ActivateSubscriptionOption === "true" ||
-                      ActivateSubscriptionOption === true
+                    ActivateSubscriptionOption === true
                       ? "auto"
                       : "none",
                   opacity: "0.5",
@@ -771,13 +751,15 @@ const Rates = () => {
             saveDisabled={!editMode}
           />
         </form>
-        <SendCodeModal isOpen={sendCodeModalOpen}
+        <SendCodeModal
+          isOpen={sendCodeModalOpen}
           onClose={() => setSendCodeModalOpen(false)}
           subject={subject}
-          code={discountCode} />
+          code={discountCode}
+        />
       </div>
     </div>
   );
 };
 
-export default Rates;
+export default Discounts;

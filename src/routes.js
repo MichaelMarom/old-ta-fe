@@ -27,10 +27,12 @@ import { redirect_to_login } from "./utils/auth";
 import { setStudentSessions } from "./redux/student/studentSessions";
 import { setTutorSessions } from "./redux/tutor/tutorSessions";
 import Collaboration from "./pages/tutor/Collaboration";
-import CallWithChatExperience from "./pages/tutor/Test1";
 import { setNewSubjCount } from "./redux/admin/newSubj";
 import Loading from "./components/common/Loading";
 import { setMissingFeildsAndTabs } from "./redux/tutor/missingFieldsInTabs";
+import { setEducation } from "./redux/tutor/education";
+import { setAccounting } from "./redux/tutor/accounting";
+import { setDiscount } from "./redux/tutor/discount";
 
 const App = () => {
   let location = useLocation();
@@ -42,8 +44,9 @@ const App = () => {
   const { user } = useSelector((state) => state.user);
   const { student } = useSelector((state) => state.student);
   const { tutor } = useSelector((state) => state.tutor);
-  const { missingFields } = useSelector((state) => state.missingFields);
-
+  const { bank } = useSelector((state) => state.bank);
+  const { education } = useSelector((state) => state.edu);
+  const { discount } = useSelector((state) => state.discount);
   const [activeRoutes, setActiveRoutes] = useState([]);
   const tutorUserId = localStorage.getItem("tutor_user_id");
   const studentLoggedIn = user?.role === "student";
@@ -103,10 +106,20 @@ const App = () => {
     }
   }, [tutor, student, userId, isSignedIn, studentLoggedIn]);
 
+  //checking missing mandatory fields and update header//tutor
+  useEffect(() => {
+    dispatch(setMissingFeildsAndTabs());
+  }, [education, discount, bank]);
+
   //sessions :nextsession, :allsessions, :time remaing for next lesson
   useEffect(() => {
     if (token && tutor.AcademyId) {
-      dispatch(setMissingFeildsAndTabs(tutor))
+      dispatch(setEducation());
+      dispatch(setAccounting());
+      dispatch(setDiscount());
+
+      console.log("render123", token, tutor);
+
       const dispatchUserSessions = async () => {
         const tutorSessions = await dispatch(await setTutorSessions(tutor));
         handleExpiredToken(tutorSessions);
@@ -130,9 +143,9 @@ const App = () => {
           await setStudentSessions(student)
         );
         handleExpiredToken(studentSessions);
-        
+
         const intervalId = setInterval(async () => {
-          console.log(student)
+          console.log(student);
           const studentSessions = await dispatch(
             await setStudentSessions(student)
           );
@@ -220,7 +233,6 @@ const App = () => {
         <Route path={"/collab"} element={<Collaboration />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/chat-call" element={<CallWithChatExperience />} />
         {activeRoutes.map((route) => (
           <Route
             key={route.path}

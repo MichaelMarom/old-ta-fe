@@ -15,7 +15,7 @@ import Tooltip from "../../components/common/ToolTip";
 import _ from "lodash";
 import { toast } from "react-toastify";
 import {
-  get_tutor_rates,
+  get_tutor_discount_form,
   getSessionDetail,
 } from "../../axios/tutor";
 import { get_my_data } from "../../axios/student";
@@ -358,7 +358,7 @@ const Collaboration = () => {
   useEffect(() => {
     if (openedSession.studentId && openedSession.tutorId) {
       if (!student.AcademyId) {
-        get_tutor_rates(openedSession.tutorId).then((result) => {
+        get_tutor_discount_form(openedSession.tutorId).then((result) => {
           !result?.response?.data &&
             setTutorVideoConsent(
               result?.[0]?.ConsentRecordingLesson &&
@@ -375,7 +375,7 @@ const Collaboration = () => {
       }
       if (!tutor.AcademyId) {
         setStudentVideoConsent(student.ParentConsent === "true");
-        get_tutor_rates(openedSession.tutorId).then((result) => {
+        get_tutor_discount_form(openedSession.tutorId).then((result) => {
           !result?.response?.data &&
             setTutorVideoConsent(
               result?.[0]?.ConsentRecordingLesson === "true"

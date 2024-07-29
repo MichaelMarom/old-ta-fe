@@ -121,7 +121,7 @@ const TutorSetup = () => {
         toast.success(
           `Please note that your application is currently in 'pending' status. 
           Use the 'Next' or 'Back' buttons at the page footer to navigate between pages. 
-          The menu tabs will become active once your application is complete`,
+          The menu tabs will become active once you complete all mandatory fields as marked by red blinking text.`,
           {
             position: toast.POSITION.BOTTOM_CENTER,
             hideProgressBar: true,
@@ -396,6 +396,7 @@ const TutorSetup = () => {
     let response = await post_tutor_setup(body);
     return response;
   };
+  console.log(tutor)
 
   useEffect(() => {
     const sortedCountries = Countries.sort((a, b) =>
@@ -489,6 +490,7 @@ const TutorSetup = () => {
       </option>
     ));
     let response_head = (
+
       <option
         key=""
         style={{
@@ -507,7 +509,7 @@ const TutorSetup = () => {
 
     response_list.unshift(response_head);
     set_response_list(response_list);
-  }, []);
+  }, [tutor.Status]);
 
   let handleImage = async (e) => {
     setUploadPhotoClicked(true);
@@ -961,14 +963,7 @@ const TutorSetup = () => {
                 >
                   <Input
                     label={
-                      <p
-                        style={{
-                          background: "rgb(233, 236, 239)",
-                          opacity: "0.5",
-                        }}
-                      >
-                        Email
-                      </p>
+                     <GeneralFieldLabel label={"Email"} />
                     }
                     value={email}
                     editMode={false}
@@ -1108,7 +1103,7 @@ const TutorSetup = () => {
                         editMode={editMode}
                       />
                     }
-                    required={tutor.Status === "active"}
+                    required={false}
                     value={add1}
                     setValue={set_add1}
                     editMode={editMode}
@@ -1133,7 +1128,7 @@ const TutorSetup = () => {
                       />
                     }
                     value={add2}
-                    required={tutor.Status === "active"}
+                    required={false}
                     setValue={set_add2}
                     editMode={editMode}
                   />
@@ -1203,6 +1198,7 @@ const TutorSetup = () => {
                       setValue={set_state}
                       value={state}
                       editMode={editMode}
+                      required={tutor.Status === 'active'}
                       label={
                         <MandatoryFieldLabel
                           name="state"
@@ -1299,13 +1295,7 @@ const TutorSetup = () => {
                   className={`${!!video.length && !videoError ? "" : "blinking-button text-success"
                     }`}
                 >
-                  Tutor's introduction video
-                  <span
-                    className="text-danger "
-                    style={{ fontSize: "25px", fontWeight: "bold" }}
-                  >
-                    *
-                  </span>
+                  Elective Tutor's introduction video
                 </h6>
                 <div className="mb-2">
                   {videoUploading && (
@@ -1338,8 +1328,7 @@ const TutorSetup = () => {
                 ) : (
                   <div className="tutor-tab-video-frame p-2 card">
                     <div style={{ textAlign: "justify", fontSize: "12px" }}>
-                      Providing your video, is mandatory. Your registration is
-                      at the stage of 'pending' until you upload it. An
+                      Providing your video is elective. Create a 30-60 seconds clip 'limit 10Mb'. An
                       introduction video is a great way to showcase your
                       personality, skills and teaching style for potential
                       students. It can help you stand out from other tutors and
