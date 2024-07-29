@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 
-import { get_bank_details, update_tutor_bank, updateTutorSetup, upload_tutor_bank } from '../../../axios/tutor';
+import {updateTutorSetup, upload_tutor_bank } from '../../../axios/tutor';
 import { showDate } from '../../../utils/moment';
-import AcadCommission from './Acad_Commission._Table';
+import AcadCommissionTable from './AcadCommissionTable';
 import Actions from '../../common/Actions'
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux'
@@ -182,7 +182,7 @@ const TutorAccSetup = ({ sessions, currentYearAccHours, currentYearEarning, prev
                                 showDate(sessions?.[sessions.length - 1]?.start, monthFormatWithYYYY) : 'N/A'}</p>
                         </div>
 
-                        <AcadCommission />
+                        <AcadCommissionTable />
                     </div>
 
                 </div>

@@ -4,7 +4,7 @@ import React, { lazy } from 'react';
 const Intro = lazy(() => import('../pages/tutor/Intro'));
 const TutorSetup = lazy(() => import('../pages/tutor/TutorSetup'));
 const Education = lazy(() => import('../pages/tutor/Education'));
-const Rates = lazy(() => import('../pages/tutor/Rates'));
+const Discounts = lazy(() => import('../pages/tutor/Discounts'));
 const Accounting = lazy(() => import('../pages/tutor/Accounting'));
 const Subjects = lazy(() => import('../pages/tutor/Subjects'));
 const MyStudents = lazy(() => import('../pages/tutor/MyStudents'));
@@ -60,7 +60,7 @@ const rolePermissions = {
     { path: "/tutor/setup", component: <TutorSetup /> },
     { path: "/tutor/education", component: <Education /> },
     { path: '/tutor/student-profile/:AcademyId', component: <StudentPublicProfile /> },
-    { path: "/tutor/rates", component: <Rates /> },
+    { path: "/tutor/discounts", component: <Discounts /> },
     { path: "/tutor/accounting", component: <Accounting /> },
     { path: "/tutor/subjects", component: <Subjects /> },
     { path: "/tutor/my-students", component: <MyStudents /> },

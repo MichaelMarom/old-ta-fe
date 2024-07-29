@@ -27,7 +27,6 @@ import { redirect_to_login } from "./utils/auth";
 import { setStudentSessions } from "./redux/student/studentSessions";
 import { setTutorSessions } from "./redux/tutor/tutorSessions";
 import Collaboration from "./pages/tutor/Collaboration";
-import CallWithChatExperience from "./pages/tutor/Test1";
 import { setNewSubjCount } from "./redux/admin/newSubj";
 import Loading from "./components/common/Loading";
 import { setMissingFeildsAndTabs } from "./redux/tutor/missingFieldsInTabs";
@@ -234,7 +233,6 @@ const App = () => {
         <Route path={"/collab"} element={<Collaboration />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/chat-call" element={<CallWithChatExperience />} />
         {activeRoutes.map((route) => (
           <Route
             key={route.path}

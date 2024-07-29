@@ -1,6 +1,6 @@
 import { COMMISSION_DATA } from "../../../constants/constants";
 
-const Acad_Commission = () => {
+const AcadCommissionTable = () => {
   return (
     <>
       <div className="rate-table">
@@ -23,4 +23,4 @@ const Acad_Commission = () => {
   );
 };
 
-export default Acad_Commission;
+export default AcadCommissionTable;

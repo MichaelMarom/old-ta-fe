@@ -3,9 +3,6 @@ import RichTextEditor from "../common/RichTextEditor/RichTextEditor";
 import Actions from "../common/Actions";
 import { get_adminConstants, post_termsOfUse, send_sms } from "../../axios/admin";
 import {
-  get_bank_details,
-  get_my_edu,
-  get_tutor_rates,
   setAgreementDateToNullForAll,
   updateTutorSetup,
 } from "../../axios/tutor";
@@ -22,6 +19,7 @@ import { toast } from "react-toastify";
 import { apiClient } from "../../axios/config";
 import _ from "lodash";
 import { MandatoryFieldLabel } from "./TutorSetup";
+import { setMissingFeildsAndTabs } from "../../redux/tutor/missingFieldsInTabs";
 
 const TermOfUse = () => {
   const [unSavedChanges, setUnSavedChanges] = useState(false);
@@ -29,13 +27,12 @@ const TermOfUse = () => {
   const [db_terms, set_db_terms] = useState("");
   const [userRole, setUserRole] = useState("");
   const [editMode, setEditMode] = useState(false);
-  const [videoError, setVideoError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [agreed, setAgreed] = useState(false);
   const { tutor } = useSelector((state) => state.tutor);
-  const [video, setVideo] = useState(null);
   const { user } = useSelector((state) => state.user);
+  const { missingFields } = useSelector((state) => state.missingFields);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -90,108 +87,14 @@ const TermOfUse = () => {
 
   const handleSaveAgreement = async (e) => {
     e.preventDefault();
-    const res = await get_my_edu(tutor.AcademyId);
-    const bank = await get_bank_details(tutor.AcademyId);
-    const rate = await get_tutor_rates(tutor.AcademyId);
-    const missingFields = [];
-    const tabs = { setup: tutor, bank: bank[0], rate: rate[0], edu: res?.[0] };
 
-    applicationMandatoryFields.Accounting.map((item) => {
-      if (
-        (!bank?.[0]?.[item.column] || bank?.[0]?.[item.column] === "null") &&
-        item.mandatory &&
-        item.mandatory?.tab &&
-        item.mandatory?.values?.includes(
-          tabs?.[item.mandatory?.tab]?.[item.mandatory?.column]
-        )
-      ) {
-        missingFields.push({ tab: "Accounting", field: item.column });
-      }
-
-      // if(!item?.mandatory?.tab && item?.mandatory &&
-      //      item.mandatory?.values?.includes(tabs?.["bank"]?.[item.mandatory?.column]) ){
-      //         missingFields.push({ tab: "Accounting", field: item.column })
-      //      }
-      console.log(
-        item.mandatory?.values?.includes(
-          tabs?.["bank"]?.[item.mandatory?.column]
-        ),
-        bank[0][item.column],
-        item.column,
-        item.mandatory?.values,
-        item.mandatory?.tab,
-        item.mandatory?.column
-      );
-      // return toast.warning(`Please fill ${item.column} Field in Accounting tab`)
-    });
-
-    applicationMandatoryFields.Motivate.map((item) => {
-      if (
-        (!rate?.[0]?.[item.column] || rate?.[0]?.[item.column] === "null") &&
-        (!item.mandatory ||
-          (item.mandatory?.tab &&
-            item.mandatory?.values?.includes(
-              tabs?.[item.mandatory?.tab]?.[item.mandatory?.column]
-            )))
-      ) {
-        missingFields.push({ tab: "Motivate", field: item.column });
-      }
-    });
-
-    applicationMandatoryFields.Setup.map((item) => {
-      if (
-        (!tutor?.[item.column] || tutor?.[item.column] === "null") &&
-        (!item.mandatory ||
-          (item.mandatory?.tab &&
-            item.mandatory?.values?.includes(
-              tabs?.[item.mandatory?.tab]?.[item.mandatory?.column]
-            )))
-      ) {
-        missingFields.push({
-          tab: "Setup",
-          field: item.column,
-          value: tutor[item.column],
-        });
-      }
-    });
-
-    applicationMandatoryFields.Education.map((item) => {
-      if (
-        (!res?.[0]?.[item.column] || res?.[0]?.[item.column] === "null") &&
-        (!item.notMandatory ||
-          !item.notMandatory?.values?.includes(
-            tabs?.["edu"]?.[item.notMandatory?.column]
-          )) &&
-        (!item.mandatory ||
-          item.mandatory?.values?.includes(
-            tabs?.["edu"]?.[item.mandatory?.column]
-          ))
-      ) {
-        missingFields.push({
-          tab: "Education",
-          field: item.column,
-          value: tabs["edu"][item.column],
-        });
-      }
-    });
-
-    console.log(missingFields, tutor.Video, tutor);
-    if (missingFields.length)
+   const missingFieldsExceptTOU = _.chain(missingFields).filter((item) => item.tab !== "Terms Of Use").map(item => `"${item.tab}" `).value()
+    if (missingFieldsExceptTOU.length)
       return toast.warning(
-        `Fields are missing from ${_.uniq(
-          missingFields.map((item) => item.tab)
+        `Mandatory fields are missing from ${_.uniq(
+          _.chain(missingFields).filter((item) => item.tab !== "Terms Of Use").map(item => `"${item.tab}" `).value()
         )} Tab`
       );
-
-    // if ((!res?.[0]?.DegFileName || !res?.[0]?.DegFileName?.length)
-    //     && (res?.[0]?.EducationalLevel !== "Undergraduate Student" ||
-    //         (res?.[0]?.EducationalLevel !== "No Academic Record")))
-    //     return toast.warning('Please upload your degree in Education Tab')
-
-    // if (!tutor?.Photo?.length)
-    //     return toast.error('Please upload your Photo in Setup Tab')
-
-    if (videoError) return toast.error("Please upload your Video in Setup Tab");
 
     setLoading(true);
     let body = {
@@ -200,34 +103,16 @@ const TermOfUse = () => {
     if (tutor.Status === PROFILE_STATUS.PENDING)
       body.Status = PROFILE_STATUS.UNDER_REVIEW;
     await updateTutorSetup(tutor.AcademyId, body);
+
+    dispatch(setMissingFeildsAndTabs({ ...tutor, ...body }));
     tutor.CellPhone.startsWith("+1") && await send_sms({ message: "Your Account is Currently Under Review,. You will get response within 24 hrs", numbers: [tutor.CellPhone.replace("+", "")], id: tutor.AcademyId })
     setLoading(false);
-
     dispatch(setTutor({ ...tutor, ...body }));
   };
-
-  useEffect(() => {
-    tutor.AcademyId &&
-      apiClient
-        .get("/tutor/setup/intro", {
-          params: { user_id: tutor.AcademyId.replace(/[.\s]/g, "") },
-        })
-        .then((res) => {
-          res?.data?.url && setVideo(res.data.url);
-        })
-        .catch((err) => console.log(err));
-  }, [tutor]);
 
   if (fetching) return <Loading />;
   return (
     <div className="form-term-of-use h-100">
-      <video
-        src={video}
-        onError={() => setVideoError(true)}
-        className="w-100 h-100 m-0 p-0 videoLive d-none"
-        controls
-        autoPlay={false}
-      />
       <form
         onSubmit={userRole === "admin" ? handleSaveTerms : handleSaveAgreement}
       >

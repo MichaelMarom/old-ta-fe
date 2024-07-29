@@ -42,10 +42,9 @@ const Actions = ({
     const tutorTabsNavigationInfo = [
         { next: "setup", current: "intro", back: null, withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
         { next: "education", current: "setup", back: "intro", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
-        { next: "rates", current: "education", back: "setup", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
-        { next: "accounting", current: "rates", back: "education", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
-        { next: "subjects", current: "accounting", back: "rates", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
-
+        { next: "discounts", current: "education", back: "setup", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
+        { next: "accounting", current: "discounts", back: "education", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
+        { next: "subjects", current: "accounting", back: "discounts", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
         { next: "scheduling", current: "subjects", back: "accounting", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
         { next: "feedback", current: "scheduling", back: "subjects", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
         { next: "my-students", current: "feedback", back: "scheduling", withCurrentRolePrefix: true, withNextRolePrefix: true, withBackRolePrefix: true },
