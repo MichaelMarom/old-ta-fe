@@ -10,8 +10,6 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import CollabSidebar from "../../components/tutor/Collab/CollabSidebar";
-import Switch from "../../components/common/Switch";
-import Tooltip from "../../components/common/ToolTip";
 import _ from "lodash";
 import { toast } from "react-toastify";
 import {
@@ -21,7 +19,6 @@ import {
 import { get_my_data } from "../../axios/student";
 import logo from "../../assets/images/tutoring Logo.png";
 import Loading from "../../components/common/Loading";
-import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
 import Actions from "../../components/common/Actions";
 
 const Collaboration = () => {

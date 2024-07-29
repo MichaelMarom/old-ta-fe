@@ -2,8 +2,6 @@ import { useCallback } from "react";
 import { convertToDate } from "../Calendar";
 
 const useEventPropGetter = ({
-  reservedSlots,
-  bookedSlots,
   isStudentLoggedIn,
   selectedTutor,
   student,

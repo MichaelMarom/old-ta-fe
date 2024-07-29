@@ -126,12 +126,12 @@ const Header = () => {
                 </ul>
 
                 <div
-                    className="d-flex border rounded p-1 justify-content-center align-items-center "
+                    className="d-flex gap-2 border rounded p-1 justify-content-center align-items-center "
                     style={{ marginRight: "20px", cursor: "pointer" }}
                     onClick={() => signOut(() => handleSignOut())}
                 >
-                    <p className="text-danger m-0">Signout</p>
-                    <FaSignOutAlt color="red" />
+                    <h6 className="text-light m-0">Signout</h6>
+                    <FaSignOutAlt color="white" />
                 </div>
 
 

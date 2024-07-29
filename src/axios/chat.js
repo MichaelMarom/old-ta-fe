@@ -34,7 +34,7 @@ export const post_message = async (body) => {
 
 /**
  * 
- * @param {{User1ID:"String", User2ID:"String"}} body 
+ * @param {{User1ID:"String", User2ID:"String"}} body //user1Id:studentId, user2Id: tutorId
  * @returns 
  */
 export const create_chat = async (body) => {

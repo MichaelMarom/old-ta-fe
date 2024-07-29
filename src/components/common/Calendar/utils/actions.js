@@ -6,41 +6,16 @@ import {
   updateStudentLesson,
 } from "../../../../redux/student/studentBookings";
 import { FeedbackMissing } from "../ToastMessages";
-import { toast } from 'react-toastify'
+import { toast } from "react-toastify";
 
 export const handlePostpone = (
   setIsTutorSideSessionModalOpen,
   dispatch,
-  reservedSlots,
-  bookedSlots,
-  tutor,
   clickedSlot,
-  navigate,
   setDisableHourSlots,
-  disableHourSlots,
-  //
-  selectedTutor,
-  isStudentLoggedIn,
-  student,
-  studentId,
-  lessons
+  disableHourSlots
 ) => {
   setIsTutorSideSessionModalOpen(false);
-  // let { reservedSlots: updatedReservedSlot, bookedSlots: updatedBookedSlots } =
-  //   filterOtherStudentAndTutorSession(
-  //     reservedSlots,
-  //     bookedSlots,
-  //     tutor.AcademyId,
-  //     clickedSlot.studentId,
-  //     //
-  //     tutor,
-  //     selectedTutor,
-  //     isStudentLoggedIn,
-  //     reservedSlots,
-  //     student,
-  //     bookedSlots,
-  //     studentId
-  //   );
   handleDisableSlot(
     convertToDate(clickedSlot.start),
     setDisableHourSlots,
@@ -49,33 +24,6 @@ export const handlePostpone = (
   dispatch(
     updateStudentLesson(clickedSlot.id, { ...clickedSlot, request: "postpone" })
   );
-  // if (clickedSlot.type === "booked") {
-  //   dispatch(
-  //     postStudentBookings({
-  //       studentId: clickedSlot.studentId,
-  //       tutorId: tutor.AcademyId,
-  //       subjectName: clickedSlot.subjectName,
-  //       bookedSlots: updatedBookedSlots.map((slot) =>
-  //         slot.id === clickedSlot.id ? { ...slot, request: "postpone" } : slot
-  //       ),
-  //       reservedSlots: updatedReservedSlot,
-  //     })
-  //   );
-  //   return;
-  // }
-  // if (clickedSlot.type === "intro" || clickedSlot.type === "reserved") {
-  //   dispatch(
-  //     postStudentBookings({
-  //       studentId: clickedSlot.studentId,
-  //       tutorId: tutor.AcademyId,
-  //       subjectName: clickedSlot.subjectName,
-  //       bookedSlots: updatedBookedSlots,
-  //       reservedSlots: updatedReservedSlot.map((slot) =>
-  //         slot.id === clickedSlot.id ? { ...slot, request: "postpone" } : slot
-  //       ),
-  //     })
-  //   );
-  // }
   // navigate(`/tutor/chat`);
 };
 
@@ -83,64 +31,13 @@ export const handlePostpone = (
 export const handleDeleteSessionByTutor = (
   setIsTutorSideSessionModalOpen,
   dispatch,
-  reservedSlots,
-  bookedSlots,
-  tutor,
   clickedSlot,
-  navigate,
-  //
-  selectedTutor,
-  isStudentLoggedIn,
-  student,
-  studentId
+  navigate
 ) => {
   setIsTutorSideSessionModalOpen(false);
-  // let { reservedSlots: updatedReservedSlot, bookedSlots: updatedBookedSlots } =
-  //   filterOtherStudentAndTutorSession(
-  //     reservedSlots,
-  //     bookedSlots,
-  //     tutor.AcademyId,
-  //     clickedSlot.studentId,
-  //     //
-  //     tutor,
-  //     selectedTutor,
-  //     isStudentLoggedIn,
-  //     reservedSlots,
-  //     student,
-  //     bookedSlots,
-  //     studentId
-  //   );
-
   dispatch(
     updateStudentLesson(clickedSlot.id, { ...clickedSlot, request: "delete" })
   );
-  // if (clickedSlot.type === "booked") {
-  //   dispatch(
-  //     postStudentBookings({
-  //       studentId: clickedSlot.studentId,
-  //       tutorId: tutor.AcademyId,
-  //       subjectName: clickedSlot.subjectName,
-  //       bookedSlots: updatedBookedSlots.map((slot) =>
-  //         slot.id === clickedSlot.id ? { ...slot, request: "delete" } : slot
-  //       ),
-  //       reservedSlots: updatedReservedSlot,
-  //     })
-  //   );
-  //   return;
-  // }
-  // if (clickedSlot.type === "intro" || clickedSlot.type === "reserved") {
-  //   dispatch(
-  //     postStudentBookings({
-  //       studentId: clickedSlot.studentId,
-  //       tutorId: tutor.AcademyId,
-  //       subjectName: clickedSlot.subjectName,
-  //       bookedSlots: updatedBookedSlots,
-  //       reservedSlots: updatedReservedSlot.map((slot) =>
-  //         slot.id === clickedSlot.id ? { ...slot, request: "delete" } : slot
-  //       ),
-  //     })
-  //   );
-  // }
   navigate(`/tutor/chat`);
 };
 
@@ -178,6 +75,8 @@ export const handleBulkEventCreate = async (
   lessons
 ) => {
   //intro session not conducted
+  if (student.Status !== "active")
+    return toast.warning("Only Active Students Can Book Lessons");
   if (
     lessons?.some((slot) => {
       return (
@@ -218,7 +117,7 @@ export const handleBulkEventCreate = async (
   if (
     selectedSlots.length &&
     selectedSlots[0].type === "reserved" &&
-    lessons.map(les => les.type === 'reserved').length > 6
+    lessons.map((les) => les.type === "reserved").length > 6
   ) {
     toast.warning("You Can Reserve no more than 6 slots");
     return;
@@ -232,8 +131,8 @@ export const handleBulkEventCreate = async (
         type === "reserved"
           ? "Reserved"
           : type === "intro"
-            ? "Intro"
-            : "Booked",
+          ? "Intro"
+          : "Booked",
       studentName: student.FirstName,
       studentId: student.AcademyId,
       subject: selectedTutor.subject,

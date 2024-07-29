@@ -1,7 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { FaArrowAltCircleLeft, FaArrowAltCircleRight, FaSignOutAlt } from "react-icons/fa";
+import {
+  FaChevronLeft,
+  FaChevronRight,
+  FaSignOutAlt,
+} from "react-icons/fa";
 import Tooltip from "../../components/common/ToolTip";
 import { useClerk } from "@clerk/clerk-react";
 import { setUser } from "../../redux/auth/auth";
@@ -11,7 +15,7 @@ import { moment } from "../../config/moment";
 import { statesColours } from "../../constants/constants";
 import Avatar from "../../components/common/Avatar";
 
-import collabVideo from '../../assets/videos/collaboration.mp4';
+import collabVideo from "../../assets/videos/collaboration.mp4";
 import { PiVideoBold } from "react-icons/pi";
 import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
 
@@ -74,10 +78,10 @@ const Header = () => {
   };
 
   const handleSignOut = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('student_user_id');
-    localStorage.removeItem('tutor_user_id');
-    localStorage.removeItem('user');
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("student_user_id");
+    localStorage.removeItem("tutor_user_id");
+    localStorage.removeItem("user");
     dispatch(setUser({}));
     dispatch(setTutor({}));
     dispatch(setStudent({}));
@@ -118,7 +122,7 @@ const Header = () => {
           onClick={handleScrollLeft}
         >
           <div style={{ opacity: "1" }}>
-            <FaArrowAltCircleLeft size={30} />
+            <FaChevronLeft size={20} />
           </div>
         </div>
         <div
@@ -141,7 +145,8 @@ const Header = () => {
             </div>
           </div>
         </div>
-        <ul ref={scrollRef}
+        <ul
+          ref={scrollRef}
           className={``}
           style={{
             background: "inherit",
@@ -163,47 +168,67 @@ const Header = () => {
                     : ""
                 }
               >
-                <h5 className="m-0" style={{ transform: "skew(40deg, 0deg)", fontSize: "14px" }}>
+                <h5
+                  className="m-0"
+                  style={{ transform: "skew(40deg, 0deg)", fontSize: "14px" }}
+                >
                   {tab.name}
-                  {!!filteredSessions.length && tab.url === "/student/feedback" && (
-                    <span
-                      className=" text-bg-danger p-1 rounded-circle"
-                      style={{
-                        display: "inline-flex",
-                        width: "19px",
-                        height: "19px",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        position: "absolute",
-                        fontSize: "10px",
-                        bottom: "6px"
-                      }}
-                    >
-                      {filteredSessions.length}
-                    </span>
-                  )}
+                  {!!filteredSessions.length &&
+                    tab.url === "/student/feedback" && (
+                      <span
+                        className=" text-bg-danger p-1 rounded-circle"
+                        style={{
+                          display: "inline-flex",
+                          width: "19px",
+                          height: "19px",
+                          flexDirection: "row",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          position: "absolute",
+                          fontSize: "10px",
+                          bottom: "6px",
+                        }}
+                      >
+                        {filteredSessions.length}
+                      </span>
+                    )}
                 </h5>
               </li>
               {tab.video && (
-                <div className="cursor-pointer mx-2 video-nav-icon" style={{ transform: "skew(0)" }}
-                  onClick={() => setIsOpen(tab.url)}>
-                  <PiVideoBold color={location.pathname === tab.url ? '#ff4e4e' : "rgb(153 132 132)"}
-                    size="28" className="video-nav-icon" />
+                <div
+                  className="cursor-pointer mx-2 video-nav-icon"
+                  style={{ transform: "skew(0)" }}
+                  onClick={() => setIsOpen(tab.url)}
+                >
+                  <PiVideoBold
+                    color={
+                      location.pathname === tab.url
+                        ? "#ff4e4e"
+                        : "rgb(153 132 132)"
+                    }
+                    size="28"
+                    className="video-nav-icon"
+                  />
                 </div>
               )}
-              <div className="text-light" style={{ fontWeight: "bold" }}>|</div>
+              <div className="text-light" style={{ fontWeight: "bold" }}>
+                |
+              </div>
             </React.Fragment>
           ))}
         </ul>
-        <TabInfoVideoToast video={tabs.find(tab => tab.url === isOpen)?.video} isOpen={isOpen} setIsOpen={setIsOpen} />
+        <TabInfoVideoToast
+          video={tabs.find((tab) => tab.url === isOpen)?.video}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+        />
         <div
-          className="d-flex border rounded p-1 justify-content-center align-items-center "
+          className="d-flex  gap-2 border rounded p-1 justify-content-center align-items-center "
           style={{ marginRight: "20px", cursor: "pointer" }}
           onClick={() => signOut(() => handleSignOut())}
         >
-          <p className="text-danger m-0">Signout</p>
-          <FaSignOutAlt color="red" />
+          <h6 className="text-light m-0">Signout</h6>
+          <FaSignOutAlt color="white" />
         </div>
         <div
           style={{
@@ -219,7 +244,7 @@ const Header = () => {
           className="scroller-right"
           onClick={handleScrollRight}
         >
-          <FaArrowAltCircleRight size={30} />
+          <FaChevronRight size={20} />
         </div>
       </div>
     </>

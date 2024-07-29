@@ -109,7 +109,7 @@ const App = () => {
   //checking missing mandatory fields and update header//tutor
   useEffect(() => {
     dispatch(setMissingFeildsAndTabs());
-  }, [education, discount, bank]);
+  }, [education, discount, bank, tutor]);
 
   //sessions :nextsession, :allsessions, :time remaing for next lesson
   useEffect(() => {
@@ -118,10 +118,9 @@ const App = () => {
       dispatch(setAccounting());
       dispatch(setDiscount());
 
-      console.log("render123", token, tutor);
-
       const dispatchUserSessions = async () => {
         const tutorSessions = await dispatch(await setTutorSessions(tutor));
+        console.log(tutorSessions, "checking render after logout");
         handleExpiredToken(tutorSessions);
 
         const intervalId = setInterval(async () => {
@@ -145,10 +144,11 @@ const App = () => {
         handleExpiredToken(studentSessions);
 
         const intervalId = setInterval(async () => {
-          console.log(student);
           const studentSessions = await dispatch(
             await setStudentSessions(student)
           );
+          console.log(studentSessions, "checking student render after logout");
+
           handleExpiredToken(studentSessions);
         }, 60000);
 

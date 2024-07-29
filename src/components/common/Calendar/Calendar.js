@@ -487,15 +487,8 @@ const ShowCalendar = ({
           handleDeleteSessionByTutor(
             setIsTutorSideSessionModalOpen,
             dispatch,
-            reservedSlots,
-            bookedSlots,
-            tutor,
             clickedSlot,
             navigate,
-            selectedTutor,
-            isStudentLoggedIn,
-            student,
-            studentId
           )
         }
         clickedSlot={clickedSlot}
@@ -503,18 +496,9 @@ const ShowCalendar = ({
           handlePostpone(
             setIsTutorSideSessionModalOpen,
             dispatch,
-            reservedSlots,
-            bookedSlots,
-            tutor,
             clickedSlot,
-            navigate,
             setDisableHourSlots,
             disableHourSlots,
-            selectedTutor,
-            isStudentLoggedIn,
-            student,
-            studentId,
-            lessons
           )
         }
       />

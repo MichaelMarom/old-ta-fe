@@ -35,7 +35,7 @@ const StudentFaculties = () => {
     dispatch(
       setTutor({
         id: item.SID,
-        photo:item.Photo,
+        photo: item.Photo,
         academyId: item.AcademyId,
         GMT: item.GMT,
         firstName: item.FirstName,
@@ -83,12 +83,14 @@ const StudentFaculties = () => {
         selectedFaculty,
         student.AcademyId
       ).then((result) => {
-        console.log(result, 83);
-        (!result || !result?.response?.data) && setTutorWithRates(result);
-        setFetchingTutorsRate(false);
+        if (result) {
+          !result?.response?.data && setTutorWithRates(result);
+          setFetchingTutorsRate(false);
+        }
       });
     }
   }, [selectedSubject, selectedFaculty, student]);
+  console.log(tutorsWithRates);
 
   useEffect(() => {
     !selectedSubject.Id && setTutorWithRates([]);
@@ -277,12 +279,15 @@ const StudentFaculties = () => {
             <div className="d-flex align-items-center " style={{ gap: "30px" }}>
               <div
                 className="d-flex align-items-center blinking-button"
-                style={{fontSize: "16px"}}
+                style={{ fontSize: "16px" }}
                 onClick={() => setSelectedSubject({})}
               >
-                <IoArrowBackCircleSharp size={30} className="" /> Back to Subjects
+                <IoArrowBackCircleSharp size={30} className="" /> Back to
+                Subjects
               </div>
-              <p className="m-0" style={{fontWeight:"bold"}}>{selectedSubject.SubjectName}</p>
+              <p className="m-0" style={{ fontWeight: "bold" }}>
+                {selectedSubject.SubjectName}
+              </p>
             </div>
           )}
 
@@ -303,10 +308,13 @@ const StudentFaculties = () => {
                       type="radio"
                       disabled={!subj.tutor_count}
                       name="options"
+                      id="subject"
                       checked={selectedSubject.Id === subj.Id}
-                      onChange={() => subj.tutor_count && setSelectedSubject(subj)}
+                      onChange={() =>
+                        subj.tutor_count && setSelectedSubject(subj)
+                      }
                     />
-                    <label className="form-check-label" htmlFor="option1">
+                    <label className="form-check-label" htmlFor="subject">
                       {subj.SubjectName}
                     </label>
                   </div>
@@ -346,9 +354,7 @@ const StudentFaculties = () => {
                       }}
                     >
                       <table>
-                        <thead className="d-none">
-
-                        </thead>
+                        <thead className="d-none"></thead>
 
                         <tbody>
                           {tutorsWithRates.map((item, index) => {
@@ -399,10 +405,15 @@ const StudentFaculties = () => {
                                     border: "1px solid lightgray",
                                   }}
                                 >
-                                  <div style={{ overflowY: "auto", height: "100%" }}>
-                                    {JSON.parse(item.grades).map(grade =>
-                                      <Pill label={grade}  key={grade} />
-                                    )}
+                                  <div
+                                    style={{
+                                      overflowY: "auto",
+                                      height: "100%",
+                                    }}
+                                  >
+                                    {JSON.parse(item.grades).map((grade) => (
+                                      <Pill label={grade} key={grade} />
+                                    ))}
                                   </div>
                                 </td>
                                 <td
@@ -411,11 +422,14 @@ const StudentFaculties = () => {
                                     border: "1px solid lightgray",
                                   }}
                                 >
-                                  {
-                                     item?.IntroSessionDiscount ?
-                                      <FaCheckCircle color="limegreen" size={20} /> :
-                                       <MdCancel size={20} color="red" /> 
-                                  }
+                                  {item?.IntroSessionDiscount ? (
+                                    <FaCheckCircle
+                                      color="limegreen"
+                                      size={20}
+                                    />
+                                  ) : (
+                                    <MdCancel size={20} color="red" />
+                                  )}
                                   {/* <input
                                     type="checkbox"
                                     style={{
@@ -490,7 +504,12 @@ const StudentFaculties = () => {
                                   >
                                     <div className="button__content">
                                       <div className="button__icon">
-                                        <img src={BTN_ICON} alt={"btn__icon"} width={20} height={20} />
+                                        <img
+                                          src={BTN_ICON}
+                                          alt={"btn__icon"}
+                                          width={20}
+                                          height={20}
+                                        />
                                       </div>
                                       <div className="button__text  text-sm">
                                         Book Lesson
@@ -512,7 +531,12 @@ const StudentFaculties = () => {
                                   >
                                     <div className="button__content">
                                       <div className="button__icon">
-                                        <img src={BTN_ICON} alt={"btn__icon"} width={20} height={20} />
+                                        <img
+                                          src={BTN_ICON}
+                                          alt={"btn__icon"}
+                                          width={20}
+                                          height={20}
+                                        />
                                       </div>
                                       <div className="button__text">
                                         {" "}
@@ -535,7 +559,12 @@ const StudentFaculties = () => {
                                   >
                                     <div className="button__content">
                                       <div className="button__icon">
-                                        <img src={BTN_ICON} alt={"btn__icon"} width={20} height={20} />
+                                        <img
+                                          src={BTN_ICON}
+                                          alt={"btn__icon"}
+                                          width={20}
+                                          height={20}
+                                        />
                                       </div>
                                       <div className="button__text">
                                         View Profile
@@ -559,7 +588,6 @@ const StudentFaculties = () => {
                                 >
                                   {item.ResponseHrs.replace("Hours", "Hrs")}
                                 </td>
-
                               </tr>
                             );
                           })}

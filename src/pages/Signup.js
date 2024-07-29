@@ -183,6 +183,7 @@ const Signup = () => {
         style={{
           backgroundColor: 'hsl(0, 0%, 96%)',
           height: '100vh',
+          overflowY:"auto"
         }}
       >
         <div className="container m-auto h-100">
@@ -202,10 +203,10 @@ const Signup = () => {
               <div className="card m-auto">
                 <h3 className="mt-3 text-center">Signup {role == 'student' && 'as "Student"'}</h3>
 
-                <div className="card-body py-5 px-md-5">
+                <div className="card-body pb-5 px-md-5">
                   {!pendingVerification ?
                     <div>
-                      <h6 className='text-start'>An 6 digit code will be sent to your email after signup</h6>
+                      <p className='text-start  text-secondary mb-2' style={{fontSize:"12px", fontWeight:"400"}} >An 6 digit code will be sent to your email after signup</p>
                       <form onSubmit={handleSignup}>
 
                         <div className='row ' style={{ gap: "10px" }}>

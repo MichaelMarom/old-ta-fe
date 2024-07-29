@@ -33,7 +33,8 @@ export const setMissingFeildsAndTabs = () => {
         const edu = getState().edu.education;
         const tutor = getState().tutor.tutor;
         const bank = getState().bank.bank;
-        const discount = getState().discount.discount;;
+        const discount = getState().discount.discount;
+        
         const missingFields = [];
         const tabs = {bank, discount, edu };
 

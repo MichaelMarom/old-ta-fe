@@ -52,24 +52,6 @@ function CustomEvent({
       if (diffInMinutes >= 65 && event.type === "reserved") {
         // await delete_student_lesson(event.id)
         dispatch(deleteStudentLesson(event))
-
-
-        // handleSetReservedSlots(
-        //   lessons.filter((slot) => {
-        //     return event.id !== slot.id;
-        //   }),
-        //   lessons[0].studentId,
-
-        //   dispatch,
-        //   tutorId,
-        //   subjectName,
-        //   bookedSlots,
-        //   isStudentLoggedIn,
-        //   tutor,
-        //   clickedSlot,
-        //   selectedTutor,
-        //   student
-        // );
         setExtraFiveMinStart(false);
       }
     };

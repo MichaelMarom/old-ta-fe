@@ -48,8 +48,8 @@ function BankDetails() {
 
     useEffect(() => { set_email(student.Email) }, [student])
 
-    const fetchBankDetails = async () => {
-        const data = await get_bank_details(AcademyId)
+    const fetchBankDetails = async (id) => {
+        const data = await get_bank_details(id)
 
         if (data?.length) {
             const result = data[0];
@@ -92,7 +92,7 @@ function BankDetails() {
     }
 
     useEffect(() => {
-        fetchBankDetails()
+       student.AcademyId && fetchBankDetails(student.AcademyId)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [student]);
 

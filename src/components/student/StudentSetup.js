@@ -4,7 +4,6 @@ import {
   code_applied,
   get_my_data,
   post_student_setup,
-  upload_setup_form,
   upload_student_setup_by_fields,
 } from "../../axios/student";
 import { get_tutor_against_code } from "../../axios/tutor";
@@ -174,33 +173,6 @@ const StudentSetup = () => {
         }
       })
     }
-    // let response = await upload_setup_form(
-    //   fname,
-    //   mname,
-    //   sname,
-    //   user.role === "student" ? user.email : email,
-    //   lang,
-    //   secLan,
-    //   parentAEmail,
-    //   parentBEmail,
-    //   parentAName,
-    //   parentBName,
-    //   is_18,
-    //   null,
-    //   cell,
-    //   grade,
-    //   add1,
-    //   add2,
-    //   city,
-    //   state,
-    //   zipCode,
-    //   country,
-    //   timeZone,
-    //   photo,
-    //   acadId,
-    //   parentConsent,
-    //   user.role === "student" ? user.SID : userId
-    // );
 
     setSaving(false);
   };

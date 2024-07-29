@@ -33,7 +33,8 @@ export default slice.reducer;
 
 export function setStudent(data) {
   return async (dispatch) => {
-    if (data && _.isObject(data) && !_.isEmpty(data))
+    console.log(data, "data:36", _.isObject(data), !_.isEmpty(data))
+    if (data && _.isObject(data))
       dispatch(slice.actions.setStudent(data));
     else {
       dispatch(slice.actions.isLoading());
