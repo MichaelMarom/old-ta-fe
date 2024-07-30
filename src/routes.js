@@ -58,7 +58,14 @@ const App = () => {
     const isMalformed = result?.response?.data?.message?.includes("malformed");
     const missingToken = result?.response?.data?.reason?.includes("attached");
     if ((isExpired || isMalformed) && !missingToken) {
-      return redirect_to_login(navigate, signOut);
+      return redirect_to_login(
+        navigate,
+        signOut,
+        dispatch,
+        setTutor,
+        setStudent,
+        setUser
+      );
     }
   };
 
@@ -120,12 +127,12 @@ const App = () => {
 
       const dispatchUserSessions = async () => {
         const tutorSessions = await dispatch(await setTutorSessions(tutor));
-        console.log(tutorSessions, "checking render after logout");
         handleExpiredToken(tutorSessions);
 
         const intervalId = setInterval(async () => {
+          // if (!localStorage.getItem("access_token")) clearInterval(intervalId);
           const tutorSessions = await dispatch(await setTutorSessions(tutor));
-          handleExpiredToken(tutorSessions);
+          if (handleExpiredToken(tutorSessions)) clearInterval(intervalId);
         }, 60000);
 
         return () => clearInterval(intervalId);
@@ -144,12 +151,13 @@ const App = () => {
         handleExpiredToken(studentSessions);
 
         const intervalId = setInterval(async () => {
+          // if (!localStorage.getItem("access_token"))
+          //   clearInterval(intervalId);
           const studentSessions = await dispatch(
             await setStudentSessions(student)
           );
-          console.log(studentSessions, "checking student render after logout");
 
-          handleExpiredToken(studentSessions);
+          if (handleExpiredToken(studentSessions)) clearInterval(intervalId);
         }, 60000);
 
         return () => clearInterval(intervalId);

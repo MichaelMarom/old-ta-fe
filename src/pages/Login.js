@@ -1,19 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  get_user_detail,
-  getToken as tokenApi,
-} from "../axios/auth";
+import { get_user_detail, getToken as tokenApi } from "../axios/auth";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../redux/auth/auth";
 import { ForgetPasswordModal } from "../components/auth/ForgetPasswordModal";
 import "../styles/auth.css";
-import {
-  useAuth,
-  useSignIn,
-  useSession,
-} from "@clerk/clerk-react";
+import { useAuth, useSignIn, useSession } from "@clerk/clerk-react";
 import { DEFAULT_URL_AFTER_LOGIN } from "../constants/constants";
 import TAButton from "../components/common/TAButton";
 
@@ -23,9 +16,8 @@ const LoginPage = () => {
   const { signIn, setActive, isLoaded } = useSignIn();
   const [showPassword, setShowPassword] = useState(false);
   const { isSignedIn, userId } = useAuth();
-  const { session, isSignedIn: sessionSignedIn } = useSession();
-  console.log(session, isSignedIn, "session info");
   const [modalOpen, setOpenModel] = useState(false);
+  const token = localStorage.getItem("access_token");
 
   const [loginForm, setLoginForm] = useState({
     email: "",
@@ -34,16 +26,10 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //     console.log(isSignedIn, user, isLoaded, session, sessionSignedIn)
-  //     isSignedIn && user.role && navigate(DEFAULT_URL_AFTER_LOGIN[user.role])
-  // }, [isSignedIn, user])
-
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!isLoaded) return;
     isSignedIn && user?.role && navigate(DEFAULT_URL_AFTER_LOGIN[user.role]);
-    console.log(isSignedIn, user, sessionSignedIn);
     setLoading(true);
     try {
       const result = await signIn.create({
@@ -52,24 +38,12 @@ const LoginPage = () => {
       });
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
-        // const token = await getToken({ template: 'tutoring-academy-jwt-template' });
-        // if (token) {
-        //     // localStorage.setItem("access_token", token);
-        // } else {
-        //     toast.error("Could not retrieve token!");
-        // }
       }
     } catch (err) {
-      console.log(err,'error in login')
       let user = localStorage.getItem("user");
-      console.log (user)
       if (user) user = JSON.parse(user);
-      // dispatch(setUser(user));
-      console.log(err.errors[0].message, user?.role);
       if (err.errors[0].code.includes("session_exists") && user?.SID) {
         fetchUser(user?.SID);
-        // navigate(DEFAULT_URL_AFTER_LOGIN[user.role])
-        // toast.error('Please Signout First, If you want to Login!')
       } else toast.error(err.errors[0].message || err.message);
     }
     localStorage.removeItem("tutor_user_id");
@@ -83,7 +57,9 @@ const LoginPage = () => {
 
   let fetchUser = async (userId) => {
     if (isLoaded && userId) {
+      setLoading(true)
       const user = await get_user_detail(userId);
+      setLoading(false)
       if (user?.role) {
         dispatch(setUser(user));
         localStorage.setItem("user", JSON.stringify(user));
@@ -98,11 +74,14 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
+    console.log(userId, isLoaded)
     if (userId && isSignedIn) {
       fetchUser(userId);
+    } else {
+      navigate("/login");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps 
-  }, [userId, isLoaded, isSignedIn]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId, isSignedIn, isLoaded]);
 
   return (
     <section>
@@ -111,21 +90,23 @@ const LoginPage = () => {
         style={{
           backgroundColor: "hsl(0, 0%, 96%)",
           height: "100vh",
-          overflowY:"auto"
+          overflowY: "auto",
         }}
       >
         <div className="container m-auto h-100">
           <div className="row m-auto h-100 gx-lg-5 align-items-center">
             <div className="col-lg-6 mb-5 mb-lg-0">
               <h1 className="my-5  fw-bold ls-tight">
-                Start your tutoring <br />business, join <br />
+                Start your tutoring <br />
+                business, join <br />
                 <span className="text-primary"> Tutoring Academy</span>
               </h1>
               <p style={{ color: "hsl(217, 10%, 50.8%)" }}>
                 Welcome to Tutoring Academy, where knowledge knows no bounds!
-                Our platform is designed to ignite the flames of curiosity, empower minds,
-                and pave the way for academic triumph. With a diverse array of subjects and dedicated tutors,
-                we're here to guide you on your journey to greatness.
+                Our platform is designed to ignite the flames of curiosity,
+                empower minds, and pave the way for academic triumph. With a
+                diverse array of subjects and dedicated tutors, we're here to
+                guide you on your journey to greatness.
               </p>
             </div>
 
@@ -172,7 +153,11 @@ const LoginPage = () => {
                           onChange={() => setShowPassword(!showPassword)}
                           checked={showPassword}
                         />
-                        <label htmlFor="show" className="d-inline-block cursor-pointer" style={{ marginLeft: "5px" }}>
+                        <label
+                          htmlFor="show"
+                          className="d-inline-block cursor-pointer"
+                          style={{ marginLeft: "5px" }}
+                        >
                           Show password
                         </label>
                       </div>

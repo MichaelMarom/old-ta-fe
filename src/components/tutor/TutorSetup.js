@@ -32,7 +32,6 @@ import {
   capitalizeFirstLetter,
   unsavedChangesHelper,
 } from "../../utils/common";
-import ReactDatePicker from "react-datepicker";
 import { Link } from "react-router-dom";
 import Button from "../common/Button";
 import { IoPersonCircle } from "react-icons/io5";
@@ -42,7 +41,6 @@ import Avatar from "../common/Avatar";
 import Input from "../common/Input";
 import Select from "../common/Select";
 import VacationSettingModal from "./VacationSettingModal";
-import Tooltip from "../common/ToolTip";
 import { uploadTutorImage } from "../../axios/file";
 import { setMissingFeildsAndTabs } from "../../redux/tutor/missingFieldsInTabs";
 
@@ -326,34 +324,10 @@ const TutorSetup = () => {
     setSavingRecord(true);
     let response = await saver();
     setSavingRecord(false);
-    dispatch(setMissingFeildsAndTabs(response?.data?.[0] || tutor))
+    dispatch(setMissingFeildsAndTabs());
     if (response.status === 200) {
-      dispatch(
-        setTutor()
-        //   {
-        //   FirstName: fname,
-        //   MiddleName: mname,
-        //   LastName: lname,
-        //   Address1: add1,
-        //   Address2: add2,
-        //   CityTown: city,
-        //   StateProvince: state,
-        //   ZipCode: zipCode,
-        //   Country: country,
-        //   CellPhone: cell,
-        //   GMT: timeZone,
-        //   ResponseHrs: response_zone,
-        //   Introduction: intro,
-        //   Motivate: motivation,
-        //   HeadLine: headline,
-        //   Grades: tutorGrades,
-        //   userId: tutor.userId ? tutor.userId : user?.SID,
-        //   StartVacation: vacation_mode ? start : new Date(),
-        //   EndVacation: vacation_mode ? end : new Date(),
-        //   VacationMode: vacation_mode,
-        // }
-      );
-      window.localStorage.setItem(
+      dispatch(setTutor());
+      localStorage.setItem(
         "tutor_screen_name",
         response.data?.[0]?.TutorScreenname
       );
@@ -396,7 +370,6 @@ const TutorSetup = () => {
     let response = await post_tutor_setup(body);
     return response;
   };
-  console.log(tutor)
 
   useEffect(() => {
     const sortedCountries = Countries.sort((a, b) =>
@@ -490,7 +463,6 @@ const TutorSetup = () => {
       </option>
     ));
     let response_head = (
-
       <option
         key=""
         style={{
@@ -526,7 +498,10 @@ const TutorSetup = () => {
         };
         reader.readAsDataURL(e.target.files[0]);
 
-        const result = await uploadTutorImage(tutor.AcademyId, e.target.files[0]);
+        const result = await uploadTutorImage(
+          tutor.AcademyId,
+          e.target.files[0]
+        );
 
         result.data?.url &&
           (await updateTutorSetup(tutor.AcademyId, {
@@ -534,8 +509,7 @@ const TutorSetup = () => {
           }));
 
         setPicUploading(false);
-      }
-      catch (err) {
+      } catch (err) {
         toast.error(err.message);
       }
     }
@@ -628,10 +602,11 @@ const TutorSetup = () => {
                 style={{ width: "15%" }}
               >
                 <h6
-                  className={`text-start m-0 ${mandatoryFields.find((item) => item.name === "photo").filled
-                    ? ""
-                    : "blink_me"
-                    }`}
+                  className={`text-start m-0 ${
+                    mandatoryFields.find((item) => item.name === "photo").filled
+                      ? ""
+                      : "blink_me"
+                  }`}
                   style={{ whiteSpace: "nowrap" }}
                 >
                   Profile Photo
@@ -731,7 +706,7 @@ const TutorSetup = () => {
                           "Tutor must conduct 40 hours before can activate “Franchise” option."
                         )
                       }
-                    //  checked={vacation_mode}
+                      //  checked={vacation_mode}
                     />
                     <label
                       className="form-check-label mr-3"
@@ -931,10 +906,11 @@ const TutorSetup = () => {
                     editMode={!nameFieldsDisabled}
                     onBlur={() => {
                       if (fname.length && lname.length) {
-                        const screenName = `${capitalizeFirstLetter(fname)} ${mname.length
-                          ? `${capitalizeFirstLetter(mname?.[0])}.`
-                          : ``
-                          } ${capitalizeFirstLetter(lname?.[0])}.`;
+                        const screenName = `${capitalizeFirstLetter(fname)} ${
+                          mname.length
+                            ? `${capitalizeFirstLetter(mname?.[0])}.`
+                            : ``
+                        } ${capitalizeFirstLetter(lname?.[0])}.`;
                         toast(
                           `You screen name is; ${screenName} which we use online. We do not disclose your private information online. 
                 We use your cellphone only for verification to withdraw your funds, or for events notifications like
@@ -962,9 +938,7 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
-                    label={
-                     <GeneralFieldLabel label={"Email"} />
-                    }
+                    label={<GeneralFieldLabel label={"Email"} />}
                     value={email}
                     editMode={false}
                   />
@@ -1198,7 +1172,7 @@ const TutorSetup = () => {
                       setValue={set_state}
                       value={state}
                       editMode={editMode}
-                      required={tutor.Status === 'active'}
+                      required={tutor.Status === "active"}
                       label={
                         <MandatoryFieldLabel
                           name="state"
@@ -1260,21 +1234,14 @@ const TutorSetup = () => {
                   >
                     <Input
                       label={
-                        <div
-                          className="d-flex"
-                          style={{
-                            gap: "5px",
-                            background: "rgb(233, 236, 239)",
-                          }}
-                        >
-                          <ToolTip
-                            width="200px"
-                            text={
-                              "Coordinated Universal Time, or 'UTC,' is the primary time standard by which the world regulates clocks and time. It's important to ensure that your PC's clock matches the UTC because discrepancies can lead to issues with scheduling, such as your booked lessons not synchronizing with your local time. To avoid any inconvenience, please verify that your computer's time settings are correctly adjusted to reflect UTC.."
-                            }
-                          />
-                          <div className="display-inline-block">UTC</div>
-                        </div>
+                        <GeneralFieldLabel
+                        editMode={editMode}
+                          label={"UTC"}
+                          tooltipText="Coordinated Universal Time, or 
+                        'UTC,' is the primary time standard by which the world regulates clocks and time.
+                         It's important to ensure that your PC's clock matches the UTC because discrepancies
+                          can lead to issues with scheduling, such as your booked lessons not synchronizing with your local time. To avoid any inconvenience, please verify that your computer's time settings are correctly adjusted to reflect UTC.."
+                        />
                       }
                       value={typeof dateTime === "object" ? "" : dateTime}
                       editMode={false}
@@ -1292,8 +1259,11 @@ const TutorSetup = () => {
                 }}
               >
                 <h6
-                  className={`${!!video.length && !videoError ? "" : "blinking-button text-success"
-                    }`}
+                  className={`${
+                    !!video.length && !videoError
+                      ? ""
+                      : "blinking-button text-success"
+                  }`}
                 >
                   Elective Tutor's introduction video
                 </h6>
@@ -1328,17 +1298,18 @@ const TutorSetup = () => {
                 ) : (
                   <div className="tutor-tab-video-frame p-2 card">
                     <div style={{ textAlign: "justify", fontSize: "12px" }}>
-                      Providing your video is elective. Create a 30-60 seconds clip 'limit 10Mb'. An
-                      introduction video is a great way to showcase your
-                      personality, skills and teaching style for potential
-                      students. It can help you stand out from other tutors and
-                      attract more atudents. Creating your video, briefly
-                      introduce yourself, your experience and your approach to
-                      tutoring. Mention what subjects and levels you can teach,
-                      and how you can help students achieve their goals. You
-                      should speak clearly, and confidently. A good introduction
-                      video can make a lasting impression and increase your
-                      chances of getting hired. View samples; <br />
+                      Providing your video is elective. Create a 30-60 seconds
+                      clip 'limit 10Mb'. An introduction video is a great way to
+                      showcase your personality, skills and teaching style for
+                      potential students. It can help you stand out from other
+                      tutors and attract more atudents. Creating your video,
+                      briefly introduce yourself, your experience and your
+                      approach to tutoring. Mention what subjects and levels you
+                      can teach, and how you can help students achieve their
+                      goals. You should speak clearly, and confidently. A good
+                      introduction video can make a lasting impression and
+                      increase your chances of getting hired. View samples;{" "}
+                      <br />
                       <Link
                         to="https://www.youtube.com/watch?v=tZ3ndrKQXN8"
                         target="_blank"
@@ -1393,8 +1364,9 @@ const TutorSetup = () => {
                         <button
                           style={{ width: "100%", fontSize: "10px" }}
                           type="button"
-                          className={`action-btn btn small ${selectedVideoOption === "record" ? "active" : ""
-                            }`}
+                          className={`action-btn btn small ${
+                            selectedVideoOption === "record" ? "active" : ""
+                          }`}
                           disabled={!editMode}
                           onClick={() => {
                             set_video("");
@@ -1433,8 +1405,9 @@ const TutorSetup = () => {
                             // pointerEvents: !editMode ? "none" : "auto",
                             fontSize: "10px",
                           }}
-                          className={`action-btn btn ${selectedVideoOption === "upload" ? "active" : ""
-                            }`}
+                          className={`action-btn btn ${
+                            selectedVideoOption === "upload" ? "active" : ""
+                          }`}
                         >
                           <div className="button__content">
                             <div className="button__icon">
@@ -1550,7 +1523,7 @@ const TutorSetup = () => {
                     style={{
                       position: "absolute",
                       background: "transparent",
-                      top: "-5px",
+                      top: "10px",
                       left: "10px",
                       padding: "2px",
                       fontSize: "12px",
@@ -1606,7 +1579,7 @@ const TutorSetup = () => {
                     className=""
                     style={{
                       position: "absolute",
-                      top: "-5px",
+                      top: "10px",
                       left: "10px",
                       padding: "2px",
                       fontSize: "12px",
@@ -1680,11 +1653,16 @@ export const MandatoryFieldLabel = ({
         }}
       >
         {!!toolTipText.length && (
-          <ToolTip text={toolTipText} direction={direction} width={width} />
+          <ToolTip
+            text={toolTipText}
+            direction={direction}
+            width={width}
+            iconSize={10}
+          />
         )}
         <span className={`${blinkMe() ? "blink_me" : ""}`}> {text}</span>:
       </span>
-      <span className="text-danger" style={{ fontSize: "26px" }}>
+      <span className="text-danger" style={{ fontSize: "13px" }}>
         *
       </span>
     </div>
@@ -1700,7 +1678,13 @@ export const OptionalFieldLabel = ({ label, editMode = true }) => (
   </p>
 );
 
-export const GeneralFieldLabel = ({ label, editMode = true, tooltipText = "", direction = 'bottomleft', width='200px' }) => {
+export const GeneralFieldLabel = ({
+  label,
+  editMode = true,
+  tooltipText = "",
+  direction = "bottomleft",
+  width = "200px",
+}) => {
   return (
     <div className="roboto-medium">
       <span
@@ -1709,12 +1693,17 @@ export const GeneralFieldLabel = ({ label, editMode = true, tooltipText = "", di
         }}
       >
         {!!tooltipText.length && (
-          <ToolTip text={tooltipText} direction={direction} width={width} />
+          <ToolTip
+            text={tooltipText}
+            direction={direction}
+            width={width}
+            iconSize={10}
+          />
         )}
         <span> {label}</span>:
       </span>
     </div>
   );
-}
+};
 
 export default TutorSetup;

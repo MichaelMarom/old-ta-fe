@@ -1,6 +1,7 @@
 // slice.js
 import { createSlice } from "@reduxjs/toolkit";
 import { formatted_student_sessions } from "../../axios/student";
+import { showErrorToast } from "../../axios/config";
 
 // Create a slice with your event-related reducers
 const slice = createSlice({
@@ -46,6 +47,7 @@ export const setStudentSessions = async (student) => {
         dispatch(slice.actions.setStudentSession(result));
       return result;
     } catch (err) {
+      showErrorToast(err)
       return err;
     }
   };

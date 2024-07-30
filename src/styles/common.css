@@ -637,21 +637,22 @@ fieldset:disabled .btn,
 }
 
 .input__label {
-
+  /* z-index: 99; */
   position: absolute;
 
   left: 0;
-  top: 0;
+  bottom: 18px;
   padding: calc(var(--size-bezel) * 0.75) calc(var(--size-bezel) * .5);
   margin: calc(var(--size-bezel) * 0.75 + 3px) calc(var(--size-bezel) * .5);
   background: pink;
   white-space: nowrap;
-  transform: translate(0, 0);
   transform-origin: 0 0;
   background: var(--color-background);
   transition: transform 120ms ease-in;
-  font-weight: bold;
+  font-weight: 400;
+  font-size: 10px;
   line-height: 1.2;
+  /* transform: translate(0, 0); */
 }
 
 .input__field {
@@ -667,18 +668,18 @@ fieldset:disabled .btn,
 }
 
 .input__field:not(:-moz-placeholder-shown)+.input__label {
-  transform: translate(0.25rem, -65%) scale(0.8);
+  /* transform: translate(0.25rem, -65%) scale(0.8); */
   color: var(--color-accent);
 }
 
 .input__field:not(:-ms-input-placeholder)+.input__label {
-  transform: translate(0.25rem, -65%) scale(0.8);
+  /* transform: translate(0.25rem, -65%) scale(0.8); */
   color: var(--color-accent);
 }
 
 .input__field:focus+.input__label,
 .input__field:not(:placeholder-shown)+.input__label {
-  transform: translate(0.25rem, -65%) scale(0.8);
+  /* transform: translate(0.25rem, -65%) scale(0.8); */
   color: var(--color-accent);
 }
 

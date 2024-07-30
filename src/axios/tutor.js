@@ -304,14 +304,10 @@ export const update_discount_form = async (id, body) => {
 
 //not using
 export const formatted_tutor_sessions = async (tutorId) => {
-  try {
     const { data } = await apiClient.get(
       `/tutor/sessions/formatted/${tutorId}`
     );
     return data;
-  } catch (err) {
-    showErrorToast(err);
-  }
 };
 
 export const feedback_records = async (tutorId, timeZone) => {

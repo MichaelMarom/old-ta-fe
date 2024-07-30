@@ -39,7 +39,7 @@ const StudentSetup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let [fname, set_fname] = useState("");
-  const [picUploading, setPicUploading] = useState(false)
+  const [picUploading, setPicUploading] = useState(false);
   let [mname, set_mname] = useState("");
   let [sname, set_sname] = useState("");
   let [email, set_email] = useState("");
@@ -111,7 +111,7 @@ const StudentSetup = () => {
   let saver = async (e, id) => {
     e.preventDefault();
     setSaving(true);
-    console.log(id)
+    console.log(id);
     if (id) {
       upload_student_setup_by_fields(id, {
         Language: lang,
@@ -139,9 +139,8 @@ const StudentSetup = () => {
             dispatch(setStudent(data));
           });
         }
-      })
-    }
-    else {
+      });
+    } else {
       post_student_setup({
         FirstName: fname,
         MiddleName: mname,
@@ -171,7 +170,7 @@ const StudentSetup = () => {
             dispatch(setStudent(data));
           });
         }
-      })
+      });
     }
 
     setSaving(false);
@@ -417,7 +416,10 @@ const StudentSetup = () => {
         };
         reader.readAsDataURL(e.target.files[0]);
         // TODO: handle for new users with no id
-        const result = await uploadStudentImages(student.AcademyId, e.target.files[0]);
+        const result = await uploadStudentImages(
+          student.AcademyId,
+          e.target.files[0]
+        );
 
         result.data?.url &&
           upload_student_setup_by_fields(student.AcademyId, {
@@ -425,8 +427,7 @@ const StudentSetup = () => {
           }).then(() => toast.success("Uploaded Successfully!"));
 
         setPicUploading(false);
-      }
-      catch (err) {
+      } catch (err) {
         toast.error(err.message);
       }
     }
@@ -920,23 +921,24 @@ const StudentSetup = () => {
                   ))}
                 </Select>
               </div>
-              <div className="form-check d-flex gap-2 align-items-center" >
+              <div className="form-check d-flex gap-2 align-items-center">
                 <input
-                style={{width:"20px", height:"20px"}}
+                  style={{ width: "20px", height: "20px" }}
                   type="checkbox"
                   className="form-check-input"
                   id="exampleCheckbox"
                   disabled={!editMode}
                   checked={is_18}
-                  onChange={(e)=>set_is_18(e.target.value)}
+                  onChange={(e) => set_is_18(!is_18)}
                 />
                 <label className="form-check-label" htmlFor="exampleCheckbox">
-                 Are you Over 18?
+                  Are you Over 18?
                 </label>
               </div>
             </div>
           </div>
-          {
+          {(!["Freshman", "Junior", "Senior", "Sophmore"].includes(grade) ||
+            !is_18) && (
             <div
               className="d-flex flex-column border rounded shadow p-2 m-2"
               style={{ gap: "2%" }}
@@ -944,81 +946,81 @@ const StudentSetup = () => {
               {!["Freshman", "Junior", "Senior", "Sophmore"].includes(
                 grade
               ) && (
-                  <>
-                    <h6 className="mb-3">Parent Info</h6>
-                    <div className="d-flex" style={{ gap: "2%" }}>
-                      <div className="input-group mb-2 ">
-                        <Input
-                          value={parentAEmail}
-                          label={
-                            <MandatoryFieldLabel
-                              text="Parent A Email"
-                              editMode={editMode}
-                              name="parentAEmail"
-                              mandatoryFields={mandatoryFields}
-                            />
-                          }
-                          editMode={editMode}
-                          setValue={setParentAEmail}
-                          required={!is_18  && student.Status === "active"}
-                        />
-                      </div>
-
-                      <div className="input-group mb-2 ">
-                        <Input
-                          value={parentAName}
-                          label={
-                            <MandatoryFieldLabel
-                              text="Parent A Name"
-                              editMode={editMode}
-                              name="parentAName"
-                              mandatoryFields={mandatoryFields}
-                            />
-                          }
-                          editMode={editMode}
-                          setValue={setParentAName}
-                          required={!is_18  && student.Status === "active"}
-                        />
-                      </div>
+                <>
+                  <h6 className="mb-3">Parent Info</h6>
+                  <div className="d-flex" style={{ gap: "2%" }}>
+                    <div className="input-group mb-2 ">
+                      <Input
+                        value={parentAEmail}
+                        label={
+                          <MandatoryFieldLabel
+                            text="Parent A Email"
+                            editMode={editMode}
+                            name="parentAEmail"
+                            mandatoryFields={mandatoryFields}
+                          />
+                        }
+                        editMode={editMode}
+                        setValue={setParentAEmail}
+                        required={!is_18 && student.Status === "active"}
+                      />
                     </div>
-                    <div className="d-flex" style={{ gap: "2%" }}>
-                      <div className="input-group mb-2">
-                        <Input
-                          value={parentBEmail}
-                          label={
-                            <MandatoryFieldLabel
-                              text="Parent B Email"
-                              editMode={editMode}
-                              name={"parentBEmail"}
-                              mandatoryFields={mandatoryFields}
-                            />
-                          }
-                          editMode={editMode}
-                          setValue={setParentBEmail}
-                          required={is_18 === "no" && student.Status === "active"}
-                        />
-                      </div>
 
-                      <div className="input-group mb-2 ">
-                        <Input
-                          value={parentBName}
-                          label={
-                            <MandatoryFieldLabel
-                              text="Parent B Name"
-                              editMode={editMode}
-                              name="parentBName"
-                              mandatoryFields={mandatoryFields}
-                            />
-                          }
-                          editMode={editMode}
-                          setValue={setParentBName}
-                          required={is_18 === "no" && student.Status === "active"}
-                        />
-                      </div>
+                    <div className="input-group mb-2 ">
+                      <Input
+                        value={parentAName}
+                        label={
+                          <MandatoryFieldLabel
+                            text="Parent A Name"
+                            editMode={editMode}
+                            name="parentAName"
+                            mandatoryFields={mandatoryFields}
+                          />
+                        }
+                        editMode={editMode}
+                        setValue={setParentAName}
+                        required={!is_18 && student.Status === "active"}
+                      />
                     </div>
-                  </>
-                )}
-              {is_18 === "no" && (
+                  </div>
+                  <div className="d-flex" style={{ gap: "2%" }}>
+                    <div className="input-group mb-2">
+                      <Input
+                        value={parentBEmail}
+                        label={
+                          <MandatoryFieldLabel
+                            text="Parent B Email"
+                            editMode={editMode}
+                            name={"parentBEmail"}
+                            mandatoryFields={mandatoryFields}
+                          />
+                        }
+                        editMode={editMode}
+                        setValue={setParentBEmail}
+                        required={!is_18 && student.Status === "active"}
+                      />
+                    </div>
+
+                    <div className="input-group mb-2 ">
+                      <Input
+                        value={parentBName}
+                        label={
+                          <MandatoryFieldLabel
+                            text="Parent B Name"
+                            editMode={editMode}
+                            name="parentBName"
+                            mandatoryFields={mandatoryFields}
+                          />
+                        }
+                        editMode={editMode}
+                        setValue={setParentBName}
+                        required={!is_18 && student.Status === "active"}
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+              {!is_18 && (
                 <div
                   style={{
                     display: "flex",
@@ -1113,7 +1115,7 @@ const StudentSetup = () => {
                 </div>
               )}
             </div>
-          }
+          )}
         </div>
       </div>
       <Actions

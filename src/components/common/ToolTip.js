@@ -8,7 +8,6 @@ const Tooltip = ({ text, children, iconSize = 16, direction = "top", width = "10
   const [tooltipStyle, setTooltipStye] = useState({
     width,
     whiteSpace: "normal",
-    zIndex: "9999999"
   })
 
   const handleMouseEnter = () => {
@@ -39,8 +38,8 @@ const Tooltip = ({ text, children, iconSize = 16, direction = "top", width = "10
     >
       {children ? children : <FaInfoCircle size={iconSize} color={color} />}
       {showTooltip && (
-        <div className={`custom-tooltip ${direction}`}
-          style={{ ...tooltipStyle, transform: "none" }}
+        <div className={`custom-tooltip ${direction} shadow-lg`}
+          style={{ ...tooltipStyle, transform: "none" , fontWeight:"400" , fontSize:"12px"}}
         >{text}</div>
       )}
     </div>

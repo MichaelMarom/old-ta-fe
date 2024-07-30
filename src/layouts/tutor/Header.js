@@ -179,7 +179,7 @@ const Header = () => {
           }}
         >
           <div>
-            <Avatar avatarSrc={tutor.Photo} size="35" indicSize="8px" />
+            <Avatar avatarSrc={tutor.Photo} size="35" indicSize="8px" borderSize="1px"/>
           </div>
           <div className="flex">
             <div style={{ fontWeight: "bold" }}>{tutor.TutorScreenname}</div>

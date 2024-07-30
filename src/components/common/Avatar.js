@@ -8,6 +8,7 @@ const Avatar = ({
   indicSize = "12px",
   positionInPixle = 0,
   showOnlineStatus = 1,
+  borderSize="2px"
 }) => {
   const [invalidUrl, setInvalidUrl] = useState(false);
   const containerStyle = {
@@ -23,7 +24,7 @@ const Avatar = ({
     height: indicSize,
     borderRadius: "50%",
     backgroundColor: online ? "limegreen" : "red", // Green for online, gray for offline
-    border: "2px solid #ffffff",
+    border: `${borderSize} solid #ffffff`,
   };
 
   return (

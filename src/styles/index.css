@@ -1,13 +1,14 @@
-html, body{
-  padding:0 !important;
-  margin:0 !important;
+html,
+body {
+  padding: 0 !important;
+  margin: 0 !important;
   overflow: hidden !important;
   user-select: none;
   background-color: white;
 }
 
-p{
-  margin:0
+p {
+  margin: 0
 }
 
 .rbc-allday-cell {
@@ -89,8 +90,9 @@ button.Toastify__close-button.Toastify__close-button--light {
 
 .custom-tooltip {
   position: absolute;
-  background-color: #333;
-  color: #fff;
+  background-color: rgb(245, 245, 245);
+  color: #333;
+  border: 1px solid rgb(193, 193, 193);
   padding: 5px;
   border-radius: 4px;
   z-index: 999;
@@ -98,26 +100,72 @@ button.Toastify__close-button.Toastify__close-button--light {
 
 .custom-tooltip.top {
   bottom: 20px;
-  left: 4rem;
+  /* left: 4rem; */
 }
 
 .custom-tooltip.bottomleft {
-  position: absolute;
   top: 20px;
   right: -27px;
 }
 
 .custom-tooltip.left {
   height: auto;
-  position: absolute;
   top: -83px;
   left: -3rem;
 }
 
-.custom-tooltip.bottomright {
+.custom-tooltip.bottomleft::after {
+  content: "";
   position: absolute;
+  bottom: 100%;
+  top:-4px;
+  left: 90%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent rgb(245, 245, 245) transparent;
+
+  background: rgb(245, 245, 245);
+  border-right:1px solid rgb(193, 193, 193);
+  border-bottom:1px solid rgb(193, 193, 193);
+  -moz-transform:rotate(-135deg);
+  -webkit-transform:rotate(-135deg);
+}
+
+.custom-tooltip.bottomright {
   top: 20px;
-  left: 50px;
+}
+
+.custom-tooltip.bottomright::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 5%;
+  top:-4px;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent rgb(245, 245, 245) transparent;
+  background: rgb(245, 245, 245);
+  border-right:1px solid rgb(193, 193, 193);
+  border-bottom:1px solid rgb(193, 193, 193);
+  -moz-transform:rotate(-135deg);
+  -webkit-transform:rotate(-135deg);
+}
+
+.custom-tooltip.top::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 5%;
+  border-width: 10px;
+  border-style: solid;
+  border-color: rgb(245, 245, 245) transparent transparent transparent;
+  background: rgb(245, 245, 245);
+  border-right:1px solid rgb(193, 193, 193);
+  border-bottom:1px solid rgb(193, 193, 193);
+  -moz-transform:rotate(45deg);
+  -webkit-transform:rotate(45deg);
 }
 
 /* video recorder */

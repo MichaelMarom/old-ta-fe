@@ -389,14 +389,10 @@ export const get_student_events = async (studentId) => {
 };
 
 export const formatted_student_sessions = async (studentId) => {
-  try {
     const { data } = await apiClient.get(
       `/student/sessions/formatted/${studentId}`
     );
     return data;
-  } catch (err) {
-    showErrorToast(err);
-  }
 };
 
 export const get_tutor_bookings = async (tutorId) => {
