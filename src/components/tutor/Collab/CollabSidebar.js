@@ -493,7 +493,7 @@ const CollabSidebar = ({
 
       <div
         className="TutorAsideChatCnt"
-        style={{ background: "rgb(225 238 242)", height: sessionTime==="current"?"75%":"65%" }}
+        style={{ background: "rgb(225 238 242)", height: sessionTime==="current"?"200px":"65%" }}
       >
         <div
           className="TutorAsideChatBox"

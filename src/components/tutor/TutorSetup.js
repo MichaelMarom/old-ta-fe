@@ -325,7 +325,7 @@ const TutorSetup = () => {
     let response = await saver();
     setSavingRecord(false);
     dispatch(setMissingFeildsAndTabs());
-    if (response.status === 200) {
+    if (response && response.status === 200) {
       dispatch(setTutor());
       localStorage.setItem(
         "tutor_screen_name",

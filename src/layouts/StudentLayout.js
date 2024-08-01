@@ -35,9 +35,6 @@ const StudentLayout = ({ children }) => {
 
   const [remainingTime, setTimeRemaining] = useState(0);
 
-  //todo
-  //when currentsession timeRemaing is 7 minutes then move to feedback
-  //have to remove inMins, because, it will effect when time is in seconds
   useEffect(() => {
     const extractRemainingtimeInInteger = parseInt(
       upcomingSessionFromNow.split(" ")[0]

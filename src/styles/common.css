@@ -641,7 +641,7 @@ fieldset:disabled .btn,
   position: absolute;
 
   left: 0;
-  bottom: 18px;
+  bottom: 22px;
   padding: calc(var(--size-bezel) * 0.75) calc(var(--size-bezel) * .5);
   margin: calc(var(--size-bezel) * 0.75 + 3px) calc(var(--size-bezel) * .5);
   background: pink;

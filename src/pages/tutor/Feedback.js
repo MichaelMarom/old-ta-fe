@@ -4,9 +4,7 @@ import { showDate } from "../../utils/moment";
 import QuestionFeedback from "../../components/tutor/Feedback/QuestionFeedback";
 import SessionsTable from "../../components/tutor/Feedback/SessionsTable";
 import { wholeDateFormat } from "../../constants/constants";
-import {
-  get_tutor_feedback_questions,
-} from "../../axios/tutor";
+import { get_tutor_feedback_questions } from "../../axios/tutor";
 import {
   fetch_student_photos,
   get_feedback_to_question,
@@ -14,9 +12,7 @@ import {
 } from "../../axios/student";
 
 import { useDispatch, useSelector } from "react-redux";
-import {
-  updateStudentLesson,
-} from "../../redux/student/studentBookings";
+import { updateStudentLesson } from "../../redux/student/studentBookings";
 import Actions from "../../components/common/Actions";
 import Tooltip from "../../components/common/ToolTip";
 import Loading from "../../components/common/Loading";
@@ -41,13 +37,14 @@ const Feedback = () => {
     sessions.length &&
       fetch_student_photos(_.uniq(sessions.map((session) => session.studentId)))
         .then((result) => {
-         !result?.response?.data &&
+          !result?.response?.data &&
             setFeedbackData(
               sessions.map((session) => ({
                 ...session,
-                photo: result.find(
-                  (student) => student.AcademyId === session.studentId
-                )?.Photo || null,
+                photo:
+                  result.find(
+                    (student) => student.AcademyId === session.studentId
+                  )?.Photo || null,
               }))
             );
         })
@@ -55,7 +52,6 @@ const Feedback = () => {
           console.log(error);
         });
   }, [sessions]);
-
 
   useEffect(() => {
     const getAllFeedbackQuestion = async () => {
@@ -96,17 +92,22 @@ const Feedback = () => {
           }, 0) / questions.length,
       });
 
-      dispatch(updateStudentLesson(selectedEvent.id, selectedEvent));
+      const lessonToUpdate = { ...selectedEvent };
+      delete lessonToUpdate.photo;
+      dispatch(updateStudentLesson(lessonToUpdate.id, lessonToUpdate));
 
       dispatch(
-       await setOnlySessions(
+        await setOnlySessions(
           [...feedbackData].map((slot) => {
             if (slot.id === selectedEvent.id) {
-             return {...slot, ratingByTutor:
-                questions.reduce((sum, question) => {
-                  sum = question.star + sum;
-                  return sum;
-                }, 0) / questions.length}
+              return {
+                ...slot,
+                ratingByTutor:
+                  questions.reduce((sum, question) => {
+                    sum = question.star + sum;
+                    return sum;
+                  }, 0) / questions.length,
+              };
             }
             return slot;
           })
@@ -123,8 +124,11 @@ const Feedback = () => {
       return slot;
     });
     dispatch(setOnlySessions(updatedSessionsData));
-    dispatch(updateStudentLesson(updatedSlot.id, updatedSlot));
-    };
+
+    const lessonToUpdate = { ...updatedSlot };
+    delete lessonToUpdate.photo;
+    dispatch(updateStudentLesson(lessonToUpdate.id, lessonToUpdate));
+  };
 
   useEffect(() => {
     if (selectedEvent.id) {
@@ -169,91 +173,91 @@ const Feedback = () => {
 
   return (
     <>
-    <TutorLayout>
-      <div className="container mt-1">
-        <div className="py-2 row">
-          <div className={ `${selectedEvent.id ? "col-md-8" : "col-md-12"}`}>
-            <h2>Booked Lessons</h2>
-            {feedbackData.length ? (
-              <>
-                <div style={{ fontSize: "14px" }}>
-                  <span style={{ fontWeight: "bold", fontSize: "16px" }}>
-                    Lessons blinking
-                  </span>
-                  by green border are ready for your feedback. Please rate your
-                  student as soon as possible.
-                </div>
-                <SessionsTable
-                  events={feedbackData}
-                  setSelectedEvent={setSelectedEvent}
-                  selectedEvent={selectedEvent}
-                />
-              </>
-            ) : (
-              <div className="text-danger">No Record Found</div>
-            )}
-          </div>
-          {selectedEvent.id && (
-            <div
-              className="col-md-4 "
-              style={{ height: "calc(100vh - 165px)", overflowY: "auto" }}
-            >
-              <h4>
-                Feedback on {showDate(selectedEvent.start, wholeDateFormat)}{" "}
-                Session
-              </h4>
-              <div className="questions">
-                <QuestionFeedback
-                  loading={questionLoading}
-                  questions={questions}
-                  handleEmojiClick={handleEmojiClick}
-                />
-                <div className="form-group">
-                  <label htmlFor="exampleTextarea">
-                    Please write a short description of your impression about
-                    this lesson
-                    <Tooltip
-                      text={"Instructions how to grade freehand notes."}
-                    />
-                  </label>
-                  <DebounceInput
-                    placeholder=""
-                    required
-                    element="textarea"
-                    className="form-control m-0"
-                    delay={1000}
-                    value={comment}
-                    style={{ height: "150px" }}
-                    setInputValue={setComment}
-                    debounceCallback={(val) => {
-                      // const updatedSlots = feedbackData.map((slot) => {
-                      //   if (slot.id === selectedEvent.id) {
-                      //     slot.commentByTutor = comment;
-                      //   }
-                      //   return slot;
-                      // });
-
-                      // setFeedbackData(updatedSlots);
-
-                      setSelectedEvent({
-                        ...selectedEvent,
-                        commentByTutor: comment,
-                      });
-                      handleDynamicSave({
-                        ...selectedEvent,
-                        commentByTutor: comment,
-                      });
-                    }}
-                    onChange={(e) => setComment(e.target.value)}
+      <TutorLayout>
+        <div className="container mt-1">
+          <div className="py-2 row">
+            <div className={`${selectedEvent.id ? "col-md-8" : "col-md-12"}`}>
+              <h2>Booked Lessons</h2>
+              {feedbackData.length ? (
+                <>
+                  <div style={{ fontSize: "14px" }}>
+                    <span style={{ fontWeight: "bold", fontSize: "16px" }}>
+                      Lessons blinking
+                    </span>
+                    by green border are ready for your feedback. Please rate
+                    your student as soon as possible.
+                  </div>
+                  <SessionsTable
+                    events={feedbackData}
+                    setSelectedEvent={setSelectedEvent}
+                    selectedEvent={selectedEvent}
                   />
+                </>
+              ) : (
+                <div className="text-danger">No Record Found</div>
+              )}
+            </div>
+            {selectedEvent.id && (
+              <div
+                className="col-md-4 "
+                style={{ height: "calc(100vh - 165px)", overflowY: "auto" }}
+              >
+                <h4>
+                  Feedback on {showDate(selectedEvent.start, wholeDateFormat)}{" "}
+                  Session
+                </h4>
+                <div className="questions">
+                  <QuestionFeedback
+                    loading={questionLoading}
+                    questions={questions}
+                    handleEmojiClick={handleEmojiClick}
+                  />
+                  <div className="form-group">
+                    <label htmlFor="exampleTextarea">
+                      Please write a short description of your impression about
+                      this lesson
+                      <Tooltip
+                        text={"Instructions how to grade freehand notes."}
+                      />
+                    </label>
+                    <DebounceInput
+                      placeholder=""
+                      required
+                      element="textarea"
+                      className="form-control m-0"
+                      delay={1000}
+                      value={comment}
+                      style={{ height: "150px" }}
+                      setInputValue={setComment}
+                      debounceCallback={(val) => {
+                        // const updatedSlots = feedbackData.map((slot) => {
+                        //   if (slot.id === selectedEvent.id) {
+                        //     slot.commentByTutor = comment;
+                        //   }
+                        //   return slot;
+                        // });
+
+                        // setFeedbackData(updatedSlots);
+
+                        setSelectedEvent({
+                          ...selectedEvent,
+                          commentByTutor: comment,
+                        });
+                        handleDynamicSave({
+                          ...selectedEvent,
+                          commentByTutor: comment,
+                        });
+                      }}
+                      onChange={(e) => setComment(e.target.value)}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </div>
-      <Actions saveDisabled />
-    </TutorLayout>
+        <Actions saveDisabled />
+      </TutorLayout>
     </>
   );
 };

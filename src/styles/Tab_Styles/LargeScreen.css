@@ -161,11 +161,10 @@
     scroll-behavior: smooth;
 }
 
-.tutor-tab-header ul::-webkit-scrollbar {
+ul.header::-webkit-scrollbar {
     display: block;
 }
-
-.tutor-tab-header ul {
+ul.header {
     list-style-type: none;
     margin: 0;
     height: 100%;
@@ -180,7 +179,7 @@
     transition: cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
-.tutor-tab-header ul li {
+ul.header li {
     padding: 15px 20px 15px 20px;
     color: #fff;
     display: flex;
@@ -195,7 +194,7 @@
     cursor: pointer;
 }
 
-.tutor-tab-header ul li a {
+ul.header li a {
     display: block;
     font-size: 14px;
     transform: skew(40deg);
@@ -210,7 +209,7 @@
 
 
 
-.tutor-tab-header ul li:hover {
+ul.header li:hover {
     background: #2471A3;
     color: #F7F9F9;
 }
@@ -240,13 +239,13 @@ ul.header {
 }
 
 ul li {
-    padding: 15px 15px 15px 15px;
+    /* padding: 15px 15px 15px 15px; */
     display: flex;
-    font-size: 100%;
+    /* font-size: 100%; */
     white-space: nowrap;
     font-weight: 400;
-    align-items: center;
-    justify-content: center;
+    /* align-items: center; */
+    /* justify-content: center; */
     float: left;
     cursor: pointer;
 }
@@ -835,7 +834,7 @@ h6 {
 }
 
 
-.tutor-tab-header ul {
+.header ul {
     list-style-type: none;
     margin: 0;
     float: right;

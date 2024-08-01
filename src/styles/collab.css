@@ -1,4 +1,4 @@
-    * {
+    /* * {
         box-sizing: border-box;
     }
 
@@ -237,7 +237,7 @@
         border: none;
         margin: 0 10px 0 10px;
         outline: none;
-    }
+    } */
 
     .StudentCollabHeader {
         height: 60px;

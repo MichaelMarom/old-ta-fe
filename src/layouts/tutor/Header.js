@@ -1,12 +1,16 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { PROFILE_STATUS, statesColours } from "../../constants/constants";
-import { useClerk } from "@clerk/clerk-react";
-import Tooltip from "../../components/common/ToolTip";
 import {
-  FaArrowAltCircleLeft,
-  FaArrowAltCircleRight,
+  PROFILE_STATUS,
+  statesColours,
+  wholeDateFormat,
+} from "../../constants/constants";
+import { useClerk } from "@clerk/clerk-react";
+import {
+  FaChevronDown,
+  FaChevronUp,
+  FaClock,
   FaExclamation,
   FaSignOutAlt,
 } from "react-icons/fa";
@@ -28,6 +32,7 @@ import { PiVideoBold } from "react-icons/pi";
 import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
 import Avatar from "../../components/common/Avatar";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import { showDate } from "../../utils/moment";
 
 const Header = () => {
   const { signOut } = useClerk();
@@ -38,6 +43,7 @@ const Header = () => {
   const [filteredSessions, setFilteredSessions] = useState([]);
   const { sessions } = useSelector((state) => state.tutorSessions);
   const [isOpen, setIsOpen] = useState(false);
+  const [profileDropdownOpened, setProfileDropdownOpened] = useState(false);
 
   const dispatch = useDispatch();
   let [screen_name, set_screen_name] = useState(
@@ -45,7 +51,6 @@ const Header = () => {
   );
 
   const { missingFields } = useSelector((state) => state.missingFields);
-  console.log(missingFields);
   const { tutor } = useSelector((state) => state.tutor);
   const screenname = localStorage.getItem("tutor_screen_name");
   const scrollRef = useRef(null);
@@ -169,23 +174,69 @@ const Header = () => {
           <FaChevronLeft size={20} />
         </div>
         <div
-          className={`screen-name rounded align-items-center px-1`}
+          className={`screen-name position-relative flex-column  px-1 gap-2`}
           style={{
+            width:"170px",
             fontSize: "14px",
             whiteSpace: "nowrap",
             marginLeft: "20px",
+            height:"50px",
+            transition: "all  0.3s ease-in-out ",
             display: !tutor.TutorScreenname ? "none" : "flex",
             color: statesColours[tutor.Status]?.bg,
           }}
         >
-          <div>
-            <Avatar avatarSrc={tutor.Photo} size="35" indicSize="8px" borderSize="1px"/>
-          </div>
-          <div className="flex">
-            <div style={{ fontWeight: "bold" }}>{tutor.TutorScreenname}</div>
-            <div style={{ fontSize: "12px", fontWeight: "700" }}>
-              {StatusValues[tutor.Status]}
+          <div className="d-flex align-items-center">
+            <div>
+              <Avatar
+                avatarSrc={tutor.Photo}
+                size="35"
+                indicSize="8px"
+                borderSize="1px"
+              />
             </div>
+            <div className="">
+              <div style={{ fontWeight: "bold" }}>{tutor.TutorScreenname}</div>
+              <div style={{ fontSize: "12px", fontWeight: "700" }}>
+                {StatusValues[tutor.Status]}
+              </div>
+            </div>
+            <div
+              style={{ marginLeft: "5px" }}
+              onClick={() => setProfileDropdownOpened(!profileDropdownOpened)}
+            >
+              {profileDropdownOpened ? <FaChevronUp /> : <FaChevronDown />}
+            </div>
+          </div>
+
+          <div
+            className={`position-absolute text-bg-light shadow w-100`}
+            style={{
+              marginTop: "50px",
+              height: profileDropdownOpened ? "auto" : 0,
+              transition: "height 0.3s ease-in-out",
+              overflow: "hidden",
+              border: "1px solid lightgray",
+              borderTop: "none",
+            }}
+          >
+            <ul className=" d-flex flex-column align-items-start p-2">
+              <li
+                className="p-0 text-start border-bottom w-100"
+                style={{ fontSize: "12px" }}
+              >
+               <span style={{marginRight:"5px"}}><FaClock /></span> {showDate(moment().toDate(), wholeDateFormat)}
+              </li>
+              <li
+                className="p-0 text-start  w-100 text-danger"
+                onClick={() => signOut(() => handleSignOut())}
+              >
+                Signout{" "}
+                <span style={{ marginLeft: "5px" }}>
+                  <FaSignOutAlt />
+                </span>
+              </li>
+            </ul>
           </div>
         </div>
         <ul
@@ -284,14 +335,14 @@ const Header = () => {
           isOpen={isOpen}
           setIsOpen={setIsOpen}
         />
-        <div
+        {/* <div
           className="d-flex  gap-2 border rounded p-1 justify-content-center align-items-center "
           style={{ marginRight: "20px", cursor: "pointer" }}
           onClick={() => signOut(() => handleSignOut())}
         >
           <h6 className="text-light m-0">Signout</h6>
           <FaSignOutAlt color="white" />
-        </div>
+        </div> */}
         <div
           style={{
             margin: "0 0 0 0",

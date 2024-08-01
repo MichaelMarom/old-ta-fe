@@ -300,11 +300,10 @@ const Discounts = () => {
                   value={selectedCancellationPolicy}
                   setValue={setSelectedCancPolicy}
                   editMode={editMode}
-                  TooltipText={
-                    "How many hours before the lesson, you allow the student to cancel without penalty?"
-                  }
                   label={
                     <MandatoryFieldLabel
+                    toolTipText= "How many hours before the lesson, you allow the student to cancel without penalty?"
+                 direction="bottomright"
                       text="Cancellation Policy"
                       mandatoryFields={mandatoryFields}
                       name={"cancPolicy"}
@@ -327,6 +326,7 @@ const Discounts = () => {
                   className="form-check-input border border-dark "
                   type="checkbox"
                   role="switch"
+                  id="introDiscount"
                   onChange={() =>
                     setIntroSessionDiscount(!IntroSessionDiscount)
                   }
@@ -334,7 +334,7 @@ const Discounts = () => {
                 />
                 <label
                   className="form-check-label mr-3"
-                  htmlFor="flexSwitchCheckChecked"
+                  htmlFor="introDiscount"
                 >
                   50% Intro Session
                 </label>
@@ -354,6 +354,7 @@ const Discounts = () => {
                   className="form-check-input border border-dark "
                   type="checkbox"
                   role="switch"
+                  id="recordingSession"
                   onChange={() =>
                     setConsentRecordingLesson(!ConsentRecordingLesson)
                   }
@@ -361,7 +362,7 @@ const Discounts = () => {
                 />
                 <label
                   className="form-check-label"
-                  htmlFor="flexSwitchCheckChecked"
+                  htmlFor="recordingSession"
                 >
                   Consent Recording Session
                 </label>
@@ -483,7 +484,7 @@ const Discounts = () => {
                   className="form-check-input border border-dark "
                   type="checkbox"
                   role="switch"
-                  id="flexSwitchCheckChecked"
+                  id="studentCode"
                   onChange={() =>
                     !!subjects.length
                       ? setDiscountEnabled(!discountEnabled)
@@ -495,7 +496,7 @@ const Discounts = () => {
                 />
                 <label
                   className="form-check-label"
-                  htmlFor="flexSwitchCheckChecked"
+                  htmlFor="studentCode"
                 >
                   My Student's code
                 </label>
@@ -611,13 +612,13 @@ const Discounts = () => {
                   className="form-check-input border border-dark "
                   type="checkbox"
                   role="switch"
-                  id="flexSwitchCheckChecked"
+                  id="hourlyCharge"
                   onChange={() => setClassTeaching(!classTeaching)}
                   checked={classTeaching}
                 />
                 <label
                   className="form-check-label w-75 "
-                  htmlFor="flexSwitchCheckChecked"
+                  htmlFor="hourlyCharge"
                 >
                   My hourly Charge for teaching a public or private school class
                   (up to 30 students). Only tutors that fill up this field are
@@ -627,7 +628,7 @@ const Discounts = () => {
                 <Tooltip
                   width="200px"
                   text="Fill in your hourly amount for teaching a public 0r private school class (up to 30 students)."
-                  direction="left"
+                  direction="top"
                 >
                   <FaInfoCircle size={20} color="#0096ff" />
                 </Tooltip>

@@ -30,6 +30,7 @@ const MyStudents = () => {
   return (
     <div className="mt-4 container">
       <h1>My Students</h1>
+      <div style={{height:"calc(100vh - 225px)", overflowY:"auto"}}>
       {(!!students.length) ? < table className="">
         <thead>
           <tr>
@@ -39,10 +40,10 @@ const MyStudents = () => {
             <th>Country</th>
             <th>GMT</th>
             <th>Grade</th>
-            <th>Total Hours</th>
             <th>Date Start</th>
             <th>Date last</th>
             <th>Rate(1hour)</th>
+            <th>Total Hours</th>
             <th>Total $ Gros</th>
             <th>Total $ Net</th>
           </tr>
@@ -58,10 +59,10 @@ const MyStudents = () => {
               <td>{student.country}</td>
               <td>{student.gmt}</td>
               <td>{student.grade}</td>
-              <td>{student.totalHours}</td>
               <td className='col-2'>{showDate(student.dateStart, wholeDateFormat)}</td>
               <td className='col-2'>{showDate(student.dateLast, wholeDateFormat)}</td>
               <td>{student.rate.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+              <td>{student.totalHours}</td>
               <td></td>
               <td>{student.totalNet.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
             </tr>
@@ -70,6 +71,8 @@ const MyStudents = () => {
       </table> :
         <h5 className='text-danger'>No Students Found!</h5>
       }
+
+      </div>
       <Actions
         editDisabled={true}
         saveDisabled={true}
