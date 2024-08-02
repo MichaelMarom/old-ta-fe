@@ -2,19 +2,22 @@ import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  FaChevronDown,
   FaChevronLeft,
+  FaClock,
   FaChevronRight,
+  FaChevronUp,
   FaSignOutAlt,
 } from "react-icons/fa";
-import Tooltip from "../../components/common/ToolTip";
 import { useClerk } from "@clerk/clerk-react";
 import { setUser } from "../../redux/auth/auth";
 import { setTutor } from "../../redux/tutor/tutorData";
 import { setStudent } from "../../redux/student/studentData";
 import { moment } from "../../config/moment";
-import { statesColours } from "../../constants/constants";
+import { statesColours, wholeDateFormat } from "../../constants/constants";
 import Avatar from "../../components/common/Avatar";
 
+import { showDate } from "../../utils/moment";
 import collabVideo from "../../assets/videos/collaboration.mp4";
 import { PiVideoBold } from "react-icons/pi";
 import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
@@ -28,9 +31,12 @@ const Header = () => {
   const dispatch = useDispatch();
   const [filteredSessions, setFilteredSessions] = useState([]);
   const { sessions } = useSelector((state) => state.studentSessions);
+  const [profileDropdownOpened, setProfileDropdownOpened] = useState(false);
   const scrollRef = useRef();
+  const profileDropdownRef = useRef();
   const scrollStep = 100;
   let location = useLocation();
+
   const { student } = useSelector((state) => state.student);
   const tabs = [
     { name: "Introduction", url: "/student/intro" },
@@ -60,6 +66,23 @@ const Header = () => {
       element.scrollIntoView({ behavior: "smooth" });
     }
   }, [location.pathname, activeTab]);
+
+  // Handle click outside the dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        profileDropdownRef.current &&
+        !profileDropdownRef.current.contains(event.target)
+      ) {
+        setProfileDropdownOpened(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     setActiveTab(location.pathname);
@@ -125,7 +148,7 @@ const Header = () => {
             <FaChevronLeft size={20} />
           </div>
         </div>
-        <div
+        {/* <div
           className={`screen-name rounded align-items-center px-1`}
           style={{
             fontSize: "14px",
@@ -144,10 +167,87 @@ const Header = () => {
               {StatusValues[student.Status]}
             </div>
           </div>
+        </div> */}
+        <div
+          className={`screen-name position-relative flex-column px-1 gap-2`}
+          style={{
+            width: "170px",
+            fontSize: "14px",
+            whiteSpace: "nowrap",
+            marginLeft: "20px",
+            height: "50px",
+            transition: "all 0.3s ease-in-out",
+            display: !student.ScreenName ? "none" : "flex",
+            color: statesColours[student.Status]?.bg,
+          }}
+        >
+          <div className="d-flex align-items-center">
+            <div>
+              <Avatar
+                avatarSrc={student.Photo}
+                size="35"
+                indicSize="8px"
+                borderSize="1px"
+              />
+            </div>
+            <div className="">
+              <div style={{ fontWeight: "bold" }}>{student.ScreenName}</div>
+              <div style={{ fontSize: "12px", fontWeight: "700" }}>
+                {StatusValues[student.Status]}
+              </div>
+            </div>
+            <div
+              style={{
+                marginLeft: "5px",
+                transition: "transform 0.3s ease-in-out",
+                transform: profileDropdownOpened
+                  ? "rotate(180deg)"
+                  : "rotate(0deg)",
+              }}
+              onClick={() => setProfileDropdownOpened(!profileDropdownOpened)}
+            >
+              {profileDropdownOpened ? <FaChevronUp /> : <FaChevronDown />}
+            </div>
+          </div>
+
+          <div
+            ref={profileDropdownRef}
+            className={`position-absolute text-bg-light shadow w-100`}
+            style={{
+              marginTop: "50px",
+              maxHeight: profileDropdownOpened ? "200px" : "0",
+              transition: "max-height 0.3s ease-in-out",
+              overflow: "hidden",
+              border: "1px solid lightgray",
+              borderTop: "none",
+              zIndex: 9,
+            }}
+          >
+            <ul className="d-flex flex-column align-items-start p-2">
+              <li
+                className="p-0 text-start border-bottom w-100"
+                style={{ fontSize: "12px" }}
+              >
+                <span style={{ marginRight: "5px" }}>
+                  <FaClock />
+                </span>
+                {showDate(moment().toDate(), wholeDateFormat)}
+              </li>
+              <li
+                className="p-0 text-start w-100 text-danger"
+                onClick={() => signOut(() => handleSignOut())}
+              >
+                Signout
+                <span style={{ marginLeft: "5px" }}>
+                  <FaSignOutAlt />
+                </span>
+              </li>
+            </ul>
+          </div>
         </div>
         <ul
           ref={scrollRef}
-          className={``}
+          className={`header`}
           style={{
             background: "inherit",
             pointerEvents: "auto",

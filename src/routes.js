@@ -130,7 +130,6 @@ const App = () => {
         handleExpiredToken(tutorSessions);
 
         const intervalId = setInterval(async () => {
-          // if (!localStorage.getItem("access_token")) clearInterval(intervalId);
           const tutorSessions = await dispatch(await setTutorSessions(tutor));
           if (handleExpiredToken(tutorSessions)) clearInterval(intervalId);
         }, 60000);
@@ -151,12 +150,11 @@ const App = () => {
         handleExpiredToken(studentSessions);
 
         const intervalId = setInterval(async () => {
-          // if (!localStorage.getItem("access_token"))
-          //   clearInterval(intervalId);
           const studentSessions = await dispatch(
             await setStudentSessions(student)
           );
 
+          console.log(studentSessions)
           if (handleExpiredToken(studentSessions)) clearInterval(intervalId);
         }, 60000);
 

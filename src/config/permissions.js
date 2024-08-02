@@ -18,6 +18,8 @@ const Bid = lazy(() => import('../pages/tutor/Add/Bid'));
 const StudentPublicProfile = lazy(() => import('../pages/tutor/StudentProfile'));
 const List = lazy(() => import('../pages/tutor/Add/List'));
 const TutorFeedback = lazy(() => import('../pages/tutor/Feedback'));
+const Agency = lazy(() => import('../pages/tutor/Agency/List'));
+
 
 // student components
 const StudentSetup = lazy(() => import('../pages/student/StudentSetup'));
@@ -51,7 +53,6 @@ const Bids = lazy(() => import('../pages/student/MarketPlace/Bids'));
 const Ads = lazy(() => import('../pages/student/MarketPlace/Ad'));
 const StudentAdList = lazy(() => import('../pages/student/MarketPlace/StudentAdList'));
 const EditAd = lazy(() => import('../pages/student/MarketPlace/EditAd'));
-const Agency = lazy(() => import('../pages/tutor/Agency'));
 
 
 const rolePermissions = {

@@ -46,14 +46,11 @@ const Header = () => {
   const [profileDropdownOpened, setProfileDropdownOpened] = useState(false);
 
   const dispatch = useDispatch();
-  let [screen_name, set_screen_name] = useState(
-    window.localStorage.getItem("tutor_screen_name")
-  );
 
   const { missingFields } = useSelector((state) => state.missingFields);
   const { tutor } = useSelector((state) => state.tutor);
-  const screenname = localStorage.getItem("tutor_screen_name");
   const scrollRef = useRef(null);
+  const profileDropdownRef = useRef(null);
   const scrollStep = 100; // Adjust the scroll step as needed
 
   const handleScrollLeft = () => {
@@ -86,6 +83,23 @@ const Header = () => {
     }
   }, [location.pathname, activeTab]);
 
+  // Handle click outside the dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        profileDropdownRef.current &&
+        !profileDropdownRef.current.contains(event.target)
+      ) {
+        setProfileDropdownOpened(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const tabs = [
     { url: "/tutor/intro", name: "Introduction", video: introVideo },
     { url: "/tutor/setup", name: "Setup", video: setupVideo },
@@ -116,10 +130,6 @@ const Header = () => {
     disapproved: "Disapproved",
     closed: "Closed",
   };
-
-  useEffect(() => {
-    set_screen_name(localStorage.getItem("tutor_screen_name"));
-  }, [screenname]);
 
   useEffect(() => {
     const currentTab = location.pathname;
@@ -174,14 +184,14 @@ const Header = () => {
           <FaChevronLeft size={20} />
         </div>
         <div
-          className={`screen-name position-relative flex-column  px-1 gap-2`}
+          className={`screen-name position-relative flex-column px-1 gap-2`}
           style={{
-            width:"170px",
+            width: "170px",
             fontSize: "14px",
             whiteSpace: "nowrap",
             marginLeft: "20px",
-            height:"50px",
-            transition: "all  0.3s ease-in-out ",
+            height: "50px",
+            transition: "all 0.3s ease-in-out",
             display: !tutor.TutorScreenname ? "none" : "flex",
             color: statesColours[tutor.Status]?.bg,
           }}
@@ -202,7 +212,13 @@ const Header = () => {
               </div>
             </div>
             <div
-              style={{ marginLeft: "5px" }}
+              style={{
+                marginLeft: "5px",
+                transition: "transform 0.3s ease-in-out",
+                transform: profileDropdownOpened
+                  ? "rotate(180deg)"
+                  : "rotate(0deg)",
+              }}
               onClick={() => setProfileDropdownOpened(!profileDropdownOpened)}
             >
               {profileDropdownOpened ? <FaChevronUp /> : <FaChevronDown />}
@@ -210,28 +226,33 @@ const Header = () => {
           </div>
 
           <div
+            ref={profileDropdownRef}
             className={`position-absolute text-bg-light shadow w-100`}
             style={{
               marginTop: "50px",
-              height: profileDropdownOpened ? "auto" : 0,
-              transition: "height 0.3s ease-in-out",
+              maxHeight: profileDropdownOpened ? "200px" : "0",
+              transition: "max-height 0.3s ease-in-out",
               overflow: "hidden",
               border: "1px solid lightgray",
               borderTop: "none",
+              zIndex: 9,
             }}
           >
-            <ul className=" d-flex flex-column align-items-start p-2">
+            <ul className="d-flex flex-column align-items-start p-2">
               <li
                 className="p-0 text-start border-bottom w-100"
                 style={{ fontSize: "12px" }}
               >
-               <span style={{marginRight:"5px"}}><FaClock /></span> {showDate(moment().toDate(), wholeDateFormat)}
+                <span style={{ marginRight: "5px" }}>
+                  <FaClock />
+                </span>
+                {showDate(moment().toDate(), wholeDateFormat)}
               </li>
               <li
-                className="p-0 text-start  w-100 text-danger"
+                className="p-0 text-start w-100 text-danger"
                 onClick={() => signOut(() => handleSignOut())}
               >
-                Signout{" "}
+                Signout
                 <span style={{ marginLeft: "5px" }}>
                   <FaSignOutAlt />
                 </span>
@@ -239,6 +260,7 @@ const Header = () => {
             </ul>
           </div>
         </div>
+
         <ul
           ref={scrollRef}
           className={`header`}

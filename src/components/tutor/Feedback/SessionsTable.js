@@ -10,6 +10,7 @@ import Tooltip from "../../common/ToolTip";
 import TAButton from "../../common/TAButton";
 import { convertTutorIdToName } from "../../../utils/common";
 import Avatar from "../../common/Avatar";
+import TableHeader from "../../common/TableHeader";
 
 function SessionsTable({ events=[], setSelectedEvent, selectedEvent }) {
   const { tutor } = useSelector((state) => state.tutor);
@@ -90,7 +91,7 @@ function SessionsTable({ events=[], setSelectedEvent, selectedEvent }) {
 
   return (
     <>
-      <div
+      {/* <div
         className="d-flex rounded justify-content-between align-items-center  p-2"
         style={{ color: "white", background: "#2471A3" }}
       >
@@ -108,7 +109,8 @@ function SessionsTable({ events=[], setSelectedEvent, selectedEvent }) {
             </div>
           );
         })}
-      </div>
+      </div> */}
+      <TableHeader headers={Header} />
       <div style={{ height: "calc(100vh - 280px)", overflowY: "auto" }}>
         <table>
           <tbody>

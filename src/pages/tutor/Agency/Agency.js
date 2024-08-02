@@ -1,17 +1,51 @@
 import React, { useState } from 'react'
-import TutorLayout from '../../layouts/TutorLayout'
-import CreateLeftPanel from '../../components/tutor/Agency/CreateLeftPanel'
-import TAButton from '../../components/common/TAButton'
+import TutorLayout from '../../../layouts/TutorLayout'
+import CreateLeftPanel from '../../../components/tutor/Agency/CreateLeftPanel'
+import TAButton from '../../../components/common/TAButton'
+import TableHeader from '../../../components/common/TableHeader'
 
 const Agency = () => {
     const [isOpen, setIsOpen] = useState(false)
+    const [subTutors, setSubTutors] = useState([])
     const onClose = () => {
         setIsOpen(false)
     }
 
+
+  const Header = [
+    {
+      width: "14%",
+      title: "Sr",
+    },
+    {
+      width: "14%",
+      title: "Name",
+    },
+    {
+      width: "14%",
+      title: "Email",
+    },
+    {
+      width: "14%",
+      title: "Phone",
+    },
+    {
+      width: "14%",
+      title: "Subject",
+    },
+    {
+      width: "14%",
+      title: "Country",
+    },
+
+    {
+        width: "14%",
+        title: "Markup",
+      },
+  ];
     return (
         <TutorLayout>
-            <div className='container'>
+            <div className='p-2'>
                 <div className=' mt-2 highlight'>
                     <p className='m-1'>
                         Tutoring Academy platform offers you with a unique 'Agency' opportunity 
@@ -36,40 +70,31 @@ const Agency = () => {
                         We are excited to see you grow and succeed in this new venture
                     </p >
                 </div>
+                <div className='container'>
                 <div className='d-flex w-100 justify-content-end mt-3'>
                     <TAButton buttonText={"Add Tutor"} handleClick={() => setIsOpen(true)} />
                 </div>
                 <div className='mt-2'>
+                <TableHeader headers={Header}/>
                     <table>
-                        <thead>
-                            <th>
-                                SID
-                            </th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Country</th>
-                            <th>Subjects</th>
-
-                            <th>Markup%</th>
-
-                        </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Name</td>
-                                <td>Email</td>
-                                <td>Phone</td>
-                                <td>Country</td>
-                                <td>Subjects</td>
+                         { subTutors.map((tutor, index)=>(  <tr>
+                                <td>{index+1}</td>
+                                <td>{tutor.FirstName} {tutor.LastName}</td>
+                                <td>{tutor.Email}</td>
+                                <td>{tutor.Phone}</td>
+                                <td>{tutor.Country}</td>
+                                <td>{tutor.Subject}</td>
 
-                                <td>Markup%</td>
-                            </tr>
+                                <td>24%</td>
+                            </tr>))}
                         </tbody>
                     </table>
                 </div>
-                <CreateLeftPanel isOpen={isOpen} onClose={onClose} />
+                    </div>
+
             </div>
+                <CreateLeftPanel isOpen={isOpen} onClose={onClose} />
 
         </TutorLayout>
     )

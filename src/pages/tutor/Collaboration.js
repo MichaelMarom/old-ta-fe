@@ -191,13 +191,28 @@ const Collaboration = () => {
       excalidrawAPI && excalidrawAPI.resetScene();
   }, [timeRemainingToEndCurrentSession, excalidrawAPI]);
 
-  function getUniqueIdsWithHigherVersion(arr) {
-    const groupedById = _.groupBy(arr, "id");
-    const uniqueIdsWithHigherVersion = _.map(groupedById, (group) =>
-      _.maxBy(group, "version")
-    );
+  function getUniqueIdsWithHigherVersion(arr, attr) {
+    // Group elements by the unique identifier
+    const groupedById = _.groupBy(arr, attr);
+
+    // Determine the highest version element, prioritizing isDeleted:true
+    const uniqueIdsWithHigherVersion = _.map(groupedById, (group) => {
+        // Separate elements with isDeleted: true and false
+        const deletedElements = _.filter(group, { isDeleted: true });
+        const nonDeletedElements = _.filter(group, { isDeleted: false });
+
+        // If there are deleted elements, select the one with the highest version
+        if (deletedElements.length > 0) {
+            return _.maxBy(deletedElements, 'version');
+        }
+
+        // Otherwise, select the non-deleted element with the highest version
+        return _.maxBy(nonDeletedElements, 'version');
+    });
+
     return uniqueIdsWithHigherVersion;
-  }
+}
+
 
   useEffect(() => {
     if (
@@ -224,7 +239,7 @@ const Collaboration = () => {
         // });
 
         const mergedArray = getUniqueIdsWithHigherVersion(
-          excalidrawAPI.getSceneElements().concat(change.elements),
+          excalidrawAPI.getSceneElements().concat(change.elements), 
           "id"
         );
         setElements(mergedArray);
@@ -287,6 +302,16 @@ const Collaboration = () => {
   }, [files, excalidrawAPI]);
 
   const handleExcalidrawChange = (newElements, appState, files) => {
+    console.log(newElements.filter(elem=>elem.id=="XTElsEXYqiuyC_pq2Y4H9")?.[0]?.isDeleted,
+    newElements.filter(elem=>elem.id=="XTElsEXYqiuyC_pq2Y4H9")?.[0]?.version )
+
+    console.log(excalidrawAPI.getSceneElements().filter(elem=>elem.id==="XTElsEXYqiuyC_pq2Y4H9")[0]?.version,
+     newElements.filter(elem=>elem.id=="XTElsEXYqiuyC_pq2Y4H9")[0]?.version)
+
+    //  console.log(getUniqueIdsWithHigherVersion(
+    //   excalidrawAPI.getSceneElements().concat(newElements),
+    //   "id"
+    // ))
     sessionId &&
       newElements.length &&
       sessionTime === "current" &&
