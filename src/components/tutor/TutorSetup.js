@@ -938,9 +938,11 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
-                    label={<GeneralFieldLabel label={"Email"} />}
-                    value={email}
                     editMode={false}
+                    label={
+                      <GeneralFieldLabel editMode={editMode} label={"Email"} />
+                    }
+                    value={email}
                   />
                 </div>
 
@@ -1235,7 +1237,7 @@ const TutorSetup = () => {
                     <Input
                       label={
                         <GeneralFieldLabel
-                        editMode={editMode}
+                          editMode={editMode}
                           label={"UTC"}
                           tooltipText="Coordinated Universal Time, or 
                         'UTC,' is the primary time standard by which the world regulates clocks and time.
