@@ -4,12 +4,12 @@ import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { isExpired } from "react-jwt";
 import React from "react";
 
-import "./styles/Tab_Styles/LargeScreen.css";
+import "./styles/tutor.css";
+import "./styles/tabs.css";
+import "./styles/collab.css";
 import "./styles/student.css";
 import "./styles/admin.css";
-import "./styles/collab.css";
-import "./styles/tutor.css";
-import "./styles/Collaboration_Styles/LargeScreen.css";
+
 import { setUser } from "./redux/auth/auth";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -154,7 +154,6 @@ const App = () => {
             await setStudentSessions(student)
           );
 
-          console.log(studentSessions)
           if (handleExpiredToken(studentSessions)) clearInterval(intervalId);
         }, 60000);
 

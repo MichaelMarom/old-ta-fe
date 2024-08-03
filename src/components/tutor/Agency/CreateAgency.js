@@ -41,7 +41,7 @@ const CreateAgency = ({ isOpen, onClose, onCreate, loading }) => {
               buttonText={"Cancel"}
             />
 
-            <TAButton type="submit" buttonText={"Create"}  loading={loading}/>
+            <TAButton type="submit" buttonText={"Create"} loading={loading} />
           </div>
         </form>
       </div>

@@ -79,19 +79,15 @@ export const get_tutor_feedback_questions = async () => {
   }
 };
 
-export let get_faculty = () => {
-  return new Promise((resolve, reject) => {
-    apiClient
-      .get("/tutor/faculties", {
-        params: {},
-      })
-      .then((result) => {
-        resolve(result.data);
-      })
-      .catch((error) => {
-        showErrorToast(error);
-      });
-  });
+export let get_faculties = async () => {
+  try {
+    const { data } = await apiClient.get("/tutor/faculties", {
+      params: {},
+    });
+    return data;
+  } catch (err) {
+    showErrorToast(err);
+  }
 };
 
 export let get_tutor_status = (faculty, subject, reason, AcademyId) => {
@@ -304,10 +300,8 @@ export const update_discount_form = async (id, body) => {
 
 //not using
 export const formatted_tutor_sessions = async (tutorId) => {
-    const { data } = await apiClient.get(
-      `/tutor/sessions/formatted/${tutorId}`
-    );
-    return data;
+  const { data } = await apiClient.get(`/tutor/sessions/formatted/${tutorId}`);
+  return data;
 };
 
 export const feedback_records = async (tutorId, timeZone) => {

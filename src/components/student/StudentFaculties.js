@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getTutorsAccordingToSubjectandFaculty } from "../../axios/student";
-import { get_faculty, get_faculty_subject } from "../../axios/tutor";
+import { get_faculties, get_faculty_subject } from "../../axios/tutor";
 
 import Actions from "../common/Actions";
 import { useDispatch, useSelector } from "react-redux";
@@ -206,7 +206,7 @@ const StudentFaculties = () => {
   ];
 
   const getFacultiesOption = async () => {
-    let list = await get_faculty();
+    let list = await get_faculties();
     !list?.reposnse?.data && set_faculties(list);
   };
   useEffect(() => {
@@ -241,10 +241,10 @@ const StudentFaculties = () => {
 
   return (
     <>
-      <div className="tutor-popin"></div>
+      {/* <div className="tutor-popin"></div>
       <div className="save-overlay">
         <span className="save_loader"></span>
-      </div>
+      </div> */}
       <div
         className="form-subjects"
         style={{ overflow: "hidden", height: "calc(100vh - 50px)" }}

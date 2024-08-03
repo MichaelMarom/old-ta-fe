@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import {
-  get_faculty,
+  get_faculties,
   get_rates,
   new_subj_request_exist,
   upload_new_subject,
@@ -67,7 +67,7 @@ const Subjects = () => {
   }, [selectedFaculty]);
 
   const getFacultiesOption = async () => {
-    let list = await get_faculty();
+    let list = await get_faculties();
     if (list?.length) {
       const selectOptions = list.map((item) => {
         return (

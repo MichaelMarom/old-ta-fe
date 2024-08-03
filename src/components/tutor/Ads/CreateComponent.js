@@ -33,7 +33,7 @@ const CreateComponent = ({ setActiveTab }) => {
     There you can look at my calendar-scheduling for availability, and book your lesson.`)
 
     useEffect(() => {
-        if (AcademyId !== null) {
+        if (AcademyId) {
             get_tutor_market_data(AcademyId)
                 .then((result) => {
                     if (!result?.repsonse?.data) {

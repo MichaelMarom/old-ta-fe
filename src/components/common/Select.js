@@ -15,17 +15,13 @@ const Select = ({
   required = false,
   mandatory = false,
 }) => {
-  const { tutor } = useSelector(state => state.tutor)
-  const dispatch = useDispatch()
-  const udpateTutorStatusToUnderRevew = async (e) => {
-  }
 
   return (
     <label className="input w-100">
       <select
         className="input__field"
         style={{ height: "50px", background: editMode ? "white" : "rgb(233 236 239)" }}
-        onChange={(e) => { udpateTutorStatusToUnderRevew(e); onChange ? onChange(e) : setValue(e.target.value) }}
+        onChange={(e) => { onChange ? onChange(e) : setValue(e.target.value) }}
         value={value}
         disabled={!editMode || disabled}
         required={required}

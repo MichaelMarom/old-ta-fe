@@ -18,7 +18,9 @@ const Bid = lazy(() => import('../pages/tutor/Add/Bid'));
 const StudentPublicProfile = lazy(() => import('../pages/tutor/StudentProfile'));
 const List = lazy(() => import('../pages/tutor/Add/List'));
 const TutorFeedback = lazy(() => import('../pages/tutor/Feedback'));
-const Agency = lazy(() => import('../pages/tutor/Agency/List'));
+const AgencyList = lazy(() => import('../pages/tutor/Agency/List'));
+const Agency = lazy(() => import('../pages/tutor/Agency/Agency'));
+
 
 
 // student components
@@ -76,7 +78,9 @@ const rolePermissions = {
 
     { path: "/tutor/tutor-profile/:id", component: <TutorProfile /> },
 
-    { path: "/tutor/agency", component: <Agency /> },
+    { path: "/tutor/agency", component: <AgencyList /> },
+    { path: "/tutor/agency/:id", component: <Agency /> },
+
 
     { path: '/tutor/chat', component: <Chat /> },
     { path: '/tutor/chat/:id', component: <Chat /> },
