@@ -28,32 +28,35 @@ const Agency = () => {
   };
   const Header = [
     {
-      width: "14%",
+      width: "12.5%",
       title: "Sr",
     },
     {
-      width: "14%",
+      width: "12.5%",
       title: "Name",
     },
     {
-      width: "14%",
+      width: "12.5%",
       title: "Email",
     },
     {
-      width: "14%",
+      width: "12.5%",
       title: "Phone",
     },
     {
-      width: "14%",
+      width: "12.5%",
       title: "Subject",
     },
     {
-      width: "14%",
+      width: "12.5%",
       title: "Country",
     },
-
     {
-      width: "14%",
+      width: "12.5%",
+      title: "Service Charge%",
+    },
+    {
+      width: "12.5%",
       title: "Markup",
     },
   ];
@@ -106,6 +109,9 @@ const Agency = () => {
                     <td style={{ width: Header[0].width }}>{tutor.Phone}</td>
                     <td style={{ width: Header[0].width }}>{tutor.Country}</td>
                     <td style={{ width: Header[0].width }}>{tutor.Subject}</td>
+                    <td style={{ width: Header[0].width }}>
+                      {tutor.ServiceCharge}
+                    </td>
 
                     <td style={{ width: Header[0].width }}>24%</td>
                   </tr>

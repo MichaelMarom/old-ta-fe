@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import Actions from "../../../components/common/Actions";
 import { capitalize } from "lodash";
 import { toast } from "react-toastify";
-import { FaEdit, FaRegEdit } from "react-icons/fa";
+import { FaEdit, FaEye, FaRegEdit } from "react-icons/fa";
 import { BiSolidMessage, BiSolidMessageSquareEdit } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 
@@ -87,7 +87,7 @@ const List = () => {
               >
               <div className="d-flex justify-content-between">
                   <h4 className="fw-bold border-bottom">{agency.AgencyName}</h4>
-                  <BiSolidMessageSquareEdit color="lightblue" />
+                  <FaEye color="green" size={25} />
                   </div>
                 <div className="d-flex justify-content-between">
                   <h6 className="text-start">Main Tutor:</h6>

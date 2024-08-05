@@ -113,7 +113,7 @@ export const unsavedChangesHelper = (fieldValues, tutor) => {
 };
 
 export const capitalizeFirstLetter = (name) => {
-  return name.charAt(0).toUpperCase() + name.slice(1);
+  return name ? name.charAt(0).toUpperCase() + name.slice(1) : "";
 };
 
 export function getFileExtension(filename) {

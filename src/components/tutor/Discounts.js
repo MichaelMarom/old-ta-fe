@@ -119,7 +119,7 @@ const Discounts = () => {
   useEffect(() => {
     get_tutor_subjects(tutor.AcademyId)
       .then((result) => {
-        result?.length && setSubjects(result);
+        result?.length && setSubjects(result.map(subs=>subs.subject));
       })
       .catch((err) => toast.error(err.message));
   }, []);

@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { get_tutor_profile } from "../../axios/tutor";
+import TAButton from "../../components/common/TAButton";
+import {
+  get_rates,
+  get_tutor_profile,
+  get_tutor_subjects,
+} from "../../axios/tutor";
 import { create_chat } from "../../axios/chat";
 import { apiClient } from "../../axios/config";
 import { IoIosCheckmarkCircle, IoIosCloseCircle } from "react-icons/io";
 import { FaCalendar, FaComment, FaRegTimesCircle } from "react-icons/fa";
 
-import {
-  convertGMTOffsetToLocalString,
-  showDate,
-} from "../../utils/moment";
+import { convertGMTOffsetToLocalString, showDate } from "../../utils/moment";
 import { useParams } from "react-router";
 import Avatar from "../common/Avatar";
 import { capitalizeFirstLetter } from "../../utils/common";
@@ -24,6 +26,7 @@ import Actions from "../common/Actions";
 import { monthFormatWithYYYY } from "../../constants/constants";
 import TutorScheduleModal from "./TutorScheduleModal";
 import ScreenRecording from "../common/ScreenRecording";
+import { useSelector } from "react-redux";
 
 const TutorProfile = () => {
   const params = useParams();
@@ -35,21 +38,33 @@ const TutorProfile = () => {
   const [activeTab, setActiveTab] = useState("bach");
   const userRole = localStorage.getItem("user_role");
   const isStudentLoggedIn = location.pathname.split("/")[1] === "student";
-  const [scheduleModalOpen, setScheduleModalOpen] = useState(false)
+  const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
+  const [subjectsWithRates, setSubjectsWithRates] = useState([]);
+  const { education } = useSelector((state) => state.edu);
+  const { discount } = useSelector((state) => state.discount);
+  const { tutor } = useSelector((state) => state.tutor);
 
-  const customSort = (a, b) => {
-    if (a === "Academic") {
-      return -1;
-    } else if (b === "Academic") {
-      return 1;
-    } else if (a.includes("grade") && b.includes("grade")) {
-      const aGrade = parseInt(a);
-      const bGrade = parseInt(b);
-      return aGrade - bGrade;
-    } else {
-      return a.localeCompare(b);
-    }
-  };
+  // const customSort = (a, b) => {
+  //   if (a === "Academic") {
+  //     return -1;
+  //   } else if (b === "Academic") {
+  //     return 1;
+  //   } else if (a.includes("grade") && b.includes("grade")) {
+  //     const aGrade = parseInt(a);
+  //     const bGrade = parseInt(b);
+  //     return aGrade - bGrade;
+  //   } else {
+  //     return a.localeCompare(b);
+  //   }
+  // };
+
+  useEffect(() => {
+    get_tutor_subjects(tutor.AcademyId).then(
+      (result) => !result?.response?.data && setSubjectsWithRates(result)
+    );
+  }, [tutor.AcademyId]);
+
+  console.log(subjectsWithRates);
 
   const customSortForSubjectsGrades = (a, b) => {
     const getOrder = (value) => {
@@ -66,7 +81,7 @@ const TutorProfile = () => {
   };
 
   const handleScheduleClick = () => {
-    setScheduleModalOpen(true)
+    setScheduleModalOpen(true);
     // if (!studentId)
     //   return toast.error("You need to select 1 student from students-list!");
     // navigate("/student/faculties");
@@ -88,26 +103,38 @@ const TutorProfile = () => {
   };
 
   useEffect(() => {
-    if (params.id) {
+    if (params.id && tutor.AcademyId) {
       const fetch_profile = async () => {
-        const profileInfo = await get_tutor_profile(params.id, studentId);
-        if (profileInfo?.AcademyId) {
-          delete profileInfo["Video"];
-          const res = await apiClient.get("/tutor/setup/intro", {
-            params: { user_id: params.id.replace(/[.\s]/g, "") },
-          });
+        const res = await apiClient.get("/tutor/setup/intro", {
+          params: { user_id: params.id.replace(/[.\s]/g, "") },
+        });
 
-          setProfileData({ ...profileInfo, Video: res?.data?.url });
-          setFetching(false);
-        }
+        setProfileData({
+          ...tutor,
+          Video: res?.data?.url,
+        });
       };
 
       fetch_profile();
     }
-  }, [params.id, studentId]);
+  }, [params.id, tutor.AcademyId]);
+  console.log(data);
 
-  if (fetching) return <Loading />;
-  else if (!data.AcademyId)
+  useEffect(() => {
+    if (education.AcademyId) {
+      setProfileData({ ...data, ...education });
+    }
+  }, [education.AcademyId]);
+
+  useEffect(() => {
+    if (discount.AcademyId) {
+      setProfileData({ ...data, ...discount });
+    }
+  }, [discount.AcademyId]);
+
+  // if (fetching) return <Loading />;
+  // else
+  if (!data.AcademyId)
     return (
       <h5 className="text-danger p-5">
         In order to view your profile, Please first must to complete uploading
@@ -115,14 +142,25 @@ const TutorProfile = () => {
       </h5>
     );
   return (
-    <div style={{ background: "lightGray", height: isStudentLoggedIn ? "calc(100vh - 50px)" : "calc(100vh - 150px)", overflowY: "auto" }}>
+    <div
+      style={{
+        background: "lightGray",
+        height: isStudentLoggedIn
+          ? "calc(100vh - 50px)"
+          : "calc(100vh - 150px)",
+        overflowY: "auto",
+      }}
+    >
       {/* <ScreenRecording /> */}
       <div className="container">
         <div className="">
           <div className="d-flex align-items-start justify-content-between w-100 mt-4 rounded  bg-white ">
             <div className="d-flex align-items-start " style={{ width: "40%" }}>
-              <div className="p-1 bg-white rounded-circle">
-                <Avatar avatarSrc={data.Photo} size="150px" indicSize="30px" />
+              <div
+                className="p-1 bg-white rounded-circle border shadow"
+                style={{ width: "180px", height: "180px" }}
+              >
+                <Avatar avatarSrc={data.Photo} size="150px" indicSize="15px" positionInPixle={10}/>
               </div>
               <div
                 className="text-start p-2 d-flex flex-column"
@@ -137,7 +175,6 @@ const TutorProfile = () => {
                       {capitalizeFirstLetter(data.TutorScreenname)}
                     </h2>
                   </div>
-
                 </div>
 
                 <div
@@ -166,31 +203,18 @@ const TutorProfile = () => {
                 </div>
                 <div className="m-2 ">
                   <div className="d-flex ">
-                    <Button
-                      className="action-btn btn"
+                    <TAButton
+                      buttonText={"Chat"}
+                      style={{ width: "100px" }}
                       onClick={handleChatClick}
                       disabled={!isStudentLoggedIn}
-                    >
-                      <div className="button__content">
-                        <div className="button__icon">
-                          <FaComment />
-                        </div>
-                        <p className="button__text">Chat</p>
-                      </div>
-                    </Button>
-                    <Button
-                      className="action-btn btn"
-                      style={{ width: "50%" }}
-                      onClick={handleScheduleClick}
+                    />
+                    <TAButton
+                      buttonText={"See Schedule"}
+                      style={{ width: "100px" }}
+                      handleClick={handleScheduleClick}
                       disabled={!isStudentLoggedIn}
-                    >
-                      <div className="button__content">
-                        <div className="button__icon">
-                          <FaCalendar />
-                        </div>
-                        <p className="button__text">See Schedule</p>
-                      </div>
-                    </Button>
+                    />
                   </div>
                 </div>
               </div>
@@ -253,13 +277,11 @@ const TutorProfile = () => {
                   style={{ gap: "10px", fontSize: "16px", fontWeight: "bold" }}
                 >
                   <h6 className="m-0">50% Off on Intro Lesson</h6>
-                  {
-                    data.IntroSessionDiscount === "1" ? (
-                      <IoIosCheckmarkCircle size={20} color="green" />
-                    ) : (
-                      <IoIosCloseCircle size={20} color="red" />
-                    )
-                  }
+                  {data.IntroSessionDiscount === "1" ? (
+                    <IoIosCheckmarkCircle size={20} color="green" />
+                  ) : (
+                    <IoIosCloseCircle size={20} color="red" />
+                  )}
                   {/* <div
                     className="form-check form-switch"
                     style={{ marginBottom: "-10px" }}
@@ -343,12 +365,14 @@ const TutorProfile = () => {
               </div>
             </div>
           </div>
-          <div className="p-2 " style={{ margin: "10px 0", background: "white" }}>
+          <div
+            className="p-2 "
+            style={{ margin: "10px 0", background: "white" }}
+          >
             <div>
               <h5 className="">Headline</h5>
               <p className="border p-2">{data.HeadLine}</p>
             </div>
-
           </div>
           <div className="d-flex mt-4" style={{ gap: "20px" }}>
             <div className="col-4">
@@ -356,19 +380,19 @@ const TutorProfile = () => {
                 className="bg-white rounded p-4 d-flex flex-column"
                 style={{ gap: "15px" }}
               >
-                {data.NativeLang.length ? (
+                {!!data?.NativeLang?.length ? (
                   <div className="d-flex flex-column align-items-start">
                     <h5 className="m-0">Languages</h5>
                     <div className="d-flex align-items-center">
                       <GradePills
                         grades={[]}
-                        grade={data.NativeLang.value}
+                        grade={JSON.parse(data.NativeLang).value}
                         editable={false}
                         hasIcon={false}
                       />
                       - Native
                     </div>
-                    {data.OtherLang.map((lang) => (
+                    {JSON.parse(data.NativeLangOtherLang).map((lang) => (
                       <div
                         className="d-flex align-items-center"
                         key={lang.value}
@@ -383,26 +407,6 @@ const TutorProfile = () => {
                     ))}
                   </div>
                 ) : null}
-                {/* <div>
-                  <h5 className="">Grades I Teach</h5>
-                  <div className="border p-2">
-                    <div
-                      className="d-flex align-items-center  flex-wrap"
-                      style={{ gap: "5px" }}
-                    >
-                      {sortedGrades.map((grade, index) => (
-                        <div key={index} style={{ width: "30%" }}>
-                          <GradePills
-                            grade={grade}
-                            editable={false}
-                            grades={[]}
-                            hasIcon={false}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div> */}
                 <div>
                   <h5 className="">Introduction</h5>
                   <p className="border p-2">{data.Introduction}</p>
@@ -419,7 +423,7 @@ const TutorProfile = () => {
                   <div>
                     <h5 className="">
                       Work Experience (Total Experience -{" "}
-                      {data.EducationLevelExp})
+                      {data.EducationalLevelExperience})
                     </h5>
                     <div
                       className="border p-2"
@@ -439,8 +443,9 @@ const TutorProfile = () => {
                     >
                       <li className="nav-item w-100 p-0">
                         <p
-                          className={`nav-link m-0 ${activeTab === "bach" ? "text-bg-primary" : ""
-                            } w-100`}
+                          className={`nav-link m-0 ${
+                            activeTab === "bach" ? "text-bg-primary" : ""
+                          } w-100`}
                           aria-current="page"
                           onClick={() => setActiveTab("bach")}
                         >
@@ -449,8 +454,9 @@ const TutorProfile = () => {
                       </li>
                       <li className="nav-item w-100 p-0">
                         <p
-                          className={`nav-link m-0 ${activeTab === "mast" ? "text-bg-primary" : ""
-                            } w-100`}
+                          className={`nav-link m-0 ${
+                            activeTab === "mast" ? "text-bg-primary" : ""
+                          } w-100`}
                           aria-current="page"
                           onClick={() => setActiveTab("mast")}
                         >
@@ -459,8 +465,9 @@ const TutorProfile = () => {
                       </li>
                       <li className="nav-item w-100 p-0">
                         <p
-                          className={`nav-link m-0 ${activeTab === "doc" ? "text-bg-primary" : ""
-                            } w-100`}
+                          className={`nav-link m-0 ${
+                            activeTab === "doc" ? "text-bg-primary" : ""
+                          } w-100`}
                           aria-current="page"
                           onClick={() => setActiveTab("doc")}
                         >
@@ -469,8 +476,9 @@ const TutorProfile = () => {
                       </li>
                       <li className="nav-item w-100 p-0">
                         <p
-                          className={`nav-link m-0 ${activeTab === "cert" ? "text-bg-primary" : ""
-                            } w-100`}
+                          className={`nav-link m-0 ${
+                            activeTab === "cert" ? "text-bg-primary" : ""
+                          } w-100`}
                           aria-current="page"
                           onClick={() => setActiveTab("cert")}
                         >
@@ -479,8 +487,9 @@ const TutorProfile = () => {
                       </li>
                       <li className="nav-item w-100 p-0">
                         <p
-                          className={`nav-link m-0 m-0 ${activeTab === "deg" ? "text-bg-primary" : ""
-                            } w-100`}
+                          className={`nav-link m-0 m-0 ${
+                            activeTab === "deg" ? "text-bg-primary" : ""
+                          } w-100`}
                           aria-current="page"
                           onClick={() => setActiveTab("deg")}
                         >
@@ -719,9 +728,9 @@ const TutorProfile = () => {
                           <div className="d-flex justify-content-between  align-items-center">
                             <h5 className=" text-center">Certificate Info</h5>
                             {/* {data.CertFileName && <FaFilePdf size={32} color='red'
-                                                            style={{ cursor: "pointer" }}
-                                                            onClick={() => window.open(`${process.env.REACT_APP_FILES_BASE_PATH}/${data.CertFileName}`, '_blank')}
-                                                        />} */}
+                                style={{ cursor: "pointer" }}
+                                onClick={() => window.open(`${process.env.REACT_APP_FILES_BASE_PATH}/${data.CertFileName}`, '_blank')}
+                            />} */}
                           </div>
                           {data.CertCountry ? (
                             <>
@@ -791,8 +800,8 @@ const TutorProfile = () => {
                           <div className="d-flex justify-content-between align-items-center">
                             <h5 className="text-center">Degree Info</h5>
                             {/* {data.DegFileName && < FaFilePdf size={32} color='red' style={{ cursor: "pointer" }}
-                                                            onClick={() => window.open(`${process.env.REACT_APP_FILES_BASE_PATH}/${data.DegFileName}`, '_blank')}
-                                                        />} */}
+                                onClick={() => window.open(`${process.env.REACT_APP_FILES_BASE_PATH}/${data.DegFileName}`, '_blank')}
+                            />} */}
                           </div>
 
                           {data.DegCountry ? (
@@ -870,13 +879,13 @@ const TutorProfile = () => {
                     </div>
                   </div>
                 </div>
-                {data.Subjects.length ? (
+                {subjectsWithRates.length ? (
                   <div className="mt-4">
                     <h5 className="">Subjects I Teach</h5>
                     <div className="">
-                      {data.Subjects.map((item, index) => {
+                      {subjectsWithRates.map((item, index) => {
                         const subjectGrades = JSON.parse(
-                          !item.SubjectGrades ? "[]" : item.SubjectGrades
+                          !item.grades ? "[]" : item.grades
                         ).sort(customSortForSubjectsGrades);
                         return (
                           <div
@@ -888,7 +897,7 @@ const TutorProfile = () => {
                               className="m-0 text-start col-2"
                               style={{ fontSize: "14px" }}
                             >
-                              {item.Subject}
+                              {item.subject}
                             </h5>
                             <div className="d-flex col-9 flex-wrap">
                               {subjectGrades.map((option) => (
@@ -902,7 +911,7 @@ const TutorProfile = () => {
                               ))}
                             </div>
                             <h6 className="m-0 text-start col-1">
-                              {item.Rate}
+                              {item.rate}
                             </h6>
                           </div>
                         );
@@ -916,7 +925,11 @@ const TutorProfile = () => {
         </div>
       </div>
 
-      <TutorScheduleModal id={params.id} isOpen={scheduleModalOpen} onClose={() => setScheduleModalOpen(false)} />
+      <TutorScheduleModal
+        id={params.id}
+        isOpen={scheduleModalOpen}
+        onClose={() => setScheduleModalOpen(false)}
+      />
 
       {!isStudentLoggedIn && (
         <Actions saveDisabled={true} editDisabled={true} />
