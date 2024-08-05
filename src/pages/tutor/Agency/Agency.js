@@ -1,16 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TutorLayout from "../../../layouts/TutorLayout";
 import CreateLeftPanel from "../../../components/tutor/Agency/AddSubTutor";
 import TAButton from "../../../components/common/TAButton";
 import TableHeader from "../../../components/common/TableHeader";
+import { get_subTutors } from "../../../axios/agency";
+import { useParams } from "react-router-dom";
 
 const Agency = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [subTutors, setSubTutors] = useState([]);
+  const params = useParams();
+
   const onClose = () => {
     setIsOpen(false);
   };
 
+  useEffect(() => {
+    if (params.id) {
+      getSubTutors();
+    }
+  }, [params.id]);
+
+  const getSubTutors = () => {
+    get_subTutors(params.id).then(
+      (result) => !result?.response?.data && setSubTutors(result)
+    );
+  };
   const Header = [
     {
       width: "14%",
@@ -72,7 +87,7 @@ const Agency = () => {
         <div className="container">
           <div className="d-flex w-100 justify-content-center mt-3">
             <TAButton
-            style={{width:"200px"}}
+              style={{ width: "200px" }}
               buttonText={"Add Sub-Tutor"}
               handleClick={() => setIsOpen(true)}
             />
@@ -83,16 +98,16 @@ const Agency = () => {
               <tbody>
                 {subTutors.map((tutor, index) => (
                   <tr>
-                    <td>{index + 1}</td>
-                    <td>
+                    <td style={{ width: Header[0].width }}>{index + 1}</td>
+                    <td style={{ width: Header[0].width }}>
                       {tutor.FirstName} {tutor.LastName}
                     </td>
-                    <td>{tutor.Email}</td>
-                    <td>{tutor.Phone}</td>
-                    <td>{tutor.Country}</td>
-                    <td>{tutor.Subject}</td>
+                    <td style={{ width: Header[0].width }}>{tutor.Email}</td>
+                    <td style={{ width: Header[0].width }}>{tutor.Phone}</td>
+                    <td style={{ width: Header[0].width }}>{tutor.Country}</td>
+                    <td style={{ width: Header[0].width }}>{tutor.Subject}</td>
 
-                    <td>24%</td>
+                    <td style={{ width: Header[0].width }}>24%</td>
                   </tr>
                 ))}
               </tbody>
@@ -100,7 +115,12 @@ const Agency = () => {
           </div>
         </div>
       </div>
-      <CreateLeftPanel isOpen={isOpen} onClose={onClose} />
+      <CreateLeftPanel
+        setAgencySubTutors={setSubTutors}
+        agencySubTutors={subTutors}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
     </TutorLayout>
   );
 };

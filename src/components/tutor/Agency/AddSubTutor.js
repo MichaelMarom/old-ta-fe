@@ -16,7 +16,12 @@ import { capitalize } from "lodash";
 import { create_subTutor, get_subTutors } from "../../../axios/agency";
 import { useParams } from "react-router-dom";
 
-const AddSubTutor = ({ isOpen, onClose }) => {
+const AddSubTutor = ({
+  isOpen,
+  onClose,
+  agencySubTutors,
+  setAgencySubTutors,
+}) => {
   const { tutor } = useSelector((state) => state.tutor);
   const [selectedTutor, setSelectedTutor] = useState({});
   const [subTutor, setSubTutor] = useState({
@@ -33,8 +38,7 @@ const AddSubTutor = ({ isOpen, onClose }) => {
   const [subjects, setSubjects] = useState([]);
   const [faculties, setFaculties] = useState([]);
   const [fetchingTutor, setFetchingTutor] = useState(false);
-  const [agencySubTutors, setAgencySubTutors] = useState([])
-  const params = useParams()
+  const params = useParams();
 
   useEffect(() => {
     get_faculties().then(
@@ -50,36 +54,28 @@ const AddSubTutor = ({ isOpen, onClose }) => {
       );
   }, [subTutor.Faculty]);
 
-  const checkIfTutorExists = async () => {
-    const data = await get_tutor_setup({ AcademyId: subTutor.TutorId });
-    console.log(data);
-    setSelectedTutor(data[0])
-  };
-
-  useEffect(() => {
-    if (params.id) {
-      getSubTutors()
-    }
-  }, [params.id])
-
-  const getSubTutors = ()=>{
-    get_subTutors(params.id).then(result => !result?.response?.data && setAgencySubTutors(result))
-  }
+  // const checkIfTutorExists = async () => {
+  //   const data = await get_tutor_setup({ AcademyId: subTutor.TutorId });
+  //   console.log(data);
+  //   setSelectedTutor(data[0])
+  // };
 
   useEffect(() => {
     if (subTutor.FirstName && subTutor.LastName) {
       setSubTutor({
-        ...subTutor, TutorId: `${capitalize(subTutor.FirstName)}${capitalize(subTutor.LastName[0])
-          }${new Date().getTime()}`
-      })
+        ...subTutor,
+        TutorId: `${capitalize(subTutor.FirstName)}${capitalize(
+          subTutor.LastName[0]
+        )}${new Date().getTime()}`,
+      });
     }
-
-  }, [subTutor.FirstName, subTutor.LastName])
+  }, [subTutor.FirstName, subTutor.LastName]);
 
   const handleAddSubTutor = async (e) => {
     e.preventDefault();
-    const result = await create_subTutor(params.id, subTutor)
-    getSubTutors()
+    const result = await create_subTutor(params.id, subTutor);
+
+    setAgencySubTutors([...agencySubTutors, result]);
     setSubTutor({
       TutorId: "",
       FirstName: "",
@@ -90,7 +86,8 @@ const AddSubTutor = ({ isOpen, onClose }) => {
       Faculty: "",
       ServiceCharge: 10,
       Subject: "",
-    })
+    });
+    onClose();
   };
 
   return (
@@ -119,14 +116,18 @@ const AddSubTutor = ({ isOpen, onClose }) => {
           <div className="m-3">
             <Input
               value={subTutor.FirstName}
-              setValue={(e) => setSubTutor({ ...subTutor, FirstName: capitalize(e) })}
+              setValue={(e) =>
+                setSubTutor({ ...subTutor, FirstName: capitalize(e) })
+              }
               label={<MandatoryFieldLabel text="First Name" />}
             />
           </div>
           <div className="m-3">
             <Input
               value={subTutor.LastName}
-              setValue={(e) => setSubTutor({ ...subTutor, LastName: capitalize(e) })}
+              setValue={(e) =>
+                setSubTutor({ ...subTutor, LastName: capitalize(e) })
+              }
               label={<MandatoryFieldLabel text="Last Name" />}
             />
           </div>
@@ -169,11 +170,8 @@ const AddSubTutor = ({ isOpen, onClose }) => {
           <div className="m-3">
             <Select
               required={true}
-             
-             value={subTutor.Subject}
-              setValue={(value) =>
-                setSubTutor({ ...subTutor, Subject: value })
-              }
+              value={subTutor.Subject}
+              setValue={(value) => setSubTutor({ ...subTutor, Subject: value })}
               label={<MandatoryFieldLabel text="Subject" />}
             >
               <option disabled value={""}>
