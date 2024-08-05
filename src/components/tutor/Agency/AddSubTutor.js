@@ -12,23 +12,29 @@ import {
   get_rates,
   get_tutor_setup,
 } from "../../../axios/tutor";
+import { capitalize } from "lodash";
+import { create_subTutor, get_subTutors } from "../../../axios/agency";
+import { useParams } from "react-router-dom";
 
 const AddSubTutor = ({ isOpen, onClose }) => {
   const { tutor } = useSelector((state) => state.tutor);
   const [selectedTutor, setSelectedTutor] = useState({});
   const [subTutor, setSubTutor] = useState({
-    AcademyId: "",
+    TutorId: "",
     FirstName: "",
     LastName: "",
     Email: "",
     Phone: "",
     Country: "",
     Faculty: "",
+    ServiceCharge: 10,
     Subject: "",
   });
   const [subjects, setSubjects] = useState([]);
   const [faculties, setFaculties] = useState([]);
   const [fetchingTutor, setFetchingTutor] = useState(false);
+  const [agencySubTutors, setAgencySubTutors] = useState([])
+  const params = useParams()
 
   useEffect(() => {
     get_faculties().then(
@@ -45,109 +51,148 @@ const AddSubTutor = ({ isOpen, onClose }) => {
   }, [subTutor.Faculty]);
 
   const checkIfTutorExists = async () => {
-    const data = await get_tutor_setup({AcademyId:subTutor.AcademyId});
+    const data = await get_tutor_setup({ AcademyId: subTutor.TutorId });
     console.log(data);
     setSelectedTutor(data[0])
   };
 
-  const handleAddSubTutor = (e) => {
+  useEffect(() => {
+    if (params.id) {
+      getSubTutors()
+    }
+  }, [params.id])
+
+  const getSubTutors = ()=>{
+    get_subTutors(params.id).then(result => !result?.response?.data && setAgencySubTutors(result))
+  }
+
+  useEffect(() => {
+    if (subTutor.FirstName && subTutor.LastName) {
+      setSubTutor({
+        ...subTutor, TutorId: `${capitalize(subTutor.FirstName)}${capitalize(subTutor.LastName[0])
+          }${new Date().getTime()}`
+      })
+    }
+
+  }, [subTutor.FirstName, subTutor.LastName])
+
+  const handleAddSubTutor = async (e) => {
     e.preventDefault();
-    // Add subtutor
+    const result = await create_subTutor(params.id, subTutor)
+    getSubTutors()
+    setSubTutor({
+      TutorId: "",
+      FirstName: "",
+      LastName: "",
+      Email: "",
+      Phone: "",
+      Country: "",
+      Faculty: "",
+      ServiceCharge: 10,
+      Subject: "",
+    })
   };
 
   return (
     <LeftSideBar isOpen={isOpen} onClose={onClose}>
       <form onSubmit={handleAddSubTutor}>
-        <div className="bg-white h-100">
+        <div className="bg-white ">
           <div className="modal-header">
             <h4 className="modal-title text-center" style={{ width: "100%" }}>
-              Add Tutor
+              Add Sub-Tutor
             </h4>
           </div>
           <div className="m-3">
-            <p className="fw-bold" style={{ fontSize: "12px" }}>
-              Check Tutor if Exists
-            </p>
+            {/* <p className="fw-bold" style={{ fontSize: "12px" }}>
+              Check if tutor is part of application.
+            </p> */}
             <Input
-              value={subTutor.AcademyId}
-              setValue={(e) => setSubTutor({ ...subTutor, AcademyId: e })}
-              label={<MandatoryFieldLabel text="AcademyId" />}
+              editMode={false}
+              value={subTutor.TutorId}
+              label={<MandatoryFieldLabel text="AcademyId" edit />}
             />
-            <button className="btn border btn-sm" onClick={checkIfTutorExists}>
+            {/* <button className="btn border btn-sm" onClick={checkIfTutorExists}>
               Search
-            </button>
+            </button> */}
           </div>
-          {selectedTutor.AcademyId && (
-            <>
-              <div className="m-3">
-                <Input
-                  value={subTutor.FirstName}
-                  setValue={(e) => setSubTutor({ ...subTutor, FirstName: e })}
-                  label={<MandatoryFieldLabel text="First Name" />}
-                />
-              </div>
-              <div className="m-3">
-                <Input
-                  value={subTutor.LastName}
-                  setValue={(e) => setSubTutor({ ...subTutor, LastName: e })}
-                  label={<MandatoryFieldLabel text="Last Name" />}
-                />
-              </div>
-              <div className="m-3">
-                <Input
-                  value={subTutor.Email}
-                  setValue={(e) => setSubTutor({ ...subTutor, Email: e })}
-                  label={<MandatoryFieldLabel text="Email" />}
-                />
-              </div>
-              <div className="m-3">
-                <Input
-                  value={subTutor.Phone}
-                  setValue={(e) => setSubTutor({ ...subTutor, Phone: e })}
-                  label={<MandatoryFieldLabel text="Phone" />}
-                />
-              </div>
-              <div className="m-3">
-                <Input
-                  value={subTutor.Country}
-                  setValue={(e) => setSubTutor({ ...subTutor, Country: e })}
-                  label={<MandatoryFieldLabel text="Country" />}
-                />
-              </div>
-              <div className="m-3">
-                <Select
-                  value={subTutor.Faculty}
-                  setValue={(e) => setSubTutor({ ...subTutor, Faculty: e })}
-                  label={<MandatoryFieldLabel text="Faculty" />}
-                >
-                  <option disabled value={""}>
-                    Select
-                  </option>
-                  {faculties.map((faculty) => (
-                    <option value={faculty.Id}>{faculty.Faculty}</option>
-                  ))}
-                </Select>
-              </div>
-              <div className="m-3">
-                <Select
-                  value={subTutor.Subject}
-                  setValue={(value) =>
-                    setSubTutor({ ...subTutor, Subject: value })
-                  }
-                  label={<MandatoryFieldLabel text="Subject" />}
-                >
-                  <option disabled value={""}>
-                    Select
-                  </option>
-                  {subjects.map(({ subject }) => (
-                    <option value={subject}>{subject}</option>
-                  ))}
-                </Select>
-              </div>
-            </>
-          )}
+
+          <div className="m-3">
+            <Input
+              value={subTutor.FirstName}
+              setValue={(e) => setSubTutor({ ...subTutor, FirstName: capitalize(e) })}
+              label={<MandatoryFieldLabel text="First Name" />}
+            />
+          </div>
+          <div className="m-3">
+            <Input
+              value={subTutor.LastName}
+              setValue={(e) => setSubTutor({ ...subTutor, LastName: capitalize(e) })}
+              label={<MandatoryFieldLabel text="Last Name" />}
+            />
+          </div>
+          <div className="m-3">
+            <Input
+              value={subTutor.Email}
+              setValue={(e) => setSubTutor({ ...subTutor, Email: e })}
+              label={<MandatoryFieldLabel text="Email" />}
+            />
+          </div>
+          <div className="m-3">
+            <Input
+              value={subTutor.Phone}
+              setValue={(e) => setSubTutor({ ...subTutor, Phone: e })}
+              label={<MandatoryFieldLabel text="Phone" />}
+            />
+          </div>
+          <div className="m-3">
+            <Input
+              value={subTutor.Country}
+              setValue={(e) => setSubTutor({ ...subTutor, Country: e })}
+              label={<MandatoryFieldLabel text="Country" />}
+            />
+          </div>
+          <div className="m-3">
+            <Select
+              value={subTutor.Faculty}
+              setValue={(e) => setSubTutor({ ...subTutor, Faculty: e })}
+              label={<MandatoryFieldLabel text="Faculty" />}
+              required={true}
+            >
+              <option disabled value={""}>
+                Select
+              </option>
+              {faculties.map((faculty) => (
+                <option value={faculty.Id}>{faculty.Faculty}</option>
+              ))}
+            </Select>
+          </div>
+          <div className="m-3">
+            <Select
+              required={true}
+             
+             value={subTutor.Subject}
+              setValue={(value) =>
+                setSubTutor({ ...subTutor, Subject: value })
+              }
+              label={<MandatoryFieldLabel text="Subject" />}
+            >
+              <option disabled value={""}>
+                Select
+              </option>
+              {subjects.map(({ subject }) => (
+                <option value={subject}>{subject}</option>
+              ))}
+            </Select>
+          </div>
+          <div className="m-3">
+            <Input
+              value={subTutor.ServiceCharge}
+              setValue={(e) => setSubTutor({ ...subTutor, ServiceCharge: e })}
+              label={<MandatoryFieldLabel text="Service Charge%" />}
+            />
+          </div>
         </div>
-        <TAButton buttonText={"Add"} />
+        <TAButton buttonText={"Add"} type="submit" />
       </form>
     </LeftSideBar>
   );

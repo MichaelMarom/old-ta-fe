@@ -70,9 +70,10 @@ const Agency = () => {
           </p>
         </div>
         <div className="container">
-          <div className="d-flex w-100 justify-content-end mt-3">
+          <div className="d-flex w-100 justify-content-center mt-3">
             <TAButton
-              buttonText={"Add Tutor"}
+            style={{width:"200px"}}
+              buttonText={"Add Sub-Tutor"}
               handleClick={() => setIsOpen(true)}
             />
           </div>
