@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import StudentLayout from '../../layouts/StudentLayout';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment-timezone';
-import { get_student_events } from '../../axios/student';
 import CustomEvent from '../../components/common/Calendar/Event';
 import { convertToDate } from '../../components/common/Calendar/Calendar';
 import { useSelector } from 'react-redux';
