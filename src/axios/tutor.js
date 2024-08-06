@@ -181,66 +181,66 @@ export let get_tutor_status = (faculty, subject, reason, AcademyId) => {
 //   });
 // };
 
-export let upload_setup_form = (
-  fname,
-  uname,
-  mname,
-  lname,
-  email,
-  cell,
-  acadId,
-  add1,
-  add2,
-  city,
-  state,
-  zipCode,
-  country,
-  timeZone,
-  response_zone,
-  intro,
-  motivation,
-  headline,
-  photo,
-  video,
-  grades,
-  userId
-) => {
-  return new Promise((resolve, reject) => {
-    apiClient
-      .post("/tutor/form-one", {
-        fname,
-        uname,
-        mname,
-        lname,
-        email,
-        cell,
-        acadId,
-        add1,
-        add2,
-        city,
-        state,
-        zipCode,
-        country,
-        timeZone,
-        response_zone,
-        intro,
-        motivation,
-        headline,
-        photo,
-        video,
-        grades,
-        userId,
-      })
-      .then((result) => {
-        resolve(result.data);
-      })
-      .catch((error) => {
-        showErrorToast(error);
+// export let upload_setup_form = (
+//   fname,
+//   uname,
+//   mname,
+//   lname,
+//   email,
+//   cell,
+//   acadId,
+//   add1,
+//   add2,
+//   city,
+//   state,
+//   zipCode,
+//   country,
+//   timeZone,
+//   response_zone,
+//   intro,
+//   motivation,
+//   headline,
+//   photo,
+//   video,
+//   grades,
+//   userId
+// ) => {
+//   return new Promise((resolve, reject) => {
+//     apiClient
+//       .post("/tutor/form-one", {
+//         fname,
+//         uname,
+//         mname,
+//         lname,
+//         email,
+//         cell,
+//         acadId,
+//         add1,
+//         add2,
+//         city,
+//         state,
+//         zipCode,
+//         country,
+//         timeZone,
+//         response_zone,
+//         intro,
+//         motivation,
+//         headline,
+//         photo,
+//         video,
+//         grades,
+//         userId,
+//       })
+//       .then((result) => {
+//         resolve(result.data);
+//       })
+//       .catch((error) => {
+//         showErrorToast(error);
 
-        // reject(error)
-      });
-  });
-};
+//         // reject(error)
+//       });
+//   });
+// };
 
 export const post_edu = async (body) => {
   try {
@@ -576,31 +576,16 @@ export const fetch_calender_detals = async (id) => {
   }
 };
 
-export const storeEventAPI = async (eventDetails) => {
-  try {
-    const newEvent = {
-      title: eventDetails.title,
-      allDay: eventDetails.allDay,
-      start: eventDetails.start,
-      end: eventDetails.end,
-    };
-    const response = await apiClient.post("/api/store-event", newEvent);
-    return response.data;
-  } catch (error) {
-    showErrorToast(error);
-  }
-};
+// export const fetchStudentsBookings = async (tutorId) => {
+//   try {
+//     const response = await apiClient.get(`api/bookings/${tutorId}`);
+//     return response.data;
+//   } catch (error) {
+//     showErrorToast(error);
 
-export const fetchStudentsBookings = async (tutorId) => {
-  try {
-    const response = await apiClient.get(`api/bookings/${tutorId}`);
-    return response.data;
-  } catch (error) {
-    showErrorToast(error);
-
-    console.error("Error:", error);
-  }
-};
+//     console.error("Error:", error);
+//   }
+// };
 
 export const getAllTutorLessons = async (tutorId) => {
   try {

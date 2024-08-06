@@ -7,7 +7,7 @@ import {
   save_student_events,
   save_student_lesson,
   update_student_lesson,
-} from "../../axios/student";
+} from "../../axios/calender";
 import { convertToDate } from "../../components/common/Calendar/Calendar";
 import { create_chat } from "../../axios/chat";
 

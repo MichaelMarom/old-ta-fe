@@ -55,7 +55,6 @@ const StudentCalenderScheduling = () => {
 
   useEffect(() => {
     const update = async () => {
-      console.log(student.AcademyId);
       if (subscriptionHours && student.AcademyId?.length) {
         // updating discountHours in StudentsBooking
         // await update_student_shortlist(
@@ -70,11 +69,11 @@ const StudentCalenderScheduling = () => {
   }, [subscriptionHours, student, selectedTutor]);
 
   useEffect(() => {
-    const getStudentDetails = async () => {
-      const res = await get_my_data(localStorage.getItem("student_user_id"));
-      !res?.response?.data?.message && dispatch(setStudent(res));
-    };
-    getStudentDetails();
+    // const getStudentDetails = async () => {
+    //   const res = await get_my_data(localStorage.getItem("student_user_id"));
+    //   !res?.response?.data?.message && dispatch(setStudent(res));
+    // };
+    // getStudentDetails();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import CustomEvent from '../../components/common/Calendar/Event';
 import { convertToDate } from '../../components/common/Calendar/Calendar';
 import { convertTutorIdToName } from '../../utils/common'
-import { get_tutor_bookings } from '../../axios/student';
+import { get_tutor_bookings } from '../../axios/calender';
 import { TutorEventModal } from '../../components/common/EventModal/TutorEventModal/TutorEventModal';
 
 

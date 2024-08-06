@@ -359,49 +359,49 @@
 
 }
 
-.worst:hover {
-  color: darkred;
+.emoji {
+  color: #32353971;
 }
 
-.angry:hover {
-  color: orangered;
+.emoji:hover{
+  transform: scale(1.3);
+  transition: all 0.3s ease;
 }
 
-.neutral:hover {
-  color: yellow;
+.worst:hover ,
+.worst:active,
+.worst-active {
+  color: rgb(234, 58, 58);
 }
 
-.good:hover {
+.angry:hover,
+.angry:active,
+.angry-active {
+  color: rgb(221, 121, 28);
+}
+
+.neutral:hover,
+.neutral:active,
+.neutral-active {
+  color: rgb(245 238 51);
+}
+
+.good:hover ,
+.good:active,
+.good-active {
   color: limegreen;
 }
 
-.best:hover {
-  color: green;
-}
-
-.worst:active {
-  color: darkred;
-}
-
-.angry:active {
-  color: orangered;
-}
-
-.neutral:active {
-  color: yellow;
-}
-
-.good:active {
-  color: limegreen;
+.best:hover ,
+.best:active,
+.best-active{
+  color: rgb(23, 143, 23);
 }
 
 .cursor-pointer {
   cursor: pointer;
 }
 
-.best:active {
-  color: green;
-}
 
 
 /* feedback */

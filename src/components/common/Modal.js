@@ -3,8 +3,10 @@ import { AiOutlineClose } from "react-icons/ai";
 
 const CenteredModal = ({
   show,
+  showHeader = true,
   handleClose,
   title,
+  isTitleReachtNode = false,
   children,
   minHeight = "400px",
   minWidth = "430px",
@@ -30,11 +32,15 @@ const CenteredModal = ({
             style={{ minHeight, minWidth }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="modal-header">
-              <h5
-                className="modal-title"
-                dangerouslySetInnerHTML={{ __html: title }}
-              />
+            <div className={`modal-header ${showHeader ? "" : "d-none"}`}>
+              {isTitleReachtNode ? (
+                title
+              ) : (
+                <h5
+                  className="modal-title"
+                  dangerouslySetInnerHTML={{ __html: title }}
+                />
+              )}
               <button
                 type="button"
                 className="close"

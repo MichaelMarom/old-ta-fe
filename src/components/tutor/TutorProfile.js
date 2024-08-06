@@ -1,23 +1,24 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import TAButton from "../../components/common/TAButton";
-import {
-  get_rates,
-  get_tutor_profile,
-  get_tutor_subjects,
-} from "../../axios/tutor";
+import { get_tutor_subjects } from "../../axios/tutor";
 import { create_chat } from "../../axios/chat";
 import { apiClient } from "../../axios/config";
 import { IoIosCheckmarkCircle, IoIosCloseCircle } from "react-icons/io";
-import { FaCalendar, FaComment, FaRegTimesCircle } from "react-icons/fa";
+import {
+  FaCalendar,
+  FaComment,
+  FaPlayCircle,
+  FaRegTimesCircle,
+} from "react-icons/fa";
+import { CiClock2 } from "react-icons/ci";
 
 import { convertGMTOffsetToLocalString, showDate } from "../../utils/moment";
 import { useParams } from "react-router";
 import Avatar from "../common/Avatar";
 import { capitalizeFirstLetter } from "../../utils/common";
-import Button from "../common/Button";
 import Loading from "../common/Loading";
-import { FaLocationDot } from "react-icons/fa6";
+import { FaLocationDot, FaRegCirclePlay } from "react-icons/fa6";
 import { IoTime } from "react-icons/io5";
 import GradePills from "./GradePills";
 import ToolTip from "../common/ToolTip";
@@ -27,8 +28,10 @@ import { monthFormatWithYYYY } from "../../constants/constants";
 import TutorScheduleModal from "./TutorScheduleModal";
 import ScreenRecording from "../common/ScreenRecording";
 import { useSelector } from "react-redux";
+import CenteredModal from "../common/Modal";
 
 const TutorProfile = () => {
+  const videoRef = useRef(null);
   const params = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -43,28 +46,22 @@ const TutorProfile = () => {
   const { education } = useSelector((state) => state.edu);
   const { discount } = useSelector((state) => state.discount);
   const { tutor } = useSelector((state) => state.tutor);
+  const [isEnlarged, setIsEnlarged] = useState(false);
 
-  // const customSort = (a, b) => {
-  //   if (a === "Academic") {
-  //     return -1;
-  //   } else if (b === "Academic") {
-  //     return 1;
-  //   } else if (a.includes("grade") && b.includes("grade")) {
-  //     const aGrade = parseInt(a);
-  //     const bGrade = parseInt(b);
-  //     return aGrade - bGrade;
-  //   } else {
-  //     return a.localeCompare(b);
-  //   }
-  // };
+  const toggleSize = () => {
+    setIsEnlarged((prev) => !prev);
+  };
+
+  useEffect(() => {
+    console.log(!isEnlarged && videoRef.current);
+    !isEnlarged && videoRef.current && videoRef.current.pause();
+  }, [isEnlarged]);
 
   useEffect(() => {
     get_tutor_subjects(tutor.AcademyId).then(
       (result) => !result?.response?.data && setSubjectsWithRates(result)
     );
   }, [tutor.AcademyId]);
-
-  console.log(subjectsWithRates);
 
   const customSortForSubjectsGrades = (a, b) => {
     const getOrder = (value) => {
@@ -103,7 +100,12 @@ const TutorProfile = () => {
   };
 
   useEffect(() => {
-    if (params.id && tutor.AcademyId) {
+    if (
+      params.id &&
+      tutor.AcademyId &&
+      education.AcademyId &&
+      discount.AcademyId
+    ) {
       const fetch_profile = async () => {
         const res = await apiClient.get("/tutor/setup/intro", {
           params: { user_id: params.id.replace(/[.\s]/g, "") },
@@ -111,26 +113,28 @@ const TutorProfile = () => {
 
         setProfileData({
           ...tutor,
+          ...education,
+          ...discount,
           Video: res?.data?.url,
         });
       };
 
       fetch_profile();
     }
-  }, [params.id, tutor.AcademyId]);
+  }, [params.id, tutor.AcademyId, education.AcademyId, discount.AcademyId]);
   console.log(data);
 
-  useEffect(() => {
-    if (education.AcademyId) {
-      setProfileData({ ...data, ...education });
-    }
-  }, [education.AcademyId]);
+  // useEffect(() => {
+  //   if (education.AcademyId) {
+  //     setProfileData({ ...data, ...education });
+  //   }
+  // }, [education.AcademyId]);
 
-  useEffect(() => {
-    if (discount.AcademyId) {
-      setProfileData({ ...data, ...discount });
-    }
-  }, [discount.AcademyId]);
+  // useEffect(() => {
+  //   if (discount.AcademyId) {
+  //     setProfileData({ ...data, ...discount });
+  //   }
+  // }, [discount.AcademyId]);
 
   // if (fetching) return <Loading />;
   // else
@@ -154,13 +158,18 @@ const TutorProfile = () => {
       {/* <ScreenRecording /> */}
       <div className="container">
         <div className="">
-          <div className="d-flex align-items-start justify-content-between w-100 mt-4 rounded  bg-white ">
+          <div className="d-flex align-items-center justify-content-between w-100 mt-4 rounded  bg-white ">
             <div className="d-flex align-items-start " style={{ width: "40%" }}>
               <div
-                className="p-1 bg-white rounded-circle border shadow"
+                className="p-1 bg-white rounded-circle border shadow d-flex justify-content-center align-items-center m-1"
                 style={{ width: "180px", height: "180px" }}
               >
-                <Avatar avatarSrc={data.Photo} size="150px" indicSize="15px" positionInPixle={10}/>
+                <Avatar
+                  avatarSrc={data.Photo}
+                  size="150px"
+                  indicSize="15px"
+                  positionInPixle={10}
+                />
               </div>
               <div
                 className="text-start p-2 d-flex flex-column"
@@ -205,7 +214,6 @@ const TutorProfile = () => {
                   <div className="d-flex ">
                     <TAButton
                       buttonText={"Chat"}
-                      style={{ width: "100px" }}
                       onClick={handleChatClick}
                       disabled={!isStudentLoggedIn}
                     />
@@ -356,12 +364,29 @@ const TutorProfile = () => {
             <div className="w-25 h-100">
               <div className="" style={{ paddingRight: "20px" }}>
                 <video
+                  loop
                   src={data.Video}
-                  className=" rounded w-100 "
-                  style={{ height: "220px" }}
-                  controls
+                  className={`rounded-4  shadow-lg`}
+                  muted
+                  style={{ width: "200px", height: "auto" }}
                   autoPlay
                 />
+              </div>
+              <div
+                className="d-flex justify-content-between align-items-center mt-2"
+                style={{ width: "200px" }}
+              >
+                <FaRegCirclePlay
+                  size={35}
+                  color="lightgray"
+                  onClick={toggleSize}
+                />
+                <div className="d-flex justify-content-center align-items-center gap-1">
+                  <CiClock2 color="lightgray" />{" "}
+                  <p className="fw-bold" style={{ color: "lightgrey" }}>
+                    {"1min video"}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -924,6 +949,29 @@ const TutorProfile = () => {
           </div>
         </div>
       </div>
+
+      <CenteredModal
+        showHeader={false}
+        show={isEnlarged}
+        handleClose={() => setIsEnlarged(false)}
+        minHeight="200px"
+      >
+        <div className="h-100 m-auto">
+          <div className="">
+            <video
+              src={data.Video}
+              ref={videoRef}
+              className=" rounded-4  shadow-lg"
+              controls
+              style={{
+                maxWidth: "470px",
+                height: "auto",
+              }}
+              autoPlay
+            />
+          </div>
+        </div>
+      </CenteredModal>
 
       <TutorScheduleModal
         id={params.id}

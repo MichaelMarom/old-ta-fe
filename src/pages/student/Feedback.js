@@ -6,7 +6,7 @@ import {
   get_all_feedback_questions,
   get_feedback_to_question,
   post_feedback_to_question,
-} from "../../axios/student";
+} from "../../axios/calender";
 import { fetch_tutors_photos } from "../../axios/tutor";
 
 import { showDate } from "../../utils/moment";

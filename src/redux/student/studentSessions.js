@@ -1,6 +1,6 @@
 // slice.js
 import { createSlice } from "@reduxjs/toolkit";
-import { formatted_student_sessions } from "../../axios/student";
+import { formatted_student_sessions } from "../../axios/calender";
 import { showErrorToast } from "../../axios/config";
 
 // Create a slice with your event-related reducers

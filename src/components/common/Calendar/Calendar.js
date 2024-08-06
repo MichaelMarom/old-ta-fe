@@ -8,22 +8,18 @@ import {
   getAllTutorLessons,
   updateTutorDisableslots,
 } from "../../../axios/tutor";
-import {
-  get_student_lesson,
-} from "../../../axios/student";
+import { get_student_lesson } from "../../../axios/calender";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CustomEvent from "./Event";
 import Loading from "../Loading";
-import {
-  setLessons,
-} from "../../../redux/student/studentBookings";
+import { setLessons } from "../../../redux/student/studentBookings";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import "../../../styles/common.css";
 import useDebouncedEffect from "../../../hooks/DebouceWithDeps";
 import { TutorEventModal } from "../EventModal/TutorEventModal/TutorEventModal";
-import "react-big-calendar/lib/css/react-big-calendar.css"; 
+import "react-big-calendar/lib/css/react-big-calendar.css";
 import { convertToGmt } from "./utils/calenderUtils";
 import useEventPropGetter from "./hooks/useEventPropGetter";
 import {
@@ -97,7 +93,9 @@ const ShowCalendar = ({
   const subjectName = selectedTutor?.subject;
   const [weekDaysTimeSlots, setWeekDaysTimeSlots] = useState([]);
 
-  let { reservedSlots, bookedSlots , lessons} = useSelector((state) => state.bookings);
+  let { reservedSlots, bookedSlots, lessons } = useSelector(
+    (state) => state.bookings
+  );
 
   //apis functions
   const updateTutorDisableRecord = async () => {
@@ -142,36 +140,42 @@ const ShowCalendar = ({
   };
 
   const getTutorSetup = async () => {
-    const [result = []] = await fetch_calender_detals(
+    const response = await fetch_calender_detals(
       isStudentLoggedIn ? selectedTutor.academyId : tutorAcademyId
     );
-    if (Object.keys(result ? result : {}).length) {
-      const updatedEnableHours = getTimeZonedEnableHours(
-        JSON.parse(
-          result.enableHourSlots === "undefined" ? "[]" : result.enableHourSlots
-        ),
-        timeZone
-      );
-      setEnableHourSlots(updatedEnableHours); //done
+    if (Array.isArray(response) && response.length > 0) {
+      const [result] = response;
+      if (Object.keys(result ? result : {}).length) {
+        const updatedEnableHours = getTimeZonedEnableHours(
+          JSON.parse(
+            result.enableHourSlots === "undefined"
+              ? "[]"
+              : result.enableHourSlots
+          ),
+          timeZone
+        );
+        setEnableHourSlots(updatedEnableHours); //done
 
-      setDisableDates(JSON.parse(result.disableDates)); //done
-      setEnabledDays(JSON.parse(result.enabledDays)); //done almost
-      setDisabledWeekDays(JSON.parse(result.disableWeekDays));
+        setDisableDates(JSON.parse(result.disableDates)); //done
+        setEnabledDays(JSON.parse(result.enabledDays)); //done almost
+        setDisabledWeekDays(JSON.parse(result.disableWeekDays));
 
-      setDisableHourSlots(JSON.parse(result.disableHourSlots)); //done
+        setDisableHourSlots(JSON.parse(result.disableHourSlots)); //done
 
-      let updatedDisableHoursRange = getTimeZonedDisableHoursRange(
-        JSON.parse(result.disableHoursRange)
-      );
-      setDisabledHours(updatedDisableHoursRange); //done
-      setDisableColor(result.disableColor);
+        let updatedDisableHoursRange = getTimeZonedDisableHoursRange(
+          JSON.parse(result.disableHoursRange)
+        );
+        setDisabledHours(updatedDisableHoursRange); //done
+        setDisableColor(result.disableColor);
+      }
+      setDataFetched(true);
+    } else {
+      console.error("Unexpected API response format or empty response");
     }
-    setDataFetched(true);
   };
 
   const fetchBookings = async () => {
     if (isStudentLoggedIn) {
-
       const response = await get_student_lesson(
         student.AcademyId,
         selectedTutor.academyId
@@ -236,7 +240,7 @@ const ShowCalendar = ({
   }, [timeZone]);
 
   useEffect(() => {
-    fetchBookings()
+    fetchBookings();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTutor, user]);
 
@@ -251,7 +255,7 @@ const ShowCalendar = ({
   };
 
   useEffect(() => {
-    getTutorSetup();
+    timeZone && getTutorSetup();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeZone]);
 
@@ -367,7 +371,7 @@ const ShowCalendar = ({
     isStudentLoggedIn,
     selectedTutor,
     student,
-    lessons
+    lessons,
   });
 
   const dayPropGetter = useDayPropGetter({
@@ -392,7 +396,7 @@ const ShowCalendar = ({
     selectedTutor,
     weekDaysTimeSlots,
     tutor,
-    lessons
+    lessons,
   });
 
   const localizer = momentLocalizer(moment);
@@ -488,7 +492,7 @@ const ShowCalendar = ({
             setIsTutorSideSessionModalOpen,
             dispatch,
             clickedSlot,
-            navigate,
+            navigate
           )
         }
         clickedSlot={clickedSlot}
@@ -499,6 +503,7 @@ const ShowCalendar = ({
             clickedSlot,
             setDisableHourSlots,
             disableHourSlots,
+            navigate
           )
         }
       />

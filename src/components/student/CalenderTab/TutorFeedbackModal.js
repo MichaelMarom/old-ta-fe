@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { get_feedback_to_question } from "../../../axios/student";
+import { get_feedback_to_question } from "../../../axios/calender";
 import { wholeDateFormat } from "../../../constants/constants";
 import { showDate } from "../../../utils/moment";
 import LeftSideBar from "../../common/LeftSideBar";

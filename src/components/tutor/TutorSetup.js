@@ -1288,7 +1288,7 @@ const TutorSetup = () => {
                 ) : selectedVideoOption === "upload" &&
                   video?.length &&
                   !videoError ? (
-                  <div className="d-flex justify-content-center align-item-center w-100 h-100 border shadow">
+                  <div className="d-flex justify-content-center flex-column m-auto align-items-center w-100 h-100 border shadow">
                     <video
                       src={video}
                       onError={() => setVideoError(true)}

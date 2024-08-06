@@ -18,7 +18,7 @@ const Loading = ({
         src={Loading_Icon}
         alt="loading icon"
         width={smallerIcon ? iconSize : 140}
-        height={smallerIcon ? iconSize : 160}
+        height={smallerIcon ? iconSize+5 : 160}
         style={{
         //   height: iconSize,
           animation: "spin 2s linear infinite",

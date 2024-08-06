@@ -4,12 +4,13 @@ import { showDate } from "../../utils/moment";
 import QuestionFeedback from "../../components/tutor/Feedback/QuestionFeedback";
 import SessionsTable from "../../components/tutor/Feedback/SessionsTable";
 import { wholeDateFormat } from "../../constants/constants";
+import TAButton from "../../components/common/TAButton";
 import { get_tutor_feedback_questions } from "../../axios/tutor";
 import {
   fetch_student_photos,
   get_feedback_to_question,
   post_feedback_to_question,
-} from "../../axios/student";
+} from "../../axios/calender";
 
 import { useDispatch, useSelector } from "react-redux";
 import { updateStudentLesson } from "../../redux/student/studentBookings";
@@ -19,6 +20,9 @@ import Loading from "../../components/common/Loading";
 import DebounceInput from "../../components/common/DebounceInput";
 import _ from "lodash";
 import { setOnlySessions } from "../../redux/tutor/tutorSessions";
+import CenteredModal from "../../components/common/Modal";
+import Avatar from "../../components/common/Avatar";
+import { CiClock2 } from "react-icons/ci";
 
 const Feedback = () => {
   const dispatch = useDispatch();
@@ -27,6 +31,7 @@ const Feedback = () => {
   const { sessions } = useSelector((state) => state.tutorSessions);
   const [questionLoading, setQuestionLoading] = useState(false);
   const [feedbackData, setFeedbackData] = useState([]);
+  const [fetching, setFetching] = useState(false);
   const [comment, setComment] = useState("");
   const [questions, setQuestions] = useState([]);
   const [rawQuestions, setRawQuestions] = useState([]);
@@ -34,7 +39,8 @@ const Feedback = () => {
   const { tutor } = useSelector((state) => state.tutor);
 
   useEffect(() => {
-    sessions.length &&
+    if (sessions.length) {
+      setFetching(true);
       fetch_student_photos(_.uniq(sessions.map((session) => session.studentId)))
         .then((result) => {
           !result?.response?.data &&
@@ -50,7 +56,11 @@ const Feedback = () => {
         })
         .catch((error) => {
           console.log(error);
+        })
+        .finally(() => {
+          setFetching(false);
         });
+    }
   }, [sessions]);
 
   useEffect(() => {
@@ -65,6 +75,7 @@ const Feedback = () => {
   }, []);
 
   const handleEmojiClick = async (id, star) => {
+    setQuestionLoading(true);
     const updatedQuestions = [...questions];
     const questionIndex = updatedQuestions.findIndex(
       (question) => question.SID === id
@@ -96,39 +107,27 @@ const Feedback = () => {
       delete lessonToUpdate.photo;
       dispatch(updateStudentLesson(lessonToUpdate.id, lessonToUpdate));
 
-      dispatch(
-        await setOnlySessions(
-          [...feedbackData].map((slot) => {
-            if (slot.id === selectedEvent.id) {
-              return {
-                ...slot,
-                ratingByTutor:
-                  questions.reduce((sum, question) => {
-                    sum = question.star + sum;
-                    return sum;
-                  }, 0) / questions.length,
-              };
-            }
-            return slot;
-          })
-        )
-      );
+      setQuestionLoading(false);
     }
   };
 
-  const handleDynamicSave = async (updatedSlot) => {
-    const updatedSessionsData = [...feedbackData].map((slot) => {
-      if (slot.id === updatedSlot.id) {
-        return updatedSlot;
-      }
-      return slot;
-    });
-    dispatch(setOnlySessions(updatedSessionsData));
+  useEffect(() => {
+    console.log(questions.reduce((sum, q) => q.star + sum, 0) / 5, comment);
+  }, [questions, comment]);
 
-    const lessonToUpdate = { ...updatedSlot };
-    delete lessonToUpdate.photo;
-    dispatch(updateStudentLesson(lessonToUpdate.id, lessonToUpdate));
-  };
+  // const handleDynamicSave = async (updatedSlot) => {
+  //   const updatedSessionsData = [...feedbackData].map((slot) => {
+  //     if (slot.id === updatedSlot.id) {
+  //       return updatedSlot;
+  //     }
+  //     return slot;
+  //   });
+  //   // dispatch(setOnlySessions(updatedSessionsData));
+
+  //   const lessonToUpdate = { ...updatedSlot };
+  //   delete lessonToUpdate.photo;
+  //   // dispatch(updateStudentLesson(lessonToUpdate.id, lessonToUpdate));
+  // };
 
   useEffect(() => {
     if (selectedEvent.id) {
@@ -171,91 +170,138 @@ const Feedback = () => {
     );
   }, [selectedEvent.id, selectedEvent.commentByTutor, tutor]);
 
+  const handleSaveFeedback = () => {
+    const updatedLesson = { ...selectedEvent };
+    delete updatedLesson.photo;
+    const ifAnyQuestionisNull = questions.filter(
+      (question) => !question.star
+    ).length;
+    if (!ifAnyQuestionisNull && !!comment.trim().length)
+      dispatch(
+        updateStudentLesson(updatedLesson.id, {
+          ...updatedLesson,
+          commentByTutor: comment,
+          ratingByTutor: questions.reduce((sum, q) => q.star + sum, 0) / 5,
+        })
+      );
+
+    setSelectedEvent({});
+  };
   return (
     <>
       <TutorLayout>
-        <div className="container mt-1">
-          <div className="py-2 row">
-            <div className={`${selectedEvent.id ? "col-md-8" : "col-md-12"}`}>
-              <h2>Booked Lessons</h2>
-              {feedbackData.length ? (
-                <>
-                  <div style={{ fontSize: "14px" }}>
-                    <span style={{ fontWeight: "bold", fontSize: "16px" }}>
-                      Lessons blinking
-                    </span>
-                    by green border are ready for your feedback. Please rate
-                    your student as soon as possible.
-                  </div>
-                  <SessionsTable
-                    events={feedbackData}
-                    setSelectedEvent={setSelectedEvent}
-                    selectedEvent={selectedEvent}
-                  />
-                </>
-              ) : (
-                <div className="text-danger">No Record Found</div>
-              )}
-            </div>
-            {selectedEvent.id && (
+        {fetching ? (
+          <Loading />
+        ) : (
+          <div className="container mt-1">
+            <div className="py-2 row">
               <div
-                className="col-md-4 "
-                style={{ height: "calc(100vh - 165px)", overflowY: "auto" }}
+                className={`${selectedEvent.id ? "col-md-12" : "col-md-12"}`}
               >
-                <h4>
-                  Feedback on {showDate(selectedEvent.start, wholeDateFormat)}{" "}
-                  Session
-                </h4>
-                <div className="questions">
-                  <QuestionFeedback
-                    loading={questionLoading}
-                    questions={questions}
-                    handleEmojiClick={handleEmojiClick}
-                  />
-                  <div className="form-group">
-                    <label htmlFor="exampleTextarea">
-                      Please write a short description of your impression about
-                      this lesson
-                      <Tooltip
-                        text={"Instructions how to grade freehand notes."}
+                <h2>Booked Lessons</h2>
+                {feedbackData.length ? (
+                  <>
+                    <div style={{ fontSize: "14px" }}>
+                      <span style={{ fontWeight: "bold", fontSize: "16px" }}>
+                        Lessons blinking
+                      </span>
+                      by green border are ready for your feedback. Please rate
+                      your student as soon as possible.
+                    </div>
+                    <SessionsTable
+                      events={feedbackData}
+                      setSelectedEvent={setSelectedEvent}
+                      selectedEvent={selectedEvent}
+                    />
+                  </>
+                ) : (
+                  <div className="text-danger">No Record Found</div>
+                )}
+              </div>
+
+              <CenteredModal
+                isTitleReachtNode
+                title={
+                  <div className="d-flex align-items-center">
+                    <Avatar avatarSrc={selectedEvent.photo} />
+                    <div>
+                      <h6 className="m-0 text-start">
+                        {selectedEvent.studentName}
+                      </h6>
+                      <p className="fw-bold" style={{ fontSize: "12px" }}>
+                        {selectedEvent.subject}
+                        {`(${selectedEvent.type})`}
+                      </p>
+                      <p
+                        className="fw-bold text-secondary"
+                        style={{ fontSize: "12px" }}
+                      >
+                        <CiClock2 size={17} />{" "}
+                        {showDate(selectedEvent.start, wholeDateFormat)}
+                      </p>
+                    </div>
+                  </div>
+                }
+                show={selectedEvent.id}
+                handleClose={() => setSelectedEvent({})}
+              >
+                <div
+                  className=" "
+                  style={{ height: "calc(100vh - 165px)", overflowY: "auto" }}
+                >
+                  <div className="questions">
+                    <QuestionFeedback
+                      loading={questionLoading}
+                      questions={questions}
+                      handleEmojiClick={handleEmojiClick}
+                    />
+                    <div className="form-group m-3">
+                      <label
+                        style={{ fontSize: "10px" }}
+                        htmlFor="exampleTextarea"
+                      >
+                        Please write a short description of your impression
+                        about this lesson
+                        <Tooltip
+                          text={"Instructions how to grade freehand notes."}
+                        />
+                      </label>
+                      <DebounceInput
+                        placeholder=""
+                        required
+                        element="textarea"
+                        className="form-control m-0"
+                        delay={1000}
+                        value={comment}
+                        style={{ height: "150px" }}
+                        setInputValue={setComment}
+                        debounceCallback={(val) => {
+                          // setSelectedEvent({
+                          //   ...selectedEvent,
+                          //   commentByTutor: comment,
+                          // });
+                          // comment.length &&
+                          //   handleDynamicSave({
+                          //     ...selectedEvent,
+                          //     commentByTutor: comment,
+                          //   });
+                        }}
+                        onChange={(e) => setComment(e.target.value)}
                       />
-                    </label>
-                    <DebounceInput
-                      placeholder=""
-                      required
-                      element="textarea"
-                      className="form-control m-0"
-                      delay={1000}
-                      value={comment}
-                      style={{ height: "150px" }}
-                      setInputValue={setComment}
-                      debounceCallback={(val) => {
-                        // const updatedSlots = feedbackData.map((slot) => {
-                        //   if (slot.id === selectedEvent.id) {
-                        //     slot.commentByTutor = comment;
-                        //   }
-                        //   return slot;
-                        // });
-
-                        // setFeedbackData(updatedSlots);
-
-                        setSelectedEvent({
-                          ...selectedEvent,
-                          commentByTutor: comment,
-                        });
-                        handleDynamicSave({
-                          ...selectedEvent,
-                          commentByTutor: comment,
-                        });
-                      }}
-                      onChange={(e) => setComment(e.target.value)}
+                    </div>
+                  </div>
+                  <div className="w-100 d-flex justify-content-between">
+                    <TAButton buttonText={"cancel"} />
+                    <TAButton
+                      buttonText={"save"}
+                      handleClick={handleSaveFeedback}
                     />
                   </div>
                 </div>
-              </div>
-            )}
+              </CenteredModal>
+            </div>
           </div>
-        </div>
+        )}
         <Actions saveDisabled />
       </TutorLayout>
     </>

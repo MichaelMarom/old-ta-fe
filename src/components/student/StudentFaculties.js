@@ -66,7 +66,7 @@ const StudentFaculties = () => {
     setSelectedSubject({});
     if (selectedFaculty) {
       get_faculty_subject(selectedFaculty).then((result) => {
-        if (!result?.response?.data) setSubjects(result);
+        if (result && !result?.response?.data) setSubjects(result);
       });
     }
   }, [selectedFaculty]);

@@ -13,7 +13,8 @@ export const handlePostpone = (
   dispatch,
   clickedSlot,
   setDisableHourSlots,
-  disableHourSlots
+  disableHourSlots,
+  navigate
 ) => {
   setIsTutorSideSessionModalOpen(false);
   handleDisableSlot(
@@ -24,7 +25,12 @@ export const handlePostpone = (
   dispatch(
     updateStudentLesson(clickedSlot.id, { ...clickedSlot, request: "postpone" })
   );
-  // navigate(`/tutor/chat`);
+  toast.success(
+    "You have Successfully sent Postpone request! You are redirecting to Chat Page to Talk to your subject's student About this."
+  );
+  setTimeout(() => {
+    navigate(`/tutor/chat`);
+  }, 4000);
 };
 
 // Function to handle deleting sessions by tutor
@@ -38,7 +44,13 @@ export const handleDeleteSessionByTutor = (
   dispatch(
     updateStudentLesson(clickedSlot.id, { ...clickedSlot, request: "delete" })
   );
-  navigate(`/tutor/chat`);
+  toast.success(
+    "You have Successfully sent Delete request! You are redirecting to Chat Page to Talk to your subject's student About this."
+  );
+
+  setTimeout(() => {
+    navigate(`/tutor/chat`);
+  }, 4000);
 };
 
 // Function to handle disabling slots
