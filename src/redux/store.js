@@ -4,7 +4,6 @@ import userReducer from './auth/auth';
 import selectedTutorReducer from './student/selectedTutor';
 import studentBookingsReducer from './student/studentBookings';
 import studentReducer from './student/studentData'
-import shortlistReducer from './student/shortlist'
 
 import tutorReducer from './tutor/tutorData'
 import videoReducer from './tutor/video'
@@ -24,7 +23,6 @@ let store = configureStore({
     selectedTutor: selectedTutorReducer,
     studentSessions: studentSessionsReducer,
     student: studentReducer,
-    shortlist: shortlistReducer,
     bookings: studentBookingsReducer,
     chat: chatReducer,
 

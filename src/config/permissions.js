@@ -31,6 +31,8 @@ const StudentScheduling = lazy(() => import('../pages/student/StudentScheduling'
 const Schedules = lazy(() => import('../pages/student/Schedules'))
 const StudentTermOfUse = lazy(() => import('../pages/student/TermOfUse'));
 const StudentProfile = lazy(() => import('../pages/student/StudentProfile'));
+const TutorPublicProfile = lazy(() => import('../pages/student/TutorPublicProfile'));
+
 const StudentIntro = lazy(() => import('../pages/student/StudentIntro'));
 const Feedback = lazy(() => import('../pages/student/Feedback'));
 const SingleTutorFeedbacks = lazy(() => import('../pages/student/SingleTutorFeedbacks'));
@@ -102,7 +104,7 @@ const rolePermissions = {
     { path: "/student/tutor/feedback/:AcademyId", component: <SingleTutorFeedbacks /> },
     { path: '/student/chat', component: <Chat /> },
     { path: '/student/chat/:id', component: <Chat /> },
-    { path: "/student/tutor-profile/:id", component: <TutorProfile /> },
+    { path: "/student/tutor-profile/:id", component: <TutorPublicProfile /> },
     { path: "/student/market-place/bid", component: <Bids /> },
     { path: "/student/market-place/ad", component: <Ads /> },
     { path: "/student/market-place/list", component: <StudentAdList /> },

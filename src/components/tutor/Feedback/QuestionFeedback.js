@@ -23,7 +23,7 @@ const Questions = ({ loading, questions, handleEmojiClick }) => {
               // color={` ${question.star === 4 ? ' lightGreen' : 'rgb(217 196 166)'}`}
               size={20}
               className={`mr-3 cursor-pointer emoji ${
-                question.star === 4 ? " good-active" : "good"
+                question.star === 4 ? "good-active" : "good"
               } `}
               onClick={() => handleEmojiClick(question.SID, 4)}
             />

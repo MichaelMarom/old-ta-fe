@@ -6,7 +6,6 @@ import Comment from "./Comment";
 import StarRating from "../../common/StarRating";
 import { convertToDate } from "../../common/Calendar/Calendar";
 import { useSelector } from "react-redux";
-import Tooltip from "../../common/ToolTip";
 import TAButton from "../../common/TAButton";
 import { convertTutorIdToName } from "../../../utils/common";
 import Avatar from "../../common/Avatar";
@@ -17,10 +16,11 @@ function SessionsTable({ events=[], setSelectedEvent, selectedEvent }) {
   const [sortedEvents, setSortedEvents] = useState([]);
 
   const eligibleForFeedback = (session) => {
-    if (session?.end) {
+    if (session?.end && tutor.timeZone) {
       const currentTimeInTimeZone = moment().tz(tutor.timeZone);
 
-      const sessionEndInTimeZone = moment(session.end).tz(tutor.timeZone);
+      const sessionEndInTimeZone = moment(convertToDate(session.end)).tz(tutor.timeZone);
+      console.log(session.end, convertToDate(session.end), sessionEndInTimeZone, tutor.timeZone);
       const minutesDifference = sessionEndInTimeZone?.diff(
         currentTimeInTimeZone,
         "minutes"

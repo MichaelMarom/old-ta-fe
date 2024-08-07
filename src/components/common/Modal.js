@@ -6,7 +6,7 @@ const CenteredModal = ({
   showHeader = true,
   handleClose,
   title,
-  isTitleReachtNode = false,
+  isTitleReactNode = false,
   children,
   minHeight = "400px",
   minWidth = "430px",
@@ -33,7 +33,7 @@ const CenteredModal = ({
             onClick={(e) => e.stopPropagation()}
           >
             <div className={`modal-header ${showHeader ? "" : "d-none"}`}>
-              {isTitleReachtNode ? (
+              {isTitleReactNode ? (
                 title
               ) : (
                 <h5

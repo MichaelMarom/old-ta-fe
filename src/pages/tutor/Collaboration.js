@@ -12,10 +12,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import CollabSidebar from "../../components/tutor/Collab/CollabSidebar";
 import _ from "lodash";
 import { toast } from "react-toastify";
-import {
-  get_tutor_discount_form,
-  getSessionDetail,
-} from "../../axios/tutor";
+import { get_tutor_discount_form } from "../../axios/tutor";
+import { getSessionDetail } from "../../axios/calender";
 import { get_my_data } from "../../axios/student";
 import logo from "../../assets/images/tutoring Logo.png";
 import Loading from "../../components/common/Loading";
@@ -108,7 +106,7 @@ const Collaboration = () => {
         user.role === "student" ? student.timeZone : tutor.timeZone
       ).then((res) => {
         setOpenedSessionFetching(false);
-        console.log(res)
+        console.log(res);
         if (!res?.response?.data) {
           setCollboratorsInState(res.session.tutorId, res.session.studentId);
           setOpenedSession(res.session);
@@ -197,22 +195,21 @@ const Collaboration = () => {
 
     // Determine the highest version element, prioritizing isDeleted:true
     const uniqueIdsWithHigherVersion = _.map(groupedById, (group) => {
-        // Separate elements with isDeleted: true and false
-        const deletedElements = _.filter(group, { isDeleted: true });
-        const nonDeletedElements = _.filter(group, { isDeleted: false });
+      // Separate elements with isDeleted: true and false
+      const deletedElements = _.filter(group, { isDeleted: true });
+      const nonDeletedElements = _.filter(group, { isDeleted: false });
 
-        // If there are deleted elements, select the one with the highest version
-        if (deletedElements.length > 0) {
-            return _.maxBy(deletedElements, 'version');
-        }
+      // If there are deleted elements, select the one with the highest version
+      if (deletedElements.length > 0) {
+        return _.maxBy(deletedElements, "version");
+      }
 
-        // Otherwise, select the non-deleted element with the highest version
-        return _.maxBy(nonDeletedElements, 'version');
+      // Otherwise, select the non-deleted element with the highest version
+      return _.maxBy(nonDeletedElements, "version");
     });
 
     return uniqueIdsWithHigherVersion;
-}
-
+  }
 
   useEffect(() => {
     if (
@@ -239,7 +236,7 @@ const Collaboration = () => {
         // });
 
         const mergedArray = getUniqueIdsWithHigherVersion(
-          excalidrawAPI.getSceneElements().concat(change.elements), 
+          excalidrawAPI.getSceneElements().concat(change.elements),
           "id"
         );
         setElements(mergedArray);
@@ -302,11 +299,20 @@ const Collaboration = () => {
   }, [files, excalidrawAPI]);
 
   const handleExcalidrawChange = (newElements, appState, files) => {
-    console.log(newElements.filter(elem=>elem.id=="XTElsEXYqiuyC_pq2Y4H9")?.[0]?.isDeleted,
-    newElements.filter(elem=>elem.id=="XTElsEXYqiuyC_pq2Y4H9")?.[0]?.version )
+    console.log(
+      newElements.filter((elem) => elem.id == "XTElsEXYqiuyC_pq2Y4H9")?.[0]
+        ?.isDeleted,
+      newElements.filter((elem) => elem.id == "XTElsEXYqiuyC_pq2Y4H9")?.[0]
+        ?.version
+    );
 
-    console.log(excalidrawAPI.getSceneElements().filter(elem=>elem.id==="XTElsEXYqiuyC_pq2Y4H9")[0]?.version,
-     newElements.filter(elem=>elem.id=="XTElsEXYqiuyC_pq2Y4H9")[0]?.version)
+    console.log(
+      excalidrawAPI
+        .getSceneElements()
+        .filter((elem) => elem.id === "XTElsEXYqiuyC_pq2Y4H9")[0]?.version,
+      newElements.filter((elem) => elem.id == "XTElsEXYqiuyC_pq2Y4H9")[0]
+        ?.version
+    );
 
     //  console.log(getUniqueIdsWithHigherVersion(
     //   excalidrawAPI.getSceneElements().concat(newElements),
@@ -384,14 +390,14 @@ const Collaboration = () => {
           !result?.response?.data &&
             setTutorVideoConsent(
               result?.[0]?.ConsentRecordingLesson &&
-              result?.[0]?.ConsentRecordingLesson === "true"
+                result?.[0]?.ConsentRecordingLesson === "true"
             );
         });
         get_my_data(openedSession.studentId).then((result) => {
           setStudentVideoConsent(
             !result?.response?.data &&
-            result.ParentConsent &&
-            result?.ParentConsent === "true"
+              result.ParentConsent &&
+              result?.ParentConsent === "true"
           );
         });
       }
@@ -421,10 +427,11 @@ const Collaboration = () => {
       {openedSession.subject && (
         <div
           style={{ width: "70%" }}
-          className={`d-flex ${openedSession.subject
-            ? "justify-content-between"
-            : "justify-content-center"
-            }`}
+          className={`d-flex ${
+            openedSession.subject
+              ? "justify-content-between"
+              : "justify-content-center"
+          }`}
         >
           <div>
             {sessionTime === "past" && (
@@ -484,7 +491,8 @@ const Collaboration = () => {
                       (!!openedSessionTimeRemainingToStart &&
                         openedSessionTimeRemainingToStart < 180)) && (
                       <div className="fs-3 text-dark">
-                        You can start using the canvas tools as soon as the lesson starts.
+                        You can start using the canvas tools as soon as the
+                        lesson starts.
                       </div>
                     )}
                 </WelcomeScreen.Center.Heading>
@@ -547,9 +555,7 @@ const Collaboration = () => {
           </div>
         </div> */}
       </div>
-      {!sessionId && <Actions 
-      saveDisabled={true}
-      /> }
+      {!sessionId && <Actions saveDisabled={true} />}
     </CommonLayout>
   );
 };

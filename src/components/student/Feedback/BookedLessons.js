@@ -59,7 +59,6 @@ function BookedLessons({ events, handleRowSelect }) {
       const currentTimeInTimeZone = moment().tz(student.timeZone);
 
       const sessionEndInTimeZone = moment(session.end).tz(student.timeZone);
-      console.log(student.timeZone, sessionEndInTimeZone, session)
       if (moment.isMoment(sessionEndInTimeZone)) {
         const minutesDifference = sessionEndInTimeZone?.diff(
           currentTimeInTimeZone,

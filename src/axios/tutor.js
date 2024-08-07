@@ -21,9 +21,9 @@ export let upload_new_subject = (
       .then((result) => {
         resolve(result.data);
       })
-      .catch((error) => {
-        showErrorToast(error);
-        // reject(error)
+      .catch((err) => {
+        showErrorToast(err);
+        // reject(err)
       });
   });
 };
@@ -41,11 +41,11 @@ export const uploadFile = (file) => {
       .then((result) => {
         return result.data;
       })
-      .catch((error) => {
-        showErrorToast(error);
+      .catch((err) => {
+        showErrorToast(err);
       });
-  } catch (error) {
-    showErrorToast(error);
+  } catch (err) {
+    showErrorToast(err);
   }
 };
 
@@ -60,12 +60,12 @@ export let get_subject = (id) => {
       .then((result) => {
         resolve(result.data);
       })
-      .catch((error) => {
-        showErrorToast(error);
+      .catch((err) => {
+        showErrorToast(err);
 
-        showErrorToast(error);
+        showErrorToast(err);
 
-        // reject(error)
+        // reject(err)
       });
   });
 };
@@ -104,82 +104,13 @@ export let get_tutor_status = (faculty, subject, reason, AcademyId) => {
       .then((result) => {
         resolve(result.data);
       })
-      .catch((error) => {
-        showErrorToast(error);
+      .catch((err) => {
+        showErrorToast(err);
 
-        // reject(error)
+        // reject(err)
       });
   });
 };
-
-// export let get_countries = () => {
-//   return new Promise((resolve, reject) => {
-//     apiClient
-//       .get("/tutor/countries", {})
-//       .then((result) => {
-//         resolve(result.data);
-//       })
-//       .catch((error) => {
-//         showErrorToast(error);
-
-//         // reject(error)
-//       });
-//   });
-// };
-
-// export let get_state = () => {
-//   return new Promise((resolve, reject) => {
-//     apiClient
-//       .get("/tutor/state", {})
-//       .then((result) => {
-//         resolve(result.data);
-//       })
-//       .catch((error) => {
-//         showErrorToast(error);
-
-//         // reject(error)
-//       });
-//   });
-// };
-
-// export let get_experience = () => {
-//   return new Promise((resolve, reject) => {
-//     apiClient
-//       .get("/tutor/experience", {})
-//       .then((result) => {
-//         resolve(result.data);
-//       })
-//       .catch((error) => {
-//         showErrorToast(error);
-//       });
-//   });
-// };
-
-// export let get_gmt = () => {
-//   return new Promise((resolve, reject) => {
-//     apiClient
-//       .get("/tutor/gmt", {})
-//       .then((result) => {
-//         resolve(result.data);
-//       })
-//       .catch((error) => {
-//         showErrorToast(error);
-//       });
-//   });
-// };
-
-// export let get_response = () => {
-//   return new Promise((resolve, reject) => {
-//     apiClient
-//       .get("/tutor/response", {})
-//       .then((result) => {
-//         resolve(result.data);
-//       })
-//       .catch((error) => {
-//         showErrorToast(error);
-//       });
-//   });
-// };
 
 // export let upload_setup_form = (
 //   fname,
@@ -234,10 +165,10 @@ export let get_tutor_status = (faculty, subject, reason, AcademyId) => {
 //       .then((result) => {
 //         resolve(result.data);
 //       })
-//       .catch((error) => {
-//         showErrorToast(error);
+//       .catch((err) => {
+//         showErrorToast(err);
 
-//         // reject(error)
+//         // reject(err)
 //       });
 //   });
 // };
@@ -246,9 +177,9 @@ export const post_edu = async (body) => {
   try {
     const data = await apiClient.post("/tutor/edu", body);
     return data;
-  } catch (error) {
-    showErrorToast(error);
-    return error;
+  } catch (err) {
+    showErrorToast(err);
+    return err;
   }
 };
 
@@ -322,10 +253,10 @@ export let get_degree = () => {
       .then((result) => {
         resolve(result.data);
       })
-      .catch((error) => {
-        showErrorToast(error);
+      .catch((err) => {
+        showErrorToast(err);
 
-        // reject(error)
+        // reject(err)
       });
   });
 };
@@ -337,10 +268,10 @@ export let get_level = () => {
       .then((result) => {
         resolve(result.data);
       })
-      .catch((error) => {
-        showErrorToast(error);
+      .catch((err) => {
+        showErrorToast(err);
 
-        // reject(error)
+        // reject(err)
       });
   });
 };
@@ -352,31 +283,25 @@ export let get_certificates = () => {
       .then((result) => {
         resolve(result.data);
       })
-      .catch((error) => {
-        showErrorToast(error);
+      .catch((err) => {
+        showErrorToast(err);
 
-        // reject(error)
+        // reject(err)
       });
   });
 };
 
-export let get_user_data = (user_id) => {
-  return new Promise((resolve, reject) => {
-    apiClient
-      .get("/tutor/education", {
-        params: {
-          user_id,
-        },
-      })
-      .then((result) => {
-        resolve(result.data);
-      })
-      .catch((error) => {
-        showErrorToast(error);
-
-        // reject(error)
-      });
-  });
+export let get_user_data = async (user_id) => {
+  try {
+    const { data } = await apiClient.get("/tutor/education", {
+      params: {
+        user_id,
+      },
+    });
+    return data;
+  } catch (err) {
+    showErrorToast(err);
+  }
 };
 
 export const student_public_profile = async (studentId, tutorId = null) => {
@@ -400,8 +325,8 @@ export let upload_tutor_rates = async (rate, grades, id, faculty, subject) => {
       }
     );
     return data;
-  } catch (error) {
-    return error;
+  } catch (err) {
+    return err;
   }
 };
 
@@ -409,7 +334,7 @@ export const remove_subject_rates = async (id) => {
   try {
     const { data } = await apiClient.delete(`/subject-rate/${id}`);
     return data;
-  } catch (error) {}
+  } catch (err) {}
 };
 
 export let get_my_data = (AcademyId) => {
@@ -421,9 +346,9 @@ export let get_my_data = (AcademyId) => {
       .then((result) => {
         resolve(result.data);
       })
-      .catch((error) => {
-        showErrorToast(error);
-        // reject(error)
+      .catch((err) => {
+        showErrorToast(err);
+        // reject(err)
       });
   });
 };
@@ -580,8 +505,8 @@ export const fetch_calender_detals = async (id) => {
 //   try {
 //     const response = await apiClient.get(`api/bookings/${tutorId}`);
 //     return response.data;
-//   } catch (error) {
-//     showErrorToast(error);
+//   } catch (err) {
+//     showErrorToast(err);
 
 //     console.error("Error:", error);
 //   }
@@ -593,8 +518,8 @@ export const getAllTutorLessons = async (tutorId) => {
       params: { tutorId },
     });
     return data;
-  } catch (error) {
-    showErrorToast(error);
+  } catch (err) {
+    showErrorToast(err);
   }
 };
 
@@ -602,10 +527,10 @@ export const new_subj_request_exist = async (subject) => {
   try {
     const response = await apiClient.get(`/tutor/newsubject/${subject}`);
     return response;
-  } catch (error) {
-    showErrorToast(error);
-    console.error("Error:", error);
-    return error;
+  } catch (err) {
+    showErrorToast(err);
+    console.error("Error:", err);
+    return err;
   }
 };
 
@@ -616,10 +541,8 @@ export let get_tutor_market_data = (id) => {
       .then((result) => {
         resolve(result.data);
       })
-      .catch((error) => {
-        showErrorToast(error);
-
-        // reject(error)
+      .catch((err) => {
+        showErrorToast(err);
       });
   });
 };
@@ -631,18 +554,16 @@ export const updateTutorDisableslots = async (tutorAcademyId, body) => {
       body
     );
     return data;
-  } catch (error) {
-    showErrorToast(error);
+  } catch (err) {
+    showErrorToast(err);
   }
 };
 export const addDisabledDates = async (date) => {
   try {
     const response = await apiClient.post("/api/store-disabled-dates", date);
     return response.data;
-  } catch (error) {
-    showErrorToast(error);
-
-    console.error("Error:", error);
+  } catch (err) {
+    showErrorToast(err);
   }
 };
 
@@ -699,8 +620,8 @@ export const post_tutor_setup = async (data) => {
 
     dataObject.AcademyId = uuidv4();
     return await apiClient.post("/tutor/setup", dataObject);
-  } catch (error) {
-    showErrorToast(error);
+  } catch (err) {
+    showErrorToast(err);
   }
 };
 
@@ -719,8 +640,8 @@ export const setAgreementDateToNullForAll = async () => {
   try {
     const data = apiClient.put("/tutor/agreement-updated");
     return data;
-  } catch (error) {
-    return error;
+  } catch (err) {
+    return err;
   }
 };
 
@@ -728,8 +649,8 @@ export const get_tutor_students = async (AcademyId) => {
   try {
     const { data } = await apiClient.get(`/tutor/get_students/${AcademyId}`);
     return data;
-  } catch (error) {
-    showErrorToast(error);
+  } catch (err) {
+    showErrorToast(err);
   }
 };
 
@@ -737,8 +658,8 @@ export const get_sessions_details = async (AcademyId) => {
   try {
     const { data } = await apiClient.get(`/tutor/session/${AcademyId}`);
     return data;
-  } catch (error) {
-    showErrorToast(error);
+  } catch (err) {
+    showErrorToast(err);
   }
 };
 
@@ -746,9 +667,9 @@ export const get_last_pay_day = async () => {
   try {
     const { data } = await apiClient.get(`/p-payment/last_payday`);
     return data;
-  } catch (error) {
-    showErrorToast(error);
-    return error;
+  } catch (err) {
+    showErrorToast(err);
+    return err;
   }
 };
 
@@ -756,8 +677,8 @@ export const get_tutor_profile = async (tutorId, studentId) => {
   try {
     const { data } = await apiClient.get(`/profile/${tutorId}/${studentId}`);
     return data;
-  } catch (error) {
-    showErrorToast(error);
+  } catch (err) {
+    showErrorToast(err);
   }
 };
 
@@ -765,8 +686,8 @@ export const post_tutor_ad = async (body) => {
   try {
     const { data } = await apiClient.post(`/tutor/market-place`, body);
     return data;
-  } catch (error) {
-    showErrorToast(error);
+  } catch (err) {
+    showErrorToast(err);
   }
 };
 
@@ -774,8 +695,8 @@ export const fetch_tutor_ads = async (id) => {
   try {
     const { data } = await apiClient.get(`/tutor/market-place/list/${id}`);
     return data;
-  } catch (error) {
-    showErrorToast(error);
+  } catch (err) {
+    showErrorToast(err);
   }
 };
 
@@ -783,8 +704,8 @@ export const fetch_students_published_ads = async () => {
   try {
     const { data } = await apiClient.get(`/tutor/market-place/classified`);
     return data;
-  } catch (error) {
-    showErrorToast(error);
+  } catch (err) {
+    showErrorToast(err);
   }
 };
 
@@ -826,8 +747,8 @@ export const fetch_ad = async (id) => {
   try {
     const { data } = await apiClient.get(`/tutor/ad/${id}`);
     return data;
-  } catch (error) {
-    showErrorToast(error);
+  } catch (err) {
+    showErrorToast(err);
   }
 };
 
@@ -835,8 +756,9 @@ export const put_ad = async (id, body) => {
   try {
     const { data } = await apiClient.put(`/tutor/ad/${id}`, body);
     return data;
-  } catch (error) {
-    return error;
+  } catch (err) {
+    showErrorToast(err)
+    return err;
   }
 };
 
@@ -857,16 +779,5 @@ export const delete_ad = async (id) => {
   } catch (err) {
     showErrorToast(err);
     return err;
-  }
-};
-
-export const getSessionDetail = async (sessionId, timezone) => {
-  try {
-    const { data } = await apiClient.get(`/collab/${sessionId}`, {
-      params: { timezone },
-    });
-    return data;
-  } catch (err) {
-    showErrorToast(err);
   }
 };

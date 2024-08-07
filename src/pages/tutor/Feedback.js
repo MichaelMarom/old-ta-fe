@@ -5,7 +5,10 @@ import QuestionFeedback from "../../components/tutor/Feedback/QuestionFeedback";
 import SessionsTable from "../../components/tutor/Feedback/SessionsTable";
 import { wholeDateFormat } from "../../constants/constants";
 import TAButton from "../../components/common/TAButton";
-import { get_tutor_feedback_questions } from "../../axios/tutor";
+import {
+  formatted_tutor_sessions,
+  get_tutor_feedback_questions,
+} from "../../axios/tutor";
 import {
   fetch_student_photos,
   get_feedback_to_question,
@@ -23,23 +26,40 @@ import { setOnlySessions } from "../../redux/tutor/tutorSessions";
 import CenteredModal from "../../components/common/Modal";
 import Avatar from "../../components/common/Avatar";
 import { CiClock2 } from "react-icons/ci";
+import FeedbackModal from "../../components/common/FeedbackModal";
+import { toast } from "react-toastify";
 
 const Feedback = () => {
   const dispatch = useDispatch();
   const [selectedEvent, setSelectedEvent] = useState({});
 
-  const { sessions } = useSelector((state) => state.tutorSessions);
+  // const { sessions } = useSelector((state) => state.tutorSessions);
+  const [sessions, setSessions] = useState([]);
   const [questionLoading, setQuestionLoading] = useState(false);
   const [feedbackData, setFeedbackData] = useState([]);
   const [fetching, setFetching] = useState(false);
   const [comment, setComment] = useState("");
   const [questions, setQuestions] = useState([]);
   const [rawQuestions, setRawQuestions] = useState([]);
-
+  const [sessionsFetched, setSessionsFetched] = useState(false);
   const { tutor } = useSelector((state) => state.tutor);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (sessions.length) {
+    if (tutor.AcademyId) {
+      formatted_tutor_sessions(tutor.AcademyId)
+        .then((res) => {
+          if (!res.response?.data) {
+            setSessions(res.sessions);
+            res.sessions.length && setSessionsFetched(true);
+          }
+        })
+        .catch((err) => toast.error(err.message));
+    }
+  }, [tutor.AcademyId]);
+
+  useEffect(() => {
+    if (sessionsFetched) {
       setFetching(true);
       fetch_student_photos(_.uniq(sessions.map((session) => session.studentId)))
         .then((result) => {
@@ -61,7 +81,7 @@ const Feedback = () => {
           setFetching(false);
         });
     }
-  }, [sessions]);
+  }, [sessionsFetched]);
 
   useEffect(() => {
     const getAllFeedbackQuestion = async () => {
@@ -82,38 +102,37 @@ const Feedback = () => {
     );
 
     if (questionIndex !== -1) {
-      await post_feedback_to_question(
-        selectedEvent.id,
-        tutor.AcademyId,
-        selectedEvent.studentId,
-        id,
-        star,
-        0
-      );
+      // await post_feedback_to_question(
+      //   selectedEvent.id,
+      //   tutor.AcademyId,
+      //   selectedEvent.studentId,
+      //   id,
+      //   star,
+      //   0
+      // );
 
       updatedQuestions[questionIndex].star = star;
       setQuestions([...updatedQuestions]);
 
-      setSelectedEvent({
-        ...selectedEvent,
-        ratingByTutor:
-          questions.reduce((sum, question) => {
-            sum = question.star + sum;
-            return sum;
-          }, 0) / questions.length,
-      });
+      // setFeedbackData([
+      //   ...sessions.filter((ses) => ses.id !== selectedEvent.id),
+      //   {
+      //     ...selectedEvent,
+      //     ratingByTutor:
+      //       questions.reduce((sum, question) => {
+      //         sum = question.star + sum;
+      //         return sum;
+      //       }, 0) / questions.length,
+      //   },
+      // ]);
 
-      const lessonToUpdate = { ...selectedEvent };
-      delete lessonToUpdate.photo;
-      dispatch(updateStudentLesson(lessonToUpdate.id, lessonToUpdate));
+      // const lessonToUpdate = { ...selectedEvent };
+      // delete lessonToUpdate.photo;
+      // dispatch(updateStudentLesson(lessonToUpdate.id, lessonToUpdate));
 
       setQuestionLoading(false);
     }
   };
-
-  useEffect(() => {
-    console.log(questions.reduce((sum, q) => q.star + sum, 0) / 5, comment);
-  }, [questions, comment]);
 
   // const handleDynamicSave = async (updatedSlot) => {
   //   const updatedSessionsData = [...feedbackData].map((slot) => {
@@ -140,23 +159,25 @@ const Feedback = () => {
           0
         );
         if (!!data?.length) {
-          const combinedArray = _.mergeWith(
-            [],
-            data,
-            rawQuestions,
-            (objValue, srcValue) => {
-              if (
-                objValue &&
-                objValue.star === null &&
-                srcValue &&
-                srcValue.star !== null
-              ) {
-                return srcValue;
-              }
-            }
-          );
+          console.log(data);
+          // const combinedArray = _.mergeWith(
+          //   [],
+          //   data,
+          //   rawQuestions,
+          //   (objValue, srcValue) => {
+          //     if (
+          //       objValue &&
+          //       objValue.star === null &&
+          //       srcValue &&
+          //       srcValue.star !== null
+          //     ) {
+          //       return srcValue;
+          //     }
+          //   }
+          // );
+          // console.log(combinedArray)
 
-          setQuestions(combinedArray);
+          setQuestions(data);
         }
         setQuestionLoading(false);
       };
@@ -171,26 +192,58 @@ const Feedback = () => {
   }, [selectedEvent.id, selectedEvent.commentByTutor, tutor]);
 
   const handleSaveFeedback = () => {
-    const updatedLesson = { ...selectedEvent };
-    delete updatedLesson.photo;
     const ifAnyQuestionisNull = questions.filter(
       (question) => !question.star
     ).length;
-    if (!ifAnyQuestionisNull && !!comment.trim().length)
-      dispatch(
-        updateStudentLesson(updatedLesson.id, {
-          ...updatedLesson,
-          commentByTutor: comment,
-          ratingByTutor: questions.reduce((sum, q) => q.star + sum, 0) / 5,
-        })
+    if (ifAnyQuestionisNull || !comment.trim().length)
+      return toast.warning(
+        "Please answer all questions and write valuabe feedback to your tutor"
       );
 
+      const updatedLesson = { ...selectedEvent };
+    delete updatedLesson.photo;
+
+    setFeedbackData([
+      ...feedbackData.filter((ses) => ses.id !== updatedLesson.id),
+      {
+        ...selectedEvent,
+        ratingByTutor:
+          questions.reduce((sum, question) => {
+            sum = question.star + sum;
+            return sum;
+          }, 0) / questions.length,
+        commentByTutor: comment,
+      },
+    ]);
+
+    questions.map((ques) =>
+      post_feedback_to_question(
+        updatedLesson.id,
+        tutor.AcademyId,
+        updatedLesson.studentId,
+        ques.SID,
+        ques.star,
+        0
+      )
+    );
+
+    dispatch(
+      updateStudentLesson(updatedLesson.id, {
+        ...updatedLesson,
+        commentByTutor: comment,
+        ratingByTutor: questions.reduce((sum, q) => q.star + sum, 0) / 5,
+      })
+    );
+
+    toast.success("Saved Successfully")
+    setQuestions(rawQuestions);
     setSelectedEvent({});
+    setComment("");
   };
   return (
     <>
       <TutorLayout>
-        {fetching ? (
+        {fetching || saving ? (
           <Loading />
         ) : (
           <div className="container mt-1">
@@ -218,9 +271,23 @@ const Feedback = () => {
                   <div className="text-danger">No Record Found</div>
                 )}
               </div>
-
-              <CenteredModal
-                isTitleReachtNode
+              <FeedbackModal
+                handleClose={() => {
+                  setQuestions(rawQuestions);
+                  setSelectedEvent({});
+                  setComment("");
+                }}
+                selectedEvent={selectedEvent}
+                setSelectedEvent={setSelectedEvent}
+                setComment={setComment}
+                comment={comment}
+                handleEmojiClick={handleEmojiClick}
+                handleSaveFeedback={handleSaveFeedback}
+                questions={questions}
+                questionLoading={questionLoading}
+              />
+              {/* <CenteredModal
+                isTitleReactNode
                 title={
                   <div className="d-flex align-items-center">
                     <Avatar avatarSrc={selectedEvent.photo} />
@@ -298,7 +365,7 @@ const Feedback = () => {
                     />
                   </div>
                 </div>
-              </CenteredModal>
+              </CenteredModal> */}
             </div>
           </div>
         )}

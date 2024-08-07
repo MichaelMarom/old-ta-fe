@@ -348,7 +348,7 @@ const StudentFaculties = () => {
                     <div
                       className="tables"
                       style={{
-                        height: "53vh",
+                        height: "calc(100vh - 400px)",
                         width: "100%",
                         overflowY: "auto",
                       }}

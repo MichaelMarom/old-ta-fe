@@ -8,7 +8,7 @@ const TutorProfile = () => {
   
   return (
     <CommonLayout role={role}>
-      <TutorProfileComp />
+      <TutorProfileComp role={role} />
     </CommonLayout>
   );
 };

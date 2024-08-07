@@ -5,19 +5,13 @@ import { get_tutor_subjects } from "../../axios/tutor";
 import { create_chat } from "../../axios/chat";
 import { apiClient } from "../../axios/config";
 import { IoIosCheckmarkCircle, IoIosCloseCircle } from "react-icons/io";
-import {
-  FaCalendar,
-  FaComment,
-  FaPlayCircle,
-  FaRegTimesCircle,
-} from "react-icons/fa";
+import { FaRegTimesCircle } from "react-icons/fa";
 import { CiClock2 } from "react-icons/ci";
 
 import { convertGMTOffsetToLocalString, showDate } from "../../utils/moment";
 import { useParams } from "react-router";
 import Avatar from "../common/Avatar";
 import { capitalizeFirstLetter } from "../../utils/common";
-import Loading from "../common/Loading";
 import { FaLocationDot, FaRegCirclePlay } from "react-icons/fa6";
 import { IoTime } from "react-icons/io5";
 import GradePills from "./GradePills";
@@ -53,14 +47,14 @@ const TutorProfile = () => {
   };
 
   useEffect(() => {
-    console.log(!isEnlarged && videoRef.current);
     !isEnlarged && videoRef.current && videoRef.current.pause();
   }, [isEnlarged]);
 
   useEffect(() => {
-    get_tutor_subjects(tutor.AcademyId).then(
-      (result) => !result?.response?.data && setSubjectsWithRates(result)
-    );
+    tutor.AcademyId &&
+      get_tutor_subjects(tutor.AcademyId).then(
+        (result) => !result?.response?.data && setSubjectsWithRates(result)
+      );
   }, [tutor.AcademyId]);
 
   const customSortForSubjectsGrades = (a, b) => {
@@ -122,7 +116,6 @@ const TutorProfile = () => {
       fetch_profile();
     }
   }, [params.id, tutor.AcademyId, education.AcademyId, discount.AcademyId]);
-  console.log(data);
 
   // useEffect(() => {
   //   if (education.AcademyId) {
@@ -158,8 +151,8 @@ const TutorProfile = () => {
       {/* <ScreenRecording /> */}
       <div className="container">
         <div className="">
-          <div className="d-flex align-items-center justify-content-between w-100 mt-4 rounded  bg-white ">
-            <div className="d-flex align-items-start " style={{ width: "40%" }}>
+          <div className="d-flex flex-wrap align-items-center justify-content-between w-100 mt-4 rounded  bg-white ">
+            <div className="d-flex align-items-start ">
               <div
                 className="p-1 bg-white rounded-circle border shadow d-flex justify-content-center align-items-center m-1"
                 style={{ width: "180px", height: "180px" }}
@@ -230,7 +223,6 @@ const TutorProfile = () => {
             <div
               className=" d-flex flex-column p-4 justfy-content-between h-100"
               style={{
-                width: "30%",
                 gap: "10px",
               }}
             >
@@ -361,11 +353,20 @@ const TutorProfile = () => {
               </div>
             </div>
 
-            <div className="w-25 h-100">
+            <div className="h-100">
               <div className="" style={{ paddingRight: "20px" }}>
                 <video
                   loop
                   src={data.Video}
+                  onClick={() => {
+                    if (videoRef.current) {
+                      if (videoRef.current.paused) {
+                        videoRef.current.play();
+                      } else {
+                        videoRef.current.pause();
+                      }
+                    }
+                  }}
                   className={`rounded-4  shadow-lg`}
                   muted
                   style={{ width: "200px", height: "auto" }}
@@ -558,7 +559,7 @@ const TutorProfile = () => {
                                 >
                                   College -
                                 </div>
-                                <h6 className="m-0">{data.College1}</h6>
+                                <h6 className="m-0">{data.Bach_College}</h6>
                               </div>
                               <div
                                 className="d-flex align-items-center"
@@ -573,7 +574,9 @@ const TutorProfile = () => {
                                 >
                                   State -
                                 </div>
-                                <h6 className="m-0">{data.College1State}</h6>
+                                <h6 className="m-0">
+                                  {data.Bach_College_State}
+                                </h6>
                               </div>
                               <div
                                 className="d-flex align-items-center"
@@ -588,7 +591,9 @@ const TutorProfile = () => {
                                 >
                                   Year of Graduation -
                                 </div>
-                                <h6 className="m-0">{data.BachYear}</h6>
+                                <h6 className="m-0">
+                                  {data.Bach_College_Year}
+                                </h6>
                               </div>
                             </>
                           ) : (
@@ -632,7 +637,7 @@ const TutorProfile = () => {
                                 >
                                   University -
                                 </div>
-                                <h6 className="m-0">{data.MastCollege}</h6>
+                                <h6 className="m-0">{data.Mast_College}</h6>
                               </div>
                               <div
                                 className="d-flex align-items-center"
@@ -647,7 +652,9 @@ const TutorProfile = () => {
                                 >
                                   State -
                                 </div>
-                                <h6 className="m-0">{data.MastState}</h6>
+                                <h6 className="m-0">
+                                  {data.Mast_College_State}
+                                </h6>
                               </div>
                               <div
                                 className="d-flex align-items-center"
@@ -662,7 +669,9 @@ const TutorProfile = () => {
                                 >
                                   Year of Graduation -
                                 </div>
-                                <h6 className="m-0">{data.MastYr}</h6>
+                                <h6 className="m-0">
+                                  {data.Mast_College_StateYear}
+                                </h6>
                               </div>
                             </>
                           ) : (
@@ -707,7 +716,7 @@ const TutorProfile = () => {
                                 >
                                   University -
                                 </div>
-                                <h6 className="m-0">{data.DocCollege}</h6>
+                                <h6 className="m-0">{data.DoctorateCollege}</h6>
                               </div>
                               <div
                                 className="d-flex align-items-center"
@@ -722,7 +731,7 @@ const TutorProfile = () => {
                                 >
                                   State -
                                 </div>
-                                <h6 className="m-0">{data.DocState}</h6>
+                                <h6 className="m-0">{data.DoctorateState}</h6>
                               </div>
                               <div
                                 className="d-flex align-items-center"
@@ -737,7 +746,7 @@ const TutorProfile = () => {
                                 >
                                   Year of Graduation -
                                 </div>
-                                <h6 className="m-0">{data.DocYr}</h6>
+                                <h6 className="m-0">{data.DoctorateGradYr}</h6>
                               </div>
                             </>
                           ) : (
@@ -874,7 +883,7 @@ const TutorProfile = () => {
                                 >
                                   State -
                                 </div>
-                                <h6 className="m-0">{data.DegState}</h6>
+                                <h6 className="m-0">{data.DegreeState}</h6>
                               </div>
                               <div
                                 className="d-flex align-items-center"
@@ -889,7 +898,7 @@ const TutorProfile = () => {
                                 >
                                   Year -
                                 </div>
-                                <h6 className="m-0">{data.DegYr}</h6>
+                                <h6 className="m-0">{data.DegreeYear}</h6>
                               </div>
                             </>
                           ) : (
