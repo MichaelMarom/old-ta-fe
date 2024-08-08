@@ -18,26 +18,35 @@ const AccDetails = () => {
   const { tutor } = useSelector((state) => state.tutor);
   const [startDate, setStartDate] = useState(null);
   const [selectedWeekSession, setSelectedWeekSession] = useState([]);
+  const [isNextDisabled, setIsNextDisabled] = useState(false)
 
   const [lastpayDay, setLastPayDay] = useState(lastFriday);
-  const [endDate, setEndDate] = useState(moment(lastpayDay));
+  const [endDate, setEndDate] = useState(moment(lastpayDay).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }));
   const [start, setStart] = useState(moment(endDate).toDate());
-  const [end, setEnd] = useState(moment(endDate).toDate());
+  const [end, setEnd] = useState(moment(lastpayDay).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }));
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (lastpayDay) {
-      const initialStartDate = moment(lastpayDay).toDate();
+      const initialStartDate = moment(lastpayDay).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
       initialStartDate.setDate(initialStartDate.getDate() - 14);
       setStartDate(initialStartDate);
     }
   }, [lastpayDay]);
 
+
   useEffect(() => {
     if (lastpayDay) {
-      setEndDate(moment(lastpayDay));
+      const setTo0 = moment(lastpayDay).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate();
+      setEnd(setTo0)
+      setEndDate(setTo0);
     }
   }, [lastpayDay]);
+
+useEffect(()=>{
+  setIsNextDisabled( moment(endDate).add(14, "days").toDate().getTime() >
+  moment(lastpayDay).toDate().getTime())
+},[endDate, lastpayDay])
 
   useEffect(() => {
     setLoading(true);
@@ -53,26 +62,22 @@ const AccDetails = () => {
     if (startDate) {
       get_sessions_details(tutor.AcademyId).then((result) => {
         const filteredSession = result.sessions.filter((session) => {
-          // const sessionDate = moment(session.end);
-          // const sessionDateWithoutTime = sessionDate.startOf("day");
+          const sessionStart = moment(session.start);
+          const sessionEnd = moment(session.end);
 
-          // const startDateWithoutTime = moment(startDate).startOf("day");
-          // const endDateWithoutTime = moment(endDate).startOf("day");
-
-          // return (
-          //   sessionDateWithoutTime.isSameOrAfter(startDateWithoutTime) &&
-          //   sessionDateWithoutTime.isSameOrBefore(endDateWithoutTime)
-          // );
-          return true;
+          return (sessionStart.isAfter(moment(startDate)) && sessionEnd.isBefore(moment(endDate)));
         });
-        setStart(startDate ? moment(startDate).toDate() : moment().toDate());
+
+        setStart(startDate ?
+          moment(convertToDate(startDate)).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate() :
+          moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toDate());
         setSelectedWeekSession(filteredSession);
       });
     }
   }, [endDate, startDate]);
 
   const handleBack = () => {
-    const newEndDate = moment(startDate).subtract(1, "days").toDate();
+    const newEndDate = moment(startDate).toDate();
     const newStartDate = moment(newEndDate).subtract(14, "days").toDate();
     setStart(newStartDate);
     setEnd(newEndDate);
@@ -81,13 +86,15 @@ const AccDetails = () => {
   };
 
   const handleNext = () => {
-    const newStartDate = moment(endDate).add(1, "days").toDate();
+    const newStartDate = moment(endDate).toDate();
     const newEndDate = moment(newStartDate).add(14, "days").toDate();
-    setStartDate(newStartDate);
-    setEnd(newEndDate);
-    setStart(newStartDate);
+    if (newEndDate.getTime() < moment(lastpayDay).toDate().getTime()) {
+      setStartDate(newStartDate);
+      setEnd(newEndDate);
+      setStart(newStartDate);
 
-    setEndDate(newEndDate);
+      setEndDate(newEndDate);
+    }
   };
 
   const totalAmount = selectedWeekSession
@@ -109,13 +116,9 @@ const AccDetails = () => {
       maximumFractionDigits: 2,
     });
 
-  const isNextDisabled =
-    moment(endDate).toDate().getDate() >=
-      moment(lastpayDay).toDate().getDate() &&
-    moment(endDate).toDate().getMonth() >=
-      moment(lastpayDay).toDate().getMonth() &&
-    moment(endDate).toDate().getFullYear() >=
-      moment(lastpayDay).toDate().getFullYear();
+  // const isNextDisabled =
+  //   moment(endDate).toDate().getDate() >
+  //   moment(lastpayDay).toDate().getDate()
 
   // const formatUTC = (dateInt, addOffset = false, start = true) => {
   //     let date = (!dateInt || dateInt.length < 1) ? moment() : moment(dateInt);
@@ -140,8 +143,8 @@ const AccDetails = () => {
         ("00" + Math.abs((offset / 60) | 0)).slice(-2) +
         ":" +
         ("00" + Math.abs(offset % 60)).slice(-2))(
-        new Date().getTimezoneOffset()
-      )
+          new Date().getTimezoneOffset()
+        )
     ) * -1;
 
   if (loading) return <Loading />;
@@ -155,11 +158,13 @@ const AccDetails = () => {
           <h6 className="text-start m-0">Total Earning between </h6>
           <ReactDatePicker
             selected={
+              //becuase react-date-picker do not support moment, SO need to manually convert time  TO tutor Timezone
               new Date(
                 start
-                  ? moment.tz(start, tutor.timeZone)
+                  ? moment(start).toDate().getTime() +
+                  (gmtInInt + getLocalGMT) * 60 * 60 * 1000
                   : moment().toDate().getTime() +
-                    (gmtInInt + getLocalGMT) * 60 * 60 * 1000
+                  (gmtInInt + getLocalGMT) * 60 * 60 * 1000
               )
             }
             onChange={(date) => {
@@ -169,15 +174,17 @@ const AccDetails = () => {
               const originalMoment = moment(date);
               setStart(originalMoment);
             }}
-            dateFormat="MMM d, yyyy"
+            dateFormat="MMM d, yyyy HH:mm:ss"
             className="form-control m-2"
           />
 
           <h6 className="m-0">and</h6>
           <ReactDatePicker
-            selected={moment
-              .tz(end ? end : new Date(), tutor.timeZone)
-              .toDate()}
+            selected={
+              moment(end)
+                .toDate().getTime() +
+              (gmtInInt + getLocalGMT) * 60 * 60 * 1000
+            }
             onChange={(date) => {
               date.setHours(23);
               date.setMinutes(59);
@@ -185,7 +192,7 @@ const AccDetails = () => {
               const originalMoment = moment(date);
               setEnd(originalMoment);
             }}
-            dateFormat="MMM d, yyyy"
+            dateFormat="MMM d, yyyy HH:mm:ss"
             className="form-control m-2"
           />
 
@@ -204,14 +211,16 @@ const AccDetails = () => {
           />
           <div className="rounded-pill border p-2">
             from &nbsp;
-            <span className="text-success">{showDate(startDate)}</span> &nbsp;
+            <span className="text-success">{showDate(startDate, wholeDateFormat)}</span> &nbsp;
             to &nbsp;
-            <span className="text-success">{showDate(endDate)}</span>
+            <span className="text-success">{showDate(endDate, wholeDateFormat)}</span>
           </div>
           <IoChevronForwardCircle
             size={32}
             color={isNextDisabled ? "gray" : "green"}
+
             onClick={() => !isNextDisabled && handleNext()}
+
             style={{ cursor: "pointer" }}
           />
         </div>
@@ -219,7 +228,7 @@ const AccDetails = () => {
       <div className="mt-4" style={{ height: "53vh", overflowY: "auto" }}>
         {selectedWeekSession.length ? (
           <table>
-            <thead>
+            <tr>
               <th>Sr.</th>
               <th>Subject</th>
               <th>Student Name</th>
@@ -231,7 +240,7 @@ const AccDetails = () => {
               <th>$ Net</th>
               <th>Invoice #</th>
               <th>Lesson Video</th>
-            </thead>
+            </tr>
             <tbody>
               {selectedWeekSession.map((session) => (
                 <tr
@@ -267,11 +276,10 @@ const AccDetails = () => {
                   <td>{session.invoiceNum}</td>
                   <td>
                     <Button
-                      className={`btn-sm ${
-                        session.request === "delete"
-                          ? "btn-danger"
-                          : "btn-primary"
-                      }`}
+                      className={`btn-sm ${session.request === "delete"
+                        ? "btn-danger"
+                        : "btn-primary"
+                        }`}
                     >
                       {session.request === "delete"
                         ? "Cancelled"
