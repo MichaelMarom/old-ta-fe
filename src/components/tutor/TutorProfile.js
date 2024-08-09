@@ -418,7 +418,7 @@ const TutorProfile = () => {
                       />
                       - Native
                     </div>
-                    {JSON.parse(data.NativeLangOtherLang).map((lang) => (
+                    {data.NativeLangOtherLang && JSON.parse(data.NativeLangOtherLang).map((lang) => (
                       <div
                         className="d-flex align-items-center"
                         key={lang.value}

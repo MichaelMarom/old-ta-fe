@@ -1274,6 +1274,7 @@ const TutorSetup = () => {
                     <Loading
                       height="10px"
                       iconSize="20px"
+                      smallerIcon
                       loadingText="uploading video ..."
                     />
                   )}
@@ -1298,7 +1299,7 @@ const TutorSetup = () => {
                     />
                   </div>
                 ) : (
-                  <div className="tutor-tab-video-frame p-2 card">
+                  <div className="tutor-tab-video-frame p-2 card"style={{overflowY:"auto"}} >
                     <div style={{ textAlign: "justify", fontSize: "12px" }}>
                       Providing your video is elective. Create a 30-60 seconds
                       clip 'limit 10Mb'. An introduction video is a great way to

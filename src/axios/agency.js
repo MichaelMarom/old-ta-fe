@@ -46,6 +46,16 @@ export const get_agencies = async () => {
     }
 }
 
+export const get_agencies_by_tutorId = async (id) => {
+    try {
+        const { data } = await apiClient.get(`/agencies/${id}`);
+        return data
+    }
+    catch (err) {
+        showErrorToast(err)
+    }
+}
+
 
 //sub tutors
 

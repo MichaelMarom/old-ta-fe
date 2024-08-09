@@ -4,7 +4,11 @@ import TutorLayout from "../../../layouts/TutorLayout";
 import { wholeDateFormat } from "../../../constants/constants";
 import TAButton from "../../../components/common/TAButton";
 import CreateAgency from "../../../components/tutor/Agency/CreateAgency";
-import { create_agency, get_agencies } from "../../../axios/agency";
+import {
+  create_agency,
+  get_agencies,
+  get_agencies_by_tutorId,
+} from "../../../axios/agency";
 import { useSelector } from "react-redux";
 import Actions from "../../../components/common/Actions";
 import { capitalize } from "lodash";
@@ -12,24 +16,31 @@ import { toast } from "react-toastify";
 import { FaEdit, FaEye, FaRegEdit } from "react-icons/fa";
 import { BiSolidMessage, BiSolidMessageSquareEdit } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
+import Loading from "../../../components/common/Loading";
 
 const List = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { tutor } = useSelector((state) => state.tutor);
   const [creating, setCreating] = useState(false);
   const navigate = useNavigate();
+  const [fetchingAgencies, setFetchingAgencies] = useState(false);
 
   const [agencies, setAgencies] = useState([]);
 
   useEffect(() => {
-    get_agencies().then(
-      (result) => !result?.response?.data && setAgencies(result)
-    );
+    setFetchingAgencies(true);
+    tutor.AcademyId &&
+      get_agencies_by_tutorId(tutor.AcademyId)
+        .then((result) => !result?.response?.data && setAgencies(result))
+        .finally(() => {
+          setFetchingAgencies(false);
+        });
   }, [tutor.AcademyId]);
 
   const onCreateAgency = async (e, body) => {
     e.preventDefault();
-    if(agencies.length) return toast.warning("You cannot create more than one Agency!")
+    if (agencies.length)
+      return toast.warning("You cannot create more than one Agency!");
     setCreating(true);
     const result = await create_agency(body);
     if (!result?.response?.data) {
@@ -42,7 +53,7 @@ const List = () => {
   return (
     <TutorLayout>
       <div className="container" style={{ height: "calc(100vh - 150px)" }}>
-      <div className=" mt-2 highlight">
+        <div className=" mt-2 highlight">
           <p className="m-1 fw-bold">
             Tutoring Academy platform offers you with a unique 'Agency'
             opportunity that comes with specific prerequisitis. As a dedicated
@@ -66,46 +77,59 @@ const List = () => {
             venture
           </p>
         </div>
-        <div className="d-flex w-100 justify-content-center">
-          <TAButton
-            buttonText={"Create Agency"}
-            style={{width:"200px"}}
-            handleClick={() => setIsOpen(true)}
-          />
-        </div>
-        <div className="d-flex gap-3 flex-wrap justify-content-start">
-          {agencies.map((agency, index) => (
-            <div
-              key={index}
-              className="p-2 click-effect-elem"
-              style={{ height: "fit-content" }}
-              onClick={()=>navigate(`/tutor/agency/${agency.AgencyId}`)}
-            >
-              <div
-                className=" rounded p-2 shadow "
-                style={{ minWidth: "200px" }}
-              >
-              <div className="d-flex justify-content-between">
-                  <h4 className="fw-bold border-bottom">{agency.AgencyName}</h4>
-                  <FaEye color="green" size={25} />
-                  </div>
-                <div className="d-flex justify-content-between">
-                  <h6 className="text-start">Main Tutor:</h6>
-                  <p className="" style={{ fontSize: "12px" }}>
-                    {capitalize(tutor.FirstName)} {capitalize(tutor.LastName)}
-                  </p>
-                </div>
-                <div className="d-flex justify-content-between">
-                  <h6 className="text-start">Date Created:</h6>
+        {!fetchingAgencies && (
+          <div className="d-flex w-100 justify-content-center">
+            <TAButton
+              buttonText={"Create Agency"}
+              style={{ width: "200px" }}
+              handleClick={() => setIsOpen(true)}
+            />
+          </div>
+        )}
+        {fetchingAgencies ? (
+          <Loading />
+        ) : (
+          <div className="d-flex gap-3 flex-wrap justify-content-start">
+            {agencies.length ? (
+              agencies.map((agency, index) => (
+                <div
+                  key={index}
+                  className="p-2 click-effect-elem"
+                  style={{ height: "fit-content" }}
+                  onClick={() => navigate(`/tutor/agency/${agency.AgencyId}`)}
+                >
+                  <div
+                    className=" rounded p-2 shadow "
+                    style={{ minWidth: "200px" }}
+                  >
+                    <div className="d-flex justify-content-between">
+                      <h4 className="fw-bold border-bottom">
+                        {agency.AgencyName}
+                      </h4>
+                      <FaEye color="green" size={25} />
+                    </div>
+                    <div className="d-flex justify-content-between">
+                      <h6 className="text-start">Main Tutor:</h6>
+                      <p className="" style={{ fontSize: "12px" }}>
+                        {capitalize(tutor.FirstName)}{" "}
+                        {capitalize(tutor.LastName)}
+                      </p>
+                    </div>
+                    <div className="d-flex justify-content-between">
+                      <h6 className="text-start">Date Created:</h6>
 
-                  <p style={{ fontSize: "12px" }}>
-                    {showDate(agency.CreatedAt, wholeDateFormat)}
-                  </p>
+                      <p style={{ fontSize: "12px" }}>
+                        {showDate(agency.CreatedAt, wholeDateFormat)}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
+              ))
+            ) : (
+              <div className="text-danger">No record Found</div>
+            )}
+          </div>
+        )}
       </div>
       <CreateAgency
         loading={creating}

@@ -29,7 +29,7 @@ const Select = ({
         {options ? options : children}
       </select>
       <span className="input__label roboto-medium d-flex align-items-end"
-        style={{ bottom:"30px", background: "transparent", color: "black" }}>
+        style={{ background: "transparent", color: "black" }}>
         {TooltipText && !!TooltipText.length && (
           <Tooltip
             width="200px"
