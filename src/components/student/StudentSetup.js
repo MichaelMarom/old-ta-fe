@@ -142,6 +142,7 @@ const StudentSetup = () => {
       });
     } else {
       post_student_setup({
+        userId: user.SID,
         FirstName: fname,
         MiddleName: mname,
         LastName: sname,
@@ -162,13 +163,17 @@ const StudentSetup = () => {
         Country: country,
         GMT: timeZone,
         Photo: photo,
+        Status:"pending",
         ParentConsent: parentConsent,
       }).then((response) => {
         if (!response?.response?.data) {
+          console.log(response[0])
           toast.success("Created Successfully!");
-          get_my_data(localStorage.getItem("student_user_id")).then((data) => {
-            dispatch(setStudent(data));
-          });
+          // get_my_data(localStorage.getItem("student_user_id")).then((data) => {
+          dispatch(
+            setStudent(response[0])
+          );
+          // });
         }
       });
     }
@@ -176,6 +181,7 @@ const StudentSetup = () => {
     setSaving(false);
   };
 
+  console.log(student)
   useEffect(() => {
     if (student.AcademyId) {
       setEditMode(false);
@@ -627,7 +633,7 @@ const StudentSetup = () => {
                   <PhoneInput
                     disabled={!editMode}
                     defaultCountry="us"
-                    value={cell}
+                    value={cell || ""}
                     onChange={(cell) => set_cell(cell)}
                     required
                   />

@@ -31,7 +31,7 @@ export function setDiscount() {
     const tutor = getState().tutor.tutor;
 
     const res = await tutorApis.get_tutor_discount_form(tutor.AcademyId);
-    dispatch(slice.actions.setDiscount(res[0]));
+    res[0] && dispatch(slice.actions.setDiscount(res[0]));
     return res[0];
   };
 }
@@ -50,6 +50,7 @@ export const updateDiscount = async (id, body) => {
 
 export const postDiscount = async (body) => {
   return async (dispatch, getState) => {
+    console.log(body)
     dispatch(slice.actions.isLoading());
     const tutor = getState().tutor.tutor;
 

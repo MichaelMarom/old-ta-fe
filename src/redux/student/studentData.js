@@ -2,7 +2,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import _ from "lodash";
 import { get_my_data } from "../../axios/student";
-import { redirect_to_login } from "../../utils/auth";
 
 // Create a slice with your event-related reducers
 const slice = createSlice({

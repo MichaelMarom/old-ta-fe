@@ -31,7 +31,7 @@ export function setEducation() {
         const tutor = getState().tutor.tutor
 
         const res = await tutorApis.get_my_edu(tutor.AcademyId);
-        dispatch(slice.actions.setEducation(res[0]))
+        res[0] && dispatch(slice.actions.setEducation(res[0]))
         return res[0]
     };
 }

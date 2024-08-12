@@ -81,7 +81,7 @@ const TutorAccSetup = ({
   let saver = async (e) => {
     e.preventDefault();
 
-    let user_id = window.localStorage.getItem("tutor_user_id");
+    let AcademyId = tutor.AcademyId;
     let Step = null;
     if (!dbValues.AcademyId) Step = 5;
     if (validate()) setSaving(true);
@@ -98,7 +98,7 @@ const TutorAccSetup = ({
           Account: acct,
         })
       );
-    else if (payment_option === "Bank") {
+    else {
       let response = await upload_tutor_bank(
         email,
         acct_name,
@@ -108,7 +108,7 @@ const TutorAccSetup = ({
         routing,
         ssh,
         payment_option,
-        user_id
+        AcademyId
       );
       fetchingTutorBankRecord();
       if (Step) {
@@ -130,7 +130,7 @@ const TutorAccSetup = ({
 
   const fetchingTutorBankRecord = async () => {
     // const result = await get_bank_details(window.localStorage.getItem('tutor_user_id'));
-    if (bank.AcademyId) {
+    if (bank?.AcademyId) {
       setDBValues({
         AcademyId: bank.AcademyId,
         PaymentOption: bank.PaymentOption,

@@ -26,7 +26,6 @@ function Chat() {
   const [files, setFiles] = useState({ images: [], pdfs: [] })
   const params = useParams();
   const location = useLocation();
-  const { shortlist } = useSelector((state) => state.shortlist);
   const { student } = useSelector((state) => state.student);
   const { tutor } = useSelector((state) => state.tutor);
   const studentLoggedIn = location.pathname.split("/")[1] === "student";
@@ -257,7 +256,7 @@ function Chat() {
     // eslint-disable-next-line
     const foundChat = chats.find((chat) => chat.id == params.id) || {};
     setSelectedChat(foundChat);
-  }, [params.id, shortlist, chats]);
+  }, [params.id, chats]);
 
   if (isLoading) return <Loading height="100vh" />;
   return (

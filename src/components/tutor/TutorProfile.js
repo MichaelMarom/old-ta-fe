@@ -42,6 +42,7 @@ const TutorProfile = () => {
   const { tutor } = useSelector((state) => state.tutor);
   const [isEnlarged, setIsEnlarged] = useState(false);
 
+  console.log(tutor, education, discount, data)
   const toggleSize = () => {
     setIsEnlarged((prev) => !prev);
   };
@@ -117,20 +118,6 @@ const TutorProfile = () => {
     }
   }, [params.id, tutor.AcademyId, education.AcademyId, discount.AcademyId]);
 
-  // useEffect(() => {
-  //   if (education.AcademyId) {
-  //     setProfileData({ ...data, ...education });
-  //   }
-  // }, [education.AcademyId]);
-
-  // useEffect(() => {
-  //   if (discount.AcademyId) {
-  //     setProfileData({ ...data, ...discount });
-  //   }
-  // }, [discount.AcademyId]);
-
-  // if (fetching) return <Loading />;
-  // else
   if (!data.AcademyId)
     return (
       <h5 className="text-danger p-5">

@@ -12,7 +12,8 @@ const Lessons = ({ paymentReportData }) => {
         }}>
             <div className='d-flex justify-content-between'>
                 <h2>Lessons</h2>
-                <h5 className='border p-1 shadow rounded'>First Lesson: {showDate(paymentReportData[0].start)}</h5>
+                <h5 className='border p-1 shadow rounded'>First Lesson: {paymentReportData?.[0]?.start  ? 
+                showDate(paymentReportData?.[0]?.start) : "N/A"}</h5>
             </div>
             {paymentReportData.length ? <table>
                 <thead className='thead-light'>

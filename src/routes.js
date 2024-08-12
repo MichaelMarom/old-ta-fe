@@ -131,6 +131,7 @@ const App = () => {
 
         const intervalId = setInterval(async () => {
           const tutorSessions = await dispatch(await setTutorSessions(tutor));
+          console.log(tutorSessions)
           if (handleExpiredToken(tutorSessions)) clearInterval(intervalId);
         }, 60000);
 

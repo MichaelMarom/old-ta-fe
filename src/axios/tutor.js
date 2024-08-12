@@ -183,37 +183,9 @@ export const post_edu = async (body) => {
   }
 };
 
-export let upload_tutor_disocunt_form = (
-  MutiStudentHourlyRate,
-  CancellationPolicy,
-  FreeDemoLesson,
-  ConsentRecordingLesson,
-  ActivateSubscriptionOption,
-  SubscriptionPlan,
-  AcademyId,
-  DiscountCode,
-  CodeSubject,
-  CodeShareable,
-  MultiStudent,
-  IntroSessionDiscount,
-  CodeStatus
-) => {
+export let upload_tutor_disocunt_form = (body) => {
   try {
-    const { data } = apiClient.post("/tutor/tutor-discounts", {
-      MutiStudentHourlyRate,
-      CancellationPolicy,
-      IntroSessionDiscount,
-      FreeDemoLesson,
-      ConsentRecordingLesson,
-      ActivateSubscriptionOption,
-      SubscriptionPlan,
-      AcademyId,
-      DiscountCode,
-      CodeShareable,
-      MultiStudent,
-      CodeSubject,
-      CodeStatus,
-    });
+    const { data } = apiClient.post("/tutor/tutor-discounts", body);
     return data;
   } catch (err) {
     showErrorToast(err);
@@ -235,74 +207,74 @@ export const formatted_tutor_sessions = async (tutorId) => {
   return data;
 };
 
-export const feedback_records = async (tutorId, timeZone) => {
-  try {
-    const { data } = await apiClient.get(`/tutor/feedbacks/${tutorId}`, {
-      params: { timeZone },
-    });
-    return data;
-  } catch (err) {
-    showErrorToast(err);
-  }
-};
+// export const feedback_records = async (tutorId, timeZone) => {
+//   try {
+//     const { data } = await apiClient.get(`/tutor/feedbacks/${tutorId}`, {
+//       params: { timeZone },
+//     });
+//     return data;
+//   } catch (err) {
+//     showErrorToast(err);
+//   }
+// };
 
-export let get_degree = () => {
-  return new Promise((resolve, reject) => {
-    apiClient
-      .get("/tutor/degree", {})
-      .then((result) => {
-        resolve(result.data);
-      })
-      .catch((err) => {
-        showErrorToast(err);
+// export let get_degree = () => {
+//   return new Promise((resolve, reject) => {
+//     apiClient
+//       .get("/tutor/degree", {})
+//       .then((result) => {
+//         resolve(result.data);
+//       })
+//       .catch((err) => {
+//         showErrorToast(err);
 
-        // reject(err)
-      });
-  });
-};
+//         // reject(err)
+//       });
+//   });
+// };
 
-export let get_level = () => {
-  return new Promise((resolve, reject) => {
-    apiClient
-      .get("/tutor/level", {})
-      .then((result) => {
-        resolve(result.data);
-      })
-      .catch((err) => {
-        showErrorToast(err);
+// export let get_level = () => {
+//   return new Promise((resolve, reject) => {
+//     apiClient
+//       .get("/tutor/level", {})
+//       .then((result) => {
+//         resolve(result.data);
+//       })
+//       .catch((err) => {
+//         showErrorToast(err);
 
-        // reject(err)
-      });
-  });
-};
+//         // reject(err)
+//       });
+//   });
+// };
 
-export let get_certificates = () => {
-  return new Promise((resolve, reject) => {
-    apiClient
-      .get("/tutor/certificates", {})
-      .then((result) => {
-        resolve(result.data);
-      })
-      .catch((err) => {
-        showErrorToast(err);
+// export let get_certificates = () => {
+//   return new Promise((resolve, reject) => {
+//     apiClient
+//       .get("/tutor/certificates", {})
+//       .then((result) => {
+//         resolve(result.data);
+//       })
+//       .catch((err) => {
+//         showErrorToast(err);
 
-        // reject(err)
-      });
-  });
-};
+//         // reject(err)
+//       });
+//   });
+// };
 
-export let get_user_data = async (user_id) => {
-  try {
-    const { data } = await apiClient.get("/tutor/education", {
-      params: {
-        user_id,
-      },
-    });
-    return data;
-  } catch (err) {
-    showErrorToast(err);
-  }
-};
+// export let get_user_data = async (user_id) => {
+//   try {
+//     const { data } = await apiClient.get("/tutor/education", {
+//       params: {
+//         user_id,
+//       },
+//     });
+//     return data;
+//   } catch (err) {
+//     showErrorToast(err);
+//   }
+// };
 
 export const student_public_profile = async (studentId, tutorId = null) => {
   try {
@@ -337,21 +309,21 @@ export const remove_subject_rates = async (id) => {
   } catch (err) {}
 };
 
-export let get_my_data = (AcademyId) => {
-  return new Promise((resolve, reject) => {
-    apiClient
-      .get("/tutor/my-data", {
-        params: {},
-      })
-      .then((result) => {
-        resolve(result.data);
-      })
-      .catch((err) => {
-        showErrorToast(err);
-        // reject(err)
-      });
-  });
-};
+// export let get_my_data = (AcademyId) => {
+//   return new Promise((resolve, reject) => {
+//     apiClient
+//       .get("/tutor/my-data", {
+//         params: {},
+//       })
+//       .then((result) => {
+//         resolve(result.data);
+//       })
+//       .catch((err) => {
+//         showErrorToast(err);
+//         // reject(err)
+//       });
+//   });
+// };
 
 export let get_my_edu = async (AcademyId) => {
   try {
@@ -374,6 +346,7 @@ export const get_tutor_subjects = async (id) => {
     showErrorToast(err);
   }
 };
+
 export const get_faculty_subject = async (id) => {
   try {
     const { data } = await apiClient.get(`/subject/${id}`);
@@ -757,7 +730,7 @@ export const put_ad = async (id, body) => {
     const { data } = await apiClient.put(`/tutor/ad/${id}`, body);
     return data;
   } catch (err) {
-    showErrorToast(err)
+    showErrorToast(err);
     return err;
   }
 };

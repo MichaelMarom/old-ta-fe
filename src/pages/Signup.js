@@ -102,7 +102,7 @@ const Signup = () => {
       });
       if (completeSignUp.status === "complete") {
         await setActive({ session: completeSignUp.createdSessionId });
-        const token = await getToken({ template: "tutoring-academy-jwt-template" });
+        const token = await getToken({ template: process.env.REACT_APP_CLERK_JWT_TEMP });
         if (token) {
           // localStorage.setItem("access_token", token);
           const result = await signup({

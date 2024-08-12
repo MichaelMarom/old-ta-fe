@@ -6,14 +6,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../redux/auth/auth";
 import { ForgetPasswordModal } from "../components/auth/ForgetPasswordModal";
 import "../styles/auth.css";
-import { useAuth, useSignIn, useSession } from "@clerk/clerk-react";
+import { useAuth, useSignIn, useSession, useClerk } from "@clerk/clerk-react";
 import { DEFAULT_URL_AFTER_LOGIN } from "../constants/constants";
 import TAButton from "../components/common/TAButton";
+import { redirect_to_login } from "../utils/auth";
+import { setTutor } from "../redux/tutor/tutorData";
+import { setStudent } from "../redux/student/studentData";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.user);
   const { signIn, setActive, isLoaded } = useSignIn();
+  const { signOut } = useClerk();
   const [showPassword, setShowPassword] = useState(false);
   const { isSignedIn, userId } = useAuth();
   const [modalOpen, setOpenModel] = useState(false);
@@ -57,9 +61,9 @@ const LoginPage = () => {
 
   let fetchUser = async (userId) => {
     if (isLoaded && userId) {
-      setLoading(true)
+      setLoading(true);
       const user = await get_user_detail(userId);
-      setLoading(false)
+      setLoading(false);
       if (user?.role) {
         dispatch(setUser(user));
         localStorage.setItem("user", JSON.stringify(user));
@@ -69,12 +73,22 @@ const LoginPage = () => {
           localStorage.setItem("access_token", token);
           navigate(DEFAULT_URL_AFTER_LOGIN[user.role]);
         }
+      } else {
+        toast.error("User not found!");
+        redirect_to_login(
+          navigate,
+          signOut,
+          dispatch,
+          setTutor,
+          setStudent,
+          setUser
+        );
       }
     }
   };
 
   useEffect(() => {
-    console.log(userId, isLoaded)
+    console.log(userId, isLoaded);
     if (userId && isSignedIn) {
       fetchUser(userId);
     } else {

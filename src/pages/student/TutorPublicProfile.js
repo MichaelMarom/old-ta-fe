@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import TAButton from "../../components/common/TAButton";
 import {
-  get_my_data,
   get_my_edu,
   get_tutor_discount_form,
   get_tutor_setup,

@@ -32,7 +32,7 @@ export function setAccounting() {
         dispatch(slice.actions.isLoading())
         const tutor = getState().tutor.tutor
         const res = await tutorApis.get_bank_details(tutor.AcademyId);
-        dispatch(slice.actions.setAccounting(res[0]))
+        res[0] && dispatch(slice.actions.setAccounting(res[0]))
         return res[0]
     };
 }

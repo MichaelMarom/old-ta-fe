@@ -23,7 +23,6 @@ const Collaboration = () => {
   const { user } = useSelector((state) => state.user);
   const { student } = useSelector((state) => state.student);
   const { tutor } = useSelector((state) => state.tutor);
-  const { shortlist } = useSelector((state) => state.shortlist);
   const { currentSession } = useSelector((state) => state.studentSessions);
   const { currentSession: tutorCurrentSession } = useSelector(
     (state) => state.tutorSessions
@@ -58,9 +57,6 @@ const Collaboration = () => {
     const collaborators = new Map();
 
     if (user.role === "student") {
-      const tutorPicture = shortlist.find(
-        (list) => list.AcademyId[0] === tutorId
-      )?.Photo;
 
       collaborators.set(studentId, {
         username: student.ScreenName,
@@ -72,7 +68,7 @@ const Collaboration = () => {
         username: tutor.AcademyId,
         isCurrentUser: true,
         isSpeaking: true,
-        avatarUrl: tutorPicture,
+        avatarUrl: null,
       });
     } else if (user.role === "tutor") {
       const tutorPicture = tutor.Photo;

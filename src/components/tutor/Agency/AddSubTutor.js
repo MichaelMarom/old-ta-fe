@@ -7,10 +7,7 @@ import Select from "../../common/Select";
 import { useSelector } from "react-redux";
 import {
   get_faculties,
-  get_faculty_subject,
-  get_my_data,
   get_rates,
-  get_tutor_setup,
 } from "../../../axios/tutor";
 import { capitalize } from "lodash";
 import { create_subTutor, get_subTutors } from "../../../axios/agency";

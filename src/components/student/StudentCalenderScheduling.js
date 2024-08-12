@@ -7,7 +7,7 @@ import {
   formatName,
 } from "../../utils/common";
 import { convertGMTOffsetToLocalString } from "../../utils/moment";
-import { get_my_data } from "../../axios/student";
+// import { get_my_data } from "../../axios/student";
 import { useDispatch } from "react-redux";
 import { setStudent } from "../../redux/student/studentData";
 import { useNavigate } from "react-router-dom";
