@@ -10,6 +10,7 @@ import TAButton from "../../common/TAButton";
 import { convertTutorIdToName } from "../../../utils/common";
 import Avatar from "../../common/Avatar";
 import TableHeader from "../../common/TableHeader";
+import { capitalize } from "lodash";
 
 function SessionsTable({ events=[], setSelectedEvent, selectedEvent }) {
   const { tutor } = useSelector((state) => state.tutor);
@@ -120,7 +121,7 @@ function SessionsTable({ events=[], setSelectedEvent, selectedEvent }) {
                   <Avatar avatarSrc={event.photo} showOnlineStatus={false} />
                 </td>
                 <td style={{ width: Header[0].width }}>
-                  {convertTutorIdToName(event.studentId)}
+                  {capitalize(event.studentName)}
                 </td>
 
                 <td style={{ width: Header[0].width }}>

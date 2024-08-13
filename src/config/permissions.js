@@ -1,4 +1,5 @@
 import React, { lazy } from 'react';
+import AdminAccounting from '../pages/admin/AdminAccounting';
 
 // tutor components
 const Intro = lazy(() => import('../pages/tutor/Intro'));
@@ -122,7 +123,7 @@ const rolePermissions = {
     { path: "/admin/marketing", component: <Send /> },
     { path: "/admin/marketing/add-sms", component: <AddSMSMessages /> },
 
-    { path: "/admin/accounting", component: null },
+    { path: "/admin/accounting", component: <AdminAccounting /> },
   ],
   common: [
     { path: "/login", component: <Login /> },

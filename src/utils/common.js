@@ -38,7 +38,7 @@ export const copyToClipboard = (text) => {
 
 export const convertTutorIdToName = (academyId) => {
   return academyId
-    ? academyId.split(".")[0] + " " + academyId.split(".")[1][1]
+    ? `${academyId.split(".")[0]} ${academyId.split(".")[1][0]}`
     : "";
 };
 

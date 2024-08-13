@@ -223,7 +223,10 @@ const Header = () => {
               zIndex: 9,
             }}
           >
-            <ul className="d-flex flex-column align-items-start p-2">
+            <ul
+              style={{ background: "#212f3c", color: "white" }}
+              className="d-flex flex-column align-items-start p-2"
+            >
               <li
                 className="p-0 text-start border-bottom w-100"
                 style={{ fontSize: "12px" }}
@@ -234,7 +237,8 @@ const Header = () => {
                 {showDate(moment().toDate(), wholeDateFormat)}
               </li>
               <li
-                className="p-0 text-start w-100 text-danger"
+                style={{ color: "#e14c4c" }}
+                className="p-0 text-start w-100"
                 onClick={() => signOut(() => handleSignOut())}
               >
                 Signout

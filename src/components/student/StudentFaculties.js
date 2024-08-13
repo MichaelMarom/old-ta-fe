@@ -449,7 +449,7 @@ const StudentFaculties = () => {
                                   }}
                                   className=""
                                 >
-                                  {convertTutorIdToName(item?.AcademyId)}
+                                  {convertTutorIdToName(item?.TutorScreenname)}
                                 </td>
                                 <td
                                   style={{

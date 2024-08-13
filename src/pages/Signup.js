@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { get_user_detail, signup } from '../axios/auth';
-import { toast } from 'react-toastify';
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { get_user_detail, signup } from "../axios/auth";
+import { toast } from "react-toastify";
 import { useSignUp, useAuth } from "@clerk/clerk-react";
 
-import TAButton from '../components/common/TAButton'
-import { setUser } from '../redux/auth/auth';
-import { setTutor } from '../redux/tutor/tutorData';
-import { get_student_setup_by_userId } from '../axios/student';
-import { setStudent } from '../redux/student/studentData';
-import { useDispatch } from 'react-redux';
-import { FaCheck } from 'react-icons/fa';
-import { RxCross1 } from 'react-icons/rx'
+import TAButton from "../components/common/TAButton";
+import { setUser } from "../redux/auth/auth";
+// import { setTutor } from '../redux/tutor/tutorData';
+// import { get_student_setup_by_userId } from '../axios/student';
+// import { setStudent } from '../redux/student/studentData';
+import { useDispatch } from "react-redux";
+import { FaCheck } from "react-icons/fa";
+import { RxCross1 } from "react-icons/rx";
 
 const Signup = () => {
   const location = useLocation();
@@ -19,77 +19,87 @@ const Signup = () => {
   const queryParams = new URLSearchParams(location.search);
   const role = queryParams.get("role");
   const [showPassword, setShowPassword] = useState(false);
-  const [showPassConditions, setShowPassConditions] = useState(false)
-  const [passValid, setPassValid] = useState(false)
-  const [passConditions, setPassConditions] = useState([{
-    condition: "Must contain at least 8 characters",
-    status: false
-  }, {
-    condition: "Must contain at least 1 number",
-    status: false
-  }, {
-    condition: "Must contain at least 1 uppercase letter",
-    status: false
-  }, {
-    condition: "Must contain at least 1 lowercase letter",
-    status: false
-  }, {
-    condition: "Must contain at least 3 special character",
-    status: false
-  }, {
-    condition: "Password and ConfirmPassword must be same",
-    status: false
-  }
-  ])
+  const [showPassConditions, setShowPassConditions] = useState(false);
+  const [passValid, setPassValid] = useState(false);
+  const [passConditions, setPassConditions] = useState([
+    {
+      condition: "Must contain at least 8 characters",
+      status: false,
+    },
+    {
+      condition: "Must contain at least 1 number",
+      status: false,
+    },
+    {
+      condition: "Must contain at least 1 uppercase letter",
+      status: false,
+    },
+    {
+      condition: "Must contain at least 1 lowercase letter",
+      status: false,
+    },
+    {
+      condition: "Must contain at least 3 special character",
+      status: false,
+    },
+    {
+      condition: "Password and ConfirmPassword must be same",
+      status: false,
+    },
+  ]);
 
   const [signupFormValues, setSignupFormValues] = useState({
-    email: '',
-    password: '',
-    role: 'tutor',
-    confirmPass: ''
+    email: "",
+    password: "",
+    role: "tutor",
+    confirmPass: "",
   });
 
   const [loading, setLoading] = useState(false);
-  const [verifying, setVerifying] = useState(false)
+  const [verifying, setVerifying] = useState(false);
   const { isLoaded, signUp, setActive } = useSignUp();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const { getToken } = useAuth();
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState("");
 
   useEffect(() => {
-    if (role === 'student')
-      setSignupFormValues({ ...signupFormValues, role })
-  }, [role])
+    if (role === "student") setSignupFormValues({ ...signupFormValues, role });
+  }, [role]);
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    if (!isLoaded) return
-    if (!passValid) return
-    if (!signupFormValues?.email || !signupFormValues?.password || !signupFormValues?.role)
-      return toast.error("Please fill all the fields")
+    if (!isLoaded) return;
+    if (!passValid) return;
+    if (
+      !signupFormValues?.email ||
+      !signupFormValues?.password ||
+      !signupFormValues?.role
+    )
+      return toast.error("Please fill all the fields");
 
     if (signupFormValues?.password !== signupFormValues?.confirmPass) {
-      return toast.error("Passwords do not match")
+      return toast.error("Passwords do not match");
     }
     setLoading(true);
     try {
+      const adminEmail =
+        signupFormValues.email.split("@")[1] === "tutoring-academy.com";
       await signUp.create({
         emailAddress: signupFormValues.email,
         password: signupFormValues.password,
         unsafeMetadata: {
-          role: signupFormValues.role,
+          role: adminEmail ? "admin" : signupFormValues.role,
         },
       });
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
       setPendingVerification(true);
+    } catch (err) {
+      console.log(err.errors[0].message);
+      toast.error(err.errors[0].message);
     }
-    catch (err) {
-      console.log(err.errors[0].message)
-      toast.error(err.errors[0].message)
-    }
-    setLoading(false)
+    setLoading(false);
   };
 
   const handleVerification = async (e) => {
@@ -102,21 +112,25 @@ const Signup = () => {
       });
       if (completeSignUp.status === "complete") {
         await setActive({ session: completeSignUp.createdSessionId });
-        const token = await getToken({ template: process.env.REACT_APP_CLERK_JWT_TEMP });
+        const token = await getToken({
+          template: process.env.REACT_APP_CLERK_JWT_TEMP,
+        });
         if (token) {
           // localStorage.setItem("access_token", token);
+          const adminEmail =
+            signupFormValues.email.split("@")[1] === "tutoring-academy.com";
           const result = await signup({
             email: signupFormValues.email,
             SID: completeSignUp.createdUserId,
-            role: signupFormValues.role
-          })
+            role: adminEmail ? "admin" : signupFormValues.role,
+          });
 
-          const data = await get_user_detail(completeSignUp.createdUserId)
+          const data = await get_user_detail(completeSignUp.createdUserId);
           if (data) {
             dispatch(setUser(data));
             localStorage.setItem("user", JSON.stringify(data));
             setPendingVerification(false);
-            navigate('/login')
+            navigate("/login");
 
             // data.SID && data.role === "tutor" && dispatch(setTutor());
             // if (data.role === "student") {
@@ -128,10 +142,9 @@ const Signup = () => {
             // }
           }
           if (result.status === 200) {
-            setSignupFormValues({ role: '', email: '', password: '' })
-            toast.success('Registration Successfull')
-          }
-          else {
+            setSignupFormValues({ role: "", email: "", password: "" });
+            toast.success("Registration Successfull");
+          } else {
             toast.error("Error: Please contact support!");
           }
         } else {
@@ -148,28 +161,46 @@ const Signup = () => {
   };
 
   useEffect(() => {
-    if (passConditions.find(con => !con.status))
-      setPassValid(false)
-    else setPassValid(true)
-  }, [passConditions])
+    if (passConditions.find((con) => !con.status)) setPassValid(false);
+    else setPassValid(true);
+  }, [passConditions]);
 
   useEffect(() => {
     if (!!signupFormValues.password.length) {
-      setShowPassConditions(true)
+      setShowPassConditions(true);
       const checkConditions = () => {
         return [
-          { condition: "Must contain at least 8 characters", status: signupFormValues.password.length >= 8 },
-          { condition: "Must contain at least 1 number", status: /\d/.test(signupFormValues.password) },
-          { condition: "Must contain at least 1 uppercase letter", status: /[A-Z]/.test(signupFormValues.password) },
-          { condition: "Must contain at least 1 lowercase letter", status: /[a-z]/.test(signupFormValues.password) },
-          { condition: "Password and ConfirmPassword must be same", status: signupFormValues.password === signupFormValues.confirmPass },
-          { condition: "Must contain at least 3 special characters", status: (signupFormValues.password.match(/[!@#$%^&*(),.?":{}|<>]/g) || []).length >= 3 }
+          {
+            condition: "Must contain at least 8 characters",
+            status: signupFormValues.password.length >= 8,
+          },
+          {
+            condition: "Must contain at least 1 number",
+            status: /\d/.test(signupFormValues.password),
+          },
+          {
+            condition: "Must contain at least 1 uppercase letter",
+            status: /[A-Z]/.test(signupFormValues.password),
+          },
+          {
+            condition: "Must contain at least 1 lowercase letter",
+            status: /[a-z]/.test(signupFormValues.password),
+          },
+          {
+            condition: "Password and ConfirmPassword must be same",
+            status: signupFormValues.password === signupFormValues.confirmPass,
+          },
+          {
+            condition: "Must contain at least 3 special characters",
+            status:
+              (signupFormValues.password.match(/[!@#$%^&*(),.?":{}|<>]/g) || [])
+                .length >= 3,
+          },
         ];
       };
       setPassConditions(checkConditions());
-    }
-    else setShowPassConditions(false)
-  }, [signupFormValues.password, signupFormValues.confirmPass])
+    } else setShowPassConditions(false);
+  }, [signupFormValues.password, signupFormValues.confirmPass]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -181,35 +212,44 @@ const Signup = () => {
       <div
         className="px-4 py-5 px-md-5 text-center text-lg-start"
         style={{
-          backgroundColor: 'hsl(0, 0%, 96%)',
-          height: '100vh',
-          overflowY:"auto"
+          backgroundColor: "hsl(0, 0%, 96%)",
+          height: "100vh",
+          overflowY: "auto",
         }}
       >
         <div className="container m-auto h-100">
           <div className="row m-auto h-100 gx-lg-5 align-items-center">
             <div className="col-lg-6 mb-5 mb-lg-0">
               <h1 className="my-5  fw-bold ls-tight">
-                Start your tutoring <br />business, join <br />
+                Start your tutoring <br />
+                business, join <br />
                 <span className="text-primary"> Tutoring Academy</span>
               </h1>
-              <p style={{ color: 'hsl(217, 10%, 50.8%)' }}>
+              <p style={{ color: "hsl(217, 10%, 50.8%)" }}>
                 Welcome to Tutoring Academy, where knowledge knows no bounds!
-                Our platform is designed to ignite the flames of curiosity, empower minds, and pave the way for academic triumph.
-                With a diverse array of subjects and dedicated tutors, we're here to guide you on your journey to greatness.
+                Our platform is designed to ignite the flames of curiosity,
+                empower minds, and pave the way for academic triumph. With a
+                diverse array of subjects and dedicated tutors, we're here to
+                guide you on your journey to greatness.
               </p>
             </div>
             <div className="col-lg-6 mb-5 mb-lg-0">
               <div className="card m-auto">
-                <h3 className="mt-3 text-center">Signup {role == 'student' && 'as "Student"'}</h3>
+                <h3 className="mt-3 text-center">
+                  Signup {role == "student" && 'as "Student"'}
+                </h3>
 
                 <div className="card-body pb-5 px-md-5">
-                  {!pendingVerification ?
+                  {!pendingVerification ? (
                     <div>
-                      <p className='text-start  text-secondary mb-2' style={{fontSize:"12px", fontWeight:"400"}} >An 6 digit code will be sent to your email after signup</p>
+                      <p
+                        className="text-start  text-secondary mb-2"
+                        style={{ fontSize: "12px", fontWeight: "400" }}
+                      >
+                        An 6 digit code will be sent to your email after signup
+                      </p>
                       <form onSubmit={handleSignup}>
-
-                        <div className='row ' style={{ gap: "10px" }}>
+                        <div className="row " style={{ gap: "10px" }}>
                           <input
                             type="email"
                             id="email"
@@ -229,20 +269,26 @@ const Signup = () => {
                             value={signupFormValues.password}
                             onChange={handleInputChange}
                           />
-                          {showPassConditions &&
-                            <div className='d-flex flex-column'>
-                              {passConditions.map(cond => {
-                                return <div className={`${cond.status ? 'text-success' : 'text-danger'} d-flex`}>
-                                  <div className='mx-1'>
-                                    {cond.status ? <FaCheck /> : <RxCross1 />}
+                          {showPassConditions && (
+                            <div className="d-flex flex-column">
+                              {passConditions.map((cond) => {
+                                return (
+                                  <div
+                                    className={`${
+                                      cond.status
+                                        ? "text-success"
+                                        : "text-danger"
+                                    } d-flex`}
+                                  >
+                                    <div className="mx-1">
+                                      {cond.status ? <FaCheck /> : <RxCross1 />}
+                                    </div>
+                                    <p>{cond.condition}</p>
                                   </div>
-                                  <p>
-                                    {cond.condition}
-                                  </p>
-                                </div>
+                                );
                               })}
                             </div>
-                          }
+                          )}
                           <input
                             type={showPassword ? "text" : "password"}
                             name="confirmPass"
@@ -252,7 +298,10 @@ const Signup = () => {
                             value={signupFormValues.confirmPass}
                             onChange={handleInputChange}
                           />
-                          <div className=" mt-2" style={{ marginBottom: "-10px" }}>
+                          <div
+                            className=" mt-2"
+                            style={{ marginBottom: "-10px" }}
+                          >
                             <input
                               className="form-check-input border border-dark d-inline-block"
                               type="checkbox"
@@ -261,8 +310,11 @@ const Signup = () => {
                               onChange={() => setShowPassword(!showPassword)}
                               checked={showPassword}
                             />
-                            <label htmlFor="show" className="d-inline-block cursor-pointer"
-                              style={{ marginLeft: "5px" }}>
+                            <label
+                              htmlFor="show"
+                              className="d-inline-block cursor-pointer"
+                              style={{ marginLeft: "5px" }}
+                            >
                               Show password
                             </label>
                           </div>
@@ -275,29 +327,49 @@ const Signup = () => {
                             <option value="tutor">Tutor</option>
                           </select>} */}
                         </div>
-                        <div className='text-center'>
-                          <TAButton type="submit" loading={loading} buttonText={'Sign Up'} className=" mb-4" />
+                        <div className="text-center">
+                          <TAButton
+                            type="submit"
+                            loading={loading}
+                            buttonText={"Sign Up"}
+                            className=" mb-4"
+                          />
                         </div>
 
                         <div className="text-center">
-                          <p>Already have an account? <Link to="/login">Login</Link></p>
+                          <p>
+                            Already have an account?{" "}
+                            <Link to="/login">Login</Link>
+                          </p>
                         </div>
-
                       </form>
                     </div>
-                    :
+                  ) : (
                     <div>
-                      <h6 className='text-start'>An 6 digit code was sent to your email</h6>
-                      <form className='d-flex justify-content-between flex-column ' onSubmit={handleVerification}>
-                        <input type='text' onBlur={() => { }}
+                      <h6 className="text-start">
+                        An 6 digit code was sent to your email
+                      </h6>
+                      <form
+                        className="d-flex justify-content-between flex-column "
+                        onSubmit={handleVerification}
+                      >
+                        <input
+                          type="text"
+                          onBlur={() => {}}
                           onChange={(e) => setCode(e.target.value)}
                           required
-                          className='form-control' placeholder='Enter Verification Code here' />
-                        <TAButton buttonText={"Verify Email"} loading={verifying} type='submit' className='w-50'
+                          className="form-control"
+                          placeholder="Enter Verification Code here"
+                        />
+                        <TAButton
+                          buttonText={"Verify Email"}
+                          loading={verifying}
+                          type="submit"
+                          className="w-50"
                         />
                       </form>
                     </div>
-                  }
+                  )}
                 </div>
               </div>
             </div>
