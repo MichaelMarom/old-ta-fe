@@ -291,7 +291,7 @@ h1 {
   position: relative;
   padding: 0;
   width: 100px;
-  height: 50px;
+  height: 30px;
   border: 2px solid #e1e1e1;
   outline: none;
   background-color: #f4f5f6;
@@ -306,6 +306,7 @@ h1 {
 
 .action-btn:active {
   box-shadow: none;
+  border-color: none !important;
 }
 
 .action-btn:active .button__content {
@@ -326,7 +327,6 @@ h1 {
   outline: none;
   background-color: #f4f5f6;
   border-radius: 10px;
-  /* box-shadow: -6px -12px 10px #ffffff, -6px -10px 15px #ffffff, -21px 0px 6px #ffffff, 6px 6px 11px rgba(0, 0, 0, 0.2); */
   transition: 0.13s ease-in-out;
   cursor: pointer;
 }
@@ -397,7 +397,7 @@ h1 {
   height: 100%;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr;
-  box-shadow: inset 0px -8px 0px #dddddd, 0px 0px 0px #f4f5f6;
+  box-shadow: inset 0px -3px 0px #dddddd, 0px 0px 0px #f4f5f6;
   border-radius: 40px;
   transition: 0.13s ease-in-out;
   z-index: 1;
@@ -405,6 +405,7 @@ h1 {
 
 .action-btn .button__icon {
   position: relative;
+  align-items: center;
   display: flex;
   transform: translate3d(0px, -4px, 0px);
   grid-column: 4;
@@ -423,8 +424,11 @@ h1 {
   grid-column: 1/4;
   grid-row: 1;
   text-align: center;
-  font-size: 15px;
-  font-weight: bold;
+  /* font-size: 15px;
+  font-weight: bold; */
+
+  font-size: 12px;
+  font-weight: 400;
   background-color: #888888;
   color: #5e5e5e;
   text-shadow: 2px 2px 3px rgba(255, 255, 255, 0.5);
@@ -435,15 +439,15 @@ h1 {
 }
 
 .action-btn.saving-btn {
-  position: relative;
+  /* position: relative;
   padding: 0;
   width: 100px;
-  height: 50px;
+  height: 50px; */
   border: 2px solid green;
-  outline: none;
+  /* outline: none; */
   background-color: lightgreen;
-  border-radius: 40px;
-  box-shadow: -6px -12px 10px #fff, -6px -10px 15px #fff, -21px 0px 6px #fff, 6px 6px 11px rgba(1, 164, 44, 0.2);
+  /* border-radius: 40px; */
+  /* box-shadow: -6px -12px 10px #fff, -6px -10px 15px #fff, -21px 0px 6px #fff, 6px 6px 11px rgba(1, 164, 44, 0.2); */
   transition: 0.13s ease-in-out;
   cursor: pointer;
 }
@@ -469,7 +473,7 @@ h1 {
   height: 100%;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr;
-  box-shadow: inset 0px -8px 0px #92be7e, 0px -8px 0px #fff;
+  box-shadow: inset 0px -3px 0px #92be7e, 0px -8px 0px #fff;
   border-radius: 40px;
   transition: 0.13s ease-in-out;
   z-index: 1;
@@ -811,9 +815,9 @@ button.Toastify__close-button.Toastify__close-button--light {
 
 .custom-tooltip {
   position: absolute;
-  background-color: rgb(245, 245, 245);
-  color: #333;
-  border: 1px solid rgb(193, 193, 193);
+  background-color: rgb(33 47 60);
+  color: #e1e1e1;
+  border: 1px solid rgb(232 232 232 / 11%);
   padding: 5px;
   border-radius: 4px;
   z-index: 999;
@@ -846,7 +850,7 @@ button.Toastify__close-button.Toastify__close-button--light {
   border-style: solid;
   border-color: transparent transparent rgb(245, 245, 245) transparent;
 
-  background: rgb(245, 245, 245);
+  background: rgb(33 47 60);
   border-right: 1px solid rgb(193, 193, 193);
   border-bottom: 1px solid rgb(193, 193, 193);
   -moz-transform: rotate(-135deg);
@@ -866,8 +870,8 @@ button.Toastify__close-button.Toastify__close-button--light {
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: transparent transparent rgb(245, 245, 245) transparent;
-  background: rgb(245, 245, 245);
+  border-color: transparent transparent rgb(232 232 232 / 11%) transparent;
+  background: rgb(33 47 60);
   border-right: 1px solid rgb(193, 193, 193);
   border-bottom: 1px solid rgb(193, 193, 193);
   -moz-transform: rotate(-135deg);
@@ -881,8 +885,8 @@ button.Toastify__close-button.Toastify__close-button--light {
   left: 5%;
   border-width: 10px;
   border-style: solid;
-  border-color: rgb(245, 245, 245) transparent transparent transparent;
-  background: rgb(245, 245, 245);
+  border-color:rgb(33 47 60) transparent transparent transparent;
+  background: rgb(33 47 60);
   border-right: 1px solid rgb(193, 193, 193);
   border-bottom: 1px solid rgb(193, 193, 193);
   -moz-transform: rotate(45deg);

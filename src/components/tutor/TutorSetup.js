@@ -40,6 +40,8 @@ import { uploadVideoToAzure } from "../../utils/uploadVideo";
 import Avatar from "../common/Avatar";
 import Input from "../common/Input";
 import Select from "../common/Select";
+import TAButton from "../common/TAButton";
+
 import VacationSettingModal from "./VacationSettingModal";
 import { uploadTutorImage } from "../../axios/file";
 import { setMissingFeildsAndTabs } from "../../redux/tutor/missingFieldsInTabs";
@@ -684,7 +686,7 @@ const TutorSetup = () => {
                     <div className="button__icon">
                       <IoPersonCircle size={20} />
                     </div>
-                    <p className="button__text">Upload </p>
+                    <p className="button__text" style={{overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap"}}>Upload </p>
                   </div>
                 </label>
                 <div className="border p-2 shadow rounded w-100 mb-3">
@@ -1357,7 +1359,7 @@ const TutorSetup = () => {
                             <div className="button__icon">
                               <RiRobot2Fill size={18} />
                             </div>
-                            <p className="button__text"> Create AI intro</p>
+                            <p className="button__text"  style={{overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap"}}> Create AI intro</p>
                           </div>
                         </Button>
                       </div>
@@ -1381,7 +1383,7 @@ const TutorSetup = () => {
                             <div className="button__icon">
                               <BsCameraVideo size={15} />
                             </div>
-                            <p className="button__text">Record Video </p>
+                            <p className="button__text"  style={{overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap"}}>Record Video </p>
                           </div>
                         </button>
                       </div>
@@ -1416,7 +1418,7 @@ const TutorSetup = () => {
                             <div className="button__icon">
                               <BsCloudUpload size={15} /> <br />
                             </div>
-                            <p className="button__text">Upload Video</p>
+                            <p className="button__text"  style={{overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap"}}>Upload Video</p>
                           </div>
                         </label>
                       </div>

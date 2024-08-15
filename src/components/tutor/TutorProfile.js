@@ -1,16 +1,18 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import TAButton from "../../components/common/TAButton";
 import { get_tutor_subjects } from "../../axios/tutor";
 import { create_chat } from "../../axios/chat";
 import { apiClient } from "../../axios/config";
 import { IoIosCheckmarkCircle, IoIosCloseCircle } from "react-icons/io";
-import { FaRegTimesCircle } from "react-icons/fa";
+import { FaChalkboardTeacher, FaRegTimesCircle } from "react-icons/fa";
 import { CiClock2 } from "react-icons/ci";
 
 import { convertGMTOffsetToLocalString, showDate } from "../../utils/moment";
 import { useParams } from "react-router";
 import Avatar from "../common/Avatar";
+import Pill from "../common/Pill";
+
 import { capitalizeFirstLetter } from "../../utils/common";
 import { FaLocationDot, FaRegCirclePlay } from "react-icons/fa6";
 import { IoTime } from "react-icons/io5";
@@ -23,6 +25,9 @@ import TutorScheduleModal from "./TutorScheduleModal";
 import ScreenRecording from "../common/ScreenRecording";
 import { useSelector } from "react-redux";
 import CenteredModal from "../common/Modal";
+import { RiVerifiedBadgeFill } from "react-icons/ri";
+import StarRating from "../common/StarRating";
+import { PiChalkboardTeacherFill } from "react-icons/pi";
 
 const TutorProfile = () => {
   const videoRef = useRef(null);
@@ -41,11 +46,38 @@ const TutorProfile = () => {
   const { discount } = useSelector((state) => state.discount);
   const { tutor } = useSelector((state) => state.tutor);
   const [isEnlarged, setIsEnlarged] = useState(false);
+  const { sessions } = useSelector((state) => state.tutorSessions);
+  const [rating, setRating] = useState(0);
+  const [totalPastLessons, setTotalPastLessons] = useState(0);
 
-  console.log(tutor, education, discount, data)
   const toggleSize = () => {
     setIsEnlarged((prev) => !prev);
   };
+
+  useEffect(() => {
+    calculateStats();
+  }, [sessions]);
+
+  const calculateStats = useCallback(() => {
+    const now = new Date();
+
+    let totalRating = 0;
+    let pastLessonsCount = 0;
+
+    for (const lesson of sessions) {
+      const endTime = new Date(lesson.end);
+
+      if (endTime < now) {
+        pastLessonsCount++;
+        totalRating += lesson.ratingByTutor;
+      }
+    }
+
+    const overallRating =
+      pastLessonsCount > 0 ? totalRating / pastLessonsCount : 0;
+    setRating(overallRating);
+    setTotalPastLessons(pastLessonsCount);
+  }, []);
 
   useEffect(() => {
     !isEnlarged && videoRef.current && videoRef.current.pause();
@@ -128,7 +160,8 @@ const TutorProfile = () => {
   return (
     <div
       style={{
-        background: "lightGray",
+        // background: "#f2f2f2",
+        background: "white",
         height: isStudentLoggedIn
           ? "calc(100vh - 50px)"
           : "calc(100vh - 150px)",
@@ -136,19 +169,19 @@ const TutorProfile = () => {
       }}
     >
       {/* <ScreenRecording /> */}
-      <div className="container">
+      <div className="">
         <div className="">
-          <div className="d-flex flex-wrap align-items-center justify-content-between w-100 mt-4 rounded  bg-white ">
+          <div className="d-flex flex-wrap align-items-center justify-content-center w-100 mt-4 rounded  bg-white ">
             <div className="d-flex align-items-start ">
               <div
                 className="p-1 bg-white rounded-circle border shadow d-flex justify-content-center align-items-center m-1"
-                style={{ width: "180px", height: "180px" }}
+                style={{ width: "160px", height: "160px" }}
               >
                 <Avatar
                   avatarSrc={data.Photo}
                   size="150px"
-                  indicSize="15px"
-                  positionInPixle={10}
+                  indicSize="18px"
+                  positionInPixle={16}
                 />
               </div>
               <div
@@ -160,9 +193,10 @@ const TutorProfile = () => {
                     className="d-flex align-items-center"
                     style={{ gap: "10px" }}
                   >
-                    <h2 className="m-0">
+                    <h4 className="m-0 fw-bold text-secondary">
                       {capitalizeFirstLetter(data.TutorScreenname)}
-                    </h2>
+                    </h4>
+                    <RiVerifiedBadgeFill color="green" size={20} />
                   </div>
                 </div>
 
@@ -176,19 +210,36 @@ const TutorProfile = () => {
                   >
                     <div
                       className="d-flex align-items-end"
-                      style={{ gap: "10px" }}
+                      style={{ gap: "10px", color: "lightgray" }}
                     >
-                      <FaLocationDot size={20} />
+                      <FaLocationDot size={15} />
                       <h6 className="m-0"> {data.Country}</h6>
                       <h6 className="m-0">GMT: {data.GMT}</h6>
                     </div>
                   </div>
                 </div>
-                <div className="d-flex align-items-end" style={{ gap: "10px" }}>
-                  <IoTime size={20} />
+                <div
+                  className="d-flex align-items-end"
+                  style={{ gap: "10px", color: "lightgray" }}
+                >
+                  <IoTime size={15} />
                   <h6 className="m-0">
                     {convertGMTOffsetToLocalString(data.GMT)}
                   </h6>
+                </div>
+                <div
+                  className="d-flex align-items-center justify-content-start rounded-pill shadow p-1 "
+                  style={{
+                    gap: "10px",
+                    color: "lightgray",
+                    width: "fit-content",
+                  }}
+                >
+                  <PiChalkboardTeacherFill size={18} />
+                  <ToolTip text={"Ratings"} className="d-flex">
+                    <StarRating rating={rating} /> 
+                  </ToolTip>
+                  <p>({totalPastLessons})</p>
                 </div>
                 <div className="m-2 ">
                   <div className="d-flex ">
@@ -210,7 +261,8 @@ const TutorProfile = () => {
             <div
               className=" d-flex flex-column p-4 justfy-content-between h-100"
               style={{
-                gap: "10px",
+                width: "300px",
+                gap: "5px",
               }}
             >
               <div className="d-flex align-items-center" style={{ gap: "5px" }}>
@@ -223,7 +275,7 @@ const TutorProfile = () => {
 
                 <div
                   className="text-primary"
-                  style={{ fontSize: "16px", fontWeight: "bold" }}
+                  style={{ fontSize: "14px", fontWeight: "bold" }}
                 >
                   Response Time -
                 </div>
@@ -240,7 +292,7 @@ const TutorProfile = () => {
 
                 <div
                   className="text-primary"
-                  style={{ fontSize: "16px", fontWeight: "bold" }}
+                  style={{ fontSize: "14px", fontWeight: "bold" }}
                 >
                   Cancellation Policy -
                 </div>
@@ -261,9 +313,14 @@ const TutorProfile = () => {
                 />
                 <div
                   className="text-primary d-flex align-items-center"
-                  style={{ gap: "10px", fontSize: "16px", fontWeight: "bold" }}
+                  style={{ gap: "10px", fontSize: "14px", fontWeight: "bold" }}
                 >
-                  <h6 className="m-0">50% Off on Intro Lesson</h6>
+                  <h6
+                    className="m-0"
+                    style={{ fontSize: "14px", fontWeight: "bold" }}
+                  >
+                    50% Off on Intro Lesson
+                  </h6>
                   {data.IntroSessionDiscount === "1" ? (
                     <IoIosCheckmarkCircle size={20} color="green" />
                   ) : (
@@ -293,7 +350,7 @@ const TutorProfile = () => {
 
                 <div
                   className="text-primary"
-                  style={{ fontSize: "16px", fontWeight: "bold" }}
+                  style={{ fontSize: "14px", fontWeight: "bold" }}
                 >
                   Verified Tutor
                 </div>
@@ -309,7 +366,7 @@ const TutorProfile = () => {
 
                 <div
                   className="text-primary"
-                  style={{ fontSize: "16px", fontWeight: "bold" }}
+                  style={{ fontSize: "14px", fontWeight: "bold" }}
                 >
                   Verified Diploma
                 </div>
@@ -328,7 +385,7 @@ const TutorProfile = () => {
 
                 <div
                   className="text-primary"
-                  style={{ fontSize: "16px", fontWeight: "bold" }}
+                  style={{ fontSize: "14px", fontWeight: "bold" }}
                 >
                   Verified Certificate
                 </div>
@@ -378,15 +435,7 @@ const TutorProfile = () => {
               </div>
             </div>
           </div>
-          <div
-            className="p-2 "
-            style={{ margin: "10px 0", background: "white" }}
-          >
-            <div>
-              <h5 className="">Headline</h5>
-              <p className="border p-2">{data.HeadLine}</p>
-            </div>
-          </div>
+
           <div className="d-flex mt-4" style={{ gap: "20px" }}>
             <div className="col-4">
               <div
@@ -405,32 +454,39 @@ const TutorProfile = () => {
                       />
                       - Native
                     </div>
-                    {data.NativeLangOtherLang && JSON.parse(data.NativeLangOtherLang).map((lang) => (
-                      <div
-                        className="d-flex align-items-center"
-                        key={lang.value}
-                      >
-                        <GradePills
-                          grades={[]}
-                          grade={lang.value}
-                          editable={false}
-                          hasIcon={false}
-                        />
-                      </div>
-                    ))}
+                    {data.NativeLangOtherLang &&
+                      JSON.parse(data.NativeLangOtherLang).map((lang) => (
+                        <div
+                          className="d-flex align-items-center"
+                          key={lang.value}
+                        >
+                          <GradePills
+                            grades={[]}
+                            grade={lang.value}
+                            editable={false}
+                            hasIcon={false}
+                          />
+                        </div>
+                      ))}
                   </div>
                 ) : null}
                 <div>
                   <h5 className="">Introduction</h5>
-                  <p className="border p-2">{data.Introduction}</p>
+                  <p className="border p-2 rounded-3">{data.Introduction}</p>
                 </div>
               </div>
             </div>
             <div className="" style={{ width: "calc(100% - 33.33% - 20px)" }}>
               <div className="bg-white p-4 rounded">
                 <div>
+                  <div>
+                    <h5 className="">Headline</h5>
+                    <p className="border rounded-3 p-2">{data.HeadLine}</p>
+                  </div>
+                </div>
+                <div>
                   <h5 className="">Motivate</h5>
-                  <p className="border p-2">{data.Motivate}</p>
+                  <p className="border p-2 rounded-3">{data.Motivate}</p>
                 </div>
                 {data.WorkExperience && (
                   <div>
@@ -439,16 +495,16 @@ const TutorProfile = () => {
                       {data.EducationalLevelExperience})
                     </h5>
                     <div
-                      className="border p-2"
+                      className="border p-2 rounded-3"
                       dangerouslySetInnerHTML={{ __html: data.WorkExperience }}
                     />
                   </div>
                 )}
                 <div className="mt-4">
                   <h5 className="">Education</h5>
-                  <div className="border p-2 d-flex ">
+                  <div className="border p-2 d-flex rounded-3 ">
                     <ul
-                      className="vertical-tabs flex-column p-0 align-items-start"
+                      className="vertical-tabs flex-column p-0 align-items-start shadow-lg"
                       style={{
                         width: "20%",
                         borderRight: "1px solid lightblue",
@@ -513,7 +569,7 @@ const TutorProfile = () => {
 
                     <div className="px-2 w-75 d-flex justify-content-end">
                       {activeTab === "bach" && (
-                        <div className="d-flex border shadow flex-column w-75  p-4 justify-content-between">
+                        <div className="d-flex  shadow flex-column w-75  p-4 justify-content-between">
                           <h5 className=" text-center">Bachelor Info</h5>
 
                           {data.BachCountry ? (
@@ -592,7 +648,7 @@ const TutorProfile = () => {
                         </div>
                       )}
                       {activeTab === "mast" && (
-                        <div className="d-flex border shadow flex-column w-75  p-4 justify-content-between">
+                        <div className="d-flex  shadow flex-column w-75  p-4 justify-content-between">
                           <h5 className=" text-center">Master Info</h5>
                           {data.MastCountry ? (
                             <>
@@ -670,7 +726,7 @@ const TutorProfile = () => {
                         </div>
                       )}
                       {activeTab === "doc" && (
-                        <div className="d-flex border shadow flex-column w-75  p-4 justify-content-between">
+                        <div className="d-flex  shadow flex-column w-75  p-4 justify-content-between">
                           <h5 className=" text-center">Doctorate Info</h5>
 
                           {data.DocCountry ? (
@@ -745,7 +801,7 @@ const TutorProfile = () => {
                         </div>
                       )}
                       {activeTab === "cert" && (
-                        <div className="d-flex border shadow flex-column w-75  p-4 justify-content-between">
+                        <div className="d-flex  shadow flex-column w-75  p-4 justify-content-between">
                           <div className="d-flex justify-content-between  align-items-center">
                             <h5 className=" text-center">Certificate Info</h5>
                             {/* {data.CertFileName && <FaFilePdf size={32} color='red'
@@ -817,7 +873,7 @@ const TutorProfile = () => {
                         </div>
                       )}
                       {activeTab === "deg" && (
-                        <div className="d-flex border shadow flex-column w-75  p-4 justify-content-between">
+                        <div className="d-flex  shadow flex-column w-75  p-4 justify-content-between">
                           <div className="d-flex justify-content-between align-items-center">
                             <h5 className="text-center">Degree Info</h5>
                             {/* {data.DegFileName && < FaFilePdf size={32} color='red' style={{ cursor: "pointer" }}

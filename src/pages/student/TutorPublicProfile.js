@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import TAButton from "../../components/common/TAButton";
 import {
@@ -35,6 +35,8 @@ import ScreenRecording from "../../components/common/ScreenRecording";
 import { useSelector } from "react-redux";
 import CenteredModal from "../../components/common/Modal";
 import StudentLayout from "../../layouts/StudentLayout";
+import { PiChalkboardTeacherFill } from "react-icons/pi";
+import StarRating from "../../components/common/StarRating";
 
 const TutorProfile = () => {
   const videoRef = useRef(null);
@@ -52,6 +54,9 @@ const TutorProfile = () => {
   const [edu, setEdu] = useState({});
   const [disc, setDis] = useState({});
   const [tutor, setTutor] = useState({});
+  const { sessions } = useSelector((state) => state.tutorSessions);
+  const [rating, setRating] = useState(0);
+  const [totalPastLessons, setTotalPastLessons] = useState(0);
   const [video, setVideo] = useState("");
 
   //   const { education } = useSelector((state) => state.edu);
@@ -62,6 +67,31 @@ const TutorProfile = () => {
   const toggleSize = () => {
     setIsEnlarged((prev) => !prev);
   };
+
+  useEffect(() => {
+    calculateStats();
+  }, [sessions]);
+
+  const calculateStats = useCallback(() => {
+    const now = new Date();
+
+    let totalRating = 0;
+    let pastLessonsCount = 0;
+
+    for (const lesson of sessions) {
+      const endTime = new Date(lesson.end);
+
+      if (endTime < now) {
+        pastLessonsCount++;
+        totalRating += lesson.ratingByTutor;
+      }
+    }
+
+    const overallRating =
+      pastLessonsCount > 0 ? totalRating / pastLessonsCount : 0;
+    setRating(overallRating);
+    setTotalPastLessons(pastLessonsCount);
+  }, []);
 
   useEffect(() => {
     console.log(!isEnlarged, videoRef.current);
@@ -170,7 +200,7 @@ const TutorProfile = () => {
   //     setProfileData({ ...data, ...discount });
   //   }
   // }, [discount.AcademyId]);
-  console.log(edu)
+  console.log(edu);
 
   if (fetching) return <Loading />;
   else if (!tutor.AcademyId)
@@ -184,7 +214,7 @@ const TutorProfile = () => {
     <StudentLayout>
       <div
         style={{
-          background: "lightGray",
+          background: "white",
           height: isStudentLoggedIn
             ? "calc(100vh - 50px)"
             : "calc(100vh - 150px)",
@@ -192,9 +222,9 @@ const TutorProfile = () => {
         }}
       >
         {/* <ScreenRecording /> */}
-        <div className="container">
+        <div className="">
           <div className="">
-            <div className="d-flex flex-wrap align-items-center justify-content-between w-100 mt-4 rounded  bg-white ">
+            <div className="d-flex flex-wrap align-items-center justify-content-center w-100 mt-4 rounded  bg-white ">
               <div className="d-flex align-items-start ">
                 <div
                   className="p-1 bg-white rounded-circle border shadow d-flex justify-content-center align-items-center m-1"
@@ -249,6 +279,20 @@ const TutorProfile = () => {
                       {convertGMTOffsetToLocalString(tutor.GMT)}
                     </h6>
                   </div>
+                  <div
+                  className="d-flex align-items-center justify-content-start rounded-pill shadow p-1 "
+                  style={{
+                    gap: "10px",
+                    color: "lightgray",
+                    width: "fit-content",
+                  }}
+                >
+                  <PiChalkboardTeacherFill size={18} />
+                  <ToolTip text={"Ratings"} className="d-flex">
+                    <StarRating rating={rating} /> 
+                  </ToolTip>
+                  <p>({totalPastLessons})</p>
+                </div>
                   <div className="m-2 ">
                     <div className="d-flex ">
                       <TAButton
@@ -269,6 +313,7 @@ const TutorProfile = () => {
               <div
                 className=" d-flex flex-column p-4 justfy-content-between h-100"
                 style={{
+                  width: "300px",
                   gap: "10px",
                 }}
               >
@@ -285,7 +330,7 @@ const TutorProfile = () => {
 
                   <div
                     className="text-primary"
-                    style={{ fontSize: "16px", fontWeight: "bold" }}
+                    style={{ fontSize: "14px", fontWeight: "bold" }}
                   >
                     Response Time -
                   </div>
@@ -305,7 +350,7 @@ const TutorProfile = () => {
 
                   <div
                     className="text-primary"
-                    style={{ fontSize: "16px", fontWeight: "bold" }}
+                    style={{ fontSize: "14px", fontWeight: "bold" }}
                   >
                     Cancellation Policy -
                   </div>
@@ -331,7 +376,7 @@ const TutorProfile = () => {
                     className="text-primary d-flex align-items-center"
                     style={{
                       gap: "10px",
-                      fontSize: "16px",
+                      fontSize: "14px",
                       fontWeight: "bold",
                     }}
                   >
@@ -368,7 +413,7 @@ const TutorProfile = () => {
 
                   <div
                     className="text-primary"
-                    style={{ fontSize: "16px", fontWeight: "bold" }}
+                    style={{ fontSize: "14px", fontWeight: "bold" }}
                   >
                     Verified Tutor
                   </div>
@@ -387,7 +432,7 @@ const TutorProfile = () => {
 
                   <div
                     className="text-primary"
-                    style={{ fontSize: "16px", fontWeight: "bold" }}
+                    style={{ fontSize: "14px", fontWeight: "bold" }}
                   >
                     Verified Diploma
                   </div>
@@ -409,7 +454,7 @@ const TutorProfile = () => {
 
                   <div
                     className="text-primary"
-                    style={{ fontSize: "16px", fontWeight: "bold" }}
+                    style={{ fontSize: "14px", fontWeight: "bold" }}
                   >
                     Verified Certificate
                   </div>
@@ -459,15 +504,7 @@ const TutorProfile = () => {
                 </div>
               </div>
             </div>
-            <div
-              className="p-2 "
-              style={{ margin: "10px 0", background: "white" }}
-            >
-              <div>
-                <h5 className="">Headline</h5>
-                <p className="border p-2">{tutor.HeadLine}</p>
-              </div>
-            </div>
+
             <div className="d-flex mt-4" style={{ gap: "20px" }}>
               <div className="col-4">
                 <div
@@ -503,15 +540,24 @@ const TutorProfile = () => {
                   ) : null}
                   <div>
                     <h5 className="">Introduction</h5>
-                    <p className="border p-2">{tutor.Introduction}</p>
+                    <p className="border p-2 rounded-3">{tutor.Introduction}</p>
                   </div>
                 </div>
               </div>
               <div className="" style={{ width: "calc(100% - 33.33% - 20px)" }}>
                 <div className="bg-white p-4 rounded">
+                  <div
+                    className=" "
+                    style={{ margin: "10px 0", background: "white" }}
+                  >
+                    <div>
+                      <h5 className="">Headline</h5>
+                      <p className="border p-2 rounded-3">{tutor.HeadLine}</p>
+                    </div>
+                  </div>
                   <div>
                     <h5 className="">Motivate</h5>
-                    <p className="border p-2">{tutor.Motivate}</p>
+                    <p className="border p-2 rounded-3">{tutor.Motivate}</p>
                   </div>
                   {edu.WorkExperience && (
                     <div>
@@ -520,14 +566,14 @@ const TutorProfile = () => {
                         {edu.EducationalLevelExperience})
                       </h5>
                       <div
-                        className="border p-2"
+                        className="border p-2 rounded-3"
                         dangerouslySetInnerHTML={{ __html: edu.WorkExperience }}
                       />
                     </div>
                   )}
                   <div className="mt-4">
                     <h5 className="">Education</h5>
-                    <div className="border p-2 d-flex ">
+                    <div className="border p-2 d-flex rounded-3">
                       <ul
                         className="vertical-tabs flex-column p-0 align-items-start"
                         style={{
@@ -642,7 +688,9 @@ const TutorProfile = () => {
                                   >
                                     State -
                                   </div>
-                                  <h6 className="m-0">{edu.Bach_College_State}</h6>
+                                  <h6 className="m-0">
+                                    {edu.Bach_College_State}
+                                  </h6>
                                 </div>
                                 <div
                                   className="d-flex align-items-center"
@@ -657,7 +705,9 @@ const TutorProfile = () => {
                                   >
                                     Year of Graduation -
                                   </div>
-                                  <h6 className="m-0">{edu.Bach_College_Year}</h6>
+                                  <h6 className="m-0">
+                                    {edu.Bach_College_Year}
+                                  </h6>
                                 </div>
                               </>
                             ) : (
@@ -716,7 +766,9 @@ const TutorProfile = () => {
                                   >
                                     State -
                                   </div>
-                                  <h6 className="m-0">{edu.Mast_College_State}</h6>
+                                  <h6 className="m-0">
+                                    {edu.Mast_College_State}
+                                  </h6>
                                 </div>
                                 <div
                                   className="d-flex align-items-center"
@@ -731,7 +783,9 @@ const TutorProfile = () => {
                                   >
                                     Year of Graduation -
                                   </div>
-                                  <h6 className="m-0">{edu.Mast_College_StateYear}</h6>
+                                  <h6 className="m-0">
+                                    {edu.Mast_College_StateYear}
+                                  </h6>
                                 </div>
                               </>
                             ) : (
@@ -776,7 +830,9 @@ const TutorProfile = () => {
                                   >
                                     University -
                                   </div>
-                                  <h6 className="m-0">{edu.DoctorateCollege}</h6>
+                                  <h6 className="m-0">
+                                    {edu.DoctorateCollege}
+                                  </h6>
                                 </div>
                                 <div
                                   className="d-flex align-items-center"

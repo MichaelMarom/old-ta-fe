@@ -14,11 +14,11 @@ function Button({ loading = false, type = "button", handleClick = () => { },
         >
             <div className="button__content">
                 <div className="button__icon">
-                    <img src={BTN_ICON} alt={"btn__icon"} width={20} height={20} style={{
+                    <img src={BTN_ICON} alt={"btn__icon"} width={15} height={15} style={{
                         animation: loading ? "spin 2s linear infinite" : 'none',
                     }} />
                 </div>
-                <p className="button__text">{buttonText}</p>
+                <p className="button__text" style={{whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis"}}>{buttonText}</p>
             </div>
         </button>
     );

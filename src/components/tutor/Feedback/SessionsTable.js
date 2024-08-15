@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { wholeDateFormat } from "../../../constants/constants";
 import { showDate } from "../../../utils/moment";
-import {moment } from '../../../config/moment'
+import { moment } from "../../../config/moment";
 import Comment from "./Comment";
 import StarRating from "../../common/StarRating";
 import { convertToDate } from "../../common/Calendar/Calendar";
@@ -11,8 +11,10 @@ import { convertTutorIdToName } from "../../../utils/common";
 import Avatar from "../../common/Avatar";
 import TableHeader from "../../common/TableHeader";
 import { capitalize } from "lodash";
+import Tooltip from "../../common/ToolTip";
+import { FaComment } from "react-icons/fa";
 
-function SessionsTable({ events=[], setSelectedEvent, selectedEvent }) {
+function SessionsTable({ events = [], setSelectedEvent, selectedEvent }) {
   const { tutor } = useSelector((state) => state.tutor);
   const [sortedEvents, setSortedEvents] = useState([]);
 
@@ -20,8 +22,15 @@ function SessionsTable({ events=[], setSelectedEvent, selectedEvent }) {
     if (session?.end && tutor.timeZone) {
       const currentTimeInTimeZone = moment().tz(tutor.timeZone);
 
-      const sessionEndInTimeZone = moment(convertToDate(session.end)).tz(tutor.timeZone);
-      console.log(session.end, convertToDate(session.end), sessionEndInTimeZone, tutor.timeZone);
+      const sessionEndInTimeZone = moment(convertToDate(session.end)).tz(
+        tutor.timeZone
+      );
+      console.log(
+        session.end,
+        convertToDate(session.end),
+        sessionEndInTimeZone,
+        tutor.timeZone
+      );
       const minutesDifference = sessionEndInTimeZone?.diff(
         currentTimeInTimeZone,
         "minutes"
@@ -132,10 +141,16 @@ function SessionsTable({ events=[], setSelectedEvent, selectedEvent }) {
                 </td>
 
                 <td style={{ width: Header[0].width }}>
-                  <StarRating rating={event.ratingByTutor} />
+                  <Tooltip direction="top" width="20px" text={event.ratingByTutor}>
+                    {" "}
+                    <StarRating rating={event.ratingByTutor} />
+                  </Tooltip>
                 </td>
                 <td style={{ width: Header[0].width }}>
-                  <Comment comment={event.commentByTutor} />
+                  <Tooltip direction="bottomright" text={event.commentByTutor}>
+                    <FaComment size={20} color="green" />
+                  </Tooltip>
+                  {/* <Comment comment={event.commentByTutor} /> */}
                 </td>
 
                 <td style={{ width: Header[0].width }}>
