@@ -313,7 +313,7 @@ const TutorProfile = () => {
                 />
                 <div
                   className="text-primary d-flex align-items-center"
-                  style={{ gap: "10px", fontSize: "14px", fontWeight: "bold" }}
+                  style={{ gap: "10px", fontWeight: "bold" }}
                 >
                   <h6
                     className="m-0"
@@ -340,7 +340,7 @@ const TutorProfile = () => {
                   </div> */}
                 </div>
               </div>
-              <div className="d-flex align-items-center" style={{ gap: "5px" }}>
+              {/* <div className="d-flex align-items-center" style={{ gap: "5px" }}>
                 <ToolTip
                   width="300px"
                   text={
@@ -355,7 +355,7 @@ const TutorProfile = () => {
                   Verified Tutor
                 </div>
                 <IoIosCheckmarkCircle size={20} color="green" />
-              </div>
+              </div> */}
               <div className="d-flex align-items-center" style={{ gap: "5px" }}>
                 <ToolTip
                   width="300px"

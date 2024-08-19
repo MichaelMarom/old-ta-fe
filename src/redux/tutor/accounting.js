@@ -49,3 +49,11 @@ export const updateAccounting = (id, body) => {
         return res
     };
 }
+
+
+export const updateAccountingState = (body) => {
+    return async (dispatch) => {
+        dispatch(slice.actions.setAccounting(body))
+        return body
+    };
+}

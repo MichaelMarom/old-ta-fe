@@ -17,7 +17,7 @@ import Input from "../../common/Input";
 import { GeneralFieldLabel, MandatoryFieldLabel } from "../TutorSetup";
 import Select from "../../common/Select";
 import { setMissingFeildsAndTabs } from "../../../redux/tutor/missingFieldsInTabs";
-import { updateAccounting } from "../../../redux/tutor/accounting";
+import { setAccounting, updateAccounting, updateAccountingState } from "../../../redux/tutor/accounting";
 
 const TutorAccSetup = ({
   sessions,
@@ -110,7 +110,8 @@ const TutorAccSetup = ({
         payment_option,
         AcademyId
       );
-      fetchingTutorBankRecord();
+      fetchingTutorBankRecord(response);
+      dispatch(updateAccountingState(response))
       if (Step) {
         await updateTutorSetup(tutor.AcademyId, {
           Step,
@@ -124,13 +125,12 @@ const TutorAccSetup = ({
         toast.error("Error while Saving the Bank Info.");
       }
     }
-    dispatch(setMissingFeildsAndTabs(tutor));
+    dispatch(setMissingFeildsAndTabs());
     setSaving(false);
   };
 
-  const fetchingTutorBankRecord = async () => {
-    // const result = await get_bank_details(window.localStorage.getItem('tutor_user_id'));
-    if (bank?.AcademyId) {
+  const fetchingTutorBankRecord = async (response) => {
+    if (response?.AcademyId) {
       setDBValues({
         AcademyId: bank.AcademyId,
         PaymentOption: bank.PaymentOption,
@@ -155,7 +155,7 @@ const TutorAccSetup = ({
 
   //fetching
   useEffect(() => {
-    fetchingTutorBankRecord();
+    bank.AcademyId && fetchingTutorBankRecord(bank);
   }, [bank]);
 
   //compare db and local
@@ -534,7 +534,7 @@ const TutorAccSetup = ({
             {tutor.Country === "USA" && (
               <div className="d-flex align-items-center mb-2 justify-content-between">
                 <Input
-                 editMode={editMode}
+                  editMode={editMode}
                   label={
                     <MandatoryFieldLabel
                       text="SS# (Social Security Number)"

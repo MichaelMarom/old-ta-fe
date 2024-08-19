@@ -653,7 +653,7 @@ fieldset:disabled .btn,
   position: absolute;
   margin: 0 !important;
   left: 0;
-  top:-12px;
+  top: -12px;
   padding: calc(var(--size-bezel) * 0.75) calc(var(--size-bezel) * .5);
   margin: calc(var(--size-bezel) * 0.75 + 3px) calc(var(--size-bezel) * .5);
   background: pink;
@@ -710,7 +710,72 @@ fieldset:disabled .btn,
 
 
 /* --------header------------- */
+.nav-circle {
+  transition: all 0.3s ease-in;
+  z-index: 2;
+  /* background: #212f3c; */
+  margin-bottom: 10px;
+  border: 1px solid #dee2e663 !important;
+  backdrop-filter: blur(10px);
 
+}
+
+.nav-circle:hover {
+  border: 1px solid white;
+  /* background: #ffffff47; */
+  cursor: pointer;
+  transform: scale(1.2);
+
+}
+
+.nav-circle svg:hover {
+  stroke: rgb(255 255 255 / 75%);
+}
+.navitem-li {
+  transform: none !important;
+  padding: 5px 10px !important;
+}
+
+.navitem {
+  position: relative;
+  transform: none !important;
+  padding: 0px 10px !important;
+}
+
+.navitem-li:hover {
+  background: initial !important;
+}
+
+/* Border X get width  */
+.navitem:before,
+.navitem:after {
+  position: absolute;
+  opacity: 0;
+  width: 0%;
+  height: 2px;
+  content: '';
+  background: linear-gradient(0.25turn, rgb(36, 113, 163), rgb(36, 113, 163));
+  transition: all 0.3s;
+}
+
+.navitem:before {
+  left: 0px;
+  top: 0px;
+}
+
+.navitem:after {
+  right: 0px;
+  bottom: 0px;
+}
+
+.navitem:hover:before,
+.navitem:hover:after,
+#tutor-tab-header-list-active1::before,
+#tutor-tab-header-list-active1::after
+{
+  opacity: 1;
+  width: 100%;
+}
 
 .video-nav-icon:hover {
   transition: width 800ms ease-in-out;
@@ -729,8 +794,6 @@ fieldset:disabled .btn,
     opacity: 0;
   }
 }
-
-
 
 
 /*  */
@@ -885,7 +948,7 @@ button.Toastify__close-button.Toastify__close-button--light {
   left: 5%;
   border-width: 10px;
   border-style: solid;
-  border-color:rgb(33 47 60) transparent transparent transparent;
+  border-color: rgb(33 47 60) transparent transparent transparent;
   background: rgb(33 47 60);
   border-right: 1px solid rgb(193, 193, 193);
   border-bottom: 1px solid rgb(193, 193, 193);

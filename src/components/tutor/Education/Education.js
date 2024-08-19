@@ -10,6 +10,8 @@ import Actions from "../../common/Actions";
 import { FaFileUpload, FaRegTimesCircle } from "react-icons/fa";
 import { toast } from "react-toastify";
 import Loading from "../../common/Loading";
+import TAButton from "../../common/TAButton";
+
 import {
   AUST_STATES,
   CAN_STATES,
@@ -64,7 +66,7 @@ const Education = () => {
   let [mast_yr, set_mast_year] = useState("");
   let [degree_yr, set_degree_year] = useState("");
   let [doctorateGraduateYear, setDoctorateGraduateYear] = useState("");
-  let [expiration, set_expiration] = useState("");
+  let [expiration, set_expiration] = useState(null);
   let [othelang, set_othelang] = useState([]);
   let [workExperience, set_workExperience] = useState("");
   let [exp, set_exp] = useState("");
@@ -87,7 +89,7 @@ const Education = () => {
   const { tutor } = useSelector((state) => state.tutor);
   const dispatch = useDispatch();
   const { education } = useSelector((state) => state.edu);
-  console.log(education);
+  console.log(expiration);
 
   let [dbValues, setDbValues] = useState({});
 
@@ -148,7 +150,7 @@ const Education = () => {
     if (dataFetched && db_edu_cert !== certificate) {
       setCountryForCert("");
       set_cert_state("");
-      set_expiration("");
+      set_expiration(null);
       set_cert_file_name("");
     }
   }, [certificate, db_edu_cert, dataFetched]);
@@ -435,7 +437,7 @@ const Education = () => {
         set_level(education.EducationalLevel);
         set_db_edu_level(education.EducationalLevel);
 
-        set_expiration(education.CertificateExpiration || moment());
+        set_expiration(education.CertificateExpiration || null);
         set_experience(education.EducationalLevelExperience);
 
         set_resumePath(education.Resume);
@@ -1277,7 +1279,6 @@ const Education = () => {
                           distinguished with a green verification badge."
                           mandatoryFields={mandatoryFields}
                         />
-                      
                       </div>
                       <div className="d-flex align-items-center">
                         {deg_file_name && deg_file_name.length ? (
@@ -1594,7 +1595,7 @@ const Education = () => {
           <div className="tutor-tab-education-experience">
             <div style={{ width: "450px", fontWeight: "bold" }}>
               <MandatoryFieldLabel
-                editMode={editMode}
+                // editMode={editMode}
                 text="Work Experience"
                 name="aboutExperience"
                 mandatoryFields={mandatoryFields}
@@ -1616,7 +1617,13 @@ const Education = () => {
             </div>
 
             <div>
-              <Button
+              <TAButton
+                buttonText={"Add Resources"}
+                style={{ width: "40%" }}
+                handleClick={() => setAddReference(true)}
+                disabled={!editMode}
+              />
+              {/* <Button
                 className="action-btn btn"
                 style={{ width: "40%" }}
                 disabled={!editMode}
@@ -1625,7 +1632,7 @@ const Education = () => {
                 <div className="button__content">
                   <p className="button__text">Add Resources</p>
                 </div>
-              </Button>
+              </Button> */}
             </div>
             {(!!dbValues.ThingsReferences?.length || addReference) && (
               <div className="form-outline my-3" style={{ width: "450px" }}>

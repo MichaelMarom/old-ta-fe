@@ -400,7 +400,7 @@ const TutorProfile = () => {
                   </div> */}
                   </div>
                 </div>
-                <div
+                {/* <div
                   className="d-flex align-items-center"
                   style={{ gap: "5px" }}
                 >
@@ -418,7 +418,7 @@ const TutorProfile = () => {
                     Verified Tutor
                   </div>
                   <IoIosCheckmarkCircle size={20} color="green" />
-                </div>
+                </div> */}
                 <div
                   className="d-flex align-items-center"
                   style={{ gap: "5px" }}

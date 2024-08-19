@@ -217,19 +217,19 @@ const ShowCalendar = ({
   }, [timeZone, disableWeekDays]);
 
   useEffect(() => {
-    if (student?.GMT && isStudentLoggedIn) {
-      const offset = parseInt(student.GMT, 10);
-      const timezone = moment.tz
-        .names()
-        .filter((name) => moment.tz(name).utcOffset() === offset * 60);
-      setTimeZone(timezone[0] || null);
+    if (student?.AcademyId && isStudentLoggedIn) {
+      // const offset = parseInt(student.GMT, 10);
+      // const timezone = moment.tz
+      //   .names()
+      //   .filter((name) => moment.tz(name).utcOffset() === offset * 60);
+      setTimeZone(student.timeZone);
     } else {
-      if (tutor.GMT && !isStudentLoggedIn) {
-        const offset = parseInt(tutor.GMT, 10);
-        const timezone = moment.tz
-          .names()
-          .filter((name) => moment.tz(name).utcOffset() === offset * 60);
-        setTimeZone(timezone[0] || null);
+      if (tutor.AcademyId && !isStudentLoggedIn) {
+        // const offset = parseInt(tutor.GMT, 10);
+        // const timezone = moment.tz
+        //   .names()
+        //   .filter((name) => moment.tz(name).utcOffset() === offset * 60);
+        setTimeZone(tutor.timeZone);
       }
     }
   }, [student, tutor, isStudentLoggedIn]);

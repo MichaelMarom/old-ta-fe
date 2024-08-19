@@ -33,6 +33,12 @@ import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
 import Avatar from "../../components/common/Avatar";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { showDate } from "../../utils/moment";
+import {
+  IoChevronBackCircleOutline,
+  IoChevronBackOutline,
+  IoChevronForwardCircleOutline,
+  IoChevronForwardOutline,
+} from "react-icons/io5";
 
 const Header = () => {
   const { signOut } = useClerk();
@@ -51,7 +57,7 @@ const Header = () => {
   const { tutor } = useSelector((state) => state.tutor);
   const scrollRef = useRef(null);
   const profileDropdownRef = useRef(null);
-  const scrollStep = 100; // Adjust the scroll step as needed
+  const scrollStep = 500; // Adjust the scroll step as needed
 
   const handleScrollLeft = () => {
     if (scrollRef.current) {
@@ -77,7 +83,7 @@ const Header = () => {
   };
 
   useEffect(() => {
-    const element = document.getElementById("tutor-tab-header-list-active");
+    const element = document.getElementById("tutor-tab-header-list-active1");
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "center" });
     }
@@ -139,14 +145,14 @@ const Header = () => {
   const getId = (tab) => {
     if (tab.common) {
       if (location.pathname === tab.url) {
-        return "tutor-tab-header-list-active";
+        return "tutor-tab-header-list-active1";
       }
       return "";
     } else {
       const locationSegment = location.pathname.split("/")[2];
       const tabSegment = tab.url.split("/")[2];
       if (locationSegment === tabSegment) {
-        return "tutor-tab-header-list-active";
+        return "tutor-tab-header-list-active1";
       }
       return "";
     }
@@ -166,23 +172,6 @@ const Header = () => {
   return (
     <>
       <div className="tutor-tab-header shadow-sm">
-        <div
-          style={{
-            margin: "0 0 0 0",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "#efefef",
-            opacity: ".7",
-            height: "100%",
-            transform: "skew(-0deg)",
-            width: "50px",
-          }}
-          className="scroller-left"
-          onClick={handleScrollLeft}
-        >
-          <FaChevronLeft size={20} />
-        </div>
         <div
           className={`screen-name position-relative flex-column px-1 gap-2`}
           style={{
@@ -265,6 +254,9 @@ const Header = () => {
           </div>
         </div>
 
+        <div onClick={handleScrollLeft} className="rounded-circle border d-flex justify-content-center align-items-center nav-circle">
+          <IoChevronBackOutline color="gray" size={30} />
+        </div>
         <ul
           ref={scrollRef}
           className={`header`}
@@ -280,22 +272,25 @@ const Header = () => {
                 ? "none"
                 : "auto",
             width: "calc(100% - 300px)",
-            margin: "0 50px 0 50px ",
+            margin: "0 -10px",
+            zIndex: 1,
           }}
         >
           {tabs.map((tab) => {
             return (
               (user.role !== "admin" || tab.url !== "/collab") && (
-                <Fragment key={tab.url}>
+                <div 
+                id={getId(tab)}
+                key={tab.url} className="navitem d-flex justify-content-center align-items-center">
                   <li
                     key={tab.url}
+                    className="navitem-li"
                     data-url={tab.url}
                     onClick={() => nav(tab.url)}
-                    id={getId(tab)}
+                
                   >
                     <h5
                       className="m-0 d-flex gap-2"
-                      style={{ transform: "skew(41deg, 0deg)" }}
                     >
                       {!!missingFields.find(
                         (field) => field.tab === tab.name
@@ -348,43 +343,23 @@ const Header = () => {
                       />
                     </div>
                   )}
-                  <div className="text-light" style={{ fontWeight: "bold" }}>
-                    |
-                  </div>
-                </Fragment>
+                  
+                </div>
               )
             );
           })}
         </ul>
+
+        <div   onClick={handleScrollRight} className="rounded-circle border d-flex justify-content-center align-items-center nav-circle">
+          <IoChevronForwardOutline color="gray" size={30} />
+        </div>
+
         <TabInfoVideoToast
           video={tabs.find((tab) => tab.url === isOpen)?.video}
           isOpen={isOpen}
           setIsOpen={setIsOpen}
         />
-        {/* <div
-          className="d-flex  gap-2 border rounded p-1 justify-content-center align-items-center "
-          style={{ marginRight: "20px", cursor: "pointer" }}
-          onClick={() => signOut(() => handleSignOut())}
-        >
-          <h6 className="text-light m-0">Signout</h6>
-          <FaSignOutAlt color="white" />
-        </div> */}
-        <div
-          style={{
-            margin: "0 0 0 0",
-            background: "#efefef",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            opacity: ".7",
-            height: "100%",
-            transform: "skew(-0deg)",
-          }}
-          className="scroller-right"
-          onClick={handleScrollRight}
-        >
-          <FaChevronRight size={20} />
-        </div>
+      
       </div>
     </>
   );

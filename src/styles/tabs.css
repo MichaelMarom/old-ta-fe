@@ -147,6 +147,10 @@ ul.header li a {
     color: #F7F9F9;
 }
 
+#tutor-tab-header-list-active1 {
+    background: initial;
+}
+
 
 
 ul.header li:hover {

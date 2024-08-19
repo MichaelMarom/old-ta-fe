@@ -16,7 +16,6 @@ import {
   applicationMandatoryFields,
 } from "../../constants/constants";
 import { toast } from "react-toastify";
-import { apiClient } from "../../axios/config";
 import _ from "lodash";
 import { MandatoryFieldLabel } from "./TutorSetup";
 import { setMissingFeildsAndTabs } from "../../redux/tutor/missingFieldsInTabs";

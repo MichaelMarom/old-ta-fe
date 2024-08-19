@@ -35,12 +35,13 @@ export const setMissingFeildsAndTabs = () => {
 
     const missingFields = [];
     const tabs = { bank, discount, edu };
+
     applicationMandatoryFields.Accounting.map((item) => {
       if (
         (!tabs.bank?.[item.column] || tabs.bank?.[item.column] === "null") &&
         (!item.mandatory ||
           item.mandatory?.values?.includes(
-            tabs?.["edu"]?.[item.mandatory?.column]
+            tabs?.["bank"]?.[item.mandatory?.column]
           ))
       ) {
         missingFields.push({ tab: "Accounting", field: item.column });
@@ -81,8 +82,11 @@ export const setMissingFeildsAndTabs = () => {
     });
 
     applicationMandatoryFields.Education.map((item) => {
+      let columnValueExistInDB = tabs.edu?.[item.column];
+      let columnValueNullInString = tabs.edu?.[item.column] === "null";
+
       if (
-        (!tabs.edu?.[item.column] || tabs.edu?.[item.column] === "null") &&
+        (!columnValueExistInDB || columnValueNullInString) &&
         (!item.notMandatory ||
           !item.notMandatory?.values?.includes(
             tabs?.["edu"]?.[item.notMandatory?.column]
@@ -99,6 +103,7 @@ export const setMissingFeildsAndTabs = () => {
         });
       }
     });
+    console.log(missingFields);
 
     if (!tutor.AgreementDate)
       missingFields.push({

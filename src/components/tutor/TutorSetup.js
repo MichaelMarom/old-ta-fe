@@ -486,6 +486,11 @@ const TutorSetup = () => {
   }, [tutor.Status]);
 
   let handleImage = async (e) => {
+    if (!tutor.AcademyId)
+      return toast.error(
+        `Please setup Firstname, Lastname and MiddleName(optional) first!`
+      );
+
     setUploadPhotoClicked(true);
 
     if (e.target.files[0].type.split("/")?.[0] !== "image") {
@@ -505,10 +510,12 @@ const TutorSetup = () => {
           e.target.files[0]
         );
 
-        result.data?.url &&
-          (await updateTutorSetup(tutor.AcademyId, {
+        if (result.data?.url) {
+          await updateTutorSetup(tutor.AcademyId, {
             Photo: result.data.url,
-          }));
+          });
+          dispatch(setTutor({ ...tutor, Photo: result.data.url }));
+        }
 
         setPicUploading(false);
       } catch (err) {
@@ -518,6 +525,10 @@ const TutorSetup = () => {
   };
 
   let handleVideo = async (e) => {
+    if (!tutor.AcademyId)
+      return toast.error(
+        `Please setup Firstname, Lastname and MiddleName(optional) first!`
+      );
     const file = e.target.files[0];
     setVideoError(false);
     if (file.size > 10485760)
@@ -533,7 +544,8 @@ const TutorSetup = () => {
       };
       reader.readAsDataURL(file);
 
-      tutor?.AcademyId && (await uploadVideoToAzure(file, tutor.AcademyId));
+      tutor?.AcademyId &&
+        (await uploadVideoToAzure(file, tutor.AcademyId, selectedVideoOption));
       setVideoUploading(false);
     }
   };
@@ -686,7 +698,16 @@ const TutorSetup = () => {
                     <div className="button__icon">
                       <IoPersonCircle size={20} />
                     </div>
-                    <p className="button__text" style={{overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap"}}>Upload </p>
+                    <p
+                      className="button__text"
+                      style={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      Upload{" "}
+                    </p>
                   </div>
                 </label>
                 <div className="border p-2 shadow rounded w-100 mb-3">
@@ -970,9 +991,9 @@ const TutorSetup = () => {
                     <span
                       className="input__label roboto-medium"
                       style={{
-                        top: "-3px",
-                        left: "5px",
+                        top: "7px",
                         zIndex: "99",
+                        fontSize:"14px",
                         padding: "2px",
                         color: "black",
                         background: "transparent",
@@ -1301,7 +1322,10 @@ const TutorSetup = () => {
                     />
                   </div>
                 ) : (
-                  <div className="tutor-tab-video-frame p-2 card"style={{overflowY:"auto"}} >
+                  <div
+                    className="tutor-tab-video-frame p-2 card"
+                    style={{ overflowY: "auto" }}
+                  >
                     <div style={{ textAlign: "justify", fontSize: "12px" }}>
                       Providing your video is elective. Create a 30-60 seconds
                       clip 'limit 10Mb'. An introduction video is a great way to
@@ -1359,7 +1383,17 @@ const TutorSetup = () => {
                             <div className="button__icon">
                               <RiRobot2Fill size={18} />
                             </div>
-                            <p className="button__text"  style={{overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap"}}> Create AI intro</p>
+                            <p
+                              className="button__text"
+                              style={{
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {" "}
+                              Create AI intro
+                            </p>
                           </div>
                         </Button>
                       </div>
@@ -1383,7 +1417,16 @@ const TutorSetup = () => {
                             <div className="button__icon">
                               <BsCameraVideo size={15} />
                             </div>
-                            <p className="button__text"  style={{overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap"}}>Record Video </p>
+                            <p
+                              className="button__text"
+                              style={{
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              Record Video{" "}
+                            </p>
                           </div>
                         </button>
                       </div>
@@ -1407,8 +1450,10 @@ const TutorSetup = () => {
                           htmlFor="video"
                           style={{
                             width: "100%",
-                            // pointerEvents: !editMode ? "none" : "auto",
+                            borderColor: "none",
+                            pointerEvents: !editMode ? "none" : "auto",
                             fontSize: "10px",
+                            border: " 1px solid #e1e1e1",
                           }}
                           className={`action-btn btn ${
                             selectedVideoOption === "upload" ? "active" : ""
@@ -1418,7 +1463,16 @@ const TutorSetup = () => {
                             <div className="button__icon">
                               <BsCloudUpload size={15} /> <br />
                             </div>
-                            <p className="button__text"  style={{overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap"}}>Upload Video</p>
+                            <p
+                              className="button__text"
+                              style={{
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              Upload Video
+                            </p>
                           </div>
                         </label>
                       </div>
