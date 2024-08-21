@@ -29,7 +29,7 @@ const Edit = () => {
         e.preventDefault()
         setUpdating(true)
         update_email_temp({ name: subject, text: emailText }, param.id).then(() => {
-            toast.success('Updated Succesfully!')
+            toast.success('Updated Successfully!')
             navigate('/admin/email-templates')
         }).finally(() => {
             setUpdating(false)

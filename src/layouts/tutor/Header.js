@@ -31,12 +31,9 @@ import { PiVideoBold } from "react-icons/pi";
 
 import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
 import Avatar from "../../components/common/Avatar";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { showDate } from "../../utils/moment";
 import {
-  IoChevronBackCircleOutline,
   IoChevronBackOutline,
-  IoChevronForwardCircleOutline,
   IoChevronForwardOutline,
 } from "react-icons/io5";
 
@@ -254,23 +251,26 @@ const Header = () => {
           </div>
         </div>
 
-        <div onClick={handleScrollLeft} className="rounded-circle border d-flex justify-content-center align-items-center nav-circle">
+        <div
+          onClick={handleScrollLeft}
+          className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
+        >
           <IoChevronBackOutline color="gray" size={30} />
         </div>
         <ul
           ref={scrollRef}
           className={`header`}
           style={{
-            background:
-              tutor.Status === (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
-              user.role !== "admin"
-                ? "#737476"
-                : "inherit",
-            pointerEvents:
-              tutor.Status === (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
-              user.role !== "admin"
-                ? "none"
-                : "auto",
+            background: "inherit",
+            // tutor.Status === (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
+            // user.role !== "admin"
+            //   ? "#737476"
+            //   : "inherit",
+            // pointerEvents:
+            //   tutor.Status === (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
+            //   user.role !== "admin"
+            //     ? "none"
+            //     : "auto",
             width: "calc(100% - 300px)",
             margin: "0 -10px",
             zIndex: 1,
@@ -279,19 +279,43 @@ const Header = () => {
           {tabs.map((tab) => {
             return (
               (user.role !== "admin" || tab.url !== "/collab") && (
-                <div 
-                id={getId(tab)}
-                key={tab.url} className="navitem d-flex justify-content-center align-items-center">
+                <div
+                  id={getId(tab)}
+                  key={tab.url}
+                  className="navitem d-flex justify-content-center align-items-center"
+                >
                   <li
                     key={tab.url}
                     className="navitem-li"
                     data-url={tab.url}
-                    onClick={() => nav(tab.url)}
-                
+                    onClick={() =>
+                      ((tutor.Status !== PROFILE_STATUS.PENDING &&
+                        tutor.AcademyId) ||
+                        user.role === "admin") &&
+                      nav(tab.url)
+                    }
+                    style={{
+                      color:
+                        tutor.Status ===
+                          (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
+                        user.role !== "admin"
+                          ? "#b5b5b5"
+                          : "white",
+                      cursor:
+                        tutor.Status ===
+                          (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
+                        user.role !== "admin"
+                          ? "not-allowed"
+                          : "pointer",
+                      // pointerEvents:
+                      //   tutor.Status ===
+                      //     (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
+                      //   user.role !== "admin"
+                      //     ? "none"
+                      //     : "auto",
+                    }}
                   >
-                    <h5
-                      className="m-0 d-flex gap-2"
-                    >
+                    <h5 className="m-0 d-flex gap-2">
                       {!!missingFields.find(
                         (field) => field.tab === tab.name
                       ) && (
@@ -330,7 +354,12 @@ const Header = () => {
                     <div
                       className="cursor-pointer mx-2 video-nav-icon"
                       style={{ transform: "skew(0)" }}
-                      onClick={() => setIsOpen(tab.url)}
+                      onClick={() =>
+                        ((tutor.Status !== PROFILE_STATUS.PENDING &&
+                          tutor.AcademyId) ||
+                          user.role === "admin") &&
+                        setIsOpen(tab.url)
+                      }
                     >
                       <PiVideoBold
                         color={
@@ -343,14 +372,16 @@ const Header = () => {
                       />
                     </div>
                   )}
-                  
                 </div>
               )
             );
           })}
         </ul>
 
-        <div   onClick={handleScrollRight} className="rounded-circle border d-flex justify-content-center align-items-center nav-circle">
+        <div
+          onClick={handleScrollRight}
+          className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
+        >
           <IoChevronForwardOutline color="gray" size={30} />
         </div>
 
@@ -359,7 +390,6 @@ const Header = () => {
           isOpen={isOpen}
           setIsOpen={setIsOpen}
         />
-      
       </div>
     </>
   );

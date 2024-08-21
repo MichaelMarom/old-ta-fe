@@ -369,7 +369,6 @@ const Actions = ({
           </div>
           <div className="" style={{ width: "10%" }}>
             <TAButton
-              loading={loading}
               type="button"
               buttonText={"Next"}
               handleClick={onNext}

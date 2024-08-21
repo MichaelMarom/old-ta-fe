@@ -1,5 +1,4 @@
 import React, { lazy } from 'react';
-import AdminAccounting from '../pages/admin/AdminAccounting';
 
 // tutor components
 const Intro = lazy(() => import('../pages/tutor/Intro'));
@@ -39,6 +38,7 @@ const Feedback = lazy(() => import('../pages/student/Feedback'));
 const SingleTutorFeedbacks = lazy(() => import('../pages/student/SingleTutorFeedbacks'));
 
 // admin components
+const AdminAccounting = lazy(() => import('../pages/admin/AdminAccounting'))
 const TutorNewSubject = lazy(() => import('../pages/admin/NewSubject'));
 const TutorTable = lazy(() => import('../pages/admin/Tutor'));
 const AddSMSMessages = lazy(() => import('../pages/admin/Marketing/AddSMSTemps'));
