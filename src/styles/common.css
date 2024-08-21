@@ -717,6 +717,8 @@ fieldset:disabled .btn,
   margin-bottom: 10px;
   border: 1px solid #dee2e663 !important;
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
 
 }
 
@@ -754,7 +756,7 @@ fieldset:disabled .btn,
   width: 0%;
   height: 2px;
   content: '';
-  background: linear-gradient(0.25turn, rgb(36, 113, 163), rgb(36, 113, 163));
+  background:linear-gradient(0.25turn, rgb(117 119 121), rgb(36, 113, 163));
   transition: all 0.3s;
 }
 
