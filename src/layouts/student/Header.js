@@ -21,6 +21,7 @@ import { showDate } from "../../utils/moment";
 import collabVideo from "../../assets/videos/collaboration.mp4";
 import { PiVideoBold } from "react-icons/pi";
 import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
+import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
 
 const Header = () => {
   const { signOut } = useClerk();
@@ -34,7 +35,7 @@ const Header = () => {
   const [profileDropdownOpened, setProfileDropdownOpened] = useState(false);
   const scrollRef = useRef();
   const profileDropdownRef = useRef();
-  const scrollStep = 100;
+  const scrollStep = 500;
   let location = useLocation();
 
   const { student } = useSelector((state) => state.student);
@@ -61,7 +62,7 @@ const Header = () => {
   };
 
   useEffect(() => {
-    const element = document.getElementById("tutor-tab-header-list-active");
+    const element = document.getElementById("tutor-tab-header-list-active1");
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
@@ -129,7 +130,7 @@ const Header = () => {
   return (
     <>
       <div className="tutor-tab-header shadow-sm">
-        <div
+        {/* <div
           style={{
             margin: "0 0 0 0",
             display: "flex",
@@ -147,7 +148,7 @@ const Header = () => {
           <div style={{ opacity: "1" }}>
             <FaChevronLeft size={20} />
           </div>
-        </div>
+        </div> */}
         {/* <div
           className={`screen-name rounded align-items-center px-1`}
           style={{
@@ -168,7 +169,152 @@ const Header = () => {
             </div>
           </div>
         </div> */}
-        <div
+
+<div
+          className={`screen-name position-relative flex-column px-1 gap-2`}
+          style={{
+            width: "170px",
+            fontSize: "14px",
+            whiteSpace: "nowrap",
+            marginLeft: "20px",
+            height: "50px",
+            transition: "all 0.3s ease-in-out",
+            display: "flex",
+            // display: !tutor.TutorScreenname ? "none" : "flex",
+            color: statesColours[student.Status]?.bg,
+          }}
+        >
+          {!student.ScreenName ? (
+            <div
+              className="screen-name position-relative d-flex align-items-center px-1 gap-2"
+              style={{ width: "170px", marginLeft: "20px", height: "50px" }}
+            >
+              <div className="d-flex align-items-center">
+                <div>
+                  <div
+                    className="bg-secondary rounded-circle"
+                    style={{ width: "35px", height: "35px" }}
+                  ></div>
+                </div>
+                <div className="ms-2">
+                  <div
+                    className="bg-secondary"
+                    style={{
+                      width: "100px",
+                      height: "14px",
+                      borderRadius: "4px",
+                    }}
+                  ></div>
+                  <div
+                    className="bg-secondary mt-1"
+                    style={{
+                      width: "80px",
+                      height: "12px",
+                      borderRadius: "4px",
+                    }}
+                  ></div>
+                </div>
+                {/* <div className="ms-2">
+                <div
+                  className="bg-secondary"
+                  style={{ width: "20px", height: "20px", borderRadius: "50%" }}
+                ></div>
+              </div> */}
+                <div
+                  style={{
+                    marginLeft: "5px",
+                    transition: "transform 0.3s ease-in-out",
+                    transform: profileDropdownOpened
+                      ? "rotate(180deg)"
+                      : "rotate(0deg)",
+                  }}
+                  onClick={() =>
+                    setProfileDropdownOpened(!profileDropdownOpened)
+                  }
+                >
+                  {profileDropdownOpened ? (
+                    <FaChevronUp color="white" />
+                  ) : (
+                    <FaChevronDown color="white" />
+                  )}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="d-flex align-items-center">
+              <div>
+                <Avatar
+                  avatarSrc={student.Photo}
+                  size="35"
+                  indicSize="8px"
+                  borderSize="1px"
+                />
+              </div>
+              <div className="">
+                <div style={{ fontWeight: "bold" }}>
+                  {student.ScreenName}
+                </div>
+                <div style={{ fontSize: "12px", fontWeight: "700" }}>
+                  {StatusValues[student.Status]}
+                </div>
+              </div>
+              <div
+                style={{
+                  marginLeft: "5px",
+                  transition: "transform 0.3s ease-in-out",
+                  transform: profileDropdownOpened
+                    ? "rotate(180deg)"
+                    : "rotate(0deg)",
+                }}
+                onClick={() => setProfileDropdownOpened(!profileDropdownOpened)}
+              >
+                {profileDropdownOpened ? <FaChevronUp /> : <FaChevronDown />}
+              </div>
+            </div>
+          )}
+          <div
+            ref={profileDropdownRef}
+            className={`position-absolute text-bg-light shadow w-100`}
+            style={{
+              marginTop: "50px",
+              maxHeight: profileDropdownOpened ? "200px" : "0",
+              transition: "max-height 0.3s ease-in-out",
+              overflow: "hidden",
+              border: "1px solid lightgray",
+              borderTop: "none",
+              zIndex: 9,
+            }}
+          >
+            <ul
+              className="d-flex flex-column align-items-start p-2"
+              style={{ background: "#212f3c", color: "white" }}
+            >
+              <li
+                className="p-0 text-start border-bottom w-100"
+                style={{ fontSize: "12px" }}
+              >
+                <span style={{ marginRight: "5px" }}>
+                  <FaClock />
+                </span>
+                {showDate(moment().toDate(), wholeDateFormat)}
+              </li>
+              <li
+                style={{ color: "#e14c4c" }}
+                className="p-0 text-start w-100"
+                onClick={() => signOut(() => handleSignOut())}
+              >
+                Signout
+                <span style={{ marginLeft: "5px" }}>
+                  <FaSignOutAlt />
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+
+
+        {/* <div
           className={`screen-name position-relative flex-column px-1 gap-2`}
           style={{
             width: "170px",
@@ -248,33 +394,60 @@ const Header = () => {
               </li>
             </ul>
           </div>
+        </div> */}
+        <div
+          onClick={handleScrollLeft}
+          style={{ marginLeft: "30px" }}
+          className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
+        >
+          <IoChevronBackOutline color="gray" size={30} />
         </div>
         <ul
           ref={scrollRef}
           className={`header`}
           style={{
             background: "inherit",
-            pointerEvents: "auto",
+            // tutor.Status === (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
+            // user.role !== "admin"
+            //   ? "#737476"
+            //   : "inherit",
+            // pointerEvents:
+            //   tutor.Status === (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
+            //   user.role !== "admin"
+            //     ? "none"
+            //     : "auto",
             width: "calc(100% - 300px)",
-            margin: "0 50px",
+            margin: "0 -10px",
+            zIndex: 1,
           }}
         >
           {tabs.map((tab) => (
-            <React.Fragment key={tab.url}>
+            <div
+              id={
+                activeTab.includes(tab.url) ||
+                (activeTab.split("/").length > 3 &&
+                  activeTab.split("/")[2] === tab.url)
+                  ? "tutor-tab-header-list-active1"
+                  : ""
+              }
+              key={tab.url}
+              className="navitem d-flex justify-content-center align-items-center"
+            >
               <li
                 data-url={tab.url}
                 onClick={handleTabClick}
-                id={
-                  activeTab.includes(tab.url) ||
-                  (activeTab.split("/").length > 3 &&
-                    activeTab.split("/")[2] === tab.url)
-                    ? "tutor-tab-header-list-active"
-                    : ""
-                }
+                 className="navitem-li"
+                // id={
+                //   activeTab.includes(tab.url) ||
+                //   (activeTab.split("/").length > 3 &&
+                //     activeTab.split("/")[2] === tab.url)
+                //     ? "tutor-tab-header-list-active1"
+                //     : ""
+                // }
               >
                 <h5
                   className="m-0"
-                  style={{ transform: "skew(40deg, 0deg)", fontSize: "14px" }}
+                  style={{ fontSize: "14px" }}
                 >
                   {tab.name}
                   {!!filteredSessions.length &&
@@ -315,12 +488,17 @@ const Header = () => {
                   />
                 </div>
               )}
-              <div className="text-light" style={{ fontWeight: "bold" }}>
-                |
-              </div>
-            </React.Fragment>
+             
+            </div>
           ))}
         </ul>
+
+        <div
+          onClick={handleScrollRight}
+          className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
+        >
+          <IoChevronForwardOutline color="gray" size={30} />
+        </div>
         <TabInfoVideoToast
           video={tabs.find((tab) => tab.url === isOpen)?.video}
           isOpen={isOpen}
@@ -334,7 +512,7 @@ const Header = () => {
           <h6 className="text-light m-0">Signout</h6>
           <FaSignOutAlt color="white" />
         </div> */}
-        <div
+        {/* <div
           style={{
             margin: "0 0 0 0",
             background: "#efefef",
@@ -349,7 +527,7 @@ const Header = () => {
           onClick={handleScrollRight}
         >
           <FaChevronRight size={20} />
-        </div>
+        </div> */}
       </div>
     </>
   );

@@ -32,10 +32,7 @@ import { PiVideoBold } from "react-icons/pi";
 import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
 import Avatar from "../../components/common/Avatar";
 import { showDate } from "../../utils/moment";
-import {
-  IoChevronBackOutline,
-  IoChevronForwardOutline,
-} from "react-icons/io5";
+import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
 
 const Header = () => {
   const { signOut } = useClerk();
@@ -178,39 +175,99 @@ const Header = () => {
             marginLeft: "20px",
             height: "50px",
             transition: "all 0.3s ease-in-out",
-            display: !tutor.TutorScreenname ? "none" : "flex",
+            display: "flex",
+            // display: !tutor.TutorScreenname ? "none" : "flex",
             color: statesColours[tutor.Status]?.bg,
           }}
         >
-          <div className="d-flex align-items-center">
-            <div>
-              <Avatar
-                avatarSrc={tutor.Photo}
-                size="35"
-                indicSize="8px"
-                borderSize="1px"
-              />
-            </div>
-            <div className="">
-              <div style={{ fontWeight: "bold" }}>{tutor.TutorScreenname}</div>
-              <div style={{ fontSize: "12px", fontWeight: "700" }}>
-                {StatusValues[tutor.Status]}
+          {!tutor.TutorScreenname ? (
+            <div
+              className="screen-name position-relative d-flex align-items-center px-1 gap-2"
+              style={{ width: "170px", marginLeft: "20px", height: "50px" }}
+            >
+              <div className="d-flex align-items-center">
+                <div>
+                  <div
+                    className="bg-secondary rounded-circle"
+                    style={{ width: "35px", height: "35px" }}
+                  ></div>
+                </div>
+                <div className="ms-2">
+                  <div
+                    className="bg-secondary"
+                    style={{
+                      width: "100px",
+                      height: "14px",
+                      borderRadius: "4px",
+                    }}
+                  ></div>
+                  <div
+                    className="bg-secondary mt-1"
+                    style={{
+                      width: "80px",
+                      height: "12px",
+                      borderRadius: "4px",
+                    }}
+                  ></div>
+                </div>
+                {/* <div className="ms-2">
+                <div
+                  className="bg-secondary"
+                  style={{ width: "20px", height: "20px", borderRadius: "50%" }}
+                ></div>
+              </div> */}
+                <div
+                  style={{
+                    marginLeft: "5px",
+                    transition: "transform 0.3s ease-in-out",
+                    transform: profileDropdownOpened
+                      ? "rotate(180deg)"
+                      : "rotate(0deg)",
+                  }}
+                  onClick={() =>
+                    setProfileDropdownOpened(!profileDropdownOpened)
+                  }
+                >
+                  {profileDropdownOpened ? (
+                    <FaChevronUp color="white" />
+                  ) : (
+                    <FaChevronDown color="white" />
+                  )}
+                </div>
               </div>
             </div>
-            <div
-              style={{
-                marginLeft: "5px",
-                transition: "transform 0.3s ease-in-out",
-                transform: profileDropdownOpened
-                  ? "rotate(180deg)"
-                  : "rotate(0deg)",
-              }}
-              onClick={() => setProfileDropdownOpened(!profileDropdownOpened)}
-            >
-              {profileDropdownOpened ? <FaChevronUp /> : <FaChevronDown />}
+          ) : (
+            <div className="d-flex align-items-center">
+              <div>
+                <Avatar
+                  avatarSrc={tutor.Photo}
+                  size="35"
+                  indicSize="8px"
+                  borderSize="1px"
+                />
+              </div>
+              <div className="">
+                <div style={{ fontWeight: "bold" }}>
+                  {tutor.TutorScreenname}
+                </div>
+                <div style={{ fontSize: "12px", fontWeight: "700" }}>
+                  {StatusValues[tutor.Status]}
+                </div>
+              </div>
+              <div
+                style={{
+                  marginLeft: "5px",
+                  transition: "transform 0.3s ease-in-out",
+                  transform: profileDropdownOpened
+                    ? "rotate(180deg)"
+                    : "rotate(0deg)",
+                }}
+                onClick={() => setProfileDropdownOpened(!profileDropdownOpened)}
+              >
+                {profileDropdownOpened ? <FaChevronUp /> : <FaChevronDown />}
+              </div>
             </div>
-          </div>
-
+          )}
           <div
             ref={profileDropdownRef}
             className={`position-absolute text-bg-light shadow w-100`}
@@ -253,6 +310,7 @@ const Header = () => {
 
         <div
           onClick={handleScrollLeft}
+          style={{ marginLeft: "30px" }}
           className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
         >
           <IoChevronBackOutline color="gray" size={30} />
