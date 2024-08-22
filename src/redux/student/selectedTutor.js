@@ -29,7 +29,7 @@ export default slice.reducer;
 
 // ACTIONS
 
-export function setTutor(data) {
+export function setSelectedTutor(data) {
     return async (dispatch) => {
         dispatch(slice.actions.setTutor(data));
         return data;

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { BsCameraVideo, BsCloudUpload } from "react-icons/bs";
 import { moment } from "../../config/moment";
@@ -40,7 +40,6 @@ import { uploadVideoToAzure } from "../../utils/uploadVideo";
 import Avatar from "../common/Avatar";
 import Input from "../common/Input";
 import Select from "../common/Select";
-import TAButton from "../common/TAButton";
 
 import VacationSettingModal from "./VacationSettingModal";
 import { uploadTutorImage } from "../../axios/file";
@@ -136,17 +135,17 @@ const TutorSetup = () => {
   }, [user.role, tutor.AcademyId, tutor.Status]);
 
   // video fetching from azure
-  useEffect(() => {
-    tutor.AcademyId &&
-      apiClient
-        .get("/tutor/setup/intro", {
-          params: { user_id: tutor.AcademyId.replace(/[.\s]/g, "") },
-        })
-        .then((res) => {
-          res?.data?.url && set_video(res.data.url);
-        })
-        .catch((err) => console.log(err));
-  }, [tutor]);
+  // useEffect(() => {
+  //   tutor.AcademyId &&
+  //     apiClient
+  //       .get("/tutor/setup/intro", {
+  //         params: { user_id: tutor.AcademyId.replace(/[.\s]/g, "") },
+  //       })
+  //       .then((res) => {
+  //         res?.data?.url && set_video(res.data.url);
+  //       })
+  //       .catch((err) => console.log(err));
+  // }, [tutor]);
 
   useEffect(() => {
     if (
@@ -222,6 +221,8 @@ const TutorSetup = () => {
         set_sname(data.LastName);
         set_mname(data.MiddleName);
         set_photo(data.Photo);
+        set_video(data.Video || "");
+
         set_cell(data.CellPhone);
         set_state(data.StateProvince);
         set_email(data.Email);
@@ -544,8 +545,15 @@ const TutorSetup = () => {
       };
       reader.readAsDataURL(file);
 
-      tutor?.AcademyId &&
-        (await uploadVideoToAzure(file, tutor.AcademyId, selectedVideoOption));
+      const { data } = await uploadVideoToAzure(
+        file,
+        tutor.AcademyId,
+        selectedVideoOption
+      );
+      updateTutorSetup(tutor.AcademyId, { Video: data.url });
+      toast.success("Video Succesfully Uploaded!");
+      dispatch(setTutor({ ...tutor, Video: data.url }));
+      console.log(data.url);
       setVideoUploading(false);
     }
   };
@@ -993,7 +1001,7 @@ const TutorSetup = () => {
                       style={{
                         top: "7px",
                         zIndex: "99",
-                        fontSize:"14px",
+                        fontSize: "14px",
                         padding: "2px",
                         color: "black",
                         background: "transparent",

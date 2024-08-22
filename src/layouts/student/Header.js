@@ -170,7 +170,7 @@ const Header = () => {
           </div>
         </div> */}
 
-<div
+        <div
           className={`screen-name position-relative flex-column px-1 gap-2`}
           style={{
             width: "170px",
@@ -251,9 +251,7 @@ const Header = () => {
                 />
               </div>
               <div className="">
-                <div style={{ fontWeight: "bold" }}>
-                  {student.ScreenName}
-                </div>
+                <div style={{ fontWeight: "bold" }}>{student.ScreenName}</div>
                 <div style={{ fontSize: "12px", fontWeight: "700" }}>
                   {StatusValues[student.Status]}
                 </div>
@@ -311,8 +309,6 @@ const Header = () => {
             </ul>
           </div>
         </div>
-
-
 
         {/* <div
           className={`screen-name position-relative flex-column px-1 gap-2`}
@@ -436,7 +432,7 @@ const Header = () => {
               <li
                 data-url={tab.url}
                 onClick={handleTabClick}
-                 className="navitem-li"
+                className="navitem-li"
                 // id={
                 //   activeTab.includes(tab.url) ||
                 //   (activeTab.split("/").length > 3 &&
@@ -445,10 +441,7 @@ const Header = () => {
                 //     : ""
                 // }
               >
-                <h5
-                  className="m-0"
-                  style={{ fontSize: "14px" }}
-                >
+                <h5 className="m-0" style={{ fontSize: "14px" }}>
                   {tab.name}
                   {!!filteredSessions.length &&
                     tab.url === "/student/feedback" && (
@@ -488,7 +481,6 @@ const Header = () => {
                   />
                 </div>
               )}
-             
             </div>
           ))}
         </ul>

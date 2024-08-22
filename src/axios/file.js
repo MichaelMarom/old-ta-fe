@@ -53,6 +53,24 @@ export const uploadTutorImage = async (tutorId, file) => {
 }
 
 
+
+export const uploadTutorDocs = async (tutorId, file) => {
+  try {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('userId', tutorId) 
+    formData.append('container', "tutor-docs")
+
+    const res = await fileUploadClient.post(`/tutor/setup/doc`, formData)
+    return res
+  }
+  catch (err) {
+    showErrorToast(err);
+    throw err;
+  }
+}
+
+
 export const uploadStudentImages = async (studentId, file) => {
   try {
     const formData = new FormData()

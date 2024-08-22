@@ -718,13 +718,11 @@ fieldset:disabled .btn,
   border: 1px solid #dee2e663 !important;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-
-
 }
 
 .nav-circle:hover {
   border: 1px solid white;
-  /* background: #ffffff47; */
+  /* background: #ffffff47; */ 
   cursor: pointer;
   transform: scale(1.2);
 

@@ -31,7 +31,7 @@ export default slice.reducer;
 
 export function setTutor(data) {
   return async (dispatch) => {
-    if (_.isEmpty(data) && _.isObject(data))
+    if (_.isObject(data))
       return dispatch(slice.actions.setTutor(data));
 
     dispatch(slice.actions.isLoading());

@@ -13,7 +13,7 @@ import { convertTutorIdToName } from "../../utils/common";
 import Avatar from "../common/Avatar";
 import { showDate } from "../../utils/moment";
 import { useNavigate } from "react-router-dom";
-import { setTutor } from "../../redux/student/selectedTutor";
+import { setSelectedTutor, setTutor } from "../../redux/student/selectedTutor";
 import BTN_ICON from "../../assets/images/button__icon.png";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { FaCandyCane, FaCheckCircle } from "react-icons/fa";
@@ -33,7 +33,7 @@ const StudentFaculties = () => {
 
   const handleNavigateToSchedule = async (item) => {
     dispatch(
-      setTutor({
+      setSelectedTutor({
         id: item.SID,
         photo: item.Photo,
         academyId: item.AcademyId,

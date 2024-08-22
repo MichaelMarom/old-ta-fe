@@ -148,19 +148,19 @@ const TutorProfile = () => {
     }
   };
 
-  useEffect(() => {
-    if (params.id) {
-      const fetch_profile = async () => {
-        const res = await apiClient.get("/tutor/setup/intro", {
-          params: { user_id: params.id.replace(/[.\s]/g, "") },
-        });
+  // useEffect(() => {
+  //   if (params.id) {
+  //     const fetch_profile = async () => {
+  //       const res = await apiClient.get("/tutor/setup/intro", {
+  //         params: { user_id: params.id.replace(/[.\s]/g, "") },
+  //       });
 
-        setVideo(res?.data?.url);
-      };
+  //       setVideo(res?.data?.url);
+  //     };
 
-      fetch_profile();
-    }
-  }, [params.id]);
+  //     fetch_profile();
+  //   }
+  // }, [params.id]);
 
   useEffect(() => {
     if (params.id) {
@@ -470,7 +470,7 @@ const TutorProfile = () => {
                 <div className="" style={{ paddingRight: "20px" }}>
                   <video
                     loop
-                    src={video}
+                    src={tutor.Video}
                     onClick={() => {
                       if (videoRef.current) {
                         if (videoRef.current.paused) {

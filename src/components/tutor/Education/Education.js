@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 
 import { updateTutorSetup } from "../../../axios/tutor";
-import { upload_file } from "../../../axios/file";
+import { upload_file, uploadTutorDocs } from "../../../axios/file";
 import { moment } from "../../../config/moment";
 
 import Select from "react-select";
@@ -503,35 +503,6 @@ const Education = () => {
     experiences.unshift(head);
     set_exp(experiences);
 
-    // get_state()
-    //     .then(({ recordset }) => {
-    //         recordset.map(item => item.State);
-    //     })
-    //     .catch((err) => {
-    //         console.log(err)
-    //     })
-
-    // get_degree()
-    //     .then((data) => {
-    //         let list = data.recordset.map((item) =>
-    //             <option key={item.Degree}
-    //                 className={item.Degree} style={{
-    //                     height: '80px', width: '100%', outline: 'none', padding: '0 10px 0 10px',
-    //                     borderRadius: '0'
-    //                 }} value={item.Degree}>{item.Degree}</option>
-    //         );
-    //         let head = <option key='null' style={{
-    //             height: '50px', width: '100%', outline: 'none', padding: '0 10px 0 10px',
-    //             borderRadius: '0'
-    //         }} value=''>Degree</option>
-
-    //         // list.unshift(head);
-
-    //     })
-    //     .catch((err) => {
-    //         console.log(err)
-    //     })
-
     let eduLevels = LEVEL.map((item, index) => (
       <option key={index} className={item} value={item}>
         {item}
@@ -593,7 +564,8 @@ const Education = () => {
       const formData = new FormData();
       formData.append("file", degreeFile);
       try {
-        await upload_file(formData, deg_file_name);
+        uploadTutorDocs(tutor.AcademyId, degreeFile)
+        // await upload_file(formData, deg_file_name);
       } catch (error) {
         console.error("Error uploading file:", error);
       }

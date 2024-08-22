@@ -134,21 +134,23 @@ const TutorProfile = () => {
       discount.AcademyId
     ) {
       const fetch_profile = async () => {
-        const res = await apiClient.get("/tutor/setup/intro", {
-          params: { user_id: params.id.replace(/[.\s]/g, "") },
-        });
+        // const res = await apiClient.get("/tutor/setup/intro", {
+        //   params: { user_id: params.id.replace(/[.\s]/g, "") },
+        // });
 
         setProfileData({
           ...tutor,
           ...education,
           ...discount,
-          Video: res?.data?.url,
+          // Video: res?.data?.url,
         });
       };
 
       fetch_profile();
     }
   }, [params.id, tutor.AcademyId, education.AcademyId, discount.AcademyId]);
+
+console.log(data)
 
   if (!data.AcademyId)
     return (
