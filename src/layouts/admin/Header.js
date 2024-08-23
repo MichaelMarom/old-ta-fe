@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Tooltip from "../../components/common/ToolTip";
 import { FaSignOutAlt } from "react-icons/fa";
 import { useClerk } from "@clerk/clerk-react";
 import { useDispatch, useSelector } from "react-redux";
@@ -67,7 +66,7 @@ const Header = () => {
         style={{ background: "rgb(33, 47, 61)" }}
       >
         <div
-          className="screen-name rounded border p-2 m-2"
+          className="screen-name rounded p-2 m-2"
           style={{
             display: screen_name === "null" ? "none" : "flex",
             fontWeight: "bold",

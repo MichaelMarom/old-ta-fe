@@ -3,13 +3,15 @@ import { get_my_edu } from "./tutor";
 
 export const upload_file = async (formData, fileName) => {
   try {
-    const { data } = await fileUploadClient.post(`/upload?fileName=${fileName}`, formData)
-    return data
-  }
-  catch (err) {
+    const { data } = await fileUploadClient.post(
+      `/upload?fileName=${fileName}`,
+      formData
+    );
+    return data;
+  } catch (err) {
     showErrorToast(err);
   }
-}
+};
 
 export const getPreviousFilePathFromDB = async (userId) => {
   try {
@@ -19,7 +21,7 @@ export const getPreviousFilePathFromDB = async (userId) => {
 
     return previousFilePath || null;
   } catch (err) {
-    console.error('Error fetching previous file path from DB:', err);
+    console.error("Error fetching previous file path from DB:", err);
     throw err;
   }
 };
@@ -29,63 +31,63 @@ export const deleteFileOnServer = async (userId) => {
     const response = await fileUploadClient.delete(`/delete-file/${userId}`);
     return response.data;
   } catch (err) {
-    console.error('Error deleting file on server:', err);
+    console.error("Error deleting file on server:", err);
     throw err;
   }
 };
 
 export const uploadTutorImage = async (tutorId, file) => {
   try {
-    const formData = new FormData()
-    const userId = tutorId?.replace(/[\s\.\-]/g, '')
-    formData.append('file', file)
+    const formData = new FormData();
+    const userId = tutorId?.replace(/[\s\.\-]/g, "");
+    formData.append("file", file);
 
     const res = await fileUploadClient.post(`/upload-image-azure/${userId}`, {
       file,
-      container:"tutor-profile-image"
-    })
-    return res
-  }
-  catch (err) {
+      container: "tutor-profile-image",
+    });
+    return res;
+  } catch (err) {
     showErrorToast(err);
     throw err;
   }
-}
+};
 
-
-
-export const uploadTutorDocs = async (tutorId, file) => {
+export const uploadTutorDocs = async (
+  tutorId,
+  file,
+  fileType,
+  existingFileName
+) => {
   try {
-    const formData = new FormData()
-    formData.append('file', file)
-    formData.append('userId', tutorId) 
-    formData.append('container', "tutor-docs")
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("userId", tutorId);
+    formData.append("container", "tutor-docs");
+    formData.append("fileType", fileType);
+    formData.append("existingFileName", existingFileName);
 
-    const res = await fileUploadClient.post(`/tutor/setup/doc`, formData)
-    return res
-  }
-  catch (err) {
+    const res = await fileUploadClient.post(`/tutor/setup/doc`, formData);
+    return res;
+  } catch (err) {
     showErrorToast(err);
     throw err;
   }
-}
-
+};
 
 export const uploadStudentImages = async (studentId, file) => {
   try {
-    const formData = new FormData()
-    const userId = studentId?.replace(/[\s\.\-]/g, '')
-    formData.append('file', file)
+    const formData = new FormData();
+    const userId = studentId?.replace(/[\s\.\-]/g, "");
+    formData.append("file", file);
 
     const res = await fileUploadClient.post(`/upload-image-azure/${userId}`, {
       file,
-      container:"student-profile-image"
-    })
-    return res
-  }
-  catch (err) {
+      container: "student-profile-image",
+    });
+    return res;
+  } catch (err) {
     showErrorToast(err);
     throw err;
   }
-}
-
+};

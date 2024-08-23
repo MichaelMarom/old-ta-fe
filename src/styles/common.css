@@ -245,7 +245,7 @@ h1 {
 
 .react-datepicker__input-container input {
   width: 100% !important;
-  margin: 5px;
+  height: 50px;
 }
 
 /*-------------------------------------------------pdfviwer--------------------------------------------*/

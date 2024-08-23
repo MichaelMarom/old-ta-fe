@@ -7,7 +7,7 @@ import { moment } from "../../../config/moment";
 
 import Select from "react-select";
 import Actions from "../../common/Actions";
-import { FaFileUpload, FaRegTimesCircle } from "react-icons/fa";
+import { FaFileUpload, FaRegTimesCircle, FaUpload } from "react-icons/fa";
 import { toast } from "react-toastify";
 import Loading from "../../common/Loading";
 import TAButton from "../../common/TAButton";
@@ -89,7 +89,6 @@ const Education = () => {
   const { tutor } = useSelector((state) => state.tutor);
   const dispatch = useDispatch();
   const { education } = useSelector((state) => state.edu);
-  console.log(expiration);
 
   let [dbValues, setDbValues] = useState({});
 
@@ -516,109 +515,90 @@ const Education = () => {
       </option>
     ));
     set_certificate_list(certificatesOptions);
-  }, [certificate, degree, experience, level]);
+  }, [certificate, degree, experience, level, tutor.Status]);
 
   const handleDegFileUpload = (event) => {
     const file = event.target.files[0];
 
     if (file) {
       const reader = new FileReader();
-      reader.onload = () => {
-        // setDegreeFileContent(base64);
-      };
+      reader.onload = () => {};
       reader.readAsDataURL(file);
-      const fileExtension = file.name.split(".").pop().toLowerCase();
-      const fileName = `${AcademyId}-degree-${level}.${fileExtension}`;
-      set_deg_file_name(fileName);
       setDegreeFile(file);
     }
   };
 
+  const handleCertUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {};
+      reader.readAsDataURL(file);
+      setCertificateFile(file);
+    }
+  };
+
   useEffect(() => {
-    if (degreeFile && level && deg_file_name) {
+    console.log(degreeFile, level);
+    if (degreeFile && level) {
       handleUploadDegreeToServer();
-      dynamicSave("DegFileName", deg_file_name);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [degreeFile, level, deg_file_name]);
+  }, [degreeFile, level]);
 
   useEffect(() => {
-    if (certificateFile && certificate && cert_file_name) {
+    if (certificate && certificateFile) {
       handleUploadCertificateToServer();
-      dynamicSave("CertFileName", cert_file_name);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [certificate, cert_file_name, certificateFile]);
-
-  // const handleResumeFileUpload = (event) => {
-  //     const file = event.target.files[0];
-
-  //     if (file) {
-  //         setResumeFile(file);
-  //         set_resumePath(`${AcademyId}-resume-${(new Date()).getTime()}-${file.name}`);
-  //     }
-  // }
+  }, [certificate, certificateFile]);
 
   const handleUploadDegreeToServer = async () => {
     if (degreeFile) {
       const formData = new FormData();
       formData.append("file", degreeFile);
       try {
-        uploadTutorDocs(tutor.AcademyId, degreeFile)
-        // await upload_file(formData, deg_file_name);
+        const existingFile = deg_file_name
+          ? deg_file_name.substring(
+              deg_file_name.lastIndexOf("/"),
+              deg_file_name.length
+            )
+          : "";
+        const { data } = await uploadTutorDocs(
+          tutor.AcademyId,
+          degreeFile,
+          "degree",
+          existingFile
+        );
+        set_deg_file_name(data.url);
+        dynamicSave("DegFileName", data.url);
       } catch (error) {
         console.error("Error uploading file:", error);
       }
     }
   };
-
-  // const handleUploadResumeToServer = async () => {
-  //     if (resumeFile) {
-  //         const previousFilePath = await getPreviousFilePathFromDB(AcademyId);
-  //         if (previousFilePath) {
-  //             await deleteFileOnServer(AcademyId);
-  //         }
-  //         const formData = new FormData();
-  //         formData.append('file', resumeFile);
-
-  //         try {
-  //             const fileName = resumePath
-  //             const response = await upload_file(formData, fileName)
-
-  //             console.log(response.data);
-  //         } catch (error) {
-  //             console.error('Error uploading file:', error);
-  //         }
-  //     } else {
-  //         console.log('Please select a file before uploading.');
-  //     }
-  // };
 
   const handleUploadCertificateToServer = async () => {
     if (certificateFile) {
-      const formData = new FormData();
-      formData.append("file", certificateFile);
       try {
-        await upload_file(formData, cert_file_name);
+        const existingFile = cert_file_name
+          ? cert_file_name.substring(
+              cert_file_name.lastIndexOf("/"),
+              cert_file_name.length
+            )
+          : "";
+        const { data } = await uploadTutorDocs(
+          tutor.AcademyId,
+          certificateFile,
+          "certificate",
+          existingFile
+        );
+        console.log(data);
+        set_cert_file_name(data.url);
+        dynamicSave("CertFileName", data.url);
       } catch (error) {
         console.error("Error uploading file:", error);
       }
-    }
-  };
-
-  const handleCertUpload = (event) => {
-    const file = event.target.files[0];
-
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        // setCertFileContent(base64);
-      };
-      reader.readAsDataURL(file);
-      setCertificateFile(file);
-      const fileExtension = file.name.split(".").pop().toLowerCase();
-      const fileName = `${AcademyId}-certificate-${certificate}.${fileExtension}`;
-      set_cert_file_name(fileName);
     }
   };
 
@@ -1262,14 +1242,30 @@ const Education = () => {
                           </div>
                         ) : (
                           <>
-                            <div className="form-outline w-75">
+                            <div className="form-outline w-100">
+                              <p
+                                style={{ fontSize: "10px", color: "#aaaaaa" }}
+                                className="fw-bold "
+                              >
+                                Files Supported: PDF, JPG, PNG, JPEG
+                              </p>
                               <label
                                 htmlFor="degreeFile"
-                                className=" cursor-pointer border border-secondary rounded"
+                                style={{
+                                  border: "1px solid #ced4da",
+                                  height: "50px",
+                                }}
+                                className=" cursor-pointer rounded d-flex align-items-center p-2 justify-content-center"
                               >
-                                <FaFileUpload size={20} /> Upload Highest Degree
-                                Diploma
+                                <FaUpload size={15} />{" "}
+                                <p
+                                  style={{ fontSize: "12px" }}
+                                  className="mx-1 fw-bold"
+                                >
+                                  Upload Highest Degree Diploma
+                                </p>
                               </label>
+
                               <input
                                 type="file"
                                 accept=".pdf, .jpeg, .png, .jpg"
@@ -1279,9 +1275,9 @@ const Education = () => {
                                 onChange={handleDegFileUpload}
                               />
                             </div>
-                            <div className="cross-icon w-25 ">
+                            {/* <div className="cross-icon w-25 ">
                               <FaRegTimesCircle size={20} color="red" />
-                            </div>
+                            </div> */}
                           </>
                         )}
                       </div>
@@ -1441,27 +1437,42 @@ const Education = () => {
                             </div>
                           ) : (
                             <>
-                              <div className="form-outline w-75">
+                              <div className="form-outline w-100">
+                                <p
+                                  style={{ fontSize: "10px", color: "#aaaaaa" }}
+                                  className="fw-bold "
+                                >
+                                  Files Supported: PDF, JPG, PNG, JPEG
+                                </p>
                                 <label
                                   htmlFor="certificateFile"
-                                  className="border border-secondary rounded p-2 cursor-pointer"
+                                  style={{
+                                    border: "1px solid #ced4da",
+                                    height: "50px",
+                                  }}
+                                  className="rounded p-2 cursor-pointer d-flex align-items-center p-2 justify-content-center"
                                 >
-                                  <FaFileUpload size={20} />
-                                  Upload Certificate File
+                                  <FaUpload size={15} />{" "}
+                                  <p
+                                    style={{ fontSize: "12px" }}
+                                    className="mx-1 fw-bold"
+                                  >
+                                    Upload Certificate
+                                  </p>
                                 </label>
 
                                 <input
                                   type="file"
-                                  accept=".pdf, .jpeg, .png, .jpg, .doc"
+                                  accept=".pdf, .jpeg, .png, .jpg"
                                   id="certificateFile"
                                   className="form-control m-0 mr-2 d-none"
                                   onChange={handleCertUpload}
                                   disabled={!editMode}
                                 />
                               </div>
-                              <div className="cross-icon w-25">
+                              {/* <div className="cross-icon w-25">
                                 <FaRegTimesCircle size={20} color="red" />
-                              </div>
+                              </div> */}
                             </>
                           )}
                         </div>
@@ -1500,7 +1511,7 @@ const Education = () => {
                         }}
                         minDate={moment().toDate()}
                         dateFormat="MMM d, yyyy"
-                        className="form-control m-2"
+                        className="form-control mx-2"
                         readOnly={!editMode}
                         placeholder="Expiration Date"
                       />
