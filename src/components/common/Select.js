@@ -1,6 +1,5 @@
 import React from "react";
 import Tooltip from "./ToolTip";
-import { useDispatch, useSelector } from "react-redux";
 
 const Select = ({
   setValue,
@@ -15,26 +14,29 @@ const Select = ({
   required = false,
   mandatory = false,
 }) => {
-
   return (
     <label className="input w-100">
       <select
         className="input__field"
-        style={{ height: "50px", background: editMode ? "white" : "rgb(233 236 239)" }}
-        onChange={(e) => { onChange ? onChange(e) : setValue(e.target.value) }}
+        style={{
+          height: "50px",
+          background: editMode ? "white" : "rgb(233 236 239)",
+        }}
+        onChange={(e) => {
+          onChange ? onChange(e) : setValue(e.target.value);
+        }}
         value={value}
         disabled={!editMode || disabled}
         required={required}
       >
         {options ? options : children}
       </select>
-      <span className="input__label roboto-medium d-flex align-items-end"
-        style={{ background: "transparent", color: "black" }}>
+      <span
+        className="input__label  d-flex align-items-end"
+        style={{ background: "transparent", color: "#555555 " }}
+      >
         {TooltipText && !!TooltipText.length && (
-          <Tooltip
-            width="200px"
-            text={TooltipText}
-          />
+          <Tooltip width="200px" text={TooltipText} />
         )}
         {label}
       </span>

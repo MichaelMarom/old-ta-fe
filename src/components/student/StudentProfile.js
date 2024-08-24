@@ -6,19 +6,18 @@ import { IoWarning } from 'react-icons/io5';
 import { FaCheckCircle } from "react-icons/fa";
 
 
-function calcTime() {
-    let utcDateTime = moment().utc()
-    const localTime = utcDateTime.local().format('dddd, MMMM D, HH:mm:ss');
-    return localTime;
-}
+// function calcTime() {
+//     let utcDateTime = moment().utc()
+//     const localTime = utcDateTime.local().format('dddd, MMMM D, HH:mm:ss');
+//     return localTime;
+// }
 
 const StudentProfileCnt = () => {
     const { student } = useSelector(state => state.student)
-    console.log(student.ParentAName, student)
 
     return (
-        <div className='d-flex flex-column container justify-content-center align-items-center' style={{ gap: "20px" }}>
-            <div className='m-2'><b className='small'>{calcTime()}</b></div>
+        <div className='d-flex flex-column container justify-content-center align-items-center ' style={{ gap: "20px", height:"calc(100vh - 150px)" }}>
+            {/* <div className='m-2'><b className='small'>{calcTime()}</b></div> */}
             <div className='d-flex'>
                 <Avatar avatarSrc={student.Photo} size='200px' positionInPixle='20px' online={student.Online} indicSize='20px' />
             </div>
@@ -52,15 +51,15 @@ const StudentProfileCnt = () => {
                 </div>
             </div>
             <div style={{ width: "700px" }} >
-                {student.ParentConsent === 'true' ?
+                {student.ParentConsent ?
                     <div className='alert alert-success d-flex'><FaCheckCircle size={20} color={'green'}
                         className='m-1' />
-                        <h6 className='m-1'>
+                        <h6 className='m-0'  style={{lineHeight:"2"}}>
                             Parent Has Given Consent Of Video recording
                         </h6>
                     </div> :
                     <div className='alert alert-warning d-flex'> <IoWarning size={20} className='m-1 text-warning' />
-                        <h6 className='m-1'>
+                        <h6 className='m-0' style={{lineHeight:"2"}}>
                             Parent did not give consent of video recording
                         </h6>
                     </div>

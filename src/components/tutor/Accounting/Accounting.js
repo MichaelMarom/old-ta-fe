@@ -5,7 +5,6 @@ import TutorAccSetup from './TutorAccSetup';
 import { useSelector } from 'react-redux';
 
 const Accounting = () => {
-    // const [sessions, setSessions] = useState([])
     const { sessions } = useSelector(state => state.tutorSessions)
     const [currentYearEarning, setCurrentYearEarning] = useState(0);
     const [previousYearEarning, setPreviousYearEarnig] = useState(0);
@@ -13,7 +12,6 @@ const Accounting = () => {
 
     let [activeTab, setActiveTab] = useState(<TutorAccSetup sessions={sessions} currentYearAccHours={currentYearHrs} currentYearEarning={currentYearEarning} previousYearEarning={previousYearEarning} />);
     const [activeTabIndex, setActiveTabIndex] = useState(0);
-    const AcademyId = localStorage.getItem('tutor_user_id')
 
     useEffect(() => {
         setActiveTab(<TutorAccSetup sessions={sessions} currentYearAccHours={currentYearHrs}

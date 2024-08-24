@@ -353,11 +353,6 @@ textarea {
 }
 
 .profile-details-cnt {
-    height: 50%;
-    width: 50%;
-    float: right;
-    display: block;
-    position: relative;
     font-size: small;
     font-weight: 500;
 }

@@ -5,16 +5,21 @@ import { moment } from "../../../config/moment";
 import { useNavigate } from "react-router-dom";
 import { showDate } from "../../../utils/moment";
 import Pill from "../../common/Pill";
+import Loading from "../../common/Loading";
 
-const ListComponent = ({ setActiveTab, setActiveTabIndex }) => {
+const ListComponent = () => {
   const [ad, setAds] = useState([]);
+  const [fetching, setFetching] = useState(false);
   const { tutor } = useSelector((state) => state.tutor);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (tutor.AcademyId) {
       const fetch = async () => {
+        setFetching(true);
         const data = await fetch_tutor_ads(tutor.AcademyId);
+        setFetching(false);
+
         data?.length && setAds(data);
       };
       fetch();
@@ -24,45 +29,51 @@ const ListComponent = ({ setActiveTab, setActiveTabIndex }) => {
   return (
     <div className="" style={{ height: "95vh", overflowY: "auto" }}>
       <div className="container">
-        {ad.map((item) => (
-          <div
-            key={item.Id}
-            onClick={() => {
-              navigate(`/tutor/market-place/${item.Id}`);
-            }}
-            className=" click-effect-elem rounded shadow-sm p-2 border m-1 d-flex "
-            style={{ gap: "20px" }}
-          >
-            {item.Published_At && (
-              <p
-                className=" m-0 text-decoration-underline "
-                style={{ width: "100px" }}
-              >
-                {showDate(moment(item.Published_At).toDate())}
-              </p>
-            )}
-            <div className="" style={{ width: "100px" }}>
-              <Pill
-                label={item.Status}
-                color={item.Status === "published" ? "success" : "danger"}
-                hasIcon={false}
-              />
-            </div>
-            {item.Subject && (
-              <div className="">
+        {fetching ? (
+          <Loading />
+        ) : !!ad.length ? (
+          ad.map((item) => (
+            <div
+              key={item.Id}
+              onClick={() => {
+                navigate(`/tutor/market-place/${item.Id}`);
+              }}
+              className=" click-effect-elem rounded shadow-sm p-2 border m-1 d-flex "
+              style={{ gap: "20px" }}
+            >
+              {item.Published_At && (
+                <p
+                  className=" m-0 text-decoration-underline "
+                  style={{ width: "100px" }}
+                >
+                  {showDate(moment(item.Published_At).toDate())}
+                </p>
+              )}
+              <div className="" style={{ width: "100px" }}>
                 <Pill
-                  label={item.Subject}
+                  label={item.Status}
+                  color={item.Status === "published" ? "success" : "danger"}
                   hasIcon={false}
-                  color="primary"
-                  width="auto"
                 />
               </div>
-            )}
-            <h5 className="click-elem m-0 text-decoration-underline d-inline-block">
-              {item.AdHeader}
-            </h5>
-          </div>
-        ))}
+              {item.Subject && (
+                <div className="">
+                  <Pill
+                    label={item.Subject}
+                    hasIcon={false}
+                    color="primary"
+                    width="auto"
+                  />
+                </div>
+              )}
+              <h5 className="click-elem m-0 text-decoration-underline d-inline-block">
+                {item.AdHeader}
+              </h5>
+            </div>
+          ))
+        ) : (
+          <div className="text-danger">No Saved Ads!</div>
+        )}
       </div>
     </div>
   );

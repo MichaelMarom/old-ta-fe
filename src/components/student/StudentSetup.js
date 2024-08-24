@@ -34,9 +34,11 @@ import Select from "../common/Select";
 import { MandatoryFieldLabel, OptionalFieldLabel } from "../tutor/TutorSetup";
 import Loading from "../common/Loading";
 import { uploadStudentImages } from "../../axios/file";
+import _ from "lodash";
 
 const StudentSetup = () => {
   const dispatch = useDispatch();
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   let [fname, set_fname] = useState("");
   const [picUploading, setPicUploading] = useState(false);
@@ -45,7 +47,6 @@ const StudentSetup = () => {
   let [email, set_email] = useState("");
 
   let [cell, set_cell] = useState("");
-  let [acadId, set_acadId] = useState("");
   let [add1, set_add1] = useState("");
   let [add2, set_add2] = useState("");
   let [city, set_city] = useState("");
@@ -78,7 +79,6 @@ const StudentSetup = () => {
   let [GradeList, setGradeList] = useState("");
 
   const [dateTime, setDateTime] = useState("");
-  const [userId, setUserId] = useState("");
   const { user } = useSelector((state) => state.user);
   const { student, isLoading } = useSelector((state) => state.student);
   const [saving, setSaving] = useState(false);
@@ -87,6 +87,16 @@ const StudentSetup = () => {
   const [nameFieldsDisabled, setNameFieldsDisabled] = useState(false);
   const [unSavedChanges, setUnSavedChanges] = useState(false);
   const [toastShown, setToastShown] = useState(false);
+
+  const nameValidations = (value) => {
+    if (!/^[a-zA-Z]+$/.test(value)) {
+      return `"Can only contain letters"`;
+    }
+    if (value.length < 2) {
+      return `"Must be at least 2 characters long"`;
+    }
+    return false;
+  };
 
   useEffect(() => {
     user.role &&
@@ -106,12 +116,14 @@ const StudentSetup = () => {
         }
       );
     setToastShown(true);
+    //eslint-disable-next-line
   }, [user.role, student.Status, student.AcademyId]);
 
   let saver = async (e, id) => {
     e.preventDefault();
+    if (_.some(errors, (value) => typeof value === "string"))
+      return toast.error("Please fix validation errors!");
     setSaving(true);
-    console.log(id);
     if (id) {
       upload_student_setup_by_fields(id, {
         Language: lang,
@@ -163,17 +175,13 @@ const StudentSetup = () => {
         Country: country,
         GMT: timeZone,
         Photo: photo,
-        Status:"pending",
+        Status: "pending",
         ParentConsent: parentConsent,
       }).then((response) => {
         if (!response?.response?.data) {
-          console.log(response[0])
+          console.log(response[0]);
           toast.success("Created Successfully!");
-          // get_my_data(localStorage.getItem("student_user_id")).then((data) => {
-          dispatch(
-            setStudent(response[0])
-          );
-          // });
+          dispatch(setStudent(response[0]));
         }
       });
     }
@@ -181,7 +189,7 @@ const StudentSetup = () => {
     setSaving(false);
   };
 
-  console.log(student)
+  console.log(student);
   useEffect(() => {
     if (student.AcademyId) {
       setEditMode(false);
@@ -192,7 +200,7 @@ const StudentSetup = () => {
     }
   }, [student]);
 
-  //unsavedChanges
+  // unsavedChanges
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const currentState = {
     Address2: add2,
@@ -232,7 +240,6 @@ const StudentSetup = () => {
           set_email(data.Email);
           set_cell(data.Cell);
           set_state(data.State);
-          setUserId(data.userId);
           set_parentConsent(data.ParentConsent);
           set_city(data.City);
           set_country(data.Country);
@@ -263,14 +270,6 @@ const StudentSetup = () => {
     };
     fetchStudentSetup();
   }, [student, user]);
-
-  useEffect(() => {
-    let id =
-      window.localStorage.getItem("student_user_id") !== null
-        ? window.localStorage.getItem("student_user_id")
-        : null;
-    set_acadId(id);
-  }, []);
 
   useEffect(() => {
     let list = Countries.map((item, index) => (
@@ -407,7 +406,7 @@ const StudentSetup = () => {
     );
 
     states_list.unshift(state_head);
-  }, []);
+  }, [student.Status]);
 
   let handleImage = async (e) => {
     if (e.target.files[0].type.split("/")?.[0] !== "image") {
@@ -500,7 +499,9 @@ const StudentSetup = () => {
         style={{ height: "100%", gap: "3%" }}
       >
         <div className="text-center" style={{ width: "30%" }}>
-          <h5 style={{ whiteSpace: "nowrap" }}>Profile Photo</h5>
+          <h5 style={{ whiteSpace: "nowrap" }} className="fw-bold">
+            Profile Photo
+          </h5>
           <input
             className="form-control"
             disabled={!editMode}
@@ -516,11 +517,6 @@ const StudentSetup = () => {
             style={{ width: "200px", height: "200px" }}
           >
             <Avatar avatarSrc={photo} showOnlineStatus={false} size="180" />
-            {/* <img
-              src={photo}
-              style={{ height: "100%", width: "100%" }}
-              alt="profile-pic"
-            /> */}
           </div>
           <label id="btn" className="action-btn mt-4" htmlFor="photo">
             <div className="button__content">
@@ -554,7 +550,11 @@ const StudentSetup = () => {
             <div className="profile-details-cnt" style={{ width: "48%" }}>
               <div className="input-group mb-2 ">
                 <Input
+                  validationFn={nameValidations}
                   setValue={set_fname}
+                  setErrors={setErrors}
+                  errors={errors}
+                  fieldName="First Name"
                   value={fname}
                   required={true}
                   label={
@@ -567,28 +567,14 @@ const StudentSetup = () => {
                   }
                   editMode={!nameFieldsDisabled}
                 />
-
-                {/* <label
-                  className="input-group-text"
-                  style={{ width: "35%" }}
-                  htmlFor="inputGroupSelect01"
-                >
-                  First Name
-                </label>
-                <input
-                  required
-                  disabled={nameFieldsDisabled}
-                  className="form-control"
-                  onChange={(e) => set_fname(e.target.value)}
-                  placeholder="First Name"
-                  value={fname}
-                  type="text"
-                  id="fname"
-                /> */}
               </div>
 
               <div className="input-group mb-2 ">
                 <Input
+                  setErrors={setErrors}
+                  errors={errors}
+                  fieldName="Middle Name"
+                  validationFn={nameValidations}
                   setValue={set_mname}
                   value={mname}
                   required={false}
@@ -604,6 +590,10 @@ const StudentSetup = () => {
 
               <div className="input-group mb-2 ">
                 <Input
+                  setErrors={setErrors}
+                  errors={errors}
+                  fieldName="Last Name"
+                  validationFn={nameValidations}
                   setValue={set_sname}
                   value={sname}
                   label={
@@ -640,42 +630,21 @@ const StudentSetup = () => {
                   <span
                     className="input__label roboto-medium"
                     style={{
-                      top: "-3px",
-                      left: "5px",
+                      top: "6px",
+                      left: "0px",
                       zIndex: "99",
                       padding: "2px",
                       color: "black",
+                      fontWeight: "bold",
+                      fontSize: "14px",
                       background: editMode ? "white" : "rgb(233, 236, 239)",
                       transform: " translate(0.25rem, -65%) scale(0.8)",
                     }}
                   >
-                    {" "}
                     phone
                   </span>
                 </div>
               </div>
-
-              {/* <div className="input-group mb-2 ">
-                <Select
-                  editMode={editMode}
-                  label={
-                    <MandatoryFieldLabel
-                      text="Are you over 18?"
-                      editMode={editMode}
-                      name="over18"
-                      mandatoryFields={mandatoryFields}
-                    />
-                  }
-                  setValue={set_is_18}
-                  value={is_18}
-                >
-                  <option value="" disabled={student.Status === "active"}>
-                    Are You Over 18 ?
-                  </option>
-                  <option value="yes">Yes</option>
-                  <option value="no">No</option>
-                </Select>
-              </div> */}
 
               <div className="input-group mb-2">
                 <Select
@@ -886,7 +855,7 @@ const StudentSetup = () => {
                 </div>
               )}
 
-              <div className="input-group mb-2 ">
+              <div className="input-group mb-2">
                 <Input
                   setValue={set_zipCode}
                   value={zipCode}
@@ -900,7 +869,7 @@ const StudentSetup = () => {
                   editMode={editMode}
                 />
               </div>
-              <div className="input-group mb-2">
+              <div className="input-group mb-2 ">
                 <Input
                   value={dateTime}
                   label={<MandatoryFieldLabel text="UTC" editMode={editMode} />}
@@ -941,91 +910,118 @@ const StudentSetup = () => {
                   Are you Over 18?
                 </label>
               </div>
+
+              {!!is_18 && (
+                <div
+                  className="d-flex flex-column justify-content-center"
+                  style={{
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  <div className="form-check d-flex gap-2 align-items-center ">
+                    <input
+                      style={{ width: "20px", height: "20px" }}
+                      type="checkbox"
+                      className="form-check-input"
+                      id="exampleCheckbox"
+                      disabled={!editMode}
+                      checked={parentConsent}
+                      onChange={() => set_parentConsent(!parentConsent)}
+                    />
+                    <label
+                      className="form-check-label mr-3"
+                      htmlFor="flexSwitchCheckChecked"
+                    >
+                      Video recording consent
+                    </label>
+                    <Tooltip
+                      text="Enable this switch to consent video recording for ensuring quality of service. The video clip stored for 30 days, then be deleted from The academy servers."
+                      width="200px"
+                    >
+                      <FaInfoCircle size={15} color="#0096ff" />
+                    </Tooltip>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-          {(!["Freshman", "Junior", "Senior", "Sophmore"].includes(grade) ||
-            !is_18) && (
+          {!["Freshman", "Junior", "Senior", "Sophmore"].includes(grade) && (
             <div
               className="d-flex flex-column border rounded shadow p-2 m-2"
               style={{ gap: "2%" }}
             >
-              {!["Freshman", "Junior", "Senior", "Sophmore"].includes(
-                grade
-              ) && (
-                <>
-                  <h6 className="mb-3">Parent Info</h6>
-                  <div className="d-flex" style={{ gap: "2%" }}>
-                    <div className="input-group mb-2 ">
-                      <Input
-                        value={parentAEmail}
-                        label={
-                          <MandatoryFieldLabel
-                            text="Parent A Email"
-                            editMode={editMode}
-                            name="parentAEmail"
-                            mandatoryFields={mandatoryFields}
-                          />
-                        }
+              <h6 className="mb-3 fw-bold">Parent Info</h6>
+              <div className="d-flex" style={{ gap: "2%" }}>
+                <div className="input-group mb-2 ">
+                  <Input
+                    value={parentAEmail}
+                    label={
+                      <MandatoryFieldLabel
+                        text="Parent A Email"
                         editMode={editMode}
-                        setValue={setParentAEmail}
-                        required={!is_18 && student.Status === "active"}
+                        name="parentAEmail"
+                        mandatoryFields={mandatoryFields}
                       />
-                    </div>
+                    }
+                    editMode={editMode}
+                    setValue={setParentAEmail}
+                    required={!is_18 && student.Status === "active"}
+                  />
+                </div>
 
-                    <div className="input-group mb-2 ">
-                      <Input
-                        value={parentAName}
-                        label={
-                          <MandatoryFieldLabel
-                            text="Parent A Name"
-                            editMode={editMode}
-                            name="parentAName"
-                            mandatoryFields={mandatoryFields}
-                          />
-                        }
+                <div className="input-group mb-2 ">
+                  <Input
+                    value={parentAName}
+                    label={
+                      <MandatoryFieldLabel
+                        text="Parent A Name"
                         editMode={editMode}
-                        setValue={setParentAName}
-                        required={!is_18 && student.Status === "active"}
+                        name="parentAName"
+                        mandatoryFields={mandatoryFields}
                       />
-                    </div>
-                  </div>
-                  <div className="d-flex" style={{ gap: "2%" }}>
-                    <div className="input-group mb-2">
-                      <Input
-                        value={parentBEmail}
-                        label={
-                          <MandatoryFieldLabel
-                            text="Parent B Email"
-                            editMode={editMode}
-                            name={"parentBEmail"}
-                            mandatoryFields={mandatoryFields}
-                          />
-                        }
+                    }
+                    editMode={editMode}
+                    setValue={setParentAName}
+                    required={!is_18 && student.Status === "active"}
+                  />
+                </div>
+              </div>
+              <div className="d-flex" style={{ gap: "2%" }}>
+                <div className="input-group mb-2">
+                  <Input
+                    value={parentBEmail}
+                    label={
+                      <MandatoryFieldLabel
+                        text="Parent B Email"
                         editMode={editMode}
-                        setValue={setParentBEmail}
-                        required={!is_18 && student.Status === "active"}
+                        name={"parentBEmail"}
+                        mandatoryFields={mandatoryFields}
                       />
-                    </div>
+                    }
+                    editMode={editMode}
+                    setValue={setParentBEmail}
+                    required={!is_18 && student.Status === "active"}
+                  />
+                </div>
 
-                    <div className="input-group mb-2 ">
-                      <Input
-                        value={parentBName}
-                        label={
-                          <MandatoryFieldLabel
-                            text="Parent B Name"
-                            editMode={editMode}
-                            name="parentBName"
-                            mandatoryFields={mandatoryFields}
-                          />
-                        }
+                <div className="input-group mb-2 ">
+                  <Input
+                    value={parentBName}
+                    label={
+                      <MandatoryFieldLabel
+                        text="Parent B Name"
                         editMode={editMode}
-                        setValue={setParentBName}
-                        required={!is_18 && student.Status === "active"}
+                        name="parentBName"
+                        mandatoryFields={mandatoryFields}
                       />
-                    </div>
-                  </div>
-                </>
-              )}
+                    }
+                    editMode={editMode}
+                    setValue={setParentBName}
+                    required={!is_18 && student.Status === "active"}
+                  />
+                </div>
+              </div>
+
               {!is_18 && (
                 <div
                   style={{
@@ -1037,7 +1033,6 @@ const StudentSetup = () => {
                     whiteSpace: "nowrap",
                   }}
                 >
-                  <h5>Parent(s) video recording consent</h5>
                   <div
                     className="form-check form-switch d-flex gap-3"
                     style={{ fontSize: "16px " }}
@@ -1063,53 +1058,6 @@ const StudentSetup = () => {
                       htmlFor="flexSwitchCheckChecked"
                     >
                       Parent(s) consent to record lesson.
-                    </label>
-                    <Tooltip
-                      text="Enable this switch to consent video recording for ensuring quality of service. The video clip stored for 30 days, then be deleted from The academy servers."
-                      width="200px"
-                    >
-                      <FaInfoCircle size={18} color="#0096ff" />
-                    </Tooltip>
-                  </div>
-                </div>
-              )}
-              {is_18 === "yes" && (
-                <div
-                  style={{
-                    flexDirection: "column",
-                    alignItems: "center",
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  <h5>Video recording consent</h5>
-                  <div
-                    className="form-check form-switch d-flex gap-3"
-                    style={{ fontSize: "16px " }}
-                  >
-                    <input
-                      className="form-check-input border border-dark m-1"
-                      disabled={!editMode}
-                      type="checkbox"
-                      role="switch"
-                      style={{
-                        width: "30px",
-                        height: "15px",
-                      }}
-                      onChange={() => {
-                        set_parentConsent(!parentConsent);
-                      }}
-                      checked={
-                        parentConsent === "true" || parentConsent === true
-                      }
-                    />
-                    <label
-                      className="form-check-label mr-3"
-                      htmlFor="flexSwitchCheckChecked"
-                    >
-                      video recording consent
                     </label>
                     <Tooltip
                       text="Enable this switch to consent video recording for ensuring quality of service. The video clip stored for 30 days, then be deleted from The academy servers."

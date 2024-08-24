@@ -42,6 +42,7 @@ const StudentProfile = () => {
             result[0]?.ChatID && navigate(`/tutor/chat/${result[0]?.ChatID}`)
         }
     }
+
     if (!tutor.AcademyId)
         return <div className='text-danger m-4'> Please Log in as Tutor to see Student Public Profile!</div>
     return (
@@ -83,15 +84,15 @@ const StudentProfile = () => {
                     </div>
                 </div>
                 <div style={{ width: "700px" }} >
-                    {student.ParentConsent === 'true' ?
+                    {!!student.ParentConsent ?
                         <div className='alert alert-success d-flex'><FaCheckCircle size={20} color={'green'}
                             className='m-1' />
-                            <h6 className='m-1'>
+                            <h6  style={{lineHeight:"2"}} >
                                 Parent Has Given Consent Of Video recording
                             </h6>
                         </div> :
                         <div className='alert alert-warning d-flex'> <IoWarning size={20} className='m-1 text-warning' />
-                            <h6 className='m-1'>
+                            <h6  style={{lineHeight:"2"}}>
                                 Parent did not give consent of video recording
                             </h6>
                         </div>

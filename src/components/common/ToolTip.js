@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 
-
-const Tooltip = ({ text, children, iconSize = 16, direction = "top", width = "100px", color = "rgb(0, 150, 255)",
-  style, customStyling = false }) => {
+const Tooltip = ({
+  text,
+  children,
+  iconSize = 16,
+  direction = "top",
+  width = "100px",
+  color = "rgb(0, 150, 255)",
+  style,
+  customStyling = false,
+}) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipStyle, setTooltipStye] = useState({
     width,
     whiteSpace: "normal",
-  })
+  });
 
   const handleMouseEnter = () => {
     setShowTooltip(true);
@@ -20,27 +27,37 @@ const Tooltip = ({ text, children, iconSize = 16, direction = "top", width = "10
 
   useEffect(() => {
     if (customStyling) {
-      if (style) setTooltipStye({ ...tooltipStyle, ...style })
+      if (style) setTooltipStye({ ...tooltipStyle, ...style });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customStyling, style])
+  }, [customStyling, style]);
 
   return (
     <div
-      className="custom-tooltip-wrapper mx-2" style={{
+      className="custom-tooltip-wrapper mx-2"
+      style={{
         fontWeight: "bold",
         lineHeight: "1.2",
         fontSize: "14px",
-        transform: "none"
+        transform: "none",
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       {children ? children : <FaInfoCircle size={iconSize} color={color} />}
       {showTooltip && (
-        <div className={`custom-tooltip ${direction} shadow-lg`}
-          style={{ ...tooltipStyle, transform: "none" , fontWeight:"400" , fontSize:"12px"}}
-        >{text}</div>
+        <div
+          className={`custom-tooltip ${direction}`}
+          style={{
+            ...tooltipStyle,
+            transform: "none",
+            fontWeight: "400",
+            fontSize: "12px",
+            boxShadow: "2px 5px 8px rgba(0,0,0,.45)",
+          }}
+        >
+          {text}
+        </div>
       )}
     </div>
   );

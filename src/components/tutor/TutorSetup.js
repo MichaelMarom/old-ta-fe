@@ -10,7 +10,6 @@ import { toast } from "react-toastify";
 import { RiRobot2Fill } from "react-icons/ri";
 
 import { post_tutor_setup, updateTutorSetup } from "../../axios/tutor";
-import { apiClient } from "../../axios/config";
 import { useDispatch } from "react-redux";
 import { convertGMTOffsetToLocalString, showDate } from "../../utils/moment";
 import WebcamCapture from "./Recorder/VideoRecorder";
@@ -44,6 +43,8 @@ import Select from "../common/Select";
 import VacationSettingModal from "./VacationSettingModal";
 import { uploadTutorImage } from "../../axios/file";
 import { setMissingFeildsAndTabs } from "../../redux/tutor/missingFieldsInTabs";
+import _ from 'lodash';
+
 
 const phoneUtil = PhoneNumberUtil.getInstance();
 const isPhoneValid = (phone) => {
@@ -106,6 +107,7 @@ const TutorSetup = () => {
   const [end, setEnd] = useState(moment(new Date()).endOf("day").toDate());
 
   const [dbCountry, setDBCountry] = useState(null);
+  const [errors, setErrors] = useState({});
 
   const { tutor, isLoading: tutorDataLoading } = useSelector(
     (state) => state.tutor
@@ -113,6 +115,16 @@ const TutorSetup = () => {
   const [nameFieldsDisabled, setNameFieldsDisabled] = useState(false);
   let [isRecording, setIsRecording] = useState(false);
   const toastId = "pending-status-toast";
+
+  const nameValidations = (value, field) => {
+    if (!/^[a-zA-Z]+$/.test(value)) {
+      return `"Can only contain letters"`;
+    }
+    if (value.length < 2) {
+      return `"Must be at least 2 characters long"`;
+    }
+    return false;
+  };
 
   useEffect(() => {
     if (user.role && tutor.AcademyId && tutor.Status === "pending") {
@@ -133,19 +145,6 @@ const TutorSetup = () => {
       }
     }
   }, [user.role, tutor.AcademyId, tutor.Status]);
-
-  // video fetching from azure
-  // useEffect(() => {
-  //   tutor.AcademyId &&
-  //     apiClient
-  //       .get("/tutor/setup/intro", {
-  //         params: { user_id: tutor.AcademyId.replace(/[.\s]/g, "") },
-  //       })
-  //       .then((res) => {
-  //         res?.data?.url && set_video(res.data.url);
-  //       })
-  //       .catch((err) => console.log(err));
-  // }, [tutor]);
 
   useEffect(() => {
     if (
@@ -174,10 +173,6 @@ const TutorSetup = () => {
     }
   }, [tutor]);
 
-  // useEffect(() => {
-  //   set_email(user?.email);
-  // }, [user]);
-
   //reset state on country change
   useEffect(() => {
     if (country !== dbCountry) {
@@ -195,10 +190,7 @@ const TutorSetup = () => {
   useEffect(() => {
     const postImage = async () => {
       if (uploadPhotoClicked && userExist) {
-        // await post_tutor_setup({ photo, fname, lname, mname, userId });
-
         setUploadPhotoClicked(false);
-        // dispatch(setTutor({ ...tutor, photo }));
       }
     };
     postImage();
@@ -239,7 +231,6 @@ const TutorSetup = () => {
         set_add2(data.Address2);
         setTutorGrades(JSON.parse(data?.Grades ?? "[]"));
 
-        // set_video(data.Video);
         setSelectedVideoOption("upload");
         set_vacation_mode(data.VacationMode);
         setStart(data.StartVacation);
@@ -320,6 +311,8 @@ const TutorSetup = () => {
 
   const saveTutorSetup = async (e) => {
     e.preventDefault();
+    if(_.some(errors, (value) => typeof value === 'string')) return toast.error("Please fix validation errors!")
+
     if (!isValid) {
       return toast.warning("Please enter the correct phone number");
     }
@@ -694,7 +687,6 @@ const TutorSetup = () => {
                     )
                   }
                   style={{
-                    // pointerEvents: !editMode ? "none" : "auto",
                     width: "50%",
                   }}
                   type="label"
@@ -737,7 +729,6 @@ const TutorSetup = () => {
                           "Tutor must conduct 40 hours before can activate “Franchise” option."
                         )
                       }
-                      //  checked={vacation_mode}
                     />
                     <label
                       className="form-check-label mr-3"
@@ -809,58 +800,6 @@ const TutorSetup = () => {
                       </div>
                     )}
                   </div>
-                  {/* {vacation_mode && (
-                <div>
-                  <h6 className="text-start">Enter Start and end Date</h6>
-                  <div
-                    className="d-flex align-items-center"
-                    style={{ gap: "10px" }}
-                  >
-                    <ReactDatePicker
-                      disabled={!editMode}
-                      selected={
-                        new Date(
-                          start
-                            ? start
-                            : moment(new Date()).toDate().getTime() +
-                            (gmtInInt + getLocalGMT) * 60 * 60 * 1000
-                        )
-                      }
-                      onChange={(date) => {
-                        date.setHours(0);
-                        date.setMinutes(0);
-                        date.setSeconds(0);
-                        const originalMoment = moment
-                          .tz(date, tutor.timeZone)
-                          .startOf("day");
-                        const utcMomentStartDate = originalMoment.clone();
-                        // utcMomentStartDate.utc()
-                        // console.log(originalMoment.get('hour'), utcMomentStartDate.get('hour'), originalMoment.get('date'), date.getDate(), date.getHours())
-                        setStart(utcMomentStartDate);
-                      }}
-                      minDate={new Date()}
-                      dateFormat="MMM d, yyyy"
-                      className="form-control"
-                    />
-
-                    <h6 className="m-0">and</h6>
-                    <ReactDatePicker
-                      disabled={!editMode}
-                      minDate={new Date(start)}
-                      selected={moment(end ? end : new Date()).toDate()}
-                      onChange={(date) => {
-                        date.setHours(0);
-                        date.setMinutes(0);
-                        date.setSeconds(0);
-                        const originalMoment = moment(date).endOf("day").utc();
-                        setEnd(originalMoment.toISOString());
-                      }}
-                      dateFormat="MMM d, yyyy"
-                      className="form-control"
-                    />
-                  </div>
-                </div>
-              )} */}
                 </div>
               </div>
 
@@ -877,6 +816,10 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
+                    setErrors={setErrors}
+                    errors={errors}
+                    fieldName="First Name"
+                    validationFn={nameValidations}
                     label={
                       <MandatoryFieldLabel
                         text="First Name"
@@ -901,6 +844,10 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
+                    setErrors={setErrors}
+                    errors={errors}
+                    fieldName="Middle Name"
+                    validationFn={nameValidations}
                     label={
                       <OptionalFieldLabel
                         label={"Middle Name"}
@@ -926,6 +873,10 @@ const TutorSetup = () => {
                   }}
                 >
                   <Input
+                    setErrors={setErrors}
+                    errors={errors}
+                    fieldName="Last Name"
+                    validationFn={nameValidations}
                     label={
                       <MandatoryFieldLabel
                         text="Last Name"
@@ -1713,7 +1664,7 @@ export const MandatoryFieldLabel = ({
   };
 
   return (
-    <div className="roboto-medium">
+    <div className="">
       <span
         style={{
           background: editMode ? "white" : "rgb(233 236 239)",
@@ -1738,7 +1689,7 @@ export const MandatoryFieldLabel = ({
 
 export const OptionalFieldLabel = ({ label, editMode = true }) => (
   <p
-    className="roboto-medium"
+    className=""
     style={{ background: editMode ? "white" : "rgb(233 236 239)" }}
   >
     {label}: <span className="text-sm">(optional)</span>
@@ -1753,7 +1704,7 @@ export const GeneralFieldLabel = ({
   width = "200px",
 }) => {
   return (
-    <div className="roboto-medium">
+    <div className="">
       <span
         style={{
           background: editMode ? "white" : "rgb(233 236 239)",

@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import Tooltip from "./ToolTip";
-import { useDispatch, useSelector } from "react-redux";
 
 const Input = ({
-  setValue = () => { },
+  setValue = () => {},
   value,
+  validationFn = () => {},
   type = "text",
   tooltipText = "",
   editMode = true,
@@ -12,28 +12,34 @@ const Input = ({
   label,
   required = true,
   mandatory = false,
+  setErrors=()=>{},
+  fieldName,
+  errors={},
   ...rest
 }) => {
-  const udpateTutorStatusToUnderRevew = async (e) => {
-  }
+  console.log(errors);
   return (
     <label className="input w-100">
       <input
         className="input__field"
-        onInput={(e) => { udpateTutorStatusToUnderRevew(e); setValue(e.target.value) }}
-        value={value}
+        onInput={(e) => {
+          setErrors({...errors, [fieldName]:validationFn(e.target.value)});
+          setValue(e.target.value);
+        }}
+        value={value || ""}
         type={type}
         required={required}
         style={{ background: editMode ? "white" : "rgb(233 236 239)" }}
         disabled={!editMode || disabled}
         {...rest}
       />
-      <span className="input__label roboto-medium d-flex align-items-end roboto-regular" style={{ background: "transparent", color: "black" }} >
+      <p className="text-danger fw-bold small">{errors[fieldName]}</p>
+      <span
+        className="input__label d-flex align-items-end "
+        style={{ background: "transparent", color: "#555555" }}
+      >
         {tooltipText && !!tooltipText.length && (
-          <Tooltip
-            width="200px"
-            text={tooltipText}
-          />
+          <Tooltip width="200px" text={tooltipText} />
         )}
         {label}
       </span>

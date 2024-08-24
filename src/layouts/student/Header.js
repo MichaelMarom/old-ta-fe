@@ -37,6 +37,7 @@ const Header = () => {
   const profileDropdownRef = useRef();
   const scrollStep = 500;
   let location = useLocation();
+  
 
   const { student } = useSelector((state) => state.student);
   const tabs = [
@@ -171,6 +172,7 @@ const Header = () => {
         </div> */}
 
         <div
+         ref={profileDropdownRef}
           className={`screen-name position-relative flex-column px-1 gap-2`}
           style={{
             width: "170px",
@@ -189,7 +191,10 @@ const Header = () => {
               className="screen-name position-relative d-flex align-items-center px-1 gap-2"
               style={{ width: "170px", marginLeft: "20px", height: "50px" }}
             >
-              <div className="d-flex align-items-center">
+              <div
+                className="d-flex align-items-center"
+                onClick={() => setProfileDropdownOpened(!profileDropdownOpened)}
+              >
                 <div>
                   <div
                     className="bg-secondary rounded-circle"
@@ -214,12 +219,6 @@ const Header = () => {
                     }}
                   ></div>
                 </div>
-                {/* <div className="ms-2">
-                <div
-                  className="bg-secondary"
-                  style={{ width: "20px", height: "20px", borderRadius: "50%" }}
-                ></div>
-              </div> */}
                 <div
                   style={{
                     marginLeft: "5px",
@@ -228,9 +227,6 @@ const Header = () => {
                       ? "rotate(180deg)"
                       : "rotate(0deg)",
                   }}
-                  onClick={() =>
-                    setProfileDropdownOpened(!profileDropdownOpened)
-                  }
                 >
                   {profileDropdownOpened ? (
                     <FaChevronUp color="white" />
@@ -241,7 +237,10 @@ const Header = () => {
               </div>
             </div>
           ) : (
-            <div className="d-flex align-items-center">
+            <div
+              className="d-flex align-items-center"
+              onClick={() => setProfileDropdownOpened(!profileDropdownOpened)}
+            >
               <div>
                 <Avatar
                   avatarSrc={student.Photo}
@@ -264,14 +263,13 @@ const Header = () => {
                     ? "rotate(180deg)"
                     : "rotate(0deg)",
                 }}
-                onClick={() => setProfileDropdownOpened(!profileDropdownOpened)}
               >
                 {profileDropdownOpened ? <FaChevronUp /> : <FaChevronDown />}
               </div>
             </div>
           )}
           <div
-            ref={profileDropdownRef}
+           
             className={`position-absolute text-bg-light shadow w-100`}
             style={{
               marginTop: "50px",

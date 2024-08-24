@@ -1,5 +1,5 @@
 html {
-  padding: 0 !important
+  padding: 0 !important;
 }
 
 body,
@@ -8,15 +8,15 @@ div {
 }
 
 p {
-  margin: 0
+  margin: 0;
 }
 
-.roboto-thin,
+/* .roboto-thin,
 p {
   font-family: "Roboto", sans-serif;
   font-weight: 100;
   font-style: normal;
-}
+} */
 
 .roboto-light {
   font-family: "Roboto", sans-serif;
@@ -90,6 +90,11 @@ h1 {
   font-style: italic;
 }
 
+span {
+  font-weight: 900 !important;
+  font-family: "Work Sans", sans-serif !important;
+}
+
 :root {
   --backgroundColor: rgba(246, 241, 209);
   --colorShadeA: rgb(16, 16, 16);
@@ -121,18 +126,15 @@ h1 {
   }
 }
 
-
 @keyframes border-blinking {
   50% {
     border-color: limegreen;
   }
 }
 
-
 .blinking-frame-red {
   animation: blinking_red 1s infinite;
 }
-
 
 .blinking-border-bottom {
   border: none;
@@ -141,7 +143,6 @@ h1 {
   animation-duration: 1s;
   animation-iteration-count: 100;
 }
-
 
 .blinking-button {
   animation: blink 1s infinite;
@@ -156,7 +157,6 @@ h1 {
   background-color: #b7b7b7 !important;
 }
 
-
 /* -------------------------------------------------calender------------------------------------------- */
 .rbc-calendar {
   min-height: 600px;
@@ -167,7 +167,7 @@ h1 {
 }
 
 .rbc-label.rbc-time-header-gutter::before {
-  content: 'hh:mm a' !important;
+  content: "hh:mm a" !important;
 }
 
 .rbc-btn-group button:nth-child(1) {
@@ -212,7 +212,7 @@ h1 {
 }
 
 .rbc-current-time-indicator:before {
-  content: 'Tutor UTC Time';
+  content: "Tutor UTC Time";
   font-size: 12px;
   bottom: 3px;
   position: absolute;
@@ -224,14 +224,13 @@ h1 {
 }
 
 .student-calender .rbc-current-time-indicator:before {
-  content: 'Student UTC Time';
+  content: "Student UTC Time";
 }
 
 .rbc-current-time-indicator {
   height: 3px !important;
   background-color: rgb(230, 16, 16) !important;
 }
-
 
 /* ----------------------------------------------------------react-datepicker--------------------------------------*/
 .react-datepicker__time-container {
@@ -253,19 +252,17 @@ h1 {
   display: none;
 }
 
-
-
 /*----TOAST------*/
 
 .custom-toast-container {
-  bottom: 100px
+  bottom: 100px;
 }
 
 .react-toastify-icon.toast-info svg {
   fill: white;
 }
 
-.setup-private-info .Toastify__close-button>svg {
+.setup-private-info .Toastify__close-button > svg {
   width: 30px !important;
   height: 30px !important;
   color: rgb(0, 255, 51) !important;
@@ -281,11 +278,10 @@ h1 {
 }
 
 .edu {
-  bottom: 300px
+  bottom: 300px;
 }
 
-/*---________________________BUtton ______________________---*/
-
+/*---________________________Button ______________________---*/
 
 .action-btn {
   position: relative;
@@ -510,14 +506,12 @@ h1 {
   transition: 0.13s ease-in-out;
 }
 
-
 .btn.disabled,
 .btn:disabled,
 fieldset:disabled .btn,
 .btn:hover {
   border: 2px solid #e1e1e1;
 }
-
 
 /* -----------------------------------------------------------------SmallSideBar---------------------------------- */
 
@@ -550,9 +544,6 @@ fieldset:disabled .btn,
   padding: 20px;
 }
 
-
-
-
 /*--------------------- scrollbar -----------------*/
 ::-webkit-scrollbar {
   width: 8px;
@@ -577,7 +568,7 @@ fieldset:disabled .btn,
 }
 
 .countdown div {
-  left: 2%
+  left: 2%;
 }
 
 /*---------------------------------------swicth--------------------------*/
@@ -596,7 +587,7 @@ fieldset:disabled .btn,
 }
 
 .toggle-collab::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 24px;
   height: 24px;
@@ -621,9 +612,7 @@ fieldset:disabled .btn,
   font-weight: bold;
 }
 
-
-
-/*************************************INput*******************/
+/*************************************Input*******************/
 
 @import url("https://rsms.me/inter/inter.css");
 
@@ -634,10 +623,10 @@ fieldset:disabled .btn,
   --color-background: var(--color-light);
   --color-text: var(--color-dark);
   --color-accent: var(--color-signal);
-  --size-bezel: .5rem;
+  --size-bezel: 0.5rem;
   --size-radius: 4px;
   line-height: 1.4;
-  font-size: calc(.6rem + .4vw);
+  font-size: calc(0.6rem + 0.4vw);
   color: var(--color-text);
   background: var(--color-background);
   font-weight: 300;
@@ -646,16 +635,17 @@ fieldset:disabled .btn,
 
 .input {
   position: relative;
-
 }
 
 .input__label {
+  background: transparent;
+  color: #555555;
   position: absolute;
   margin: 0 !important;
-  left: 0;
+  left: 7px;
   top: -12px;
-  padding: calc(var(--size-bezel) * 0.75) calc(var(--size-bezel) * .5);
-  margin: calc(var(--size-bezel) * 0.75 + 3px) calc(var(--size-bezel) * .5);
+  padding: calc(var(--size-bezel) * 0.75) calc(var(--size-bezel) * 0.5);
+  margin: calc(var(--size-bezel) * 0.75 + 3px) calc(var(--size-bezel) * 0.5);
   background: pink;
   white-space: nowrap;
   transform-origin: 0 0;
@@ -678,18 +668,18 @@ fieldset:disabled .btn,
   border-radius: var(--size-radius);
 }
 
-.input__field:not(:-moz-placeholder-shown)+.input__label {
+.input__field:not(:-moz-placeholder-shown) + .input__label {
   /* transform: translate(0.25rem, -65%) scale(0.8); */
   color: var(--color-accent);
 }
 
-.input__field:not(:-ms-input-placeholder)+.input__label {
+.input__field:not(:-ms-input-placeholder) + .input__label {
   /* transform: translate(0.25rem, -65%) scale(0.8); */
   color: var(--color-accent);
 }
 
-.input__field:focus+.input__label,
-.input__field:not(:placeholder-shown)+.input__label {
+.input__field:focus + .input__label,
+.input__field:not(:placeholder-shown) + .input__label {
   /* transform: translate(0.25rem, -65%) scale(0.8); */
   color: var(--color-accent);
 }
@@ -708,7 +698,6 @@ fieldset:disabled .btn,
   background-color: green !important;
 }
 
-
 /* --------header------------- */
 .nav-circle {
   transition: all 0.3s ease-in;
@@ -722,10 +711,9 @@ fieldset:disabled .btn,
 
 .nav-circle:hover {
   border: 1px solid white;
-  /* background: #ffffff47; */ 
+  /* background: #ffffff47; */
   cursor: pointer;
   transform: scale(1.2);
-
 }
 
 .nav-circle svg:hover {
@@ -753,8 +741,8 @@ fieldset:disabled .btn,
   opacity: 0;
   width: 0%;
   height: 2px;
-  content: '';
-  background:linear-gradient(0.25turn, rgb(117 119 121), rgb(36, 113, 163));
+  content: "";
+  background: linear-gradient(0.25turn, rgb(117 119 121), rgb(36, 113, 163));
   transition: all 0.3s;
 }
 
@@ -771,18 +759,16 @@ fieldset:disabled .btn,
 .navitem:hover:before,
 .navitem:hover:after,
 #tutor-tab-header-list-active1::before,
-#tutor-tab-header-list-active1::after
-{
+#tutor-tab-header-list-active1::after {
   opacity: 1;
   width: 100%;
 }
 
 .video-nav-icon:hover {
-  transition: width 800ms ease-in-out;
+  transition: all 0.3s ease-in-out;
   transform: scale(1.2);
   /* Enlarge the icon on hover */
 }
-
 
 .blink_me {
   color: red;
@@ -795,9 +781,7 @@ fieldset:disabled .btn,
   }
 }
 
-
 /*  */
-
 
 .rbc-allday-cell {
   display: none;
@@ -815,7 +799,6 @@ fieldset:disabled .btn,
   background-color: #eaf6ff !important;
 }
 
-
 .rbc-event-label {
   display: none !important;
 }
@@ -830,12 +813,16 @@ fieldset:disabled .btn,
   border-top: 0 !important;
 }
 
-.rbc-day-slot.rbc-time-column .rbc-timeslot-group .rbc-time-slot.place-holder-start-slot {
+.rbc-day-slot.rbc-time-column
+  .rbc-timeslot-group
+  .rbc-time-slot.place-holder-start-slot {
   border: 1px solid red !important;
   border-bottom: 0 !important;
 }
 
-.rbc-day-slot.rbc-time-column .rbc-timeslot-group .rbc-time-slot.place-holder-start-slot::after {
+.rbc-day-slot.rbc-time-column
+  .rbc-timeslot-group
+  .rbc-time-slot.place-holder-start-slot::after {
   content: "Place holder";
   display: block;
   color: rgb(249, 5, 5);
@@ -962,7 +949,7 @@ button.Toastify__close-button.Toastify__close-button--light {
 }
 
 input[type="checkbox"] {
-  accent-color: green
+  accent-color: green;
 }
 
 .form-check-input border border-dark:checked {
