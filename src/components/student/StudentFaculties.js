@@ -9,7 +9,7 @@ import Pill from "../common/Pill";
 import { wholeDateFormat } from "../../constants/constants";
 import SubMenu from "../common/SubMenu";
 import Loading from "../common/Loading";
-import { convertTutorIdToName } from "../../utils/common";
+import { capitalizeFirstLetter, convertTutorIdToName } from "../../utils/common";
 import Avatar from "../common/Avatar";
 import { showDate } from "../../utils/moment";
 import { useNavigate } from "react-router-dom";
@@ -449,7 +449,7 @@ const StudentFaculties = () => {
                                   }}
                                   className=""
                                 >
-                                  {convertTutorIdToName(item?.TutorScreenname)}
+                                  {capitalizeFirstLetter(item?.FirstName)}
                                 </td>
                                 <td
                                   style={{
