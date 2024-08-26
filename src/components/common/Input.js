@@ -36,7 +36,8 @@ const Input = ({
       <p className="text-danger fw-bold small">{errors[fieldName]}</p>
       <span
         className="input__label d-flex align-items-end "
-        style={{ background: "transparent", color: "#555555" }}
+        style={{ background: "transparent", color: "#555555",
+         }}
       >
         {tooltipText && !!tooltipText.length && (
           <Tooltip width="200px" text={tooltipText} />

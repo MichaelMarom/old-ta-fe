@@ -716,7 +716,7 @@ const Education = () => {
           <div className="tutor-tab-education-info pt-4 ">
             <div
               className="d-flex  row border p-3 shadow "
-              style={{ background: editMode ? "inherit" : "#ebe9ec" }}
+              style={{ background: editMode ? "inherit" : "rgb(233, 236, 239)" }}
             >
               <h6 className="border-bottom">Experience</h6>
               <div className="d-flex justify-content-between">

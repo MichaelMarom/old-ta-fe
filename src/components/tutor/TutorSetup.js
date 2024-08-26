@@ -1271,11 +1271,13 @@ const TutorSetup = () => {
                 ) : selectedVideoOption === "upload" &&
                   video?.length &&
                   !videoError ? (
-                  <div className="d-flex justify-content-center flex-column m-auto align-items-center w-100 h-100 border shadow">
+                  <div className="d-flex justify-content-center flex-column m-auto align-items-center w-100 h-100">
                     <video
                       src={video}
+                      preload="auto" 
                       onError={() => setVideoError(true)}
-                      className="w-100 h-100 m-0 p-0 videoLive"
+                      className="w-100 h-100 m-0 p-0 videoLive border shadow-lg rounded-5"
+                      loop
                       controls
                       autoPlay={false}
                     />
@@ -1675,7 +1677,7 @@ export const MandatoryFieldLabel = ({
             text={toolTipText}
             direction={direction}
             width={width}
-            iconSize={10}
+            iconSize={13}
           />
         )}
         <span className={`${blinkMe() ? "blink_me" : ""}`}> {text}</span>:
