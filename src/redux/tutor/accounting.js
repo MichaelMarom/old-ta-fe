@@ -1,8 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import * as tutorApis from "../../axios/tutor";
-import _ from "lodash";
-import { useSelector } from "react-redux";
-import { getTutor } from "./tutorData";
 
 // Create a slice with your event-related reducers
 const slice = createSlice({
@@ -32,6 +29,7 @@ export function setAccounting() {
         dispatch(slice.actions.isLoading())
         const tutor = getState().tutor.tutor
         const res = await tutorApis.get_bank_details(tutor.AcademyId);
+        console.log(res[0])
         res[0] && dispatch(slice.actions.setAccounting(res[0]))
         return res[0]
     };

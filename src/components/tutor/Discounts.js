@@ -30,13 +30,15 @@ const generateDiscountCode = () => {
 };
 
 const Discounts = () => {
+  const dispatch = useDispatch();
+  const { discount } = useSelector((state) => state.discount);
   const { tutor } = useSelector((state) => state.tutor);
+
   let [MultiStudentHourlyRate, setMultiStudentHourlyRate] = useState(null);
   let [FreeDemoLesson, setFreeDemoLesson] = useState("");
   let [ActivateSubscriptionOption, setActivateSubscriptionOption] =
     useState("");
   let [SubscriptionPlan, setSubscriptionPlan] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
   const [sendCodeModalOpen, setSendCodeModalOpen] = useState(false);
 
   const [discountEnabled, setDiscountEnabled] = useState(false);
@@ -51,11 +53,10 @@ const Discounts = () => {
   const [IntroSessionDiscount, setIntroSessionDiscount] = useState(true);
   const [dbState, setDbState] = useState({});
   const [editMode, setEditMode] = useState(false);
+
   const [subjects, setSubjects] = useState([]);
   const [subject, setSubject] = useState("");
   const [codeUsed, setCodeUsed] = useState("new");
-  const dispatch = useDispatch();
-  const { discount } = useSelector((state) => state.discount);
 
   const fetchTutorRateRecord = () => {
     try {
@@ -64,43 +65,43 @@ const Discounts = () => {
         setMultiStudentHourlyRate(discount.MutiStudentHourlyRate);
         setSelectedCancPolicy(discount.CancellationPolicy);
         setFreeDemoLesson(discount.FreeDemoLesson);
-        setConsentRecordingLesson(discount.ConsentRecordingLesson === "true");
+        setConsentRecordingLesson(discount.ConsentRecording);
         setActivateSubscriptionOption(discount.ActivateSubscriptionOption);
         setSubscriptionPlan(discount.SubscriptionPlan);
         setDiscountCode(discount.DiscountCode);
         setClassTeaching(discount.MultiStudent);
         setDiscountEnabled(discount.CodeShareable);
         setIntroSessionDiscount(discount.IntroSessionDiscount);
-        let subscriptionPlan = document.querySelector("#subscription-plan");
-        ActivateSubscriptionOption === "true"
-          ? (subscriptionPlan.checked = true)
-          : (subscriptionPlan.checked = false);
+        // let subscriptionPlan = document.querySelector("#subscription-plan");
+        // ActivateSubscriptionOption === "true"
+        //   ? (subscriptionPlan.checked = true)
+        //   : (subscriptionPlan.checked = false);
 
-        let multiStudent = [...document.querySelectorAll("#multi-student")];
+        // let multiStudent = [...document.querySelectorAll("#multi-student")];
 
-        multiStudent.map((item) => {
-          if (
-            MultiStudentHourlyRate.split(" ").splice(-1)[0] ===
-            item.value.split(" ").splice(-1)[0]
-          ) {
-            item.checked = true;
-          }
-          return item;
-        });
+        // multiStudent.map((item) => {
+        //   if (
+        //     MultiStudentHourlyRate.split(" ").splice(-1)[0] ===
+        //     item.value.split(" ").splice(-1)[0]
+        //   ) {
+        //     item.checked = true;
+        //   }
+        //   return item;
+        // });
 
-        let studentSubscription = [
-          ...document.querySelectorAll("#student-subscription"),
-        ];
+        // let studentSubscription = [
+        //   ...document.querySelectorAll("#student-subscription"),
+        // ];
 
-        studentSubscription.map((item) => {
-          if (
-            SubscriptionPlan.split(" ").splice(-1)[0] ===
-            item.value.split(" ").splice(-1)[0]
-          ) {
-            item.checked = true;
-          }
-          return item;
-        });
+        // studentSubscription.map((item) => {
+        //   if (
+        //     SubscriptionPlan.split(" ").splice(-1)[0] ===
+        //     item.value.split(" ").splice(-1)[0]
+        //   ) {
+        //     item.checked = true;
+        //   }
+        //   return item;
+        // });
       }
     } catch (err) {
       // })
@@ -174,6 +175,7 @@ const Discounts = () => {
           MultiStudent: classTeaching,
           IntroSessionDiscount,
           CodeStatus: codeUsed,
+          ConsentRecording: ConsentRecordingLesson
         })
       );
     else {
@@ -189,23 +191,9 @@ const Discounts = () => {
           IntroSessionDiscount,
           CodeStatus: codeUsed,
           AcademyId: tutor.AcademyId,
+          ConsentRecording: ConsentRecordingLesson
         })
       );
-      // let response = await upload_tutor_disocunt_form(
-      //   MultiStudentHourlyRate,
-      //   selectedCancellationPolicy,
-      //   FreeDemoLesson,
-      //   ConsentRecordingLesson,
-      //   ActivateSubscriptionOption,
-      //   SubscriptionPlan,
-      //   window.localStorage.getItem("tutor_user_id"),
-      //   discountCode,
-      //   subject,
-      //   discountEnabled,
-      //   classTeaching,
-      //   IntroSessionDiscount,
-      //   codeUsed
-      // );
     }
   };
 
@@ -400,10 +388,10 @@ const Discounts = () => {
                   }
                   style={{ cursor: "pointer", height: "20px", width: "20px" }}
                   name="subscription-plan"
-                  id="subscription-plan"
+                  id="subscription-plan1"
                 />{" "}
                 &nbsp;
-                <label htmlFor="subscription-plan">
+                <label htmlFor="subscription-plan1">
                 Activate subscription option
                 </label>
               </div>

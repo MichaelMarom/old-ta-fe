@@ -1502,7 +1502,7 @@ const TutorSetup = () => {
 
           <div style={{ width: "100%" }}>
             <div
-              className=" d-flex justify-content-center "
+              className=" d-flex justify-content-center mt-3"
               style={{ gap: "20px" }}
             >
               <div

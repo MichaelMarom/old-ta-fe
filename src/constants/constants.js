@@ -1283,7 +1283,6 @@ export const applicationMandatoryFields = {
     { column: "Country" },
     { column: "CellPhone" },
     { column: "ResponseHrs" },
-    ,
     { column: "GMT" },
     { column: "HeadLine" },
     { column: "Introduction" },
@@ -1415,7 +1414,6 @@ export const applicationMandatoryFields = {
           "No Academic Education",
           "Associate Degree",
           "Bachelor Degree",
-          ,
           "Master Degree",
         ],
       },
@@ -1429,7 +1427,6 @@ export const applicationMandatoryFields = {
           "No Academic Education",
           "Associate Degree",
           "Bachelor Degree",
-          ,
           "Master Degree",
         ],
       },
@@ -1472,7 +1469,14 @@ export const applicationMandatoryFields = {
   ],
   Accounting: [
     { column: "PaymentOption" },
-    { column: "Email" },
+    {
+      column: "Email",
+      mandatory: {
+        column: "PaymentOption",
+        values: ["Paypal", "Zelle", "Wise", "Payneer"],
+        tab: "bank",
+      },
+    },
     {
       column: "SSH",
       mandatory: { column: "Country", values: ["USA"], tab: "setup" },

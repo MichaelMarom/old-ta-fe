@@ -17,7 +17,10 @@ import Input from "../../common/Input";
 import { GeneralFieldLabel, MandatoryFieldLabel } from "../TutorSetup";
 import Select from "../../common/Select";
 import { setMissingFeildsAndTabs } from "../../../redux/tutor/missingFieldsInTabs";
-import { setAccounting, updateAccounting, updateAccountingState } from "../../../redux/tutor/accounting";
+import {
+  updateAccounting,
+  updateAccountingState,
+} from "../../../redux/tutor/accounting";
 
 const TutorAccSetup = ({
   sessions,
@@ -54,10 +57,10 @@ const TutorAccSetup = ({
 
   const commissionAccordingtoNumOfSession = (sr) => {
     const commissionEntry = COMMISSION_DATA.find((entry) => {
-      if (!entry.higher) {
-        return sr >= entry.lower && sr <= entry.higher;
+      if (!entry.max) {
+        return sr >= entry.min && sr <= entry.max;
       } else {
-        return sr >= entry.lower;
+        return sr >= entry.min;
       }
     });
     return commissionEntry ? commissionEntry.percent : null;
@@ -65,7 +68,6 @@ const TutorAccSetup = ({
 
   const validate = () => {
     const fields = { SSH: { value: ssh, pattern: /^\d{3}-\d{2}-\d{4}$/ } };
-
     if (
       fields.SSH.value?.length &&
       !fields.SSH.pattern.test(fields.SSH.value)
@@ -84,49 +86,52 @@ const TutorAccSetup = ({
     let AcademyId = tutor.AcademyId;
     let Step = null;
     if (!dbValues.AcademyId) Step = 5;
-    if (validate()) setSaving(true);
-    if (bank.AcademyId)
-      dispatch(
-        updateAccounting(bank.id, {
-          Email: email,
-          AccountName: acct_name,
-          AccountType: acct_type,
-          SSH: ssh,
-          Routing: routing,
-          BankName: bank_name,
-          PaymentOption: payment_option,
-          Account: acct,
-        })
-      );
-    else {
-      let response = await upload_tutor_bank(
-        email,
-        acct_name,
-        acct_type,
-        bank_name,
-        acct,
-        routing,
-        ssh,
-        payment_option,
-        AcademyId
-      );
-      fetchingTutorBankRecord(response);
-      dispatch(updateAccountingState(response))
-      if (Step) {
-        await updateTutorSetup(tutor.AcademyId, {
-          Step,
-        });
-        dispatch(setTutor({ ...tutor, Step }));
+    if (validate()) {
+      setSaving(true);
+      if (bank.AcademyId)
+        dispatch(
+          updateAccounting(bank.id, {
+            Email: email,
+            AccountName: acct_name,
+            AccountType: acct_type,
+            SSH: ssh,
+            Routing: routing,
+            BankName: bank_name,
+            PaymentOption: payment_option,
+            Account: acct,
+          })
+        );
+      else {
+        let response = await upload_tutor_bank(
+          email,
+          acct_name,
+          acct_type,
+          bank_name,
+          acct,
+          routing,
+          ssh,
+          payment_option,
+          AcademyId
+        );
+        console.log(response);
+        fetchingTutorBankRecord(response[0]);
+        dispatch(updateAccountingState(response[0]));
+        if (Step) {
+          await updateTutorSetup(tutor.AcademyId, {
+            Step,
+          });
+          dispatch(setTutor({ ...tutor, Step }));
+        }
+        if (response?.[0]?.AcademyId) {
+          toast.success("Succesfully Saved The Bank Info.");
+          setEditMode(false);
+        } else {
+          toast.error("Error while Saving the Bank Info.");
+        }
       }
-      if (response) {
-        toast.success("Succesfully Saved The Bank Info.");
-        setEditMode(false);
-      } else {
-        toast.error("Error while Saving the Bank Info.");
-      }
+      dispatch(setMissingFeildsAndTabs());
+      setSaving(false);
     }
-    dispatch(setMissingFeildsAndTabs());
-    setSaving(false);
   };
 
   const fetchingTutorBankRecord = async (response) => {
@@ -156,6 +161,7 @@ const TutorAccSetup = ({
   //fetching
   useEffect(() => {
     bank.AcademyId && fetchingTutorBankRecord(bank);
+    //eslint-disable-next-line
   }, [bank]);
 
   //compare db and local
@@ -213,10 +219,7 @@ const TutorAccSetup = ({
       className="d-flex"
       style={{ height: "calc(100vh - 185px)", overflowY: "auto" }}
     >
-      <div
-        className="d-flex col-md-3   p-2"
-        style={{ height: "fit-content" }}
-      >
+      <div className="d-flex col-md-3   p-2" style={{ height: "fit-content" }}>
         <div className="d-flex flex-column">
           <div className="highlight m-0">
             At our tutoring academy, the service charge is determined by the
@@ -527,7 +530,7 @@ const TutorAccSetup = ({
           <div
             className="p-3"
             style={{
-              height: "calc(100vh - 360px)",
+              height: "calc(100vh - 380px)",
               background: editMode ? "white" : "rgb(233, 236, 239",
             }}
           >
