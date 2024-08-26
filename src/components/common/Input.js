@@ -33,7 +33,7 @@ const Input = ({
         disabled={!editMode || disabled}
         {...rest}
       />
-      <p className="text-danger fw-bold small">{errors[fieldName]}</p>
+      <p className="text-danger small">{errors[fieldName]}</p>
       <span
         className="input__label d-flex align-items-end "
         style={{ background: "transparent", color: "#555555",

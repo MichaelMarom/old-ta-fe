@@ -1429,12 +1429,48 @@ const Education = () => {
                       certificate !== "Not Certified" ? (
                         <div className="d-flex justify-content-center align-items-center">
                           {cert_file_name?.length ? (
+                            <>
+                             <div className="form-outline w-100">
+                                <p
+                                  style={{ fontSize: "10px", color: "#aaaaaa" }}
+                                  className="fw-bold "
+                                >
+                                  Files Supported: PDF, JPG, PNG, JPEG
+                                </p>
+                                <label
+                                  htmlFor="certificateFile"
+                                  style={{
+                                    border: "1px solid #ced4da",
+                                    height: "50px",
+                                  }}
+                                  className="rounded p-2 cursor-pointer d-flex align-items-center p-2 justify-content-center"
+                                >
+                                  <FaUpload size={15} />{" "}
+                                  {/* <p
+                                    style={{ fontSize: "12px" }}
+                                    className="mx-1 fw-bold"
+                                  >
+                                    Upload Certificate
+                                  </p> */}
+                                </label>
+
+                                <input
+                                  type="file"
+                                  accept=".pdf, .jpeg, .png, .jpg"
+                                  id="certificateFile"
+                                  className="form-control m-0 mr-2 d-none"
+                                  onChange={handleCertUpload}
+                                  disabled={!editMode}
+                                />
+                              </div>
+
                             <div className="d-flex w-100 justify-content-between border rounded p-2">
                               <div>Certificate Uploaded</div>
                               <div className="tick-icon">
                                 <IoIosCheckmarkCircle size={20} color="green" />
                               </div>
                             </div>
+                            </>
                           ) : (
                             <>
                               <div className="form-outline w-100">
