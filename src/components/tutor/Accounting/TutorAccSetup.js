@@ -214,7 +214,7 @@ const TutorAccSetup = ({
       style={{ height: "calc(100vh - 185px)", overflowY: "auto" }}
     >
       <div
-        className="d-flex col-md-3 border p-2"
+        className="d-flex col-md-3   p-2"
         style={{ height: "fit-content" }}
       >
         <div className="d-flex flex-column">
@@ -231,7 +231,7 @@ const TutorAccSetup = ({
               <h6 className="m-0 text-start ">
                 Tutor's Start Day (First tutoring lesson)
               </h6>
-              <p className="border px-4  py-2 rounded m-2 col-4">
+              <p className="  px-4  py-2 rounded m-2 col-4">
                 {!!sessions.length
                   ? showDate(
                       sessions?.[sessions.length - 1]?.start,
@@ -246,7 +246,7 @@ const TutorAccSetup = ({
         </div>
       </div>
       <form onSubmit={saver} className="d-flex h-100">
-        <div className="col-md-8 border  p-2 h-100">
+        <div className="col-md-8    p-2 h-100">
           <div className="highlight" style={{ height: "150px" }}>
             Our tutoring academy issues payments bi-weekly, every second Friday,
             for the lessons conducted up to the preceding Friday at midnight
@@ -258,7 +258,7 @@ const TutorAccSetup = ({
           </div>
           <div
             className="p-3 "
-            style={{ fontWeight: "bold", height: "calc(100vh - 150px)" }}
+            style={{ fontWeight: "bold", height: "calc(100vh - 350px)" }}
           >
             <MandatoryFieldLabel
               text={"How do you want to be paid?"}
@@ -393,7 +393,7 @@ const TutorAccSetup = ({
 
                 {payment_option === "Bank" && tutor.Country === "USA" && (
                   <div
-                    className=" shadow p-3 border border-2 "
+                    className=" shadow p-3    -2 "
                     style={{
                       background: editMode ? "white" : "rgb(233 236 239)",
                     }}
@@ -489,7 +489,7 @@ const TutorAccSetup = ({
                   </div>
                 )}
                 {emailRequiredPaymentMethods.includes(payment_option) && (
-                  <div className=" shadow p-3 border border-2 ">
+                  <div className=" shadow p-3    -2 ">
                     <div className="d-flex align-items-center justify-content-between">
                       <Input
                         value={email}
@@ -517,7 +517,7 @@ const TutorAccSetup = ({
           </div>
         </div>
 
-        <div className="col-md-4 border p-2 h-100">
+        <div className="col-md-4   p-2 h-100">
           <div className="highlight" style={{ height: "150px" }}>
             Social security needs to be provided only from US residents for
             annual EARNING over $600. Form 1099 to be issued by the academy.
@@ -527,7 +527,7 @@ const TutorAccSetup = ({
           <div
             className="p-3"
             style={{
-              height: "calc(100vh - 150px)",
+              height: "calc(100vh - 360px)",
               background: editMode ? "white" : "rgb(233, 236, 239",
             }}
           >

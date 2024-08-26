@@ -417,16 +417,6 @@ option {
 
 }
 
-.tutor-tab-education-notice {
-    height: fit-content;
-    width: 600px;
-    text-align: left;
-    display: block;
-    position: relative;
-    margin: auto;
-    background-color: #fbfbfb;
-    margin-bottom: 100px;
-}
 
 .tutor-tab-education-experience {
     height: calc(100% - 40px);
@@ -486,15 +476,11 @@ option {
     display: block;
 }
 
-h6 {
-    text-align: center;
-}
-
 .highlight {
     height: fit-content;
     width: 100%;
     margin: auto;
-    text-align: left;
+    text-align: justify;
     border-radius: 5px;
     margin-bottom: 15px;
     background-color: #d4e9efad;

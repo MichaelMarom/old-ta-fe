@@ -438,7 +438,7 @@ console.log(data)
             </div>
           </div>
 
-          <div className="d-flex mt-4" style={{ gap: "20px" }}>
+          <div className="d-flex mt-4 container" style={{ gap: "20px" }}>
             <div className="col-4">
               <div
                 className="bg-white rounded p-4 d-flex flex-column"

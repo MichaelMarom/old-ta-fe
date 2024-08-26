@@ -702,7 +702,7 @@ const Education = () => {
       }}
     >
       <div className="container tutor-tab-education">
-        <h6 className="tutor-tab-education-notice highlight">
+        <p className="tutor-tab-education-notice highlight">
           In the realm of tutoring, possessing a formal tutor's degree is not a
           prerequisite for imparting knowledge. Nevertheless, for the purpose of
           validating tutor's educational background, it is mandatory to submit
@@ -711,7 +711,7 @@ const Education = () => {
           submission. Upon successful upload of the credentials, this icon will
           transform into a green "Verified" emblem, thereby providing assurance
           to students and parents during the tutor selection process.
-        </h6>
+        </p>
         <form action="" onSubmit={handleSave}>
           <div className="tutor-tab-education-info pt-4 ">
             <div

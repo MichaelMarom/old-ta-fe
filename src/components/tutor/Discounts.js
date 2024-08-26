@@ -404,7 +404,7 @@ const Discounts = () => {
                 />{" "}
                 &nbsp;
                 <label htmlFor="subscription-plan">
-                  <h6>Activate subscription option</h6>
+                Activate subscription option
                 </label>
               </div>
 
@@ -471,7 +471,7 @@ const Discounts = () => {
           </div>
           <div className="d-flex flex-column" style={{ width: "30%" }}>
             <div className="p-4  float-end rounded shadow border m-2 ">
-              <h6>Tutor's Own Students</h6>
+              <h6 className="text-center">Tutor's Own Students</h6>
               <div className="highlight">
                 To assist your current students on this platform, please provide
                 the following code to each student for use during their
@@ -519,7 +519,7 @@ const Discounts = () => {
                 <div>
                   <div className="d-flex flex-column w-100 justify-content-end ">
                     <div className="d-flex align-items-end">
-                      <h6 className="mt-4 d-inline">Your Student's new code</h6>
+                      <h6 className="mt-4 d-inline text-center">Your Student's new code</h6>
                       <Tooltip text="Generate New Code">
                         <IoMdRefresh
                           size={20}
@@ -594,7 +594,7 @@ const Discounts = () => {
               )}
             </div>
             <div className="rounded shadow border m-2 p-4">
-              <h6>School class Students</h6>
+              <h6 className="text-center">School class Students</h6>
 
               <div className="p-2 mt-4 highlight">
                 American public schools are currently experiencing a severe
@@ -606,7 +606,7 @@ const Discounts = () => {
                 substitute teacher can easily locate your profile, which is
                 marked to indicate your availability.
               </div>
-              <div className="form-check form-switch d-flex align-items-center gap-2 mt-4">
+              <div className="form-check form-switch d-flex align-items-center gap-2 mt-4 justify-content-between">
                 <input
                   disabled={!editMode}
                   className="form-check-input border border-dark "
@@ -684,7 +684,7 @@ const Discounts = () => {
                 />{" "}
                 &nbsp;
                 <label htmlFor="subscription-plan">
-                  <h6>Activate multi students option</h6>
+                 Activate multi students option
                 </label>
               </div>
 
@@ -698,7 +698,7 @@ const Discounts = () => {
                 session is non-refundable.
               </div>
 
-              <h6>Multi Students hourly rate</h6>
+              <h6 className="text-center">Multi Students hourly rate</h6>
               <div
                 className="rate-table d-flex w-100 justify-content-center m-0"
                 style={{

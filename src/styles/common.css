@@ -24,31 +24,25 @@ p {
   font-style: normal;
 }
 
-.roboto-regular,
-h4,
-h5,
-h6 {
+.roboto-regular {
   font-family: "Roboto", sans-serif;
   font-weight: 400;
   font-style: normal;
 }
 
-.roboto-medium,
-h3 {
+.roboto-medium {
   font-family: "Roboto", sans-serif;
   font-weight: 500;
   font-style: normal;
 }
 
-.roboto-bold,
-h2 {
+.roboto-bold {
   font-family: "Roboto", sans-serif;
   font-weight: 700;
   font-style: normal;
 }
 
-.roboto-black,
-h1 {
+.roboto-black {
   font-family: "Roboto", sans-serif;
   font-weight: 900;
   font-style: normal;
@@ -90,9 +84,33 @@ h1 {
   font-style: italic;
 }
 
+h1, h2, h3, h4, h5, h6, div, p {
+  font-family: "Work Sans", sans-serif;
+}
+p{
+  line-height: 1.3;
+}
+
+h1 {
+  font-weight: 900;
+}
+
+h2 {
+  font-weight: 800;
+}
+
+h3 {
+  font-weight: 700;
+}
+
+h4, h5, h6 {
+  font-weight: 600;
+}
+
+
 span {
   color: rgb(85 85 85);
-  font-weight: 900 !important;
+  font-weight: 700 !important;
   font-family: "Work Sans", sans-serif !important;
 }
 
@@ -743,7 +761,7 @@ fieldset:disabled .btn,
   width: 0%;
   height: 2px;
   content: "";
-  background: linear-gradient(0.25turn, rgb(117 119 121), rgb(36, 113, 163));
+  background: linear-gradient(0.25turn, rgb(235 235 235), rgb(36, 113, 163));
   transition: all 0.3s;
 }
 
