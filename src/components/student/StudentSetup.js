@@ -409,6 +409,7 @@ const StudentSetup = () => {
   }, [student.Status]);
 
   let handleImage = async (e) => {
+    if(!student.AcademyId) return toast.warning("Please set you Name first!")
     if (e.target.files[0].type.split("/")?.[0] !== "image") {
       alert("Only Image Can Be Uploaded To This Field");
     } else {
@@ -429,7 +430,9 @@ const StudentSetup = () => {
         result.data?.url &&
           upload_student_setup_by_fields(student.AcademyId, {
             Photo: result.data.url,
-          }).then(() => toast.success("Uploaded Successfully!"));
+          }).then(() =>{
+            dispatch(setStudent({...student, Photo: result.data.url}));
+            toast.success("Uploaded Successfully!")});
 
         setPicUploading(false);
       } catch (err) {
@@ -472,6 +475,7 @@ const StudentSetup = () => {
     { name: "country", filled: !!country?.length, value: country },
     { name: "parentAName", filled: !!parentAName?.length, value: parentAName },
     { name: "parentBName", filled: !!parentBName?.length, value: parentBName },
+    {name:"state", filled: !!state?.length, value: state},
     {
       name: "parentAEmail",
       filled: !!parentAEmail?.length,
@@ -641,7 +645,13 @@ const StudentSetup = () => {
                       transform: " translate(0.25rem, -65%) scale(0.8)",
                     }}
                   >
-                    phone
+                     <MandatoryFieldLabel
+                        name="phone"
+                        mandatoryFields={mandatoryFields}
+                        editMode={editMode}
+                        text={"Phone"}
+                      />
+                    
                   </span>
                 </div>
               </div>
@@ -954,6 +964,7 @@ const StudentSetup = () => {
               <div className="d-flex" style={{ gap: "2%" }}>
                 <div className="input-group mb-2 ">
                   <Input
+                  type="email"
                     value={parentAEmail}
                     label={
                       <MandatoryFieldLabel
@@ -989,6 +1000,7 @@ const StudentSetup = () => {
               <div className="d-flex" style={{ gap: "2%" }}>
                 <div className="input-group mb-2">
                   <Input
+                  type="email"
                     value={parentBEmail}
                     label={
                       <MandatoryFieldLabel

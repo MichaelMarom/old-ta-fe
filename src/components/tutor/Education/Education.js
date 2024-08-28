@@ -522,7 +522,7 @@ const Education = () => {
 
     if (file) {
       const reader = new FileReader();
-      reader.onload = () => {};
+      reader.onload = () => { };
       reader.readAsDataURL(file);
       setDegreeFile(file);
     }
@@ -532,7 +532,7 @@ const Education = () => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = () => {};
+      reader.onload = () => { };
       reader.readAsDataURL(file);
       setCertificateFile(file);
     }
@@ -560,9 +560,9 @@ const Education = () => {
       try {
         const existingFile = deg_file_name
           ? deg_file_name.substring(
-              deg_file_name.lastIndexOf("/"),
-              deg_file_name.length
-            )
+            deg_file_name.lastIndexOf("/") + 1,
+            deg_file_name.length
+          )
           : "";
         const { data } = await uploadTutorDocs(
           tutor.AcademyId,
@@ -583,9 +583,9 @@ const Education = () => {
       try {
         const existingFile = cert_file_name
           ? cert_file_name.substring(
-              cert_file_name.lastIndexOf("/"),
-              cert_file_name.length
-            )
+            cert_file_name.lastIndexOf("/") + 1,
+            cert_file_name.length
+          )
           : "";
         const { data } = await uploadTutorDocs(
           tutor.AcademyId,
@@ -611,8 +611,7 @@ const Education = () => {
       !markSecondEduStepCompleted().valid
     )
       toast.warning(
-        `Some mandatory fields are not filled. You can return later and complete ${
-          markSecondEduStepCompleted().value
+        `Some mandatory fields are not filled. You can return later and complete ${markSecondEduStepCompleted().value
         }`
       );
 
@@ -794,7 +793,7 @@ const Education = () => {
                   {
                     <h6 className="border-bottom">
                       {level === "Associate Degree" ||
-                      level === "Undergraduate Student"
+                        level === "Undergraduate Student"
                         ? "College"
                         : "Bachelor Degree"}
                     </h6>
@@ -809,7 +808,7 @@ const Education = () => {
                             mandatoryFields={mandatoryFields}
                             text={
                               level === "Associate Degree" ||
-                              level === "Undergraduate Student"
+                                level === "Undergraduate Student"
                                 ? "College Name"
                                 : "College Name"
                             }
@@ -935,8 +934,8 @@ const Education = () => {
                   </div>
                 </div>
                 {level !== "Bachelor Degree" &&
-                level !== "Undergraduate Student" &&
-                level !== "Associate Degree" ? (
+                  level !== "Undergraduate Student" &&
+                  level !== "Associate Degree" ? (
                   <div
                     className="row mt-3 border p-3 shadow "
                     style={{
@@ -1077,9 +1076,9 @@ const Education = () => {
                   </div>
                 ) : null}
                 {level !== "Undergraduate Student" &&
-                level !== "Bachelor Degree" &&
-                level !== "Master Degree" &&
-                level !== "Associate Degree" ? (
+                  level !== "Bachelor Degree" &&
+                  level !== "Master Degree" &&
+                  level !== "Associate Degree" ? (
                   <div
                     className="row mt-3 border p-3 shadow "
                     style={{
@@ -1232,23 +1231,49 @@ const Education = () => {
                           mandatoryFields={mandatoryFields}
                         />
                       </div>
-                      <div className="d-flex align-items-center">
+                      <p
+                        style={{ fontSize: "10px", color: "#aaaaaa" }}
+                        className="fw-bold "
+                      >
+                        Files Supported: PDF, JPG, PNG, JPEG
+                      </p>
+                      <div className="d-flex align-items-end gap-2">
                         {deg_file_name && deg_file_name.length ? (
-                          <div className="d-flex w-100 justify-content-between border rounded p-2">
-                            <div>Degree uploaded</div>
-                            <div className="tick-icon">
-                              <IoIosCheckmarkCircle size={20} color="green" />
+                          <>
+                            <div className="form-outline w-25">
+
+
+                              <label
+                                htmlFor="deg_file"
+                                style={{
+                                  border: "1px solid #ced4da",
+                                  height: "50px",
+                                }}
+                                className="rounded p-2 cursor-pointer d-flex align-items-center p-2 justify-content-center"
+                              >
+                                <FaUpload size={15} />{" "}
+                              </label>
+
+                              <input
+                                type="file"
+                                accept=".pdf, .jpeg, .png, .jpg"
+                                id="deg_file"
+                                className="form-control m-0 mr-2 d-none"
+                                onChange={handleDegFileUpload}
+                                disabled={!editMode}
+                              />
                             </div>
-                          </div>
+                            <div className="d-flex justify-content-between align-items-center  border rounded p-2 gap-2" style={{ height: "50px" }}>
+
+                              <div>Degree uploaded</div>
+                              <div className="tick-icon d-flex align-items-center">
+                                <IoIosCheckmarkCircle size={20} color="green" />
+                              </div>
+                            </div>
+                          </>
                         ) : (
                           <>
                             <div className="form-outline w-100">
-                              <p
-                                style={{ fontSize: "10px", color: "#aaaaaa" }}
-                                className="fw-bold "
-                              >
-                                Files Supported: PDF, JPG, PNG, JPEG
-                              </p>
                               <label
                                 htmlFor="degreeFile"
                                 style={{
@@ -1420,25 +1445,25 @@ const Education = () => {
                   </FormSelect>
                 </div>
                 {certificate &&
-                certificate.length &&
-                certificate !== "Not Certified" ? (
+                  certificate.length &&
+                  certificate !== "Not Certified" ? (
                   <>
                     <div className="col-md-3" style={{ fontSize: "14px" }}>
+                      <p
+                        style={{ fontSize: "10px", color: "#aaaaaa" }}
+                        className="fw-bold "
+                      >
+                        Files Supported: PDF, JPG, PNG, JPEG
+                      </p>
                       {certificate &&
-                      certificate.length &&
-                      certificate !== "Not Certified" ? (
-                        <div className="d-flex justify-content-center align-items-center">
+                        certificate.length &&
+                        certificate !== "Not Certified" ? (
+                        <div className="d-flex justify-content-center align-items-end gap-2">
                           {cert_file_name?.length ? (
                             <>
-                             <div className="form-outline w-100">
-                                <p
-                                  style={{ fontSize: "10px", color: "#aaaaaa" }}
-                                  className="fw-bold "
-                                >
-                                  Files Supported: PDF, JPG, PNG, JPEG
-                                </p>
+                              <div className="form-outline w-100">
                                 <label
-                                  htmlFor="certificateFile"
+                                  htmlFor="cert_file"
                                   style={{
                                     border: "1px solid #ced4da",
                                     height: "50px",
@@ -1457,29 +1482,24 @@ const Education = () => {
                                 <input
                                   type="file"
                                   accept=".pdf, .jpeg, .png, .jpg"
-                                  id="certificateFile"
+                                  id="cert_file"
                                   className="form-control m-0 mr-2 d-none"
                                   onChange={handleCertUpload}
                                   disabled={!editMode}
                                 />
                               </div>
 
-                            <div className="d-flex w-100 justify-content-between border rounded p-2">
-                              <div>Certificate Uploaded</div>
-                              <div className="tick-icon">
-                                <IoIosCheckmarkCircle size={20} color="green" />
+                              <div className="d-flex w-100 justify-content-between border rounded p-2">
+                                <div>Certificate Uploaded</div>
+                                <div className="tick-icon d-flex align-items-center">
+                                  <IoIosCheckmarkCircle size={20} color="green" />
+                                </div>
                               </div>
-                            </div>
                             </>
                           ) : (
                             <>
                               <div className="form-outline w-100">
-                                <p
-                                  style={{ fontSize: "10px", color: "#aaaaaa" }}
-                                  className="fw-bold "
-                                >
-                                  Files Supported: PDF, JPG, PNG, JPEG
-                                </p>
+
                                 <label
                                   htmlFor="certificateFile"
                                   style={{

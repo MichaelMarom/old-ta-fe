@@ -125,7 +125,7 @@ function BookedLessons({ events, handleRowSelect }) {
                   <Avatar showOnlineStatus={false} avatarSrc={event.photo} />
                 </td>
                 <td style={{ width: Header[0].width }}>
-                  {convertTutorIdToName(event.tutorId)}
+                  {event.tutorName}
                 </td>
                 <td style={{ width: Header[0].width }}>
                   {showDate(convertToDate(event.start), wholeDateFormat)}

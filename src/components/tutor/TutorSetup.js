@@ -311,7 +311,7 @@ const TutorSetup = () => {
 
   const saveTutorSetup = async (e) => {
     e.preventDefault();
-    if(_.some(errors, (value) => typeof value === 'string')) return toast.error("Please fix validation errors!")
+    if (_.some(errors, (value) => typeof value === 'string')) return toast.error("Please fix validation errors!")
 
     if (!isValid) {
       return toast.warning("Please enter the correct phone number");
@@ -617,11 +617,10 @@ const TutorSetup = () => {
                 style={{ width: "15%" }}
               >
                 <h6
-                  className={`text-start m-0 ${
-                    mandatoryFields.find((item) => item.name === "photo").filled
+                  className={`text-start m-0 ${mandatoryFields.find((item) => item.name === "photo").filled
                       ? ""
                       : "blink_me"
-                  }`}
+                    }`}
                   style={{ whiteSpace: "nowrap" }}
                 >
                   Profile Photo
@@ -888,11 +887,10 @@ const TutorSetup = () => {
                     editMode={!nameFieldsDisabled}
                     onBlur={() => {
                       if (fname.length && lname.length) {
-                        const screenName = `${capitalizeFirstLetter(fname)} ${
-                          mname.length
+                        const screenName = `${capitalizeFirstLetter(fname)} ${mname.length
                             ? `${capitalizeFirstLetter(mname?.[0])}.`
                             : ``
-                        } ${capitalizeFirstLetter(lname?.[0])}.`;
+                          } ${capitalizeFirstLetter(lname?.[0])}.`;
                         toast(
                           `You screen name is; ${screenName} which we use online. We do not disclose your private information online. 
                 We use your cellphone only for verification to withdraw your funds, or for events notifications like
@@ -958,9 +956,7 @@ const TutorSetup = () => {
                         background: "transparent",
                         transform: " translate(0.25rem, -65%) scale(0.8)",
                       }}
-                    >
-                      {" "}
-                      <MandatoryFieldLabel
+                    > <MandatoryFieldLabel
                         name="phone"
                         mandatoryFields={mandatoryFields}
                         editMode={editMode}
@@ -1243,11 +1239,10 @@ const TutorSetup = () => {
                 }}
               >
                 <h6
-                  className={`${
-                    !!video.length && !videoError
+                  className={`${!!video.length && !videoError
                       ? ""
                       : "blinking-button text-success"
-                  }`}
+                    }`}
                 >
                   Elective Tutor's introduction video
                 </h6>
@@ -1274,7 +1269,7 @@ const TutorSetup = () => {
                   <div className="d-flex justify-content-center flex-column m-auto align-items-center w-100 h-100">
                     <video
                       src={video}
-                      preload="auto" 
+                      preload="auto"
                       onError={() => setVideoError(true)}
                       className="w-100 h-100 m-0 p-0 videoLive border shadow-lg rounded-5"
                       loop
@@ -1364,9 +1359,8 @@ const TutorSetup = () => {
                         <button
                           style={{ width: "100%", fontSize: "10px" }}
                           type="button"
-                          className={`action-btn btn small ${
-                            selectedVideoOption === "record" ? "active" : ""
-                          }`}
+                          className={`action-btn btn small ${selectedVideoOption === "record" ? "active" : ""
+                            }`}
                           disabled={!editMode}
                           onClick={() => {
                             set_video("");
@@ -1416,9 +1410,8 @@ const TutorSetup = () => {
                             fontSize: "10px",
                             border: " 1px solid #e1e1e1",
                           }}
-                          className={`action-btn btn ${
-                            selectedVideoOption === "upload" ? "active" : ""
-                          }`}
+                          className={`action-btn btn ${selectedVideoOption === "upload" ? "active" : ""
+                            }`}
                         >
                           <div className="button__content">
                             <div className="button__icon">
