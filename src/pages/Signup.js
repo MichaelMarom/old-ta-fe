@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { get_user_detail, signup } from "../axios/auth";
 import { toast } from "react-toastify";
-import { useSignUp, useAuth } from "@clerk/clerk-react";
+import { useSignUp, useAuth, useClerk } from "@clerk/clerk-react";
 
 import TAButton from "../components/common/TAButton";
 import { setUser } from "../redux/auth/auth";
@@ -12,6 +12,8 @@ import { setUser } from "../redux/auth/auth";
 import { useDispatch } from "react-redux";
 import { FaCheck } from "react-icons/fa";
 import { RxCross1 } from "react-icons/rx";
+import Input from "../components/common/Input";
+import { post_tutor_setup } from "../axios/tutor";
 
 const Signup = () => {
   const location = useLocation();
@@ -19,8 +21,10 @@ const Signup = () => {
   const queryParams = new URLSearchParams(location.search);
   const role = queryParams.get("role");
   const [showPassword, setShowPassword] = useState(false);
+  const { user, signOut } = useClerk()
   const [showPassConditions, setShowPassConditions] = useState(false);
   const [passValid, setPassValid] = useState(false);
+  const [regError, setRegError] = useState(false)
   const [passConditions, setPassConditions] = useState([
     {
       condition: "Must contain at least 8 characters",
@@ -49,6 +53,9 @@ const Signup = () => {
   ]);
 
   const [signupFormValues, setSignupFormValues] = useState({
+    fname: "",
+    mname: "",
+    lname: "",
     email: "",
     password: "",
     role: "tutor",
@@ -119,34 +126,35 @@ const Signup = () => {
           // localStorage.setItem("access_token", token);
           const adminEmail =
             signupFormValues.email.split("@")[1] === "tutoring-academy.com";
-          const result = await signup({
+          const userBody = {
             email: signupFormValues.email,
             SID: completeSignUp.createdUserId,
             role: adminEmail ? "admin" : signupFormValues.role,
-          });
-
-          const data = await get_user_detail(completeSignUp.createdUserId);
-          if (data) {
-            dispatch(setUser(data));
-            localStorage.setItem("user", JSON.stringify(data));
-            setPendingVerification(false);
-            navigate("/login");
-
-            // data.SID && data.role === "tutor" && dispatch(setTutor());
-            // if (data.role === "student") {
-            //   const result = await get_student_setup_by_userId(data.SID);
-            //   if (result?.[0] && result[0].AcademyId) {
-            //     dispatch(setStudent(result[0]));
-            //     localStorage.setItem("student_user_id", result[0].AcademyId);
-            //   }
-            // }
           }
-          if (result.status === 200) {
-            setSignupFormValues({ role: "", email: "", password: "" });
-            toast.success("Registration Successfull");
-          } else {
-            toast.error("Error: Please contact support!");
+
+          try {
+            const result = await signup(userBody);
+            const newTutorSetup = await post_tutor_setup({
+              userId: completeSignUp.createdUserId,
+              fname: signupFormValues.fname, mname: signupFormValues.mname, lname: signupFormValues.lname
+            })
+            console.log(newTutorSetup, 'newUser');
+            if (result.status === 200) {
+              setSignupFormValues({ role: "", email: "", password: "" });
+              dispatch(setUser(userBody));
+              localStorage.setItem("user", JSON.stringify(userBody));
+              setPendingVerification(false);
+              navigate("/login");
+              toast.success("Registration Successfull");
+            } else {
+              toast.error("Error: Please contact support!");
+            }
           }
+          catch (e) {
+            toast.error(e.message)
+            setRegError(true)
+          }
+
         } else {
           toast.error("Could not retrieve token from clerk");
         }
@@ -154,11 +162,19 @@ const Signup = () => {
         toast.error("Unable to complete sign up. Please contact support");
       }
     } catch (err) {
+      toast.error(err.message)
       // setErrors(err.errors);
     } finally {
       setVerifying(false);
     }
   };
+
+  useEffect(() => {
+    if (user && regError) {
+      user.delete()
+      signOut();
+    }
+  }, [user, regError])
 
   useEffect(() => {
     if (passConditions.find((con) => !con.status)) setPassValid(false);
@@ -251,6 +267,35 @@ const Signup = () => {
                       <form onSubmit={handleSignup}>
                         <div className="row " style={{ gap: "10px" }}>
                           <input
+                            type="text"
+                            id="fname"
+                            name="fname"
+                            required
+                            className="form-control m-0"
+                            placeholder="First Name"
+                            value={signupFormValues.fname}
+                            onChange={handleInputChange}
+                          />
+                          <input
+                            type="text"
+                            id="mname"
+                            name="mname"
+                            className="form-control m-0"
+                            placeholder="Middle Name"
+                            value={signupFormValues.mname}
+                            onChange={handleInputChange}
+                          />
+                          <input
+                            type="text"
+                            id="lname"
+                            name="lname"
+                            required
+                            className="form-control m-0"
+                            placeholder="Last Name"
+                            value={signupFormValues.lname}
+                            onChange={handleInputChange}
+                          />
+                          <input
                             type="email"
                             id="email"
                             name="email"
@@ -274,11 +319,10 @@ const Signup = () => {
                               {passConditions.map((cond) => {
                                 return (
                                   <div
-                                    className={`${
-                                      cond.status
-                                        ? "text-success"
-                                        : "text-danger"
-                                    } d-flex`}
+                                    className={`${cond.status
+                                      ? "text-success"
+                                      : "text-danger"
+                                      } d-flex`}
                                   >
                                     <div className="mx-1">
                                       {cond.status ? <FaCheck /> : <RxCross1 />}
@@ -355,7 +399,7 @@ const Signup = () => {
                       >
                         <input
                           type="text"
-                          onBlur={() => {}}
+                          onBlur={() => { }}
                           onChange={(e) => setCode(e.target.value)}
                           required
                           className="form-control"

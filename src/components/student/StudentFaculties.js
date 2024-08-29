@@ -53,6 +53,7 @@ const StudentFaculties = () => {
     );
     navigate("/student/booking");
   };
+
   const handleNavigateToFeedback = (id) =>
     navigate(`/student/tutor/feedback/${id}`);
 
@@ -90,7 +91,6 @@ const StudentFaculties = () => {
       });
     }
   }, [selectedSubject, selectedFaculty, student]);
-  console.log(tutorsWithRates);
 
   useEffect(() => {
     !selectedSubject.Id && setTutorWithRates([]);
@@ -219,17 +219,21 @@ const StudentFaculties = () => {
 
   const calculateTimeDifference = (tutorGMT) => {
     try {
-      const studentOffset = parseInt(student.GMT, 10);
-      const tutorOffset = parseInt(tutorGMT, 10);
+      if (tutorGMT && student.GMT) {
+        const studentOffset = parseInt(student.GMT, 10);
+        const tutorOffset = parseInt(tutorGMT, 10);
 
-      const difference = studentOffset - tutorOffset;
-      return difference;
+        const difference = studentOffset - tutorOffset;
+        return difference;
+      }
+      else return '-'
     } catch (error) {
       console.log("Invalid GMT offset format");
     }
   };
 
   const classByDifference = (difference) => {
+    if (typeof (difference) !== 'number') return ''
     if (difference >= -3 && difference <= 3) {
       return "text-bg-success";
     } else if (difference >= -6 && difference <= 6) {
@@ -314,7 +318,7 @@ const StudentFaculties = () => {
                         subj.tutor_count && setSelectedSubject(subj)
                       }
                     />
-                    <label className="form-check-label" htmlFor="subject">
+                    <label className="form-check-label cursor-pointer" htmlFor="subject">
                       {subj.SubjectName}
                     </label>
                   </div>
@@ -337,8 +341,8 @@ const StudentFaculties = () => {
                           className="text-center d-flex flex-column"
                           style={{ width: item.width }}
                         >
-                          <p className="m-0" key={item.Header}>
-                            {item.Header}
+                          <p className="m-0" style={{fontSize:"12px"}} key={item.Header}>
+                            {item.Header} 
                           </p>
                           <div style={{ float: "right" }}>{item.tooltip}</div>
                         </div>
@@ -401,18 +405,18 @@ const StudentFaculties = () => {
                                 </td>
                                 <td
                                   style={{
-                                    width: multi_student_cols[11].width,
+                                    width:  multi_student_cols[11].width,
                                     border: "1px solid lightgray",
                                   }}
                                 >
-                                  <div
+                                  <div className="d-flex flex-wrap"
                                     style={{
                                       overflowY: "auto",
                                       height: "100%",
                                     }}
                                   >
                                     {JSON.parse(item.grades).map((grade) => (
-                                      <Pill label={grade} key={grade} />
+                                      <Pill label={grade} key={grade} width="fit-content" />
                                     ))}
                                   </div>
                                 </td>
@@ -480,14 +484,13 @@ const StudentFaculties = () => {
                                   className=""
                                 >
                                   <div
-                                    className={`d-inline card px-1 m-auto ${classByDifference(
+                                    className={`d-inline rounded px-1 m-auto ${classByDifference(
                                       calculateTimeDifference(item?.GMT)
                                     )}`}
                                     style={{ fontSize: "18px" }}
-                                  >
-                                    {calculateTimeDifference(item?.GMT) > 0
-                                      ? `+${calculateTimeDifference(item?.GMT)}`
-                                      : calculateTimeDifference(item?.GMT)}
+                                  > {calculateTimeDifference(item?.GMT) > 0
+                                    ? `+${calculateTimeDifference(item?.GMT)}`
+                                    : calculateTimeDifference(item?.GMT)}
                                   </div>
                                 </td>
                                 <td

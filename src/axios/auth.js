@@ -8,6 +8,7 @@ export const signup = async (data) => {
     }
     catch (err) {
         showErrorToast(err)
+        throw new Error("Registration failed")
     }
 }
 

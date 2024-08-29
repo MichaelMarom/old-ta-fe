@@ -598,6 +598,19 @@ export const post_tutor_setup = async (data) => {
   }
 };
 
+/**
+ *
+ * @param {Object} data mandatory keys(FirstName, LastName, MiddleName, userId)
+ * @returns
+ */
+export const post_tutor_setup_at_signup = async (data) => {
+  try {
+    return await apiClient.post("/tutor/setup", data);
+  } catch (err) {
+    showErrorToast(err);
+  }
+};
+
 export const updateTutorSetup = async (tutorAcademyId, body) => {
   try {
     const { data } = await apiClient.put(
