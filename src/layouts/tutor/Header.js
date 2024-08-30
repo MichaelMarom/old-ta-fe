@@ -320,7 +320,7 @@ const Header = () => {
           style={{ marginLeft: "30px" }}
           className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
         >
-          <IoChevronBackOutline color="gray" size={30} />
+          <IoChevronBackOutline color="#47c176" size={30} />
         </div>
         <ul
           ref={scrollRef}

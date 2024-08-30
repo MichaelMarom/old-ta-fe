@@ -13,18 +13,24 @@ import { useDispatch } from "react-redux";
 import { FaCheck } from "react-icons/fa";
 import { RxCross1 } from "react-icons/rx";
 import Input from "../components/common/Input";
-import { post_tutor_setup } from "../axios/tutor";
+import { post_tutor_setup, post_tutor_setup_at_signup } from "../axios/tutor";
+import _ from "lodash";
+import { post_student_setup_at_signup } from "../axios/student";
+import Tooltip from "../components/common/ToolTip";
 
 const Signup = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const role = queryParams.get("role");
+
   const [showPassword, setShowPassword] = useState(false);
+  const [passOnFocus, setPassOnFocus] = useState(false)
   const { user, signOut } = useClerk()
   const [showPassConditions, setShowPassConditions] = useState(false);
   const [passValid, setPassValid] = useState(false);
-  const [regError, setRegError] = useState(false)
+  const [regError, setRegError] = useState(false);
+  const [validError, setValidError] = useState({});
   const [passConditions, setPassConditions] = useState([
     {
       condition: "Must contain at least 8 characters",
@@ -71,12 +77,23 @@ const Signup = () => {
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState("");
 
+  const nameValidations = (value, field) => {
+    if (!/^[a-zA-Z]+$/.test(value) && !!value.length) {
+      return `"Can only contain letters"`;
+    }
+    if (value.length < 2 && field !== 'mname') {
+      return `"Must be at least 2 characters long"`;
+    }
+    return false;
+  };
+
   useEffect(() => {
     if (role === "student") setSignupFormValues({ ...signupFormValues, role });
   }, [role]);
 
   const handleSignup = async (e) => {
     e.preventDefault();
+    if (_.some(validError, (value) => typeof value === "string")) return toast.warning("Please fix validation errors!")
     if (!isLoaded) return;
     if (!passValid) return;
     if (
@@ -109,6 +126,7 @@ const Signup = () => {
     setLoading(false);
   };
 
+  console.log(_.some(passConditions, { status: false }), passConditions)
   const handleVerification = async (e) => {
     setVerifying(true);
     e.preventDefault();
@@ -134,11 +152,23 @@ const Signup = () => {
 
           try {
             const result = await signup(userBody);
-            const newTutorSetup = await post_tutor_setup({
-              userId: completeSignUp.createdUserId,
-              fname: signupFormValues.fname, mname: signupFormValues.mname, lname: signupFormValues.lname
-            })
-            console.log(newTutorSetup, 'newUser');
+            if (signupFormValues.role === 'tutor') {
+              const newTutorSetup = await post_tutor_setup_at_signup({
+                userId: completeSignUp.createdUserId,
+                Status: 'pending',
+                FirstName: signupFormValues.fname, MiddleName: signupFormValues.mname, LastName: signupFormValues.lname
+              })
+              console.log(newTutorSetup, 'newUser');
+            }
+            else if (signupFormValues.role === 'student') {
+              const de = await post_student_setup_at_signup({
+                userId: completeSignUp.createdUserId,
+                Status: 'pending',
+                FirstName: signupFormValues.fname, MiddleName: signupFormValues.mname, LastName: signupFormValues.lname
+              })
+              console.log(de, 'newUser student');
+
+            }
             if (result.status === 200) {
               setSignupFormValues({ role: "", email: "", password: "" });
               dispatch(setUser(userBody));
@@ -162,12 +192,13 @@ const Signup = () => {
         toast.error("Unable to complete sign up. Please contact support");
       }
     } catch (err) {
-      toast.error(err.message)
+      toast.error(err.message || err?.errors?.[0]?.long_message)
       // setErrors(err.errors);
     } finally {
       setVerifying(false);
     }
   };
+  console.log(passOnFocus)
 
   useEffect(() => {
     if (user && regError) {
@@ -218,8 +249,12 @@ const Signup = () => {
     } else setShowPassConditions(false);
   }, [signupFormValues.password, signupFormValues.confirmPass]);
 
+  console.log(validError)
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    if (['fname', 'lname', 'mname'].includes(name))
+      setValidError({ ...validError, [name]: nameValidations(value, name) })
+
     setSignupFormValues({ ...signupFormValues, [name]: value });
   };
 
@@ -266,37 +301,51 @@ const Signup = () => {
                       </p>
                       <form onSubmit={handleSignup}>
                         <div className="row " style={{ gap: "10px" }}>
-                          <input
-                            type="text"
-                            id="fname"
-                            name="fname"
-                            required
-                            className="form-control m-0"
-                            placeholder="First Name"
-                            value={signupFormValues.fname}
-                            onChange={handleInputChange}
-                          />
-                          <input
-                            type="text"
-                            id="mname"
-                            name="mname"
-                            className="form-control m-0"
-                            placeholder="Middle Name"
-                            value={signupFormValues.mname}
-                            onChange={handleInputChange}
-                          />
-                          <input
-                            type="text"
-                            id="lname"
-                            name="lname"
-                            required
-                            className="form-control m-0"
-                            placeholder="Last Name"
-                            value={signupFormValues.lname}
-                            onChange={handleInputChange}
-                          />
+                          <div className="p-0">
+                            <input
+                              type="text"
+                              id="fname"
+                              name="fname"
+                              required
+                              className="form-control m-0"
+                              placeholder="First Name"
+                              value={signupFormValues.fname}
+                              onChange={handleInputChange}
+                            />
+                            <p className="text-danger small">{validError.fname}</p>
+                          </div>
+                          <div className="p-0">
+
+                            <input
+                              type="text"
+                              id="mname"
+                              name="mname"
+                              className="form-control m-0"
+                              placeholder="Middle Name (optional)"
+                              value={signupFormValues.mname}
+                              onChange={handleInputChange}
+                            />
+                            <p className="text-danger small">{validError.mname}</p>
+
+                          </div>
+                          <div className="p-0">
+
+                            <input
+                              type="text"
+                              id="lname"
+                              name="lname"
+                              required
+                              className="form-control m-0"
+                              placeholder="Last Name"
+                              value={signupFormValues.lname}
+                              onChange={handleInputChange}
+                            />
+                            <p className="text-danger small">{validError.lname}</p>
+
+                          </div>
                           <input
                             type="email"
+
                             id="email"
                             name="email"
                             required
@@ -305,35 +354,42 @@ const Signup = () => {
                             value={signupFormValues.email}
                             onChange={handleInputChange}
                           />
-                          <input
-                            type={showPassword ? "text" : "password"}
-                            name="password"
-                            required
-                            className="form-control m-0"
-                            placeholder="Password"
-                            value={signupFormValues.password}
-                            onChange={handleInputChange}
-                          />
-                          {showPassConditions && (
-                            <div className="d-flex flex-column">
-                              {passConditions.map((cond) => {
-                                return (
-                                  <div
-                                    className={`${cond.status
-                                      ? "text-success"
-                                      : "text-danger"
-                                      } d-flex`}
-                                  >
-                                    <div className="mx-1">
-                                      {cond.status ? <FaCheck /> : <RxCross1 />}
+                          <Tooltip toggleOnHover={false} opened={(passOnFocus && _.some(passConditions, { status: false }))}
+                            text={true && (
+                              <div className="d-flex flex-column">
+                                {passConditions.map((cond) => {
+                                  return (
+                                    <div
+                                      style={{
+                                        color: cond.status ? "#a8eeb3" : "#ffbfbf"
+                                      }}
+                                      className={` d-flex`}
+                                    >
+                                      <div className="mx-1">
+                                        {cond.status ? <FaCheck /> : <RxCross1 />}
+                                      </div>
+                                      <p>{cond.condition}</p>
                                     </div>
-                                    <p>{cond.condition}</p>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          )}
+                                  );
+                                })}
+                              </div>
+                            )} width="300px" >
+
+                            <input
+                              onFocus={() => setPassOnFocus(true)}
+                              onBlur={() => setPassOnFocus(false)}
+                              type={showPassword ? "text" : "password"}
+                              name="password"
+                              required
+                              className="form-control m-0"
+                              placeholder="Password"
+                              value={signupFormValues.password}
+                              onChange={handleInputChange}
+                            />
+                          </Tooltip>
                           <input
+                            onFocus={() => setPassOnFocus(true)}
+                            onBlur={() => setPassOnFocus(false)}
                             type={showPassword ? "text" : "password"}
                             name="confirmPass"
                             required

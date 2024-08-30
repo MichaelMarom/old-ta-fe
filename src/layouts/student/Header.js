@@ -394,7 +394,7 @@ const Header = () => {
           style={{ marginLeft: "30px" }}
           className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
         >
-          <IoChevronBackOutline color="gray" size={30} />
+          <IoChevronBackOutline color="#47c176" size={30} />
         </div>
         <ul
           ref={scrollRef}
@@ -487,7 +487,7 @@ const Header = () => {
           onClick={handleScrollRight}
           className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
         >
-          <IoChevronForwardOutline color="gray" size={30} />
+          <IoChevronForwardOutline color="#47c176" size={30} />
         </div>
         <TabInfoVideoToast
           video={tabs.find((tab) => tab.url === isOpen)?.video}

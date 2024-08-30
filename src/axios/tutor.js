@@ -605,9 +605,10 @@ export const post_tutor_setup = async (data) => {
  */
 export const post_tutor_setup_at_signup = async (data) => {
   try {
-    return await apiClient.post("/tutor/setup", data);
+    return await apiClient.post("/tutor/setup/signup", data);
   } catch (err) {
     showErrorToast(err);
+    throw new Error(err)
   }
 };
 

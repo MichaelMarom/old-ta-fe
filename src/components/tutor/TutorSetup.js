@@ -566,16 +566,16 @@ const TutorSetup = () => {
   const mandatoryFields = [
     { name: "fname", filled: !!fname.length, value: fname },
     { name: "lname", filled: !!lname.length, value: lname },
-    { name: "phone", filled: !!cell.length, value: cell },
-    { name: "rtime", filled: !!response_zone.length, value: response_zone },
-    { name: "country", filled: !!country.length, value: country },
-    { name: "state", filled: !!state.length, value: state },
+    { name: "phone", filled: !!cell?.length, value: cell },
+    { name: "rtime", filled: !!response_zone?.length, value: response_zone },
+    { name: "country", filled: !!country?.length, value: country },
+    { name: "state", filled: !!state?.length, value: state },
     { name: "photo", filled: !!photo?.length, value: photo },
-    { name: "video", filled: !!video.length, value: video },
-    { name: "timezone", filled: !!timeZone.length, value: timeZone },
-    { name: "motivate", filled: !!motivation.length, value: motivation },
-    { name: "intro", filled: !!intro.length, value: intro },
-    { name: "headline", filled: !!headline.length, value: headline },
+    { name: "video", filled: !!video?.length, value: video },
+    { name: "timezone", filled: !!timeZone?.length, value: timeZone },
+    { name: "motivate", filled: !!motivation?.length, value: motivation },
+    { name: "intro", filled: !!intro?.length, value: intro },
+    { name: "headline", filled: !!headline?.length, value: headline },
   ];
 
   if (tutorDataLoading) return <Loading height="calc(100vh - 150px" />;
@@ -940,7 +940,7 @@ const TutorSetup = () => {
                   <div className="input w-100">
                     <PhoneInput
                       defaultCountry="us"
-                      value={cell}
+                      value={cell || ''}
                       onChange={(cell) => set_cell(cell)}
                       disabled={!editMode}
                       style={{ width: "100%" }}
@@ -1459,7 +1459,7 @@ const TutorSetup = () => {
                     float: "right",
                   }}
                 >
-                  {headline.length}/80
+                  {headline?.length}/80
                 </div>
                 <input
                   className="input__field m-0 shadow form-control"
@@ -1516,7 +1516,7 @@ const TutorSetup = () => {
                   }}
                 >
                   {" "}
-                  {intro.length}/500
+                  {intro?.length}/500
                 </div>
                 <div className="input w-100">
                   <textarea
@@ -1572,7 +1572,7 @@ const TutorSetup = () => {
                     float: "right",
                   }}
                 >
-                  {motivation.length}/500
+                  {motivation?.length}/500
                 </div>
                 <div className="input w-100">
                   <textarea

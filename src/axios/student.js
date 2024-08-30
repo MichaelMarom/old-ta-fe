@@ -73,6 +73,15 @@ export const post_student_setup = async (body) => {
     showErrorToast(err);
   }
 };
+export const post_student_setup_at_signup = async (body) => {
+  try {
+    const { data } = await apiClient.post("/student/setup/signup", body);
+    return data;
+  } catch (err) {
+    showErrorToast(err);
+    throw new Error(err)
+  }
+};
 
 export const update_student_setup = async (id, body) => {
   try {

@@ -4,6 +4,8 @@ import { FaInfoCircle } from "react-icons/fa";
 const Tooltip = ({
   text,
   children,
+  toggleOnHover=true,
+  opened = true,
   iconSize = 16,
   direction = "top",
   width = "100px",
@@ -33,33 +35,35 @@ const Tooltip = ({
   }, [customStyling, style]);
 
   return (
-    <div
-      className="custom-tooltip-wrapper mx-2"
-      style={{
-        fontWeight: "bold",
-        lineHeight: "1.2",
-        fontSize: "14px",
-        transform: "none",
-      }}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
+    <>
+      <div
+        className="custom-tooltip-wrapper mx-2"
+        style={{
+          fontWeight: "bold",
+          lineHeight: "1.2",
+          fontSize: "14px",
+          transform: "none",
+        }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        {(toggleOnHover ?showTooltip : opened) && (
+          <div
+            className={`custom-tooltip ${direction}`}
+            style={{
+              ...tooltipStyle,
+              transform: "none",
+              fontWeight: "400",
+              fontSize: "12px",
+              boxShadow: "2px 5px 8px rgba(0,0,0,.45)",
+            }}
+          >
+            {text}
+          </div>
+        )}
+      </div>
       {children ? children : <FaInfoCircle size={iconSize} color={color} />}
-      {showTooltip && (
-        <div
-          className={`custom-tooltip ${direction}`}
-          style={{
-            ...tooltipStyle,
-            transform: "none",
-            fontWeight: "400",
-            fontSize: "12px",
-            boxShadow: "2px 5px 8px rgba(0,0,0,.45)",
-          }}
-        >
-          {text}
-        </div>
-      )}
-    </div>
+    </>
   );
 };
 
