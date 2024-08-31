@@ -142,24 +142,14 @@ ul.header li a {
     background: transparent;
 }
 
-#tutor-tab-header-list-active {
-    background: #2471A3;
-    color: #F7F9F9;
-}
-
 #tutor-tab-header-list-active1 {
-    background: initial;
+    /* text-decoration: underline; */
+    border-bottom: 3px solid #5ae28e;
+    
 }
-
-
-
-ul.header li:hover {
-    background: #2471A3;
-    color: #F7F9F9;
+#tutor-tab-header-list-active1>* {
+color: #5ae28e  !important;
 }
-
-
-
 
 #active {
     background-color: #ffffff;
@@ -172,9 +162,7 @@ ul {
     align-items: center;
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 0 8px 0 8px;
     scroll-behavior: smooth;
-    transition: cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 ul.header {
@@ -183,32 +171,15 @@ ul.header {
 }
 
 ul li {
-    /* padding: 15px 15px 15px 15px; */
     display: flex;
-    /* font-size: 100%; */
     white-space: nowrap;
     font-weight: 400;
-    /* align-items: center; */
-    /* justify-content: center; */
     float: left;
     cursor: pointer;
 }
 
 ul.nav.nav-tabs li {
     padding: 0 !important;
-}
-
-
-.inputValidator {
-    display: none;
-    color: red;
-    width: 100%;
-    margin: auto;
-    text-align: center;
-}
-
-#inputValidator {
-    display: block;
 }
 
 .tutor-tab-intro {
@@ -228,7 +199,7 @@ ul.nav.nav-tabs li {
     height: calc(100vh - 350px);
     width: 100%;
 }
-
+/* 
 .note-one,
 .note-two,
 .note-three {
@@ -237,7 +208,7 @@ ul.nav.nav-tabs li {
     margin: 0 1.6% 0 1.6%;
     padding: 10px;
     float: left;
-}
+} */
 
 .tutor-tab-intro-prompt {
     height: 200px;
@@ -253,8 +224,6 @@ table {
     position: relative;
 
 }
-
-
 
 td {
     border: 1px solid #000000;
@@ -778,58 +747,10 @@ option {
     transition: cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
-.tutor-acct-tab-menu ul {
-    list-style-type: none;
-    margin: 0;
-    float: right;
-    height: 100%;
-    width: calc(100% - 150px);
-    display: flex;
-    align-items: center;
-    justify-content: left;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 0 8px 0 8px;
-    background: #212F3D;
-    scroll-behavior: smooth;
-    transition: cubic-bezier(0.165, 0.84, 0.44, 1);
-}
-
-.tutor-acct-tab-menu ul li {
-    padding: 15px 20px 15px 20px;
-    color: #fff;
-    display: flex;
-    transform: skew(-40deg);
-    font-size: large;
-    transition: all .2s ease-in;
-    white-space: nowrap;
-    font-weight: 400;
-    align-items: center;
-    justify-content: center;
-    float: left;
-    cursor: pointer;
-}
-
-.tutor-acct-tab-menu ul li a {
-    display: block;
-    font-size: 14px;
-    transform: skew(40deg);
-    transition: all .2s ease-in;
-    background: transparent;
-}
-
 #tutor-acct-tab-menu-list-active {
     background: #2471A3;
     color: #F7F9F9;
 }
-
-
-
-.tutor-acct-tab-menu ul li:hover {
-    background: #2471A3;
-    color: #F7F9F9;
-}
-
 
 
 ::-webkit-scrollbar {

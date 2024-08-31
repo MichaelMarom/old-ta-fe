@@ -750,12 +750,24 @@ fieldset:disabled .btn,
   padding: 0px 10px !important;
 }
 
+.navitem,.navitem>*{
+  transition: all 0.3s ease-in;
+}
+
+.navitem:hover, .navitem>*:hover{
+  color: #5ae28e !important;
+  /* text-decoration: underline; */
+}
+.navitem:hover{
+  border-bottom: 3px solid #5ae28e;
+}
+
 .navitem-li:hover {
   background: initial !important;
 }
 
 /* Border X get width  */
-.navitem:before,
+/* .navitem:before,
 .navitem:after {
   position: absolute;
   opacity: 0;
@@ -782,7 +794,7 @@ fieldset:disabled .btn,
 #tutor-tab-header-list-active1::after {
   opacity: 1;
   width: 100%;
-}
+} */
 
 .video-nav-icon:hover {
   transition: all 0.3s ease-in-out;

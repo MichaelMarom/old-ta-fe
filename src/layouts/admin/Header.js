@@ -62,7 +62,7 @@ const Header = () => {
   return (
     <>
       <div
-        className="tutor-tab-header  shadow-sm d-flex"
+        className=" shadow-sm d-flex align-items-center"
         style={{ background: "rgb(33, 47, 61)" }}
       >
         <div
@@ -81,7 +81,7 @@ const Header = () => {
         </div>
 
         <ul
-          className="header"
+          className="header h-100"
           style={{
             background: "inherit",
             pointerEvents: "auto",
@@ -92,18 +92,19 @@ const Header = () => {
           {tabs.map((tab) => (
             <>
               <li
+              className="navitem navitem-li"
                 key={tab.id}
                 data-url={tab.id}
                 onClick={handleTabClick}
                 id={
                   activeTab.split("/")[2] === tab.id
-                    ? "tutor-tab-header-list-active"
+                    ? "tutor-tab-header-list-active1"
                     : ""
                 }
               >
                 <h5
                   className="m-0"
-                  style={{ transform: "skew(40deg, 0deg)", fontSize: "14px" }}
+                  style={{fontSize: "14px" }}
                 >
                   {tab.name}
                   {tab.name === "New Subject" && !!count && (
@@ -127,9 +128,6 @@ const Header = () => {
                   )}
                 </h5>
               </li>
-              <div className="text-light" style={{ fontWeight: "bold" }}>
-                |
-              </div>
             </>
           ))}
         </ul>

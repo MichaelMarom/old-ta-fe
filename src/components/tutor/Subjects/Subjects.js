@@ -138,7 +138,7 @@ const Subjects = () => {
   
   return (
     <>
-      <div className="" style={{ marginTop: "2px" }}>
+      <div className="" style={{ margin: "2px 30px 0 30px" }}>
         <div className=" d-flex flex-column">
           <SubMenu
             faculty={faculty}

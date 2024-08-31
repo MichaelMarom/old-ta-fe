@@ -420,9 +420,6 @@ const Header = () => {
                       className="cursor-pointer mx-2 video-nav-icon"
                       style={{ transform: "skew(0)" }}
                       onClick={() =>
-                        ((tutor.Status !== PROFILE_STATUS.PENDING &&
-                          tutor.AcademyId) ||
-                          user.role === "admin") &&
                         setIsOpen(tab.url)
                       }
                     >
@@ -447,7 +444,7 @@ const Header = () => {
           onClick={handleScrollRight}
           className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
         >
-          <IoChevronForwardOutline color="gray" size={30} />
+          <IoChevronForwardOutline color="#47c176" size={30} />
         </div>
 
         <TabInfoVideoToast

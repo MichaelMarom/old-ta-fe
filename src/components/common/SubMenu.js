@@ -1,10 +1,10 @@
 import React, { useRef } from "react";
-import { IoChevronBackCircleOutline, IoChevronForwardCircleOutline } from "react-icons/io5";
+import { IoChevronBackCircle, IoChevronBackCircleOutline, IoChevronForwardCircle, IoChevronForwardCircleOutline } from "react-icons/io5";
 
 const SubMenu = ({ faculty, selectedFaculty, setSelectedFaculty }) => {
 
-    const scrollRef = useRef()
-    const scrollStep = 500
+  const scrollRef = useRef()
+  const scrollStep = 500
   const handleScrollLeft = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollLeft -= scrollStep;
@@ -18,7 +18,7 @@ const SubMenu = ({ faculty, selectedFaculty, setSelectedFaculty }) => {
   };
 
   return (
-    <div className=" m-1 d-flex " style={{ background: "rgb(33 47 61)", color: "white" }}>
+    <div className=" m-1 d-flex " style={{ background: "rgb(33 47 61)", color: "white", borderRadius: "10px", padding: "10px" }}>
       {/* <div
         style={{
           display: "flex",
@@ -37,7 +37,7 @@ const SubMenu = ({ faculty, selectedFaculty, setSelectedFaculty }) => {
         onClick={handleScrollLeft}
         className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
       >
-        <IoChevronBackCircleOutline color="#47c176" size={30} />
+        <IoChevronBackCircle color="#47c176" size={30} />
       </div>
       {/* <div style={{ opacity: "1" }}>
         <FaChevronLeft />
@@ -68,7 +68,7 @@ const SubMenu = ({ faculty, selectedFaculty, setSelectedFaculty }) => {
         onClick={handleScrollRight}
         className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
       >
-        <IoChevronForwardCircleOutline color="#47c176" size={30} />
+        <IoChevronForwardCircle color="#47c176" size={30} />
       </div>
       {/* <div
         style={{

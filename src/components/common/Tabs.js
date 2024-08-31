@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 const Tabs = ({
   links,
-  activeTab,
   setActiveTab,
   activeTabIndex,
   setActiveTabIndex,
@@ -19,7 +18,6 @@ const Tabs = ({
 
   return (
     <div
-      className="tutor-acct-tab-menu"
       style={{
         height: "30px",
         cursor: "pointer",
@@ -31,7 +29,7 @@ const Tabs = ({
         marginTop: "5px",
       }}
     >
-      <ul id="tutor-header-menus" className="header">
+      <ul className="header">
         {links.map((tab, index) => (
           <li
             id={`${
@@ -40,14 +38,14 @@ const Tabs = ({
                   ? location.pathname === tab.link
                   : index === activeTabIndex
               )
-                ? "tutor-acct-tab-menu-list-active"
+                ? "tutor-tab-header-list-active1"
                 : ""
             }`}
             key={index}
             onClick={() => handleTabClick(index, tab.component)}
-            className={location.pathname === tab.link ? "active" : ""}
+            className={`navitem navitem-li ${location.pathname === tab.link ? "active" : ""}`}
           >
-            <h6 className="m-0" style={{ transform: "skew(44deg, 0deg)" }}>
+            <h6 className="m-0">
               {tab.label}
             </h6>
           </li>

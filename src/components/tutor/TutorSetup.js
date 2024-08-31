@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { BsCameraVideo, BsCloudUpload } from "react-icons/bs";
 import { moment } from "../../config/moment";
@@ -85,7 +85,6 @@ const TutorSetup = () => {
   const [videoError, setVideoError] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  let [tutorGrades, setTutorGrades] = useState([]);
   const isValid = isPhoneValid(cell);
   const { user } = useSelector((state) => state.user);
   const [email, set_email] = useState(user?.email);
@@ -115,6 +114,7 @@ const TutorSetup = () => {
   const [nameFieldsDisabled, setNameFieldsDisabled] = useState(false);
   let [isRecording, setIsRecording] = useState(false);
   const toastId = "pending-status-toast";
+  let toastRef =useRef()
 
   const nameValidations = (value, field) => {
     if (!/^[a-zA-Z]+$/.test(value)) {
@@ -129,7 +129,7 @@ const TutorSetup = () => {
   useEffect(() => {
     if (user.role && tutor.AcademyId && tutor.Status === "pending") {
       if (!toast.isActive(toastId)) {
-        toast.success(
+       toastRef.current = toast.success(
           `Please note that your application is currently in 'pending' status. 
           Use the 'Next' or 'Back' buttons at the page footer to navigate between pages. 
           The menu tabs will become active once you complete all mandatory fields as marked by red blinking text.`,
@@ -144,6 +144,14 @@ const TutorSetup = () => {
         );
       }
     }
+
+    
+    return () => {
+      if (toastRef.current) {
+        toast.dismiss(toastRef.current);
+        toastRef.current = null; // Ensure the toast is cleared when unmounting
+      }
+    };
   }, [user.role, tutor.AcademyId, tutor.Status]);
 
   useEffect(() => {
@@ -229,7 +237,7 @@ const TutorSetup = () => {
         set_headline(data.HeadLine);
         set_add1(data.Address1);
         set_add2(data.Address2);
-        setTutorGrades(JSON.parse(data?.Grades ?? "[]"));
+        // setTutorGrades(JSON.parse(data?.Grades ?? "[]"));
 
         setSelectedVideoOption("upload");
         set_vacation_mode(data.VacationMode);
@@ -261,7 +269,6 @@ const TutorSetup = () => {
         Introduction: "",
         Motivate: "",
         HeadLine: "",
-        Grades: `[]`,
         VacationMode: false,
       };
     }
@@ -281,7 +288,6 @@ const TutorSetup = () => {
       intro,
       motivation,
       headline,
-      tutorGrades,
       vacation_mode,
     };
     setUnsavedChanges(
@@ -304,7 +310,6 @@ const TutorSetup = () => {
     intro,
     motivation,
     headline,
-    tutorGrades,
     tutor,
     vacation_mode,
   ]);
@@ -352,9 +357,7 @@ const TutorSetup = () => {
       intro,
       motivation,
       headline,
-      tutorGrades,
       userId: tutor.userId ? tutor.userId : user?.SID,
-      grades: tutorGrades,
       start: vacation_mode ? start : moment().toDate(),
       end: vacation_mode ? end : moment().endOf().toDate(),
       vacation_mode,

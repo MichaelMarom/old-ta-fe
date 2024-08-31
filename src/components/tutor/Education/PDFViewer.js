@@ -7,7 +7,7 @@ const PDFViewer = ({ pdfUrl }) => {
 
   return (
     <div style={{ width: "80px", height: "80px" }}>
-      <Document file={pdfUrl}>
+      <Document file={pdfUrl} onLoadSuccess={()=>{console.log("hello")}}>
         <Page pageNumber={1} />
       </Document>
     </div>

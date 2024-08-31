@@ -33,7 +33,6 @@ const StudentAccounting = () => {
         <>
             <Tabs
                 links={tabs}
-                activeTab={activeTab}
                 activeTabIndex={activeTabIndex}
                 setActiveTab={setActiveTab}
                 setActiveTabIndex={setActiveTabIndex}

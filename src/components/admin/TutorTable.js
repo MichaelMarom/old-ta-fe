@@ -7,65 +7,58 @@ import { toast } from "react-toastify";
 import { statesColours } from "../../constants/constants";
 import { get_role_count_by_status } from "../../axios/admin";
 import Avatar from "../common/Avatar";
+import CertificateModal from "./CertificateModal";
+import DegreeModal from "./DegreeModal";
+import { getDoc } from "../../axios/tutor";
 
 const TutorTable = () => {
   let [data, set_data] = useState([]);
   const [fetching, setFetching] = useState(false);
   const [updatingStatus, setUpdatingStatus] = useState(false);
   const [status, setStatus] = useState("pending");
+  const [openDegModal, setOpenDegModal] = useState(false);
+  const [openCertModal, setOpenCertModal] = useState(false);
+  const [docUrl, setDocUrl] = useState('');
   const [statusCount, setStatusCount] = useState([]);
   const COLUMNS = [
     {
       Header: "Sr#",
-      accessor: "Sr#",
     },
     {
       Header: "Status",
-      accessor: "Status",
     },
     {
       Header: "Photo",
-      accessor: "Photo",
     },
     {
       Header: "Screen Id",
-      accessor: "Screen Id",
     },
     {
       Header: "Tutor Name",
-      accessor: "Tutor Name",
     },
     {
       Header: "Email",
-      accessor: "Email",
     },
     {
       Header: "Phone",
-      accessor: "Phone",
     },
     {
       Header: "GMT",
-      accessor: "GMT",
     },
     {
       Header: "Tot. Hours",
-      accessor: "Tot. Hours",
     },
     {
       Header: "Earned",
-      accessor: "Earned",
     },
     {
       Header: "Last Active",
-      accessor: "Last Active",
     },
     {
       Header: "ID Verified",
-      accessor: "ID Verified",
     },
     {
-      Header: "BG Verified",
-      accessor: "BG Verified",
+      Header: "Action",
     },
   ];
 
@@ -357,8 +350,19 @@ const TutorTable = () => {
                 <td data-src={null}>{null}</td>
                 <td data-src={null}>{null}</td>
                 <td data-src={item.IdVerified}>{item.IdVerified}</td>
-                <td data-src={item.BackgroundVerified}>
-                  {item.BackgroundVerified}
+                <td className="p-1">
+                  <button className="m-0 mb-1 w-100 btn btn-success" onClick={() =>{
+                    getDoc("degree",item.AcademyId).then((res=>setDocUrl(res?.[0]?.DegFileName)))
+                    setOpenDegModal(true)}}>
+                    View Degree
+                  </button>
+                  <button className="btn m-0 btn-primary w-100" onClick={() =>{
+                    getDoc("certificate",item.AcademyId).then((res=>setDocUrl(res?.[0]?.CertFileName)))
+                    
+                    setOpenCertModal(true)}}>
+                    View Certificate
+                  </button>
+
                 </td>
 
               </tr>
@@ -368,6 +372,9 @@ const TutorTable = () => {
       ) : (
         <div className="text-danger"> No record Found!</div>
       )}
+
+      <CertificateModal open={openCertModal} docUrl={docUrl} onClose={() => setOpenCertModal(false)} />
+      <DegreeModal open={openDegModal} docUrl={docUrl} onClose={() => setOpenDegModal(false)} />
     </div>
   );
 };

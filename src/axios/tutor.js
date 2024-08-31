@@ -612,6 +612,16 @@ export const post_tutor_setup_at_signup = async (data) => {
   }
 };
 
+export const getDoc = async (docType, id) => {
+  try {
+    const response = await apiClient.get(`/tutor/my-edu/doc/${id}`, {params:{docType}});
+    return response.data;
+  } catch (err) {
+    showErrorToast(err);
+    return err;
+  }
+} 
+
 export const updateTutorSetup = async (tutorAcademyId, body) => {
   try {
     const { data } = await apiClient.put(
@@ -623,6 +633,7 @@ export const updateTutorSetup = async (tutorAcademyId, body) => {
     showErrorToast(err);
   }
 };
+
 export const setAgreementDateToNullForAll = async () => {
   try {
     const data = apiClient.put("/tutor/agreement-updated");

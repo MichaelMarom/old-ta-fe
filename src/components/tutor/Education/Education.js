@@ -114,6 +114,13 @@ const Education = () => {
     if (toastId && (cert_file_name || deg_file_name)) {
       toast.dismiss();
     }
+
+    return () => {
+      if (toastId.current) {
+        toast.dismiss(toastId.current);
+        toastId.current = null; // Ensure the toast is cleared when unmounting
+      }
+    };
   }, [recordFetched, dbValues, cert_file_name, deg_file_name]);
 
   useEffect(() => {
