@@ -3,7 +3,6 @@ import CenteredModal from '../common/Modal'
 import PDFViewer from '../tutor/Education/PDFViewer'
 
 const DegreeModal = ({ open, onClose, docUrl }) => {
-    console.log(docUrl)
     return (
         <CenteredModal minWidth='800px' style={{minWidth:"800px"}} show={open} handleClose={onClose} title={"Degree"}>
             <div>
