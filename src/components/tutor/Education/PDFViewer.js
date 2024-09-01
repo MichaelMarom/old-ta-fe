@@ -3,11 +3,11 @@ import { Document, Page, pdfjs } from 'react-pdf/dist/esm/entry.webpack';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.js`;
 
-const PDFViewer = ({ pdfUrl }) => {
+const PDFViewer = ({ pdfUrl, width = "80px", height = "80px" }) => {
 
   return (
-    <div style={{ width: "80px", height: "80px" }}>
-      <Document file={pdfUrl} onLoadSuccess={()=>{console.log("hello")}}>
+    <div style={{ width, height }}>
+      <Document file={pdfUrl} onLoadSuccess={() => { console.log("hello") }}>
         <Page pageNumber={1} />
       </Document>
     </div>

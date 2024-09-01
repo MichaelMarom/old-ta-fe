@@ -5,12 +5,14 @@ import PDFViewer from '../tutor/Education/PDFViewer'
 const CertificateModal = ({ open, onClose, docUrl }) => {
     console.log(docUrl)
     return (
-        <CenteredModal show={open} handleClose={onClose} title={"Certificate"}>
+        <CenteredModal  minWidth='800px' style={{minWidth:"800px"}}  show={open} handleClose={onClose} title={"Certificate"}>
             <div>
                 {docUrl ?
                     <>
-                        {docUrl.split('.')[1]!=="pdf" ? <img src={docUrl} alt='deoc' width={450} height={500} />:
-                        <PDFViewer pdfUrl={docUrl} />}
+                        {docUrl.split('.').pop() !== "pdf" ? <img src={docUrl} alt='deoc' width={770} height={770} /> :
+                            <PDFViewer pdfUrl={docUrl} width={"770px"} height='auto' />
+                        }
+
                     </> :
                     <div className='text-danger'>"No Certificate by Tutor"</div>
                 }
