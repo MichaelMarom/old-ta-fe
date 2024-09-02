@@ -528,8 +528,10 @@ const TutorSetup = () => {
       );
     const file = e.target.files[0];
     setVideoError(false);
-    if (file.size > 10485760)
-      return toast.warning("Video size should be less than 10MB");
+
+toast.warning(`Size is ${file.size/1024} KB`)
+    if (file.size > 52428800)
+      return toast.warning("Video size should be less than 50MB");
     if (!file?.type || file.type.split("/")?.[0] !== "video") {
       alert("Only Video Can Be Uploaded To This Field");
     } else {
@@ -1662,8 +1664,8 @@ export const MandatoryFieldLabel = ({
   };
 
   return (
-    <div className="">
-      <span
+    <div className="d-flex">
+      <span className="d-flex gap-2"
         style={{
           background: editMode ? "white" : "rgb(233 236 239)",
         }}
@@ -1676,7 +1678,7 @@ export const MandatoryFieldLabel = ({
             iconSize={13}
           />
         )}
-        <span className={`${blinkMe() ? "blink_me" : ""}`}> {text}</span>:
+        <span className={`${blinkMe() ? "blink_me" : ""}`}> {text}</span>
       </span>
       <span className="text-danger" style={{ fontSize: "13px" }}>
         *
@@ -1703,7 +1705,7 @@ export const GeneralFieldLabel = ({
 }) => {
   return (
     <div className="">
-      <span
+      <span className="d-flex gap-2"
         style={{
           background: editMode ? "white" : "rgb(233 236 239)",
         }}
@@ -1713,10 +1715,10 @@ export const GeneralFieldLabel = ({
             text={tooltipText}
             direction={direction}
             width={width}
-            iconSize={10}
+            iconSize={15}
           />
         )}
-        <span> {label}</span>:
+        <span> {label}</span>
       </span>
     </div>
   );

@@ -5,7 +5,7 @@ const Tooltip = ({
   text,
   children,
   toggleOnHover=true,
-  opened = true,
+  opened = false,
   iconSize = 16,
   direction = "top",
   width = "100px",
@@ -34,36 +34,45 @@ const Tooltip = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customStyling, style]);
 
+console.log(toggleOnHover, showTooltip, opened)
   return (
-    <>
+    <div className="p-0 position-relative">
+      {(toggleOnHover ? showTooltip : opened) && (
       <div
-        className="custom-tooltip-wrapper mx-2"
+        className={`"custom-tooltip-wrapper mx-2"`}
         style={{
           fontWeight: "bold",
           lineHeight: "1.2",
           fontSize: "14px",
           transform: "none",
         }}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        // onMouseEnter={handleMouseEnter}
+        // onMouseLeave={handleMouseLeave}
       >
-        {(toggleOnHover ?showTooltip : opened) && (
           <div
             className={`custom-tooltip ${direction}`}
             style={{
               ...tooltipStyle,
+              bottom:opened ? "40px" : "20px",
               transform: "none",
               fontWeight: "400",
+              height:"fit-content",
               fontSize: "12px",
               boxShadow: "2px 5px 8px rgba(0,0,0,.45)",
             }}
           >
             {text}
           </div>
-        )}
       </div>
+        )}
+      <div
+       onMouseEnter={handleMouseEnter}
+       onMouseLeave={handleMouseLeave}
+      >
+
       {children ? children : <FaInfoCircle size={iconSize} color={color} />}
-    </>
+      </div>
+    </div>
   );
 };
 

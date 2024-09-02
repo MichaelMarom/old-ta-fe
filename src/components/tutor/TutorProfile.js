@@ -480,18 +480,18 @@ console.log(data)
             </div>
             <div className="" style={{ width: "calc(100% - 33.33% - 20px)" }}>
               <div className="bg-white p-4 rounded">
-                <div>
+                <div className="m-0 mb-2">
                   <div>
                     <h5 className="">Headline</h5>
                     <p className="border rounded-3 p-2">{data.HeadLine}</p>
                   </div>
                 </div>
-                <div>
+                <div  className="m-0 mb-2">
                   <h5 className="">Motivate</h5>
                   <p className="border p-2 rounded-3">{data.Motivate}</p>
                 </div>
                 {data.WorkExperience && (
-                  <div>
+                  <div  className="m-0 mb-2">
                     <h5 className="">
                       Work Experience (Total Experience -{" "}
                       {data.EducationalLevelExperience})

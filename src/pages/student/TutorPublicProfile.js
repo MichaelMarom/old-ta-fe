@@ -550,17 +550,17 @@ const TutorProfile = () => {
                     className=" "
                     style={{ margin: "10px 0", background: "white" }}
                   >
-                    <div>
+                    <div  className="m-0 mb-2">
                       <h5 className="">Headline</h5>
                       <p className="border p-2 rounded-3">{tutor.HeadLine}</p>
                     </div>
                   </div>
-                  <div>
+                  <div  className="m-0 mb-2">
                     <h5 className="">Motivate</h5>
                     <p className="border p-2 rounded-3">{tutor.Motivate}</p>
                   </div>
                   {edu.WorkExperience && (
-                    <div>
+                    <div  className="m-0 mb-2">
                       <h5 className="">
                         Work Experience (Total Experience -{" "}
                         {edu.EducationalLevelExperience})

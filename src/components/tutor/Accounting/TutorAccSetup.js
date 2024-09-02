@@ -237,9 +237,9 @@ const TutorAccSetup = ({
               <p className="  px-4  py-2 rounded m-2 col-4">
                 {!!sessions.length
                   ? showDate(
-                      sessions?.[sessions.length - 1]?.start,
-                      monthFormatWithYYYY
-                    )
+                    sessions?.[sessions.length - 1]?.start,
+                    monthFormatWithYYYY
+                  )
                   : "N/A"}
               </p>
             </div>
@@ -381,17 +381,18 @@ const TutorAccSetup = ({
             {!!payment_option && (
               <div className="m-5">
                 {emailRequiredPaymentMethods.includes(payment_option) && (
-                  <p
+                  <div className="d-flex align-items-center gap-3"
                     style={{
                       fontWeight: "bold",
                     }}
                   >
-                    3% service charge imposed by the services listed above.
+                    <p>    3% service charge imposed by the services listed above.</p>
                     <Tooltip
+                      iconSize={20}
                       width="200px"
                       text={"Payoneer, Paypal, Zelle, Wise"}
                     />
-                  </p>
+                  </div>
                 )}
 
                 {payment_option === "Bank" && tutor.Country === "USA" && (
