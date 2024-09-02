@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Header from './admin/Header'
 import MobileScreen from '../pages/MobileScreen';
 import { widthResolutionAllowed } from '../constants/constants';
+import { Outlet } from 'react-router-dom';
 
 const AdminLayout = ({ children }) => {
     const [resolution, setResolution] = useState({ width: window.innerWidth, height: window.innerHeight });
@@ -22,7 +23,8 @@ const AdminLayout = ({ children }) => {
     return resolution.width < widthResolutionAllowed ? <MobileScreen /> :
         <>
             <Header />
-            {children}
+            <Outlet />
+            {/* {children} */}
         </>
 }
 

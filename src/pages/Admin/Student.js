@@ -3,9 +3,9 @@ import AdminLayout from "../../layouts/AdminLayout";
 
 const Student_Table = () => {
     return ( 
-        <AdminLayout>
-            <StudentTable />
-        </AdminLayout>
+        <StudentTable />
+        // <AdminLayout>
+        // </AdminLayout>
      );
 }
  

@@ -3,15 +3,13 @@ import { useNavigate, useLocation } from "react-router-dom";
 import TAButton from "../../components/common/TAButton";
 import { get_tutor_subjects } from "../../axios/tutor";
 import { create_chat } from "../../axios/chat";
-import { apiClient } from "../../axios/config";
 import { IoIosCheckmarkCircle, IoIosCloseCircle } from "react-icons/io";
-import { FaChalkboardTeacher, FaRegTimesCircle } from "react-icons/fa";
+import { FaRegTimesCircle } from "react-icons/fa";
 import { CiClock2 } from "react-icons/ci";
 
 import { convertGMTOffsetToLocalString, showDate } from "../../utils/moment";
 import { useParams } from "react-router";
 import Avatar from "../common/Avatar";
-import Pill from "../common/Pill";
 
 import { capitalizeFirstLetter } from "../../utils/common";
 import { FaLocationDot, FaRegCirclePlay } from "react-icons/fa6";
@@ -22,12 +20,13 @@ import { toast } from "react-toastify";
 import Actions from "../common/Actions";
 import { monthFormatWithYYYY } from "../../constants/constants";
 import TutorScheduleModal from "./TutorScheduleModal";
-import ScreenRecording from "../common/ScreenRecording";
 import { useSelector } from "react-redux";
 import CenteredModal from "../common/Modal";
 import { RiVerifiedBadgeFill } from "react-icons/ri";
 import StarRating from "../common/StarRating";
 import { PiChalkboardTeacherFill } from "react-icons/pi";
+
+import ScreenRecording from "../common/ScreenRecording";
 
 const TutorProfile = () => {
   const videoRef = useRef(null);
@@ -36,9 +35,7 @@ const TutorProfile = () => {
   const location = useLocation();
   const studentId = localStorage.getItem("student_user_id");
   const [data, setProfileData] = useState({});
-  const [fetching, setFetching] = useState(true);
   const [activeTab, setActiveTab] = useState("bach");
-  const userRole = localStorage.getItem("user_role");
   const isStudentLoggedIn = location.pathname.split("/")[1] === "student";
   const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
   const [subjectsWithRates, setSubjectsWithRates] = useState([]);

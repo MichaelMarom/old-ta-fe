@@ -26,14 +26,14 @@ const Layout = ({ children }) => {
     ];
 
     return (
-        <AdminLayout >
+        <div >
             <Tabs links={tabs} setActiveTab={setActiveTab}
                 setActiveTabIndex={setActiveTabIndex}
                 activeTab={activeTab}
                 activeTabIndex={activeTabIndex}
             />
             {children}
-        </AdminLayout>
+        </div>
     )
 }
 

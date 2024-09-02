@@ -3,7 +3,7 @@ import Header from "../layouts/student/Header";
 import { useSelector } from "react-redux";
 import SmallSideBar from "../components/common/SmallSideBar";
 import { generateUpcomingSessionMessage } from "../utils/common";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import _ from "lodash";
 import MobileScreen from "../pages/MobileScreen";
 import { widthResolutionAllowed } from "../constants/constants";
@@ -94,7 +94,8 @@ const StudentLayout = ({ children }) => {
           upcomingSessionFromNow
         )}
       />{" "}
-      {children}
+      <Outlet />
+      {/* {children} */}
     </>
   );
 };

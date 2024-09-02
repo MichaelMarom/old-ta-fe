@@ -3,7 +3,7 @@ import Header from '../layouts/tutor/Header'
 import { useSelector } from 'react-redux'
 import SmallSideBar from '../components/common/SmallSideBar'
 import { generateUpcomingSessionMessage } from '../utils/common'
-import { useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import MobileScreen from '../pages/MobileScreen'
 import { widthResolutionAllowed } from '../constants/constants'
 
@@ -59,7 +59,8 @@ const TutorLayout = ({ children }) => {
         <>
             <Header />
             <SmallSideBar inMins={inMins} currentSession={currentSession} message={generateUpcomingSessionMessage(upcomingSession, upcomingSessionFromNow)} />
-            {children}
+            <Outlet />
+            {/* {children} */}
         </>
 }
 

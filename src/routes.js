@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Suspense, useEffect, useState } from "react";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { isExpired } from "react-jwt";
 import React from "react";
 
@@ -33,6 +33,9 @@ import { setMissingFeildsAndTabs } from "./redux/tutor/missingFieldsInTabs";
 import { setEducation } from "./redux/tutor/education";
 import { setAccounting } from "./redux/tutor/accounting";
 import { setDiscount } from "./redux/tutor/discount";
+import AdminLayout from "./layouts/AdminLayout";
+import StudentLayout from "./layouts/StudentLayout";
+import TutorLayout from "./layouts/TutorLayout";
 
 const App = () => {
   let location = useLocation();
@@ -233,20 +236,63 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  console.log(user.role)
+
   return (
     <Suspense fallback={<Loading />}>
       <Routes>
-        <Route path={"/collab"} element={<Collaboration />} />
+        {/* Public Routes */}
+        <Route path="/collab" element={user.role === "student" || user.role === "tutor" ? <Collaboration /> : <Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        {activeRoutes.map((route) => (
-          <Route
-            key={route.path}
-            path={route.path}
-            element={<SignedIn>{route.element}</SignedIn>}
-          />
-        ))}
-        <Route path="*" element={<Loading />} />
+
+      
+        {/* {user.role === "admin" || user.role === "student" && */}
+          <Route path="/student/*" element={<StudentLayout />}>
+            {rolePermissions['student']
+              // .filter(route => route.role === 'student')
+              .map(route => (
+                <Route
+                  key={route.path}
+                  path={route.path.replace('/student/', '')} // Removing '/student' prefix
+                  element={<SignedIn>{route.component}</SignedIn>}
+                />
+              ))}
+          </Route>
+        {/* } */}
+
+        {/* Tutor Section */}
+        {/* {user.role === "admin" || user.role === "tutor" && */}
+          <Route path="/tutor/*" element={<TutorLayout />}>
+            {rolePermissions['tutor']
+              // .filter(route => route.user.role === 'tutor')
+              .map(route => (
+                <Route
+                  key={route.path}
+                  path={route.path.replace('/tutor/', '')} // Removing '/tutor' prefix
+                  element={<SignedIn>{route.component}</SignedIn>}
+                />
+              ))}
+          </Route>
+        {/* } */}
+
+        {/* Admin Section */}
+        {user.role === "admin" &&
+          <Route path="/admin/*" element={<AdminLayout />}>
+            {rolePermissions['admin']
+              // .filter(route => route.user.role === 'admin')
+              .map(route => (
+                <Route
+                  key={route.path}
+                  path={route.path.replace('/admin/', '')} // Removing '/admin' prefix
+                  element={<SignedIn>{route.component}</SignedIn>}
+                />
+              ))}
+          </Route>
+        }
+
+        {/* Fallback Route */}
+        <Route path="*" element={<div >Hi</div>} />
       </Routes>
     </Suspense>
   );

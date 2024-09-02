@@ -2,9 +2,9 @@ import AdminLayout from "../../layouts/AdminLayout"
 
 const Chat = () => {
     return (
-        <AdminLayout>
+        <div>
             Marketung
-        </AdminLayout>
+        </div>
 
     )
 }

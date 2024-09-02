@@ -8,12 +8,8 @@ import {
   get_tutor_subjects,
 } from "../../axios/tutor";
 import { create_chat } from "../../axios/chat";
-import { apiClient } from "../../axios/config";
 import { IoIosCheckmarkCircle, IoIosCloseCircle } from "react-icons/io";
 import {
-  FaCalendar,
-  FaComment,
-  FaPlayCircle,
   FaRegTimesCircle,
 } from "react-icons/fa";
 import { CiClock2 } from "react-icons/ci";
@@ -31,7 +27,6 @@ import { toast } from "react-toastify";
 import Actions from "../../components/common/Actions";
 import { monthFormatWithYYYY } from "../../constants/constants";
 import TutorScheduleModal from "../../components/tutor/TutorScheduleModal";
-import ScreenRecording from "../../components/common/ScreenRecording";
 import { useSelector } from "react-redux";
 import CenteredModal from "../../components/common/Modal";
 import StudentLayout from "../../layouts/StudentLayout";
@@ -41,13 +36,11 @@ import StarRating from "../../components/common/StarRating";
 const TutorProfile = () => {
   const videoRef = useRef(null);
   const params = useParams();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const location = useLocation();
   const studentId = localStorage.getItem("student_user_id");
-  const [data, setProfileData] = useState({});
   const [fetching, setFetching] = useState(true);
   const [activeTab, setActiveTab] = useState("bach");
-  const userRole = localStorage.getItem("user_role");
   const isStudentLoggedIn = location.pathname.split("/")[1] === "student";
   const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
   const [subjectsWithRates, setSubjectsWithRates] = useState([]);
@@ -57,7 +50,6 @@ const TutorProfile = () => {
   const { sessions } = useSelector((state) => state.tutorSessions);
   const [rating, setRating] = useState(0);
   const [totalPastLessons, setTotalPastLessons] = useState(0);
-  const [video, setVideo] = useState("");
 
   //   const { education } = useSelector((state) => state.edu);
   //   const { discount } = useSelector((state) => state.discount);
@@ -134,18 +126,19 @@ const TutorProfile = () => {
 
   // TODO: fix data.CHATID to getting chatid from reduc chats
   const handleChatClick = async () => {
-    if (data.ChatID) {
-      navigate(`/student/chat/${data.ChatID}`);
-    }
     if (!studentId)
       return toast.error("You need  to select 1 student from student list!");
-    else {
-      const result = await create_chat({
-        User1ID: studentId,
-        User2ID: data.AcademyId,
-      });
-      result?.[0]?.ChatID && navigate(`/student/chat/${result?.[0]?.ChatID}`);
-    }
+
+    // if (data.ChatID) {
+    //   navigate(`/student/chat/${data.ChatID}`);
+    // }
+    // else {
+    //   const result = await create_chat({
+    //     User1ID: studentId,
+    //     User2ID: data.AcademyId,
+    //   });
+    //   result?.[0]?.ChatID && navigate(`/student/chat/${result?.[0]?.ChatID}`);
+    // }
   };
 
   // useEffect(() => {
@@ -511,7 +504,7 @@ const TutorProfile = () => {
                   className="bg-white rounded p-4 d-flex flex-column"
                   style={{ gap: "15px" }}
                 >
-                  {!!data?.NativeLang?.length ? (
+                  {!!edu?.NativeLang?.length ? (
                     <div className="d-flex flex-column align-items-start">
                       <h5 className="m-0">Languages</h5>
                       <div className="d-flex align-items-center">
@@ -1086,7 +1079,7 @@ const TutorProfile = () => {
           <div className="h-100 m-auto">
             <div className="">
               <video
-                src={video}
+                src={tutor.video}
                 ref={videoRef}
                 className=" rounded-4  shadow-lg"
                 controls

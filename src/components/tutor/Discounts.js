@@ -58,6 +58,8 @@ const Discounts = () => {
   const [subject, setSubject] = useState("");
   const [codeUsed, setCodeUsed] = useState("new");
 
+
+  console.log("rendering")
   const fetchTutorRateRecord = () => {
     try {
       if (discount.AcademyId) {

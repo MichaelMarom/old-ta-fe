@@ -3,9 +3,9 @@ import TutorLayout from "../../layouts/TutorLayout";
 
 const Accounting = () => {
   return (
-    <TutorLayout  >
-      <AccountingComp />
-    </TutorLayout>
+    <AccountingComp />
+    // <TutorLayout  >
+    // </TutorLayout>
   );
 };
 

@@ -4,10 +4,10 @@ import TutorLayout from "../../layouts/TutorLayout";
 
 const TutorSetup = () => {
     return (
-        <TutorLayout>
-            {/* <TabInfoVideoToast video={VIDEO} /> */}
             <Setup />
-        </TutorLayout>
+        // <TutorLayout>
+        //     {/* <TabInfoVideoToast video={VIDEO} /> */}
+        // </TutorLayout>
     );
 }
 

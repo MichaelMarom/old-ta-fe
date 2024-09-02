@@ -5,10 +5,10 @@ import TabInfoVideoToast from '../../components/common/TabInfoVideoToast'
 
 const TutorIntro = () => {
     return (
-        <TutorLayout  >
-            {/* <TabInfoVideoToast video={VIDEO} /> */}
+        // {/* <TabInfoVideoToast video={VIDEO} /> */}
             <Intro />
-        </TutorLayout>
+        // <TutorLayout  >
+        // </TutorLayout>
     );
 }
 
