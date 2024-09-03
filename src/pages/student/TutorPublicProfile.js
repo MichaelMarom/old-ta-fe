@@ -204,7 +204,7 @@ const TutorProfile = () => {
       </h5>
     );
   return (
-    <StudentLayout>
+    <>
       <div
         style={{
           background: "white",
@@ -1103,7 +1103,7 @@ const TutorProfile = () => {
           <Actions saveDisabled={true} editDisabled={true} />
         )}
       </div>
-    </StudentLayout>
+    </>
   );
 };
 

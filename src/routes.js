@@ -242,13 +242,13 @@ const App = () => {
     <Suspense fallback={<Loading />}>
       <Routes>
         {/* Public Routes */}
-        <Route path="/collab" element={user.role === "student" || user.role === "tutor" ? <Collaboration /> : <Navigate to="/login" />} />
+        <Route path="/collab" element={(user.role === "student" || user.role === "tutor") ? <Collaboration /> : <Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
       
         {/* {user.role === "admin" || user.role === "student" && */}
-          <Route path="/student/*" element={<StudentLayout />}>
+          <Route path="/student/*" element={(user.role === "student" || user.role==="admin") ? <StudentLayout /> : <Navigate to="/login" />}>
             {rolePermissions['student']
               // .filter(route => route.role === 'student')
               .map(route => (
@@ -263,7 +263,7 @@ const App = () => {
 
         {/* Tutor Section */}
         {/* {user.role === "admin" || user.role === "tutor" && */}
-          <Route path="/tutor/*" element={<TutorLayout />}>
+          <Route path="/tutor/*" element={(user.role === "tutor" || user.role==="admin") ? <TutorLayout /> : <Navigate to="/login" />}>
             {rolePermissions['tutor']
               // .filter(route => route.user.role === 'tutor')
               .map(route => (
@@ -292,7 +292,7 @@ const App = () => {
         }
 
         {/* Fallback Route */}
-        <Route path="*" element={<div >Hi</div>} />
+        <Route path="*" element={<Navigate to="login" />} />
       </Routes>
     </Suspense>
   );

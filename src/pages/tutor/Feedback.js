@@ -242,7 +242,7 @@ const Feedback = () => {
   };
   return (
     <>
-      <TutorLayout>
+      <div>
         {fetching || saving ? (
           <Loading />
         ) : (
@@ -370,7 +370,7 @@ const Feedback = () => {
           </div>
         )}
         <Actions saveDisabled />
-      </TutorLayout>
+      </div>
     </>
   );
 };

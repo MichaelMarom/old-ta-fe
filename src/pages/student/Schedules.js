@@ -32,22 +32,6 @@ const Schedules = () => {
         }
     }, [student])
 
-    useEffect(() => {
-        const fetchEvents = async () => {
-            // setLoading(true)
-            // const data = await get_student_events(studentId);
-            // setLoading(false)
-            // console.log(data)
-            // if (!data?.response?.data) {
-            //     const reservedSlotsArray = data?.map(item => JSON.parse(item.reservedSlots)).flat();
-            //     const bookedSlotsArray = data?.map(item => JSON.parse(item.bookedSlots)).flat();
-            //     setReservedSlots(reservedSlotsArray);
-            //     setBookedSlots(bookedSlotsArray);
-            // }
-        }
-        fetchEvents();
-    }, [studentId, sessions])
-
     const handleEventClick = (event) => {
         setClickedSlot(event)
         const pastEvent = convertToDate(event.end).getTime() < (new Date()).getTime();
@@ -89,7 +73,7 @@ const Schedules = () => {
     if (loading)
         return <Loading />
     return (
-        <StudentLayout  >
+        <div  >
             <div>
                 <h4 className='text-center m-3'>Your Schedule</h4>
                 <div className='m-3 student-calender' style={{ height: "65vh" }}>
@@ -126,7 +110,7 @@ const Schedules = () => {
                 onClose={() => setIsModalOpen(false)}
             />
             <Actions saveDisabled />
-        </StudentLayout >
+        </div >
     );
 }
 

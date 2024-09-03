@@ -297,7 +297,7 @@ const Header = () => {
                 style={{ fontSize: "12px" }}
               >
                 <span style={{ marginRight: "5px" }}>
-                  <FaClock />
+                  <FaClock color="white" />
                 </span>
                 {showDate(moment().toDate(), wholeDateFormat)}
               </li>
@@ -308,7 +308,7 @@ const Header = () => {
               >
                 Signout
                 <span style={{ marginLeft: "5px" }}>
-                  <FaSignOutAlt />
+                  <FaSignOutAlt color="#e14c4c" />
                 </span>
               </li>
             </ul>
@@ -336,7 +336,7 @@ const Header = () => {
             //   user.role !== "admin"
             //     ? "none"
             //     : "auto",
-            width: "calc(100% - 300px)",
+            width: "calc(100% - 400px)",
             margin: "0 -10px",
             zIndex: 1,
           }}

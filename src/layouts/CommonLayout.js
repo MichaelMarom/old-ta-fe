@@ -3,21 +3,28 @@ import AdminLayout from './AdminLayout'
 import TutorLayout from './TutorLayout'
 import StudentLayout from './StudentLayout'
 import UnAuthorizeRoute from '../pages/UnAuthorizeRoute'
+import StudentHeader from './student/Header'
+import TutorHeader from './tutor/Header'
+import AdminHeader from './admin/Header'
 
 
 const CommonLayout = ({ role, children }) => {
 
     if (role === 'student')
         return (
-            <StudentLayout>{children}</StudentLayout>
+            <>
+                <StudentHeader />{children}
+            </>
         )
     else if (role === 'tutor')
         return (
-            <TutorLayout>{children}</TutorLayout>
+            <>
+                <TutorHeader />{children}</>
         )
     else if (role === 'admin')
         return (
-                <AdminLayout />
+            <>
+                <AdminHeader />Admin Cannot access Collaboration Tab</>
         )
     else return <UnAuthorizeRoute />
 }

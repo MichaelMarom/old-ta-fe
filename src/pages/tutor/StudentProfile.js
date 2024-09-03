@@ -46,7 +46,7 @@ const StudentProfile = () => {
     if (!tutor.AcademyId)
         return <div className='text-danger m-4'> Please Log in as Tutor to see Student Public Profile!</div>
     return (
-        <TutorLayout>
+        <>
             <div className='d-flex flex-column container justify-content-center align-items-center' style={{ gap: "20px" }}>
                 <div className='m-2'><b className='small'>{calcTime()}</b></div>
                 <div className='d-flex flex-column align-items-center'>
@@ -99,7 +99,7 @@ const StudentProfile = () => {
                     }
                 </div>
             </div>
-        </TutorLayout>
+        </>
     )
 }
 

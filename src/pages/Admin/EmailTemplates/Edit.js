@@ -7,6 +7,7 @@ import UserRichTextEditor from '../../../components/common/RichTextEditor/UserRi
 import { get_email_temp, save_email_temp, update_email_temp } from '../../../axios/admin';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { MandatoryFieldLabel } from '../../../components/tutor/TutorSetup';
 
 const Edit = () => {
     const [subject, setSubject] = useState('');
@@ -45,7 +46,7 @@ const Edit = () => {
                             style={{ gap: "5px" }}>
                             <h5> Update Email Template</h5>
 
-                            <Input value={subject} setValue={setSubject} label={"Enter Subject"} />
+                            <Input value={subject} setValue={setSubject} label={<MandatoryFieldLabel text={"Enter Subject"} />} />
 
                             <UserRichTextEditor
                                 onChange={(value) => setEmailText(value)}

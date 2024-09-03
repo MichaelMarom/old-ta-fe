@@ -3,9 +3,9 @@ import TutorLayout from "../../layouts/TutorLayout";
 
 const TermOfUse = () => {
   return (
-    <TutorLayout  >
-      <TermOfUseComp />
-    </TutorLayout>
+    <TermOfUseComp />
+    // <TutorLayout  >
+    // </TutorLayout>
   );
 };
 

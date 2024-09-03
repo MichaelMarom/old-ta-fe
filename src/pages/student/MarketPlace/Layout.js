@@ -34,14 +34,14 @@ const Layout = ({ children }) => {
   ];
 
   return (
-    <StudentLayout >
+    <div >
       <Tabs links={tabs} setActiveTab={setActiveTab}
         setActiveTabIndex={setActiveTabIndex}
         activeTab={activeTab}
         activeTabIndex={activeTabIndex}
       />
       {children}
-    </StudentLayout>
+    </div>
   )
 }
 

@@ -61,7 +61,7 @@ const Agency = () => {
     },
   ];
   return (
-    <TutorLayout>
+    <div>
       <div className="p-2">
         <div className=" mt-2 highlight">
           <p className="m-1">
@@ -127,7 +127,7 @@ const Agency = () => {
         isOpen={isOpen}
         onClose={onClose}
       />
-    </TutorLayout>
+    </div>
   );
 };
 

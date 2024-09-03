@@ -3,8 +3,8 @@ import StudentLayout from '../../layouts/StudentLayout';
 
 const Form = () => {
     return (
-        <StudentLayout>
-        </StudentLayout>
+        <div> Student Academy
+        </div>
     );
 }
 

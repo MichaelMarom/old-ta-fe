@@ -12,9 +12,13 @@ import { toast } from "react-toastify";
 import SubjectCard from "./SubjectCard";
 import Actions from "../../common/Actions";
 import Loading from "../../common/Loading";
-import { FaPlus, FaSearch } from "react-icons/fa";
+import TAButton from "../../common/TAButton";
+
+import { FaBook, FaChevronRight, FaPlus, FaSearch } from "react-icons/fa";
 import DebounceInput from "../../common/DebounceInput";
 import Pill from "../../common/Pill";
+
+import _ from "lodash"
 import SubMenu from "../../common/SubMenu";
 
 const Subjects = () => {
@@ -59,7 +63,8 @@ const Subjects = () => {
     get_rates(user_id, selectedFaculty)
       .then((result) => {
         if (!result?.response?.data) {
-          setSubjectsWithRates(result);
+          console.log(result)
+          setSubjectsWithRates(_.sortBy(result, 'subject'));
         }
         setLoadingSubs(false);
       })
@@ -81,14 +86,14 @@ const Subjects = () => {
           </option>
         );
       });
-      set_faculty(list);
+      set_faculty(_.sortBy(list, 'Faculty'));
       setNewSubjectFaculty(selectOptions);
     }
   };
-  
+
   useEffect(() => {
-      getFacultiesOption();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+    getFacultiesOption();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newSubjectFacultyData]);
 
   const checkRequestExist = async (e) => {
@@ -134,46 +139,56 @@ const Subjects = () => {
       });
   };
 
-
-  
   return (
     <>
-      <div className="" style={{ margin: "2px 30px 0 30px" }}>
+      <div className="" style={{ margin: "10px" }}>
         <div className=" d-flex flex-column">
-          <SubMenu
+          {/* <SubMenu
             faculty={faculty}
             selectedFaculty={selectedFaculty}
             setSelectedFaculty={setSelectedFaculty}
-          />
+          /> */}
+
+
           <div className="d-flex justify-content-around">
             <div
-              className="highlight d-flex flex-column align-items-center m-0"
-              style={{ width: "20%" }}
+              className=" d-flex flex-column align-items-center m-0"
             >
-              <p>
+              <div className="p-3 rounded-3" style={{ width: '100%', height: "calc(100vh - 170px)", overflowY: "auto", backgroundColor: 'rgb(33 47 61)', color: 'white' }}>
+                <h4 className="text-light text-center">{faculty.length} Faculties</h4>
+                <TAButton handleClick={() => setShowAddNewSubjModal(true)} style={{ width: "100%", marginLeft: "0", marginRight: "0" }} type="button" buttonText={"Search/Add New Subject"} />
+
+                <ul className="list-group">
+                  {faculty.map(({ Id, Faculty }) => (
+                    <li
+                      key={Id}
+                      id={Id === selectedFaculty ? "tutor-tab-header-list-active1"
+                        : ""}
+                      className="list-group-item list-group-item-action navitem-li navitem "
+                      style={{ backgroundColor: 'rgb(33 47 61)', color:  Id === selectedFaculty ? "lightgreen" :'white',
+                        padding:"10px" }}
+                      onClick={() => setSelectedFaculty(Id)}
+                    >
+                      <FaBook className="me-2" /> {Faculty}
+                      <FaChevronRight className="float-end" style={{marginTop:"5px"}} />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              {/* <p>
                 Select your faculty above, then from the list below click on the
                 'Edit' button for each subject that you teach (you can select
                 more than one). Type your rate, select the school grade(s) you
                 tutor for this subject and SAVE. Didn't find your subject, and
                 want to add it? Submit your request that match your expertise by
                 clicking here:
-              </p>
-              <Button
-                className="action-btn btn text-center w-100"
-                type="button"
-                handleClick={() => setShowAddNewSubjModal(true)}
-              >
-                <div className="button__content">
-                  <div className="button__icon">
-                    <FaPlus />
-                  </div>
-                  <p className="button__text">Search/Add New Subject</p>
-                </div>
-              </Button>
+              </p> */}
             </div>
 
             {loadingSubs ? (
-              <Loading height="57vh" />
+              <div style={{ width: "78%" }}>
+                <Loading height="calc(100vh - 170px)" />
+              </div>
             ) : (
               <div style={{ width: "78%" }}>
                 <div
@@ -193,7 +208,7 @@ const Subjects = () => {
                 </div>
                 <div
                   style={{
-                    height: "calc(100vh - 250px)",
+                    height: "calc(100vh - 200px)",
                     overflowY: "auto",
                     overflowX: "hidden",
                     position: "relative",
@@ -227,8 +242,8 @@ const Subjects = () => {
         handleClose={handleModalClose}
         title={
           !subjectExistInFaculties.length &&
-          phase !== "search" &&
-          !!newSubjectData.length
+            phase !== "search" &&
+            !!newSubjectData.length
             ? "Add New Suggested Subject"
             : "To Search If your subject exist , please type it in below field"
         }

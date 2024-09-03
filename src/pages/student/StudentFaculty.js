@@ -4,9 +4,9 @@ import StudentLayout from "../../layouts/StudentLayout";
 
 const StudentFaculty = () => {
     return (
-        <StudentLayout  >
-            <StudentFaculties />
-        </StudentLayout>
+        <StudentFaculties />
+        // <StudentLayout  >
+        // </StudentLayout>
     );
 }
 

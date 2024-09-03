@@ -62,7 +62,7 @@ const StudentIntro = () => {
   if (fetching)
     return <Loading />
   return (
-    <StudentLayout  >
+    <div  >
       <form onSubmit={handleSave}>
         <div className='px-4 mt-4 student-intro'>
           <RichTextEditor
@@ -82,7 +82,7 @@ const StudentIntro = () => {
           unSavedChanges={unSavedChanges}
         />
       </form>
-    </StudentLayout>
+    </div>
   )
 }
 

@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import moment from "moment";
 import Avatar from "../common/Avatar";
+import { FaBook, FaClock, FaUserCircle } from "react-icons/fa";
 
 const StudentCalenderScheduling = () => {
   const dispatch = useDispatch();
@@ -159,7 +160,7 @@ const StudentCalenderScheduling = () => {
             >
               <div className="d-flex col-3 card m-2">
                 <div className="c d-flex flex-column">
-                  <div className="d-inline  card-title ">
+                  {/* <div className="d-inline  card-title ">
                     <div className="d-flex align-items-center gap-3">
                       <h5> Tutor:</h5>
                       <div className="d-flex align-items-center"> <Avatar avatarSrc={selectedTutor.photo} showOnlineStatus size="30" />
@@ -170,7 +171,36 @@ const StudentCalenderScheduling = () => {
                     <div className="d-flex align-items-center gap-3">  <h5> Subject:</h5><p> {selectedTutor.subject}</p></div>
                     <div className="card-subtitle d-inline ml-2 card-text d-flex align-items-center gap-3">
                       <h5> Time:</h5><p> {tutorTime}</p>
-                    </div> </div>
+                    </div>
+                  </div> */}
+                  <div
+                    key={selectedTutor.id}
+                    className="d-flex align-items-center p-3 rounded"
+                    style={{
+                      backgroundColor: "white",
+                      color: 'black',
+                      boxShadow:"gray 6px 3px 10px 1px"                    }}
+                  >
+                    {/* Tutor Avatar */}
+                    <div className="me-3">
+                      <Avatar avatarSrc={selectedTutor.photo} showOnlineStatus size="60" positionInPixle={6} />
+                    </div>
+
+                    {/* Tutor Info */}
+                    <div className="flex-grow-1">
+                      <h5 className="mb-1"> {capitalizeFirstLetter(
+                        formatName(selectedTutor.firstName, selectedTutor.lastName)
+                      )}</h5>
+                      <p className="mb-1">
+                        <FaBook className="me-2" />
+                        {selectedTutor.subject}
+                      </p>
+                      <p className="mb-0">
+                        <FaClock className="me-2" />
+                        {tutorTime}
+                      </p>
+                    </div>
+                  </div>
 
                 </div>
               </div>
@@ -186,7 +216,7 @@ const StudentCalenderScheduling = () => {
                     ? `+${calculateTimeDifference()}`
                     : calculateTimeDifference()}
                 </h5>
-                <h6>Greenwich UTC: {moment().utc().format("hh:mm a")}</h6>
+                <h6>UTC: {moment().utc().format("hh:mm a")}</h6>
               </div>
               <div className="d-flex col-3 card m-2">
                 <div className="card-body">

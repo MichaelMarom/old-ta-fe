@@ -85,7 +85,7 @@ const Header = () => {
           style={{
             background: "inherit",
             pointerEvents: "auto",
-            width: "calc(100% - 300px)",
+            width: "calc(100% - 400px)",
             margin: "0 50px",
           }}
         >

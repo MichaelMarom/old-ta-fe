@@ -4,10 +4,10 @@ import Actions from '../../components/common/Actions';
 
 const StudentProfile = () => {
     return (
-        <StudentLayout  >
+        <  >
             <StudentProfileCnt />
             <Actions saveDisabled />
-        </StudentLayout>
+        </>
     );
 }
 

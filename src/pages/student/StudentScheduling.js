@@ -5,9 +5,9 @@ import '../../styles/common.css'
 
 const StudentScheduling = () => {
   return (
-    <StudentLayout   >
-      <StudentCalenderScheduling />
-    </StudentLayout>
+    <StudentCalenderScheduling />
+    // <StudentLayout   >
+    // </StudentLayout>
   )
 }
 

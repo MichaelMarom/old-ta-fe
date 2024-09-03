@@ -94,7 +94,7 @@ const SingleTutorFeedbacks = () => {
     const localizer = momentLocalizer(moment);
 
     return (
-        <StudentLayout  >
+        <div  >
             <div style={{
                 width: clickedSlot.id ? "75%" : "100%",
                 float: clickedSlot.id ? "right" : "left"
@@ -133,7 +133,7 @@ const SingleTutorFeedbacks = () => {
                 onClose={() => handleModalClose()}
                 clickedSlot={clickedSlot}
             />
-        </StudentLayout>
+        </div>
     )
 }
 

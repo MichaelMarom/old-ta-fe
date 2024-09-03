@@ -266,7 +266,7 @@ const Feedback = () => {
 
   if (loading) return <Loading />;
   return (
-    <StudentLayout>
+    <div>
       <div className="container mt-1">
         <div className="py-2 row">
           <div className={` ${selectedEvent.id ? "col-md-12" : "col-md-12"}`}>
@@ -351,7 +351,7 @@ const Feedback = () => {
       </div>
 
       <Actions saveDisabled={true} />
-    </StudentLayout>
+    </div>
   );
 };
 

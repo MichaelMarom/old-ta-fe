@@ -5,9 +5,9 @@ import StudentLayout from "../../layouts/StudentLayout";
 const StudentSetup = () => {
 
     return (
-        <StudentLayout  >
-            <StudentSetupComp />
-        </StudentLayout>
+        <StudentSetupComp />
+        // <StudentLayout  >
+        // </StudentLayout>
     );
 }
 

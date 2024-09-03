@@ -5,12 +5,12 @@ import TutorLayout from "../../layouts/TutorLayout";
 
 const Scheduling = () => {
   return (
-    <TutorLayout  >
+    <  >
       {/* <TabInfoVideoToast video={VIDEO} /> */}
       <SchedulingComp />
       <Actions saveDisabled={true}
         editDisabled={true} />
-    </TutorLayout>
+    </>
   );
 };
 

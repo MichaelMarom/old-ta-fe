@@ -89,7 +89,7 @@ const TermOfUse = () => {
     if (fetching)
         return <Loading />
     return (
-        <StudentLayout  >
+        <  >
 
             <form onSubmit={user.role === 'admin' ? handleSave : handleSaveAgreement}>
                 <div className="d-block p-5">
@@ -130,7 +130,7 @@ const TermOfUse = () => {
                     nextDisabled={!student.AgreementDate}
                 />
             </form>
-        </StudentLayout>
+        </>
     )
 }
 

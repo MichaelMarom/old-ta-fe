@@ -3,9 +3,9 @@ import TutorLayout from "../../layouts/TutorLayout";
 
 const MyStudents = () => {
   return (
-    <TutorLayout  >
-      <MyStudentsComp />
-    </TutorLayout>
+    <MyStudentsComp />
+    // <TutorLayout  >
+    // </TutorLayout>
   );
 };
 

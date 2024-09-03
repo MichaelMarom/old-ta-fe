@@ -4,12 +4,12 @@ import TutorLayout from "../../layouts/TutorLayout";
 
 const Subjects = () => {
   return (
-    <TutorLayout  >
-      {/* <TabInfoVideoToast
-      video={VIDEO} /> */}
+    // {/* <TabInfoVideoToast
+    //   video={VIDEO} /> */}
 
       <SubjectsComp />
-    </TutorLayout>
+    //   <TutorLayout  >
+    // </TutorLayout>
   );
 };
 

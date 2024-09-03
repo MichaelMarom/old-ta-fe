@@ -3,9 +3,9 @@ import StudentLayout from "../../layouts/StudentLayout";
 
 const StudentAccountings = () => {
     return (
-        <StudentLayout  >
-            <StudentAccounting />
-        </StudentLayout>
+        <StudentAccounting />
+        // <StudentLayout  >
+        // </StudentLayout>
     );
 }
 

@@ -51,7 +51,7 @@ const List = () => {
   };
 
   return (
-    <TutorLayout>
+    <div>
       <div className="container" style={{ height: "calc(100vh - 150px)" }}>
         <div className=" mt-2 highlight">
           <p className="m-1 fw-bold">
@@ -138,7 +138,7 @@ const List = () => {
         onCreate={onCreateAgency}
       />
       <Actions saveDisabled />
-    </TutorLayout>
+    </div>
   );
 };
 

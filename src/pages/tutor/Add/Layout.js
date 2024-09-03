@@ -33,7 +33,7 @@ const Layout = ({ children }) => {
     ];
 
     return (
-        <TutorLayout  >
+        <  >
             {/* <TabInfoVideoToast
                 video={VIDEO} /> */}
 
@@ -43,7 +43,7 @@ const Layout = ({ children }) => {
                 activeTabIndex={activeTabIndex}
             />
             {children}
-        </TutorLayout>
+        </>
     )
 }
 
