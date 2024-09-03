@@ -179,7 +179,8 @@ const StudentCalenderScheduling = () => {
                     style={{
                       backgroundColor: "white",
                       color: 'black',
-                      boxShadow:"gray 6px 3px 10px 1px"                    }}
+                      boxShadow: "gray 6px 3px 10px 1px"
+                    }}
                   >
                     {/* Tutor Avatar */}
                     <div className="me-3">
