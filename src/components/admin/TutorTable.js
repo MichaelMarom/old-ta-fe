@@ -82,9 +82,9 @@ const TutorTable = () => {
       });
   }, [status]);
 
-  useEffect(() => {
-    // get_user_list().then(data => console.log(data))
-  }, [])
+  // useEffect(() => {
+  //   // get_user_list().then(data => console.log(data))
+  // }, [])
 
   let handleStatusChange = async (id, status, currentStatus, phone) => {
     if (currentStatus === "pending" || currentStatus === 'closed')

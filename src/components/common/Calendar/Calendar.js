@@ -181,7 +181,6 @@ const ShowCalendar = ({
         selectedTutor.academyId
       );
 
-      console.log(response);
       if (!!response && !response?.response?.data) {
         dispatch(setLessons(response));
       }

@@ -9,7 +9,6 @@ export const PostponeModal = ({ isOpen, onClose }) => {
         // Extracting the date and hours part, then appending ':00'
         const newDateTime = e.target.value.split('T')[0] + 'T' + e.target.value.split('T')[1].split(':')[0] + ':00';
         setSelectedDateTime(newDateTime);
-        console.log(newDateTime);
     };
 
     return (

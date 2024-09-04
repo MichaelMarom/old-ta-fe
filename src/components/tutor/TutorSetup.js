@@ -114,7 +114,7 @@ const TutorSetup = () => {
   const [nameFieldsDisabled, setNameFieldsDisabled] = useState(false);
   let [isRecording, setIsRecording] = useState(false);
   const toastId = "pending-status-toast";
-  let toastRef =useRef()
+  let toastRef = useRef()
 
   const nameValidations = (value, field) => {
     if (!/^[a-zA-Z]+$/.test(value)) {
@@ -129,7 +129,7 @@ const TutorSetup = () => {
   useEffect(() => {
     if (user.role && tutor.AcademyId && tutor.Status === "pending") {
       if (!toast.isActive(toastId)) {
-       toastRef.current = toast.success(
+        toastRef.current = toast.success(
           `Please note that your application is currently in 'pending' status. 
           Use the 'Next' or 'Back' buttons at the page footer to navigate between pages. 
           The menu tabs will become active once you complete all mandatory fields as marked by red blinking text.`,
@@ -145,7 +145,7 @@ const TutorSetup = () => {
       }
     }
 
-    
+
     return () => {
       if (toastRef.current) {
         toast.dismiss(toastRef.current);
@@ -526,12 +526,13 @@ const TutorSetup = () => {
       return toast.error(
         `Please setup Firstname, Lastname and MiddleName(optional) first!`
       );
-    const file = e.target.files[0];
     setVideoError(false);
 
-toast.warning(`Size is ${file.size/1024} KB`)
-    if (file.size > 52428800)
-      return toast.warning("Video size should be less than 50MB");
+    const file = e.target.files[0];
+
+
+    // if (file.size > 52428800)
+    //   return toast.warning("Video size should be less than 50MB");
     if (!file?.type || file.type.split("/")?.[0] !== "video") {
       alert("Only Video Can Be Uploaded To This Field");
     } else {
@@ -539,21 +540,37 @@ toast.warning(`Size is ${file.size/1024} KB`)
       let reader = new FileReader({});
 
       reader.onload = (result) => {
-        set_video(reader.result);
+        const videoElement = document.createElement('video');
+        videoElement.src = reader.result;
+
+        videoElement.onloadedmetadata = async () => {
+          // toast.warning(`Size is ${file.size / 1024} KB and duration ${videoElement.duration}`)
+
+          if (videoElement.duration <= 50.59) {
+
+            set_video(reader.result);
+            const { data } = await uploadVideoToAzure(
+              file,
+              tutor.AcademyId,
+              selectedVideoOption
+            );
+            updateTutorSetup(tutor.AcademyId, { Video: data.url });
+            toast.success("Video Succesfully Uploaded!");
+            dispatch(setTutor({ ...tutor, Video: data.url }));
+            console.log(data.url);
+            setVideoUploading(false);
+          }
+          else {
+            videoElement.src =null;
+            set_video(tutor.Video)
+            toast.error("Video duration should be less than 1 minute")
+
+          }
+          setVideoUploading(false);
+        }
       };
       reader.readAsDataURL(file);
-
-      const { data } = await uploadVideoToAzure(
-        file,
-        tutor.AcademyId,
-        selectedVideoOption
-      );
-      updateTutorSetup(tutor.AcademyId, { Video: data.url });
-      toast.success("Video Succesfully Uploaded!");
-      dispatch(setTutor({ ...tutor, Video: data.url }));
-      console.log(data.url);
-      setVideoUploading(false);
-    }
+    };
   };
 
   useEffect(() => {
@@ -623,8 +640,8 @@ toast.warning(`Size is ${file.size/1024} KB`)
               >
                 <h6
                   className={`text-start m-0 ${mandatoryFields.find((item) => item.name === "photo").filled
-                      ? ""
-                      : "blink_me"
+                    ? ""
+                    : "blink_me"
                     }`}
                   style={{ whiteSpace: "nowrap" }}
                 >
@@ -893,8 +910,8 @@ toast.warning(`Size is ${file.size/1024} KB`)
                     onBlur={() => {
                       if (fname.length && lname.length) {
                         const screenName = `${capitalizeFirstLetter(fname)} ${mname.length
-                            ? `${capitalizeFirstLetter(mname?.[0])}.`
-                            : ``
+                          ? `${capitalizeFirstLetter(mname?.[0])}.`
+                          : ``
                           } ${capitalizeFirstLetter(lname?.[0])}.`;
                         toast(
                           `You screen name is; ${screenName} which we use online. We do not disclose your private information online. 
@@ -1245,8 +1262,8 @@ toast.warning(`Size is ${file.size/1024} KB`)
               >
                 <h6
                   className={`${!!video.length && !videoError
-                      ? ""
-                      : "blinking-button text-success"
+                    ? ""
+                    : "blinking-button text-success"
                     }`}
                 >
                   Elective Tutor's introduction video
@@ -1273,6 +1290,7 @@ toast.warning(`Size is ${file.size/1024} KB`)
                   !videoError ? (
                   <div className="d-flex justify-content-center flex-column m-auto align-items-center w-100 h-100">
                     <video
+                      controlsList="nodownload noremoteplayback"
                       src={video}
                       preload="auto"
                       onError={() => setVideoError(true)}

@@ -17,7 +17,6 @@ const Input = ({
   errors={},
   ...rest
 }) => {
-  console.log(errors);
   return (
     <label className="input w-100">
       <input

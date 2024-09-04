@@ -8,6 +8,7 @@ import Tooltip from '../../common/ToolTip'
 import { FaRegCirclePlay } from 'react-icons/fa6'
 import { FaRegStopCircle } from 'react-icons/fa'
 import { uploadVideoToAzure } from '../../../utils/uploadVideo'
+import { toast } from 'react-toastify'
 
 const WebcamCapture = ({ user_id, record_duration }) => {
   const webcamRef = useRef(null)
@@ -31,7 +32,7 @@ const WebcamCapture = ({ user_id, record_duration }) => {
 
   const logError = (e) => {
     setError(e.message)
-    // toast.error(e.message)
+    toast.error(e.message)
     console.log(e)
   }
 
@@ -359,7 +360,7 @@ const WebcamCapture = ({ user_id, record_duration }) => {
       )}
 
       <div className={`preview h-100 ${blob ? 'show' : 'hide'}`}>
-        <video ref={previewRef} playsInline onClick={handlePreviewPlayPause} controls loop />
+        <video  controlsList="nodownload noremoteplayback"  ref={previewRef} playsInline onClick={handlePreviewPlayPause} controls loop />
       </div>
     </div>
   )

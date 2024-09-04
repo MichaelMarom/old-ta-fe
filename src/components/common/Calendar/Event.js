@@ -48,7 +48,6 @@ function CustomEvent({
       const inputTime = moment(event.createdAt);
       const diffInMinutes = currentTime.diff(inputTime, "minutes");
       //5 min extra after expire
-      console.log(event, convertToDate(event.createdAt).toLocaleString());
       if (diffInMinutes >= 65 && event.type === "reserved") {
         // await delete_student_lesson(event.id)
         dispatch(deleteStudentLesson(event))

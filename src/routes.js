@@ -236,8 +236,6 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log(user.role)
-
   return (
     <Suspense fallback={<Loading />}>
       <Routes>

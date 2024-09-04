@@ -285,7 +285,6 @@ const Actions = ({
   const isBackTabExist = currentTabInfo?.back;
 
   const onNext = () => {
-    // console.log(next)
     currentTabInfo.withNextRolePrefix
       ? navigate(`/${user.role}/${currentTabInfo.next}`)
       : navigate(`/${currentTabInfo.next}`);

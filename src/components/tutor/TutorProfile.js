@@ -400,6 +400,7 @@ console.log(data)
               <div className="" style={{ paddingRight: "20px" }}>
                 <video
                   loop
+                  controlsList="nodownload noremoteplayback" 
                   src={data.Video}
                   onClick={() => {
                     if (videoRef.current) {
@@ -1010,6 +1011,7 @@ console.log(data)
         <div className="h-100 m-auto">
           <div className="">
             <video
+             controlsList="nodownload noremoteplayback" 
               src={data.Video}
               ref={videoRef}
               className=" rounded-4  shadow-lg"

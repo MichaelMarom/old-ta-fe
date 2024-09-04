@@ -83,21 +83,7 @@ export const filterOtherStudentAndTutorSession = (
       slot.studentId === (studentId ? studentId : student.AcademyId) &&
       slot.tutorId === tutorId
   );
-  console.log(
-    reservedSlots,
-    reservedSlots.length,
-    "orig rese",
-    bookedSlots.length,
-    "orig book",
-    updatedReservedSlots.length,
-    "updat res",
-    updatedBookedSlots.length,
-    "upda book",
-    tutorId,
-    "tutodi id",
-    studentId ? studentId : student.AcademyId,
-    "studentIS"
-  );
+ 
   return {
     reservedSlots: tutorId ? updatedReservedSlots : reservedSlots,
     bookedSlots: tutorId ? updatedBookedSlots : bookedSlots,

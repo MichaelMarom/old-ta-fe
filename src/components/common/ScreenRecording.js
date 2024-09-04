@@ -8,10 +8,8 @@ const ScreenRecording = ({ onSessionEnd }) => {
     const getSelectedOption = (mediaStream) => {
         const isFirefox = typeof InstallTrigger !== 'undefined';
         const isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
-        console.log(window, isChrome, isFirefox)
         const videoTrack = mediaStream.getVideoTracks()[0];
         if (isFirefox) {
-            console.log(videoTrack, 'firefpx')
             if (videoTrack.label === "Primary Monitor") {
                 return true;
             } else {
@@ -19,7 +17,6 @@ const ScreenRecording = ({ onSessionEnd }) => {
             }
         } else if (isChrome) {
             const videoSetting = videoTrack.getSettings();
-            console.log(videoSetting, 'chrome')
 
             if (videoSetting && videoSetting.displaySurface !== "monitor") {
                 return false;
@@ -37,7 +34,6 @@ const ScreenRecording = ({ onSessionEnd }) => {
                     audio: false,
                 });
 
-                console.log(getSelectedOption(stream))
                 const recorder = new MediaRecorder(stream);
                 setMediaRecorder(recorder);
 
@@ -81,7 +77,7 @@ const ScreenRecording = ({ onSessionEnd }) => {
     return (
         <div>
             <p>{status}</p>
-            {mediaBlobUrl && <video style={{ width: "200px", height: "200px" }} src={mediaBlobUrl} controls autoPlay loop />}
+            {mediaBlobUrl && <video  controlsList="nodownload noremoteplayback"  style={{ width: "200px", height: "200px" }} src={mediaBlobUrl} controls autoPlay loop />}
         </div>
     );
 };

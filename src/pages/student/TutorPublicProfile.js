@@ -462,6 +462,7 @@ const TutorProfile = () => {
               <div className=" h-100">
                 <div className="" style={{ paddingRight: "20px" }}>
                   <video
+                   controlsList="nodownload noremoteplayback" 
                     loop
                     src={tutor.Video}
                     onClick={() => {
@@ -1079,6 +1080,7 @@ const TutorProfile = () => {
           <div className="h-100 m-auto">
             <div className="">
               <video
+               controlsList="nodownload noremoteplayback" 
                 src={tutor.video}
                 ref={videoRef}
                 className=" rounded-4  shadow-lg"

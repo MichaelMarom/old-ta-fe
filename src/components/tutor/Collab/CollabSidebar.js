@@ -404,7 +404,7 @@ const CollabSidebar = ({
 
         {allowStreaming ?
           <>
-            <video className="tutor-video-tab"></video>
+            <video className="tutor-video-tab"  controlsList="nodownload noremoteplayback" ></video>
             <ul>
               <li
                 className="video-size"

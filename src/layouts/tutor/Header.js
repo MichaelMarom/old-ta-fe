@@ -380,7 +380,7 @@ const Header = () => {
                       //     : "auto",
                     }}
                   >
-                    <h5 className="m-0 d-flex gap-2">
+                    <h5 className="m-0 d-flex gap-2" style={{fontSize:"14px"}}>
                       {!!missingFields.find(
                         (field) => field.tab === tab.name
                       ) && (

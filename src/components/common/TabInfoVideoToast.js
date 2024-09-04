@@ -43,7 +43,7 @@ const TabInfoVideoToast = ({ video, iframeVideo = false, isOpen, setIsOpen }) =>
                                 src={`${video}?rel=0`}
                                 frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                            : <video id="tabvideo" controls style={{ width: "-webkit-fill-available" }}>
+                            : <video  controlsList="nodownload noremoteplayback"  id="tabvideo" controls style={{ width: "-webkit-fill-available" }}>
                                 <source src={video} type="video/mp4"></source>
                             </video>
                         }
