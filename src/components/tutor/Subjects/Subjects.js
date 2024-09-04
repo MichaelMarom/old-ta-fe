@@ -29,7 +29,7 @@ const Subjects = () => {
   let [newSubjectReasonData, setNewSubjectReasonData] = useState("");
   const [showAddNewSubjModal, setShowAddNewSubjModal] = useState(false);
   const [newSubjRequestChecking, setNewSubjReqChecking] = useState(false);
-  const [selectedFaculty, setSelectedFaculty] = useState(1);
+  const [selectedFaculty, setSelectedFaculty] = useState(36);
   const [subjectExistInFaculties, setSubjectInFaculties] = useState([]);
   let [faculty, set_faculty] = useState([]);
   const [subjectsWithRates, setSubjectsWithRates] = useState([]);

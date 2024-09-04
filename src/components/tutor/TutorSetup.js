@@ -561,7 +561,7 @@ const TutorSetup = () => {
             setVideoUploading(false);
           }
           else {
-            videoElement.src =null;
+            videoElement.src = null;
             set_video(tutor.Video)
             toast.error("Video duration should be less than 1 minute")
 
@@ -620,13 +620,16 @@ const TutorSetup = () => {
           }}
         >
           <div className="highlight w-100 m-0 justify-content-start text-sm">
-            <span
-              className="text-danger"
-              style={{ fontSize: "20px", fontWeight: "bold" }}
-            >
-              *
-            </span>{" "}
-            = Mandatory Fields
+            <p className="text-danger">{tutor.StatusReason}</p>
+            <p>
+              <span
+                className="text-danger"
+                style={{ fontSize: "20px", fontWeight: "bold" }}
+              >
+                *
+              </span>{" "}
+              = Mandatory Fields</p>
+
           </div>
 
           <div className="d-flex flex-column">

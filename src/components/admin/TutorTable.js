@@ -9,7 +9,8 @@ import { get_role_count_by_status } from "../../axios/admin";
 import Avatar from "../common/Avatar";
 import CertificateModal from "./CertificateModal";
 import DegreeModal from "./DegreeModal";
-import { getDoc } from "../../axios/tutor";
+import { getDoc, updateTutorSetup } from "../../axios/tutor";
+import StatusReason from "./StatusReason";
 
 const TutorTable = () => {
   let [data, set_data] = useState([]);
@@ -20,6 +21,47 @@ const TutorTable = () => {
   const [openCertModal, setOpenCertModal] = useState(false);
   const [docUrl, setDocUrl] = useState('');
   const [statusCount, setStatusCount] = useState([]);
+  const [statusReason, setStatusReason] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState({});
+  const [selectedStatus, setSelectedStatus] = useState("");
+
+
+  const handleReasonStatus = (user, status) => {
+    setModalOpen(true);
+    setSelectedUser(user)
+    console.log(user, status)
+    setSelectedStatus(status)
+  }
+
+  const handleProceed = async (e) => {
+    e.preventDefault()
+    setModalOpen(false);
+    setSelectedUser({})
+    setSelectedStatus("")
+    setUpdatingStatus(true);
+
+    let response = selectedUser.AcademyId && await updateTutorSetup(selectedUser.AcademyId, { Status: selectedStatus, StatusReason: statusReason });
+    setStatusReason("")
+
+    // !!phone && !!phone.startsWith("+1") && await send_sms({
+    //   message: `Your account is currently in "${status}" state.`,
+    //   numbers: [phone.replace("+", "")],
+    //   id
+    // })
+
+    setStatus(selectedStatus)
+    const result = await get_tutor_data(status);
+    get_role_count_by_status().then(
+      (data) => !data?.response?.data && setStatusCount(data)
+    );
+    if (!result?.response?.data) {
+      set_data(result);
+      setUpdatingStatus(false);
+    }
+  }
+
+
   const COLUMNS = [
     {
       Header: "Sr#",
@@ -86,23 +128,30 @@ const TutorTable = () => {
   //   // get_user_list().then(data => console.log(data))
   // }, [])
 
-  let handleStatusChange = async (id, status, currentStatus, phone) => {
+  let handleStatusChange = async (item, status, currentStatus, phone) => {
     if (currentStatus === "pending" || currentStatus === 'closed')
       return toast.warning(
         `You cannot change status of "${currentStatus}" users!`
       );
     if (currentStatus === status)
       return toast.warning(`You already on "${status}" Status`);
+
+    if (status === "suspended" || status === "disapproved" || status === "closed") {
+      return handleReasonStatus(item, status)
+    }
+
     setUpdatingStatus(true);
-    let response = await set_tutor_status(id, status);
+ await updateTutorSetup(item.AcademyId, { Status: status, StatusReason: "" });
+
+
+
     !!phone && !!phone.startsWith("+1") && await send_sms({
       message: `Your account is currently in "${status}" state.`,
       numbers: [phone.replace("+", "")],
-      id
+      id: item.Academy
     })
 
 
-    if (response.bool) {
       setStatus(status)
       const result = await get_tutor_data(status);
       get_role_count_by_status().then(
@@ -112,10 +161,6 @@ const TutorTable = () => {
         set_data(result);
         setUpdatingStatus(false);
       }
-    } else {
-      toast.error(response.mssg);
-      setUpdatingStatus(false);
-    }
   };
 
   let redirect_to_tutor_setup = (tutor_user_id, screenName) => {
@@ -304,7 +349,7 @@ const TutorTable = () => {
                     <select value={item.Status}
                       onChange={(e) =>
                         handleStatusChange(
-                          item.AcademyId,
+                          item,
                           e.target.value,
                           item.Status,
                           item.CellPhone
@@ -351,15 +396,17 @@ const TutorTable = () => {
                 <td data-src={null}>{null}</td>
                 <td data-src={item.IdVerified}>{item.IdVerified}</td>
                 <td className="p-1">
-                  <button className="m-0 mb-1 w-100 btn btn-success" onClick={() =>{
-                    getDoc("degree",item.AcademyId).then((res=>setDocUrl(res?.[0]?.DegFileName)))
-                    setOpenDegModal(true)}}>
+                  <button className="m-0 mb-1 w-100 btn btn-success" onClick={() => {
+                    getDoc("degree", item.AcademyId).then((res => setDocUrl(res?.[0]?.DegFileName)))
+                    setOpenDegModal(true)
+                  }}>
                     View Degree
                   </button>
-                  <button className="btn m-0 btn-primary w-100" onClick={() =>{
-                    getDoc("certificate",item.AcademyId).then((res=>setDocUrl(res?.[0]?.CertFileName)))
-                    
-                    setOpenCertModal(true)}}>
+                  <button className="btn m-0 btn-primary w-100" onClick={() => {
+                    getDoc("certificate", item.AcademyId).then((res => setDocUrl(res?.[0]?.CertFileName)))
+
+                    setOpenCertModal(true)
+                  }}>
                     View Certificate
                   </button>
 
@@ -373,6 +420,14 @@ const TutorTable = () => {
         <div className="text-danger"> No record Found!</div>
       )}
 
+      <StatusReason open={modalOpen} status={selectedStatus} user={selectedUser}
+        handleProceed={handleProceed}
+        onClose={() => {
+          setModalOpen(false)
+          setSelectedStatus("")
+          setSelectedUser({})
+          setStatusReason("")
+        }} statusReason={statusReason} setStatusReason={setStatusReason} />
       <CertificateModal open={openCertModal} docUrl={docUrl} onClose={() => setOpenCertModal(false)} />
       <DegreeModal open={openDegModal} docUrl={docUrl} onClose={() => setOpenDegModal(false)} />
     </div>

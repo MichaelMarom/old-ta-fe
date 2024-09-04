@@ -51,7 +51,7 @@ const TutorLayout = ({ children }) => {
         }
     }, [currentSession.end]);
 
-    if (user.role !== 'admin' && (tutor.Status === 'closed' || tutor.Status === 'disapproved'))
+    if (user.role !== 'admin' && (tutor.Status === 'closed'))
         return <div className='text-danger'>Your Account is Closed or Suspended. Please contact adminitrator.</div>
     if (user.role === 'admin' && !localStorage.getItem('tutor_user_id'))
         return <div className='text-danger'>Please Select Tutor  From Tutor-Table to view tutor records</div>

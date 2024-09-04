@@ -43,17 +43,15 @@ export let get_tutor_new_subject = async () => {
   }
 };
 
-export let get_tutor_data = (status) => {
-  return new Promise((resolve, reject) => {
-    apiClient
+export let get_tutor_data = async (status) => {
+  try {
+    const { data } = await apiClient
       .get("/admin/tutor-data", { params: { status } })
-      .then((result) => {
-        resolve(result.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
+    return data
+  }
+  catch (err) {
+    showErrorToast(err);
+  }
 };
 
 export let get_role_count_by_status = async (role) => {
