@@ -546,7 +546,7 @@ const TutorSetup = () => {
         videoElement.onloadedmetadata = async () => {
           // toast.warning(`Size is ${file.size / 1024} KB and duration ${videoElement.duration}`)
 
-          if (videoElement.duration <= 50.59) {
+          if (videoElement.duration <= 59.59) {
 
             set_video(reader.result);
             const { data } = await uploadVideoToAzure(
