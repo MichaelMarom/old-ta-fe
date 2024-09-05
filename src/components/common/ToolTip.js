@@ -55,6 +55,7 @@ const Tooltip = ({
               fontWeight: "400",
               height: "fit-content",
               fontSize: "12px",
+              color:"white",
               boxShadow: "2px 5px 8px rgba(0,0,0,.45)",
             }}
           >

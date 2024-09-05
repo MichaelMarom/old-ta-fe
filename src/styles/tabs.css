@@ -217,26 +217,23 @@ ul.nav.nav-tabs li {
 }
 
 table {
-    border-collapse: collapse;
     width: 100%;
     text-align: center;
-    font-size: small;
     position: relative;
-
 }
 
 td {
-    border: 1px solid #000000;
+    border: 1px solid gray;
+    /* border-radius: 10px; */
     text-align: left;
     width: 20px;
     padding: 0;
     text-align: center;
     height: 40px;
-
 }
 
 th {
-    border: 1px solid #000000;
+    border: 1px solid gray;
     text-align: left;
     width: 20px;
     padding: 0;
@@ -246,11 +243,10 @@ th {
     color: #fff;
     position: sticky;
     background: #2471A3;
-
 }
 
 tr:nth-child(even) {
-    background-color: hsl(0, 0%, 100%);
+    background-color: hsl(0, 0%, 90%);
 }
 
 .tutor-tab-setup {
@@ -273,8 +269,8 @@ button {
 
 textarea {
     outline: none;
-    background-color: #fbfbfb;
-    border: 1px solid #000;
+    background-color: hsl(0, 0%, 98%);
+    border: 1px solid gray;
     border-radius: 2.5px;
     resize: none;
 }

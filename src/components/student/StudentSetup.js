@@ -11,7 +11,7 @@ import { convertGMTOffsetToLocalString } from "../../utils/moment";
 import { useDispatch } from "react-redux";
 import { setStudent } from "../../redux/student/studentData";
 import Tooltip from "../common/ToolTip";
-import { FaInfoCircle } from "react-icons/fa";
+import { FaExclamationCircle, FaInfoCircle } from "react-icons/fa";
 import TAButton from "../common/TAButton";
 import {
   AUST_STATES,
@@ -35,6 +35,17 @@ import { MandatoryFieldLabel, OptionalFieldLabel } from "../tutor/TutorSetup";
 import Loading from "../common/Loading";
 import { uploadStudentImages } from "../../axios/file";
 import _ from "lodash";
+import { PhoneNumberUtil } from "google-libphonenumber";
+
+const phoneUtil = PhoneNumberUtil.getInstance();
+
+const isPhoneValid = (phone) => {
+  try {
+    return phoneUtil.isValidNumber(phoneUtil.parseAndKeepRawInput(phone));
+  } catch (error) {
+    return false;
+  }
+};
 
 const StudentSetup = () => {
   const dispatch = useDispatch();
@@ -87,6 +98,8 @@ const StudentSetup = () => {
   const [nameFieldsDisabled, setNameFieldsDisabled] = useState(false);
   const [unSavedChanges, setUnSavedChanges] = useState(false);
   const [toastShown, setToastShown] = useState(false);
+  const isValid = isPhoneValid(cell);
+
 
   const nameValidations = (value) => {
     if (!/^[a-zA-Z]+$/.test(value)) {
@@ -123,6 +136,10 @@ const StudentSetup = () => {
     e.preventDefault();
     if (_.some(errors, (value) => typeof value === "string"))
       return toast.error("Please fix validation errors!");
+    if (!isValid) {
+      return toast.warning("Please enter the correct phone number");
+    }
+    
     setSaving(true);
     if (id) {
       upload_student_setup_by_fields(id, {
@@ -189,7 +206,6 @@ const StudentSetup = () => {
     setSaving(false);
   };
 
-  console.log(student);
   useEffect(() => {
     if (student.AcademyId) {
       setEditMode(false);
@@ -498,7 +514,8 @@ const StudentSetup = () => {
         background: editMode ? "inherit" : "rgb(233, 236, 239)",
       }}
     >
-      <div
+     {!!student.StatusReason?.length && <div className="m-3 highlight text-danger w-auto"><FaExclamationCircle color="red" /> {student.StatusReason}</div>
+      }<div
         className="d-flex justify-content-center container mt-4"
         style={{ height: "100%", gap: "3%" }}
       >
@@ -540,7 +557,7 @@ const StudentSetup = () => {
                     required={false}
                     setValue={set_code}
                     value={code}
-                    label={<p className="bg-light p-1">Write Code </p>}
+                    label={<p className="bg-light p-1">Enter received Code here </p>}
                   />
                 </div>
 

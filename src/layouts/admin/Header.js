@@ -56,6 +56,7 @@ const Header = () => {
     dispatch(setUser({}));
     dispatch(setTutor({}));
     dispatch(setStudent({}));
+    console.log('cliekc')
     nav("/login");
   };
 

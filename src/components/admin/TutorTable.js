@@ -11,6 +11,8 @@ import CertificateModal from "./CertificateModal";
 import DegreeModal from "./DegreeModal";
 import { getDoc, updateTutorSetup } from "../../axios/tutor";
 import StatusReason from "./StatusReason";
+import Tooltip from "../common/ToolTip";
+import { IoChatbox } from "react-icons/io5";
 
 const TutorTable = () => {
   let [data, set_data] = useState([]);
@@ -98,6 +100,10 @@ const TutorTable = () => {
     },
     {
       Header: "ID Verified",
+    },
+    
+    {
+      Header: "Reason",
     },
     {
       Header: "Action",
@@ -395,6 +401,11 @@ const TutorTable = () => {
                 <td data-src={null}>{null}</td>
                 <td data-src={null}>{null}</td>
                 <td data-src={item.IdVerified}>{item.IdVerified}</td>
+                <td>
+                  
+                  {!!item.StatusReason ? <Tooltip width="200px" text={item.StatusReason} >
+                  <IoChatbox size={25} />
+                  </Tooltip>: "-"}</td>
                 <td className="p-1">
                   <button className="m-0 mb-1 w-100 btn btn-success" onClick={() => {
                     getDoc("degree", item.AcademyId).then((res => setDocUrl(res?.[0]?.DegFileName)))

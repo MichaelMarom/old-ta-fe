@@ -44,6 +44,7 @@ import VacationSettingModal from "./VacationSettingModal";
 import { uploadTutorImage } from "../../axios/file";
 import { setMissingFeildsAndTabs } from "../../redux/tutor/missingFieldsInTabs";
 import _ from 'lodash';
+import { FaExclamationCircle } from "react-icons/fa";
 
 
 const phoneUtil = PhoneNumberUtil.getInstance();
@@ -620,7 +621,8 @@ const TutorSetup = () => {
           }}
         >
           <div className="highlight w-100 m-0 justify-content-start text-sm">
-            <p className="text-danger">{tutor.StatusReason}</p>
+         {!!tutor.StatusReason?.length&& <div className=" text-danger w-auto"><FaExclamationCircle color="red" /> {tutor.StatusReason}</div>
+}
             <p>
               <span
                 className="text-danger"

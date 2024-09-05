@@ -1,5 +1,4 @@
-// constants.js
-
+//calender
 export const hours = [
   ["12:00 am", "1:00 am", "midnight"],
   ["1:00 am", "2:00 am", "midnight"],
@@ -38,68 +37,16 @@ export const days = [
   "Holidays",
 ];
 
+// responsiveness
 export const widthResolutionAllowed = 700;
 
+//time
 export const monthFormat = "MMM D, YY";
 export const wholeDateFormat = "ddd, MMM D, hh:mm a";
 export const slotPillDateFormat = "MMM D, hh a";
 export const monthFormatWithYYYY = "MMM D, YYYY";
 
-export const loggedInStudent = {
-  sid: 1,
-  firstName: "Naomi",
-  middleName: "C",
-  lastName: "Marom",
-  email: "ddiffo@gmail.com",
-  password: "qwertyui",
-  cell: 15166088464,
-  language: "English",
-  ageGrade: "9th",
-  grade: "",
-  address1: "476 Shotwell Rd",
-  address2: "Ste 102",
-  city: "Clayton",
-  state: "CA",
-  zipCode: "27527",
-  country: "USA",
-  gmt: "+03",
-  parentEmail: "ddiffo@gmail.com",
-  parentFirstName: "Marom",
-  parentLastName: "Naomi",
-  academyId: "Naomi. C. M8bc074",
-  screenName: "Naomi. C. M",
-  photo: "data:image/png;ba...", // Replace with actual image data
-  status: "Active",
-};
-export const loggedInTutor = {
-  SID: "1",
-  Photo: "photo string",
-  Video: "video string",
-  FirstName: "Michael",
-  MiddleName: "C",
-  LastName: "Marom",
-  Address1: "476 Shotwell Rd",
-  Address2: "Ste 102",
-  CityTown: "Clayton",
-  StateProvince: "NC",
-  ZipCode: "27520",
-  Country: "USA",
-  Email: "michael_marom@yahoo.com",
-  CellPhone: "15166088464",
-  GMT: "+07",
-  ResponseHrs: "48 Hours",
-  TutorScreenname: "Michael. C. M",
-  HeadLine: "hello world",
-  Introduction: "hello world",
-  Motivate: "hello world",
-  Password: "qwertyui",
-  IdVerified: null,
-  BackgroundVerified: null,
-  AcademyId: "Michael. C. M5ea887",
-  Status: "Active",
-  Grades: ["8th grade", "9th grade", "7th grade", "10th grade"],
-};
-
+// personal info
 export const FACULTIES = [
   {
     Id: 1,
@@ -1095,7 +1042,6 @@ export const COMMISSION_DATA = [
 // ALTER TABLE TutorSetup
 // add disableHoursRange VARCHAR(MAX) DEFAULT '[["1:00 am","2:00 am"],["2:00 am","3:00 am"],["3:00 am","4:00 am"],["4:00 am","5:00 am"],["5:00 am","6:00 am"],["7:00 am","8:00 am"],["9:00 pm","10:00 pm"],["10:00 pm","11:00 pm"],["11:00 pm","12:00 am (midnight)"],["6:00 am","7:00 am"],["12:00 am","1:00 am","midnight"]]'
 // `
-export const loggedInAdmin = {};
 
 export const LANGUAGES = [
   "Afrikaans",
@@ -1505,3 +1451,72 @@ export const applicationMandatoryFields = {
     },
   ],
 };
+
+export const studentMandtoryFields = {
+  Setup: [
+    { column: "Photo" },
+    { column: "FirstName" },
+    { column: "LastName" },
+    {column:"Grade"},
+    {column: "NativeLang"},
+    {column: "ParentAEmail"},
+    {column: "ParentBEmail"},
+    {column: "ParentAName"},
+    {column: "ParentBName"},
+
+
+    {
+      column: "StateProvince",
+      mandatory: {
+        tab: "setup",
+        column: "Country",
+        values: [
+          "Australia",
+          "USA",
+          "Canada",
+          "United Kingdom",
+          "UnitedKingdom",
+        ],
+      },
+    },
+    { column: "Country" },
+    { column: "CellPhone" },
+    { column: "GMT" },
+  ],
+  Accounting: [
+    { column: "PaymentOption" },
+    {
+      column: "Email",
+      mandatory: {
+        column: "PaymentOption",
+        values: ["Paypal", "Zelle", "Wise", "Payneer"],
+        tab: "bank",
+      },
+    },
+    {
+      column: "SSH",
+      mandatory: { column: "Country", values: ["USA"], tab: "setup" },
+    },
+    {
+      column: "Routing",
+      mandatory: { column: "PaymentOption", values: ["Bank"], tab: "bank" },
+    },
+    {
+      column: "Account",
+      mandatory: { column: "PaymentOption", values: ["Bank"], tab: "bank" },
+    },
+    {
+      column: "AccountType",
+      mandatory: { column: "PaymentOption", values: ["Bank"], tab: "bank" },
+    },
+    {
+      column: "AccountName",
+      mandatory: { column: "PaymentOption", values: ["Bank"], tab: "bank" },
+    },
+  ],
+  TermsOfService: [
+    {
+      column: "AgreementDate",
+    },
+  ],
+}

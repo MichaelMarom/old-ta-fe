@@ -1,10 +1,15 @@
 import { useEffect, useState } from 'react';
-import { get_role_count_by_status, get_student_data, set_student_status } from '../../axios/admin';
+import { get_role_count_by_status, get_student_data, get_tutor_data, set_student_status } from '../../axios/admin';
 import { convertGMTOffsetToLocalString } from '../../utils/moment'
 import Loading from '../common/Loading'
 import { statesColours } from '../../constants/constants';
 import { toast } from 'react-toastify';
 import Avatar from '../common/Avatar';
+import Tooltip from '../common/ToolTip';
+import { IoChatbox } from 'react-icons/io5';
+import StatusReason from './StatusReason';
+import { updateTutorSetup } from '../../axios/tutor';
+import { update_student_setup, upload_student_setup_by_fields } from '../../axios/student';
 
 const StudentTable = () => {
 
@@ -14,50 +19,82 @@ const StudentTable = () => {
     const [status, setStatus] = useState('pending')
     const [updatingStatus, setUpdatingStatus] = useState(false)
     const [statusCount, setStatusCount] = useState([])
+    const [selectedStatus, setSelectedStatus] = useState("")
+    const [selectedUser, setSelectedUser] = useState({});
+    const [modalOpen, setModalOpen] = useState(false);
+    const [statusReason, setStatusReason] = useState("")
+
+    const handleReasonStatus = (user, status) => {
+        setModalOpen(true);
+        setSelectedUser(user)
+        console.log(user, status)
+        setSelectedStatus(status)
+    }
+
+    const handleProceed = async (e) => {
+        e.preventDefault()
+        setModalOpen(false);
+        setSelectedUser({})
+        setSelectedStatus("")
+        setUpdatingStatus(true);
+
+
+        selectedUser.AcademyId && await upload_student_setup_by_fields(selectedUser.AcademyId, { Status: selectedStatus, StatusReason: statusReason });
+        setStatusReason("")
+
+        // !!phone && !!phone.startsWith("+1") && await send_sms({
+        //   message: `Your account is currently in "${status}" state.`,
+        //   numbers: [phone.replace("+", "")],
+        //   id
+        // })
+
+        setStatus(selectedStatus)
+        const result = await get_student_data(status);
+        get_role_count_by_status('student').then(
+            (data) => !data?.response?.data && setStatusCount(data)
+        );
+        if (!result?.response?.data) {
+            set_data(result);
+            setUpdatingStatus(false);
+        }
+    }
+
     const COLUMNS = [
         {
             Header: 'Status',
-            accessor: 'Status',
         },
         {
             Header: 'Photo',
-            accessor: 'Photo',
         },
         {
             Header: 'Screen ID',
-            accessor: 'Screen ID',
         },
         {
             Header: 'Student Name',
-            accessor: 'Student Name',
         },
         {
             Header: 'Email',
-            accessor: 'Email',
         },
         {
             Header: 'Phone',
-            accessor: 'Phone',
         },
         {
             Header: 'GMT',
-            accessor: 'GMT',
         },
         {
             Header: 'Tot. Hours',
-            accessor: 'Tot. Hours',
         },
         {
             Header: 'Tot. $ Paid',
-            accessor: 'Tot. $ Paid',
         },
         {
             Header: 'Last Active',
-            accessor: 'Last Active',
+        },
+        {
+            Header: 'Reason',
         },
         {
             Header: 'ID Verified',
-            accessor: 'ID Verified',
         },
 
     ];
@@ -81,7 +118,7 @@ const StudentTable = () => {
         );
     }, []);
 
-    let handleStatusChange = async (id, status, currentStatus) => {
+    let handleStatusChange = async (item, status, currentStatus) => {
         if (currentStatus === 'closed')
             return toast.warning(
                 `You cannot change status of "${currentStatus}" users!`
@@ -89,9 +126,13 @@ const StudentTable = () => {
         if (currentStatus === status)
             return toast.warning(`You already on "${status}" Status`);
 
+
+        if (status === "suspended" || status === "disapproved" || status === "closed") {
+            return handleReasonStatus(item, status)
+        }
+
         setUpdatingStatus(true);
-        let response = await set_student_status(id, status);
-        if (response.data.bool) {
+        let response = await upload_student_setup_by_fields(item.AcademyId, { Status: status, StatusReason: null });
             setStatus(status)
             get_student_data(status)
                 .then((result) => {
@@ -108,10 +149,6 @@ const StudentTable = () => {
                 (data) => !data?.response?.data && setStatusCount(data)
             );
 
-        } else {
-            toast.error(response.mssg);
-            setUpdatingStatus(false);
-        }
     };
 
     let redirect_to_student_setup = (student_id, screenName) => {
@@ -123,7 +160,7 @@ const StudentTable = () => {
 
     return (
         <>
-            <div className="tables" style={{ width: '100%', overflowY: 'auto', height: "90vh", padding: '5px' }}>
+            <div style={{ width: '100%', overflowY: 'auto', height: "90vh", padding: '5px' }}>
                 <div className="d-flex justify-content-center mt-4">
                     <div
                         onClick={() => setStatus("pending")}
@@ -296,7 +333,7 @@ const StudentTable = () => {
                                                     <select value={item.Status}
                                                         onChange={(e) =>
                                                             handleStatusChange(
-                                                                item.AcademyId,
+                                                                item,
                                                                 e.target.value,
                                                                 item.Status
                                                             )} className="form-select"
@@ -323,8 +360,15 @@ const StudentTable = () => {
                                             <td data-src={item.Cell}>{item.Cell}</td>
                                             <td data-src={item.GMT}>{convertGMTOffsetToLocalString(item.GMT)}</td>
                                             <td data-src={item.ResponseHrs}>{item.ResponseHrs}</td>
-                                            <td ></td>
-                                            <td ></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>
+                                                {!!item.StatusReason ?
+                                                    <Tooltip width="200px" text={item.StatusReason} >
+                                                        <IoChatbox size={25} />
+                                                    </Tooltip> :
+                                                    "-"}
+                                            </td>
                                             <td data-src={item.IdVerified}>{item.IdVerified}</td>
                                         </tr>
                                     )
@@ -337,6 +381,14 @@ const StudentTable = () => {
                     <Loading />
                 }
             </div>
+            <StatusReason open={modalOpen} status={selectedStatus} user={selectedUser}
+                handleProceed={handleProceed}
+                onClose={() => {
+                    setModalOpen(false)
+                    setSelectedStatus("")
+                    setSelectedUser({})
+                    setStatusReason("")
+                }} statusReason={statusReason} setStatusReason={setStatusReason} />
         </>
     );
 }

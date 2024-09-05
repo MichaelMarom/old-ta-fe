@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import * as tutorApis from "../../axios/tutor";
 import _ from "lodash";
 import { applicationMandatoryFields } from "../../constants/constants";
 

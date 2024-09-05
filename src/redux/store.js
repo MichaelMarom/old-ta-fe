@@ -15,14 +15,18 @@ import missingFields from './tutor/missingFieldsInTabs.js';
 import educationReducer from './tutor/education.js'
 import discountReducer from './tutor/discount.js'
 import accountingReducer from './tutor/accounting.js'
+import studentbankReducer from './student/accounting.js'
 
 
 let store = configureStore({
   reducer: {
     user: userReducer,
+
     selectedTutor: selectedTutorReducer,
     studentSessions: studentSessionsReducer,
     student: studentReducer,
+    studentBank: studentbankReducer,
+
     bookings: studentBookingsReducer,
     chat: chatReducer,
 

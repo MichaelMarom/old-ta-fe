@@ -140,7 +140,6 @@ function BankDetails() {
             setLoading(true)
             const allNull = _.every(errors, _.isNull);
             if (!allNull) return toast("Please fix Errors")
-            console.log('hit')
 
             if (validateCreditDebitInfo()) {
                 const data = await post_bank_details({

@@ -19,7 +19,7 @@ const StatusReason = ({ open, onClose, statusReason, setStatusReason, status, us
 
                     <div><span className='fw-bold'>New Status:</span> {status}</div>
                     <label htmlFor='reason'>Enter Reason:</label>
-                    <textarea id="reason" style={{ height: "150px" }} className="w-100 border border-secondary" value={statusReason} onChange={(e) => setStatusReason(e.target.value)} placeholder={"Enter Reason"} />
+                    <textarea required id="reason" style={{ height: "150px" }} className="w-100 border border-secondary" value={statusReason} onChange={(e) => setStatusReason(e.target.value)} placeholder={"Enter Reason"} />
                 </div>
                 <div className='d-flex justify-content-between'>
                     <TAButton buttonText={"Cancel"} type='button' handleClick={onClose} />

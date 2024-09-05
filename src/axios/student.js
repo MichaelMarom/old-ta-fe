@@ -83,14 +83,14 @@ export const post_student_setup_at_signup = async (body) => {
   }
 };
 
-export const update_student_setup = async (id, body) => {
-  try {
-    const { data } = await apiClient.put("/student/setup/:id", body);
-    return data;
-  } catch (err) {
-    showErrorToast(err);
-  }
-};
+// export const update_student_setup = async (id, body) => {
+//   try {
+//     const { data } = await apiClient.put(`/student/setup/${id}`, body);
+//     return data;
+//   } catch (err) {
+//     showErrorToast(err);
+//   }
+// };
 
 export const post_student_agreement = async (userId, body) => {
   try {
@@ -340,6 +340,15 @@ export const post_bank_details = async (payload) => {
 export const get_bank_details = async (id) => {
   try {
     const { data } = await apiClient.get(`/student/bank/${id}`);
+    return data;
+  } catch (err) {
+    showErrorToast(err);
+  }
+};
+
+export const update_bank_details = async (id, body) => {
+  try {
+    const { data } = await apiClient.put(`/student/bank/${id}`, body);
     return data;
   } catch (err) {
     showErrorToast(err);

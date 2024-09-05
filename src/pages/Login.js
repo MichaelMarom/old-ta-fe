@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { get_user_detail, getToken as tokenApi } from "../axios/auth";
 import { toast } from "react-toastify";
@@ -59,7 +59,7 @@ const LoginPage = () => {
     setLoading(false);
   };
 
-  let fetchUser = async (userId) => {
+  let fetchUser = useCallback(async (userId) => {
     if (isLoaded && userId) {
       setLoading(true);
       const user = await get_user_detail(userId);
@@ -85,17 +85,19 @@ const LoginPage = () => {
         );
       }
     }
-  };
+  }, [isLoaded,])
 
+  console.log(user, )
   useEffect(() => {
-    console.log(userId, isLoaded);
+    console.log(userId, isSignedIn,"sused")
     if (userId && isSignedIn) {
       fetchUser(userId);
     } else {
+      dispatch(setUser({}))
+      localStorage.removeItem("user");
       navigate("/login");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId, isSignedIn, isLoaded]);
+  }, [userId, isSignedIn, isLoaded, fetchUser]);
 
   return (
     <section>

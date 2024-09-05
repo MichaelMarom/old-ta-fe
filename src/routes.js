@@ -36,6 +36,7 @@ import { setDiscount } from "./redux/tutor/discount";
 import AdminLayout from "./layouts/AdminLayout";
 import StudentLayout from "./layouts/StudentLayout";
 import TutorLayout from "./layouts/TutorLayout";
+import { setStudentAccounting } from "./redux/student/accounting";
 
 const App = () => {
   let location = useLocation();
@@ -145,8 +146,13 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tutor.AcademyId, token]);
 
+  const { studentBank } = useSelector(state => state.studentBank)
+  console.log(studentBank)
+
   useEffect(() => {
     if (token && student.AcademyId) {
+      dispatch(setStudentAccounting())
+
       const dispatchUserSessions = async () => {
         const studentSessions = await dispatch(
           await setStudentSessions(student)
@@ -236,6 +242,7 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  console.log(user.role, 'role')
   return (
     <Suspense fallback={<Loading />}>
       <Routes>
@@ -244,39 +251,39 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
-      
+
         {/* {user.role === "admin" || user.role === "student" && */}
-          <Route path="/student/*" element={(user.role === "student" || user.role==="admin") ? <StudentLayout /> : <Navigate to="/login" />}>
-            {rolePermissions['student']
-              // .filter(route => route.role === 'student')
-              .map(route => (
-                <Route
-                  key={route.path}
-                  path={route.path.replace('/student/', '')} // Removing '/student' prefix
-                  element={<SignedIn>{route.component}</SignedIn>}
-                />
-              ))}
-          </Route>
+        <Route path="/student/*" element={(user.role === "student" || user.role === "admin") ? <StudentLayout /> : <>authorizing ...</>}>
+          {rolePermissions['student']
+            // .filter(route => route.role === 'student')
+            .map(route => (
+              <Route
+                key={route.path}
+                path={route.path.replace('/student/', '')} // Removing '/student' prefix
+                element={<SignedIn>{route.component}</SignedIn>}
+              />
+            ))}
+        </Route>
         {/* } */}
 
         {/* Tutor Section */}
         {/* {user.role === "admin" || user.role === "tutor" && */}
-          <Route path="/tutor/*" element={(user.role === "tutor" || user.role==="admin") ? <TutorLayout /> : <Navigate to="/login" />}>
-            {rolePermissions['tutor']
-              // .filter(route => route.user.role === 'tutor')
-              .map(route => (
-                <Route
-                  key={route.path}
-                  path={route.path.replace('/tutor/', '')} // Removing '/tutor' prefix
-                  element={<SignedIn>{route.component}</SignedIn>}
-                />
-              ))}
-          </Route>
+        <Route path="/tutor/*" element={(user.role === "tutor" || user.role === "admin") ? <TutorLayout /> : <>authorizing ...</>}>
+          {rolePermissions['tutor']
+            // .filter(route => route.user.role === 'tutor')
+            .map(route => (
+              <Route
+                key={route.path}
+                path={route.path.replace('/tutor/', '')} // Removing '/tutor' prefix
+                element={<SignedIn>{route.component}</SignedIn>}
+              />
+            ))}
+        </Route>
         {/* } */}
 
         {/* Admin Section */}
         {user.role === "admin" &&
-          <Route path="/admin/*" element={<AdminLayout />}>
+          <Route path="/admin/*" element={isSignedIn ? <AdminLayout /> : <Navigate to="/login" />}>
             {rolePermissions['admin']
               // .filter(route => route.user.role === 'admin')
               .map(route => (
@@ -286,11 +293,10 @@ const App = () => {
                   element={<SignedIn>{route.component}</SignedIn>}
                 />
               ))}
-          </Route>
-        }
+          </Route>}
 
         {/* Fallback Route */}
-        <Route path="*" element={<Navigate to="login" />} />
+        <Route path="*" element={<Login />} />
       </Routes>
     </Suspense>
   );
