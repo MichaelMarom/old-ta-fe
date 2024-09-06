@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PaymentForm from '../../common/PaymentForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { get_bank_details, post_bank_details, upload_student_setup_by_fields } from '../../../axios/student';
+import { get_bank_details, post_bank_details, update_bank_details, upload_student_setup_by_fields } from '../../../axios/student';
 import Actions from '../../common/Actions';
 import _ from "lodash";
 import { compareStates } from '../../../utils/common';
@@ -10,11 +10,14 @@ import Input from '../../common/Input';
 import { MandatoryFieldLabel } from '../../tutor/TutorSetup';
 import Select from '../../common/Select';
 import { setStudent } from '../../../redux/student/studentData';
+import { postStudentAccounting, updateStudentAccounting } from '../../../redux/student/accounting';
 
 function BankDetails() {
     let [AccountName, set_acct_name] = useState(null)
     const [errors, setErrors] = useState({})
     const dispatch = useDispatch()
+    const { studentBank } = useSelector(state => state.studentBank)
+
     let [PaymentType, set_acct_type] = useState(null)
     let [BankName, set_bank_name] = useState(null)
     let [AccountNumber, set_acct] = useState(null)
@@ -48,18 +51,15 @@ function BankDetails() {
 
     useEffect(() => { set_email(student.Email) }, [student])
 
-    const fetchBankDetails = async (id) => {
-        const data = await get_bank_details(id)
-
-        if (data?.length) {
-            const result = data[0];
-            setDbState(result)
-            set_acct_name(result.AccountName);
-            set_acct_type(result.PaymentType);
-            set_bank_name(result.BankName);
-            set_acct(result.AccountNumber);
-            set_routing(result.RoutingNumber);
-            set_payment_option(result.PaymentOption);
+    useEffect(() => {
+        if (studentBank?.AcademyId) {
+            setDbState(studentBank)
+            set_acct_name(studentBank.AccountName);
+            set_acct_type(studentBank.PaymentType);
+            set_bank_name(studentBank.BankName);
+            set_acct(studentBank.AccountNumber);
+            set_routing(studentBank.RoutingNumber);
+            set_payment_option(studentBank.PaymentOption);
             setCreditDebitState({
                 add1: student.Address1,
                 add2: student.Address2,
@@ -67,16 +67,16 @@ function BankDetails() {
                 zip: student.ZipCode,
                 state: student.State,
                 country: student.Country,
-                number_p: result.CD_Number_Pri || '',
-                cvc_p: result.CD_Cvc_Pri || '',
-                name_p: result.CD_Name_Pri || '',
-                expiry_p: result.CD_Expiry_Pri || '',
-                number_s: result.CD_Number_Sec || '',
-                cvc_s: result.CD_Cvc_Sec || '',
-                name_s: result.CD_Name_Sec || '',
-                expiry_s: result.CD_Expiry_Sec || ''
+                number_p: studentBank.CD_Number_Pri || '',
+                cvc_p: studentBank.CD_Cvc_Pri || '',
+                name_p: studentBank.CD_Name_Pri || '',
+                expiry_p: studentBank.CD_Expiry_Pri || '',
+                number_s: studentBank.CD_Number_Sec || '',
+                cvc_s: studentBank.CD_Cvc_Sec || '',
+                name_s: studentBank.CD_Name_Sec || '',
+                expiry_s: studentBank.CD_Expiry_Sec || ''
             })
-            set_email(result.Email)
+            set_email(studentBank.Email)
         }
         else {
             setCreditDebitState({
@@ -89,12 +89,8 @@ function BankDetails() {
                 country: student.Country,
             })
         }
-    }
-
-    useEffect(() => {
-       student.AcademyId && fetchBankDetails(student.AcademyId)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [student]);
+        // student.AcademyId && fetchBankDetails(student.AcademyId)
+    }, [studentBank, student]);
 
     const validateCreditDebitInfo = (cardType) => {
         const cardNumber = cardType === "primary" ? creditDebitState.number_p : creditDebitState.number_s;
@@ -142,24 +138,48 @@ function BankDetails() {
             if (!allNull) return toast("Please fix Errors")
 
             if (validateCreditDebitInfo()) {
-                const data = await post_bank_details({
-                    Email: email,
-                    CD_Name_Pri: creditDebitState.name_p,
-                    CD_Expiry_Pri: creditDebitState.expiry_p,
-                    CD_Number_Pri: creditDebitState.number_p,
-                    CD_Cvc_Pri: creditDebitState.cvc_p,
-                    CD_Name_Sec: creditDebitState.name_s,
-                    CD_Expiry_Sec: creditDebitState.expiry_s,
-                    CD_Number_Sec: creditDebitState.number_s,
-                    CD_Cvc_Sec: creditDebitState.cvc_s,
-                    PaymentOption,
-                    PaymentType,
-                    AccountName,
-                    BankName,
-                    AccountNumber,
-                    RoutingNumber,
-                    AcademyId,
-                })
+                let result = {};
+                console.log(PaymentOption, 'opt')
+                if (studentBank.AcademyId) {
+                    result = await dispatch(updateStudentAccounting(student.AcademyId, {
+                        Email: email,
+                        CD_Name_Pri: creditDebitState.name_p,
+                        CD_Expiry_Pri: creditDebitState.expiry_p,
+                        CD_Number_Pri: creditDebitState.number_p,
+                        CD_Cvc_Pri: creditDebitState.cvc_p,
+                        CD_Name_Sec: creditDebitState.name_s,
+                        CD_Expiry_Sec: creditDebitState.expiry_s,
+                        CD_Number_Sec: creditDebitState.number_s,
+                        CD_Cvc_Sec: creditDebitState.cvc_s,
+                        PaymentOption,
+                        PaymentType,
+                        AccountName,
+                        BankName,
+                        AccountNumber,
+                        RoutingNumber,
+                    }))
+                }
+                else {
+                    result = await dispatch(postStudentAccounting({
+                        Email: email,
+                        CD_Name_Pri: creditDebitState.name_p,
+                        CD_Expiry_Pri: creditDebitState.expiry_p,
+                        CD_Number_Pri: creditDebitState.number_p,
+                        CD_Cvc_Pri: creditDebitState.cvc_p,
+                        CD_Name_Sec: creditDebitState.name_s,
+                        CD_Expiry_Sec: creditDebitState.expiry_s,
+                        CD_Number_Sec: creditDebitState.number_s,
+                        CD_Cvc_Sec: creditDebitState.cvc_s,
+                        PaymentOption,
+                        PaymentType,
+                        AccountName,
+                        BankName,
+                        AccountNumber,
+                        RoutingNumber,
+                        AcademyId
+                    }))
+                }
+                console.log(result, 'bank')
                 await upload_student_setup_by_fields(student.AcademyId,
                     {
                         Address1: creditDebitState.add1,
@@ -178,12 +198,15 @@ function BankDetails() {
                     Country: creditDebitState.country
                 }))
 
-                if (data?.response?.status === 400)
+                if (result?.response?.status === 400)
                     toast.error('Error Saving the data')
                 else {
                     setEditMode(false)
                     toast.success('Data saved succesfully')
                 }
+            }
+            else {
+                toast.error('Please fix the credit card information errors')
             }
         }
         catch (err) {
@@ -260,7 +283,7 @@ function BankDetails() {
     const emailPaymentOptions = ['paypal', 'payoneer', 'zelle', 'wise']
 
     return (
-        <div style={{ background: editMode ? "initial" : "#e9ecef", height:"calc(100vh - 180px)" }} >
+        <div style={{ background: editMode ? "initial" : "#e9ecef", height: "calc(100vh - 180px)" }} >
             <div className='container rounded'>
                 <form onSubmit={onSave}>
                     <div className='' style={{ fontWeight: "bold" }}>

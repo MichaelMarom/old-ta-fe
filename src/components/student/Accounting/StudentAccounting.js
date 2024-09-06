@@ -9,7 +9,6 @@ const StudentAccounting = () => {
 
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-    const [paymentReportData, setPaymentReportData] = useState([]);
     const [activeTabIndex, setActiveTabIndex] = useState(0);
     const { sessions } = useSelector(state => state.studentSessions)
     let [activeTab, setActiveTab] = useState(null);

@@ -1457,16 +1457,61 @@ export const studentMandtoryFields = {
     { column: "Photo" },
     { column: "FirstName" },
     { column: "LastName" },
-    {column:"Grade"},
-    {column: "NativeLang"},
-    {column: "ParentAEmail"},
-    {column: "ParentBEmail"},
-    {column: "ParentAName"},
-    {column: "ParentBName"},
-
+    { column: "Grade" },
+    { column: "Language" },
+    
+    { column: "Cell" },
 
     {
-      column: "StateProvince",
+      column: "ParentAEmail", notMandatory: {
+        tab: "setup",
+        column: "Grade",
+        values: [
+          "Freshman",
+          "Sophmore",
+          "Junior",
+          "Senior",
+        ],
+      }
+    },
+    {
+      column: "ParentBEmail", notMandatory: {
+        tab: "setup",
+        column: "Grade",
+        values: [
+          "Freshman",
+          "Sophmore",
+          "Junior",
+          "Senior",
+        ],
+      }
+    },
+    {
+      column: "ParentAName", notMandatory: {
+        tab: "setup",
+        column: "Grade",
+        values: [
+          "Freshman",
+          "Sophmore",
+          "Junior",
+          "Senior",
+        ],
+      }
+    },
+    {
+      column: "ParentBName", notMandatory: {
+        tab: "setup",
+        column: "Grade",
+        values: [
+          "Freshman",
+          "Sophmore",
+          "Junior",
+          "Senior",
+        ],
+      }
+    },
+    {
+      column: "State",
       mandatory: {
         tab: "setup",
         column: "Country",
@@ -1480,7 +1525,6 @@ export const studentMandtoryFields = {
       },
     },
     { column: "Country" },
-    { column: "CellPhone" },
     { column: "GMT" },
   ],
   Accounting: [

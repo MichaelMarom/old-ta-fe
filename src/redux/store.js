@@ -16,7 +16,7 @@ import educationReducer from './tutor/education.js'
 import discountReducer from './tutor/discount.js'
 import accountingReducer from './tutor/accounting.js'
 import studentbankReducer from './student/accounting.js'
-
+import studentMissingFieldsReducer from './student/mandatoryStudentFieldsInTabs.js'
 
 let store = configureStore({
   reducer: {
@@ -26,6 +26,7 @@ let store = configureStore({
     studentSessions: studentSessionsReducer,
     student: studentReducer,
     studentBank: studentbankReducer,
+    studentMissingFields: studentMissingFieldsReducer,
 
     bookings: studentBookingsReducer,
     chat: chatReducer,

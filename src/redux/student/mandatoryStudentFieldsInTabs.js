@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import _ from "lodash";
-import { applicationMandatoryFields } from "../../constants/constants";
+import { applicationMandatoryFields, studentMandtoryFields } from "../../constants/constants";
 
 // Create a slice with your event-related reducers
 const slice = createSlice({
-  name: "missingFields",
+  name: "studentMissingFields",
   initialState: {
-    missingFields: [],
+    studentMissingFields: [],
     isLoading: false,
     error: null,
   },
@@ -16,7 +16,7 @@ const slice = createSlice({
     },
     setFieldsAndTabs: (state, action) => {
       state.isLoading = false;
-      state.missingFields = action.payload;
+      state.studentMissingFields = action.payload;
     },
   },
 });
@@ -24,19 +24,20 @@ const slice = createSlice({
 export default slice.reducer;
 export const { setFieldsAndTabs } = slice.actions;
 
-export const setMissingFeildsAndTabs = () => {
+export const setStudentMissingFeildsAndTabs = () => {
   return async (dispatch, getState) => {
     dispatch(slice.actions.isLoading());
     const student = getState().student.student;
-    const bank = getState().bank.studentBank;
-    console.log(bank)
+    const bank = getState().studentBank.studentBank;
+    console.log(bank, student)
 
     const missingFields = [];
-    const tabs = { bank };
+    const tabs = { bank, setup:student };
 
     studentMandtoryFields.Accounting.map((item) => {
       if (
         (!tabs.bank?.[item.column] || tabs.bank?.[item.column] === "null") &&
+       
         (!item.mandatory ||
           item.mandatory?.values?.includes(
             tabs?.["bank"]?.[item.mandatory?.column]
@@ -51,6 +52,10 @@ export const setMissingFeildsAndTabs = () => {
         (!student?.[item.column] ||
           student?.[item.column] === "null" ||
           !student?.[item.column]?.length) &&
+          (!item.notMandatory ||
+            !item.notMandatory?.values?.includes(
+              tabs?.["setup"]?.[item.notMandatory?.column]
+            ))&&
         (!item.mandatory ||
           (item.mandatory?.tab &&
             item.mandatory?.values?.includes(

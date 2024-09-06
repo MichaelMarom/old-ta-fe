@@ -8,9 +8,10 @@ import Loading from '../../components/common/Loading'
 import { toast } from 'react-toastify'
 import { showDate } from '../../utils/moment'
 import { convertToDate } from '../../components/common/Calendar/Calendar'
-import { post_student_agreement } from '../../axios/student'
+import { post_student_agreement, setAgreementDateToNullForAllStudents } from '../../axios/student'
 import { setStudent } from '../../redux/student/studentData'
 import { MandatoryFieldLabel } from '../../components/tutor/TutorSetup'
+import _ from 'lodash'
 
 const TermOfUse = () => {
     const { user } = useSelector(state => state.user)
@@ -21,6 +22,7 @@ const TermOfUse = () => {
     const [db_terms, set_db_terms] = useState('');
     const [fetching, setFetching] = useState(true);
     const { student } = useSelector(state => state.student)
+    const { studentMissingFields } = useSelector(state => state.studentMissingFields)
     const [agreed, setAgreed] = useState();
 
     const dispatch = useDispatch();
@@ -66,6 +68,7 @@ const TermOfUse = () => {
         }
         else {
             toast.success('Successfully save the terms!');
+            setAgreementDateToNullForAllStudents()
             set_db_terms(response.data.TermContent);
         }
         setEditMode(false);
@@ -74,6 +77,14 @@ const TermOfUse = () => {
 
     const handleSaveAgreement = async (e) => {
         e.preventDefault()
+        const missingFieldsExceptTOU = _.chain(studentMissingFields).filter((item) => item.tab !== "Terms Of Use").map(item => `"${item.tab}" `).value()
+        if (missingFieldsExceptTOU.length)
+            return toast.warning(
+                `Mandatory fields are missing from ${_.uniq(
+                    _.chain(studentMissingFields).filter((item) => item.tab !== "Terms Of Use").map(item => `"${item.tab}" `).value()
+                )} Tab`
+            );
+
         setLoading(true)
 
         const data = await post_student_agreement(user.SID, { AgreementDate: new Date(), Status: 'under-review' })
@@ -89,11 +100,10 @@ const TermOfUse = () => {
     if (fetching)
         return <Loading />
     return (
-        <  >
-
+        <>
             <form onSubmit={user.role === 'admin' ? handleSave : handleSaveAgreement}>
-                <div className="d-block p-5">
-                    <h4 style={{ fontSize: "16px" }}><span className="text-danger" style={{fontWeight:"bold", fontSize:"20px"}}>*</span>CHECKING THE BOX BELOW, CONSITUTES YOUR ACCPETANCE OF THESE TERMS OF USE
+                <div className="d-block py-3 px-5">
+                    <h4 style={{ fontSize: "16px" }}><span className="text-danger" style={{ fontWeight: "bold", fontSize: "20px" }}>*</span>CHECKING THE BOX BELOW, CONSITUTES YOUR ACCPETANCE OF THESE TERMS OF USE
                     </h4>
                     <div className="form-check " >
                         <input className="form-check-input border border-dark" style={{ width: "30px", height: "30px", marginRight: '10px' }}
@@ -112,13 +122,44 @@ const TermOfUse = () => {
                     }
                 </div>
                 <div className='px-4 mt-4 student-terms'>
-                    <RichTextEditor
+                    <div className='overflow-auto border shadow p-2' style={{ height: "calc(100vh - 290px" }} >
+                        <div className='w-100 text-center p-1'>
+                            <img className='' src={`${process.env.REACT_APP_BASE_URL}/logo1.png`} width={350} height={100} alt="logo" />
+                        </div>
+                        <h6>Welcome to Tutoring Academy, an online platform that connects you with qualified tutors in various subjects.
+                            By using our services, you agree to abide by the following terms of use:
+                        </h6>
+                        <ol>
+                            <li>You are responsible for your own learning and academic performance. Our tutors are here to guide you, but they cannot do your homework, assignments, tests, or exams for you. You must not ask them to violate any academic integrity policies of your school or institution.
+                            </li>
+                            <li>You are expected to be respectful and courteous to our tutors and other users. You must not use any abusive, offensive, or inappropriate language or behavior on our platform. You must also respect the privacy and confidentiality of our tutors and other users. You must not share any personal or sensitive information without their consent.
+                            </li>
+                            <li>You are required to pay for the tutoring sessions that you book on our platform. You may cancel reschedule a session according to the cancellation policy of your tutor before the scheduled time. If you do not show up for a session without any notice, you will be charged the full session price.
+                            </li>
+                            <li>If you consented to the session recording, you are entitled to a refund or a replacement session if you are not satisfied with the quality of the tutoring service. You must contact us within 48 hours after the session and provide us with a detailed explanation of your dissatisfaction. We will review your recorded session case and offer you a suitable solution. if you didn't consent to the session recording, it may be harder for us to resolve your content.
+                            </li>
+                            <li>
+                                You acknowledge that we own all the intellectual property rights of our platform, including but not limited to the content, design, logo, trademark, and software. You must not copy, modify, distribute, or use any of our materials without our prior written permission.
+                            </li>
+                            <li> You agree to indemnify and hold us harmless from any claims, damages, liabilities, or expenses that may arise from your use or misuse of our platform, your violation of these terms of use, or your infringement of any rights of our tutors or other users.
+                            </li>
+                            <li>We reserve the right to modify, suspend, or terminate our platform or any part of it at any time without prior notice. We also reserve the right to update, change, or amend these terms of use at any time without prior notice. You are advised to check these terms of use regularly for any changes. Your continued use of our platform after any changes constitutes your acceptance of the new terms of use.
+                            </li>
+                        </ol>
+                        <p className='text-success'>
+                            If you have any questions or concerns about these terms of use, please contact us at 
+                            <span className='text-primary'>
+                                &nbsp;admin@tutoring-academy.com
+                            </span>.
+                        </p>
+                    </div>
+                    {/* <RichTextEditor
                         value={terms}
                         onChange={handleEditorChange}
                         readOnly={!editMode || user.role !== 'admin' || !editMode}
                         placeholder="Enter Term Of Service here"
                         style={{ height: "calc(100vh - 310px)" }}
-                    />
+                    /> */}
                 </div>
 
                 <Actions

@@ -300,7 +300,7 @@ const Actions = ({
     <div style={actionsStyle}>
       <div className="container">
         <div className="row justify-content-center">
-          <div className="" style={{ width: "10%" }}>
+          <div className="" style={{ width: "120px" }}>
             <TAButton
               type="button"
               buttonText={"Back"}
@@ -322,7 +322,7 @@ const Actions = ({
                         </button> */}
           </div>
 
-          <div className="" style={{ width: "10%" }}>
+          <div className="" style={{ width: "120px" }}>
             <TAButton
               type="button"
               buttonText={"Edit"}
@@ -339,7 +339,7 @@ const Actions = ({
                             </div>
                         </button> */}
           </div>
-          <div className="" style={{ width: "10%" }}>
+          <div className="" style={{ width: "120px" }}>
             <TAButton
               loading={loading}
               type="submit"
@@ -366,7 +366,7 @@ const Actions = ({
                             </div>
                         </Button> */}
           </div>
-          <div className="" style={{ width: "10%" }}>
+          <div className="" style={{ width: "120px" }}>
             <TAButton
               type="button"
               buttonText={"Next"}

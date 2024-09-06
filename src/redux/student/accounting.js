@@ -48,6 +48,17 @@ export const updateStudentAccounting = (id, body) => {
     };
 }
 
+export const postStudentAccounting = ( body) => {
+    return async (dispatch, getState) => {
+        dispatch(slice.actions.isLoading())
+        const bank = getState().studentBank.studentBank
+
+        const res = await studentApis.post_bank_details( body);
+        dispatch(slice.actions.setAccounting({ ...bank, ...body }))
+
+        return res
+    };
+}
 
 export const updateStudentAccountingState = (body) => {
     return async (dispatch) => {

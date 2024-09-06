@@ -105,6 +105,15 @@ export const post_student_agreement = async (userId, body) => {
   }
 };
 
+export const setAgreementDateToNullForAllStudents = async () => {
+  try {
+    const data = apiClient.put("/student/agreement-updated");
+    return data;
+  } catch (err) {
+    return err;
+  }
+};
+
 export let get_student_setup = async (AcademyId) => {
   try {
     const { data } = await apiClient.get("/student/setup", {

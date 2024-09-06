@@ -37,6 +37,7 @@ import AdminLayout from "./layouts/AdminLayout";
 import StudentLayout from "./layouts/StudentLayout";
 import TutorLayout from "./layouts/TutorLayout";
 import { setStudentAccounting } from "./redux/student/accounting";
+import { setStudentMissingFeildsAndTabs } from "./redux/student/mandatoryStudentFieldsInTabs";
 
 const App = () => {
   let location = useLocation();
@@ -51,6 +52,11 @@ const App = () => {
   const { bank } = useSelector((state) => state.bank);
   const { education } = useSelector((state) => state.edu);
   const { discount } = useSelector((state) => state.discount);
+
+  
+  const { studentBank } = useSelector(state => state.studentBank)
+  console.log(studentBank)
+  
   const [activeRoutes, setActiveRoutes] = useState([]);
   const tutorUserId = localStorage.getItem("tutor_user_id");
   const studentLoggedIn = user?.role === "student";
@@ -122,6 +128,10 @@ const App = () => {
     dispatch(setMissingFeildsAndTabs());
   }, [education, discount, bank, tutor]);
 
+  useEffect(() => {
+    dispatch(setStudentMissingFeildsAndTabs());
+  }, [studentBank, student]);
+
   //sessions :nextsession, :allsessions, :time remaing for next lesson
   useEffect(() => {
     if (token && tutor.AcademyId) {
@@ -145,9 +155,6 @@ const App = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tutor.AcademyId, token]);
-
-  const { studentBank } = useSelector(state => state.studentBank)
-  console.log(studentBank)
 
   useEffect(() => {
     if (token && student.AcademyId) {
