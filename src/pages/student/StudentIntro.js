@@ -64,7 +64,34 @@ const StudentIntro = () => {
   return (
     <div  >
       <form onSubmit={handleSave}>
-        <div className='px-4 mt-4 student-intro'>
+        <div className='px-4 mt-4 student-terms'>
+          <div className='overflow-auto border shadow p-2' style={{ maxHeight: "calc(100vh - 290px", height: "auto" }} >
+            <div className='w-100 text-center p-1'>
+              <img className='' src={`${process.env.REACT_APP_BASE_URL}/logo1.png`} width={350} height={100} alt="logo" />
+            </div>
+            <h6>Student Intro:
+            </h6>
+            <div>
+              ................
+            </div>
+            <p className='text-success'>
+              If you have any questions or concerns about these terms of use, please contact us at
+              <span className='text-primary'>
+                &nbsp;admin@tutoring-academy.com
+              </span>
+
+            </p>
+          </div>
+          {/* <RichTextEditor
+                        value={terms}
+                        onChange={handleEditorChange}
+                        readOnly={!editMode || user.role !== 'admin' || !editMode}
+                        placeholder="Enter Term Of Service here"
+                        style={{ height: "calc(100vh - 310px)" }}
+                    /> */}
+        </div>
+
+        {/* <div className='px-4 mt-4 student-intro'>
           <RichTextEditor
             value={intro}
             onChange={handleEditorChange}
@@ -72,7 +99,7 @@ const StudentIntro = () => {
             placeholder="Enter Intro here"
             style={{ height: "72vh" }}
           />
-        </div>
+        </div> */}
         <Actions
           backDisabled={true}
           loading={loading}

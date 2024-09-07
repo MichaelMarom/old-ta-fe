@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { BsCameraVideo, BsCloudUpload } from "react-icons/bs";
+import { BsCameraVideo, BsCloudUpload, BsFillPersonFill } from "react-icons/bs";
 import { moment } from "../../config/moment";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
@@ -45,6 +45,7 @@ import { uploadTutorImage } from "../../axios/file";
 import { setMissingFeildsAndTabs } from "../../redux/tutor/missingFieldsInTabs";
 import _ from 'lodash';
 import { FaExclamationCircle } from "react-icons/fa";
+import { AiOutlineInfoCircle } from "react-icons/ai";
 
 
 const phoneUtil = PhoneNumberUtil.getInstance();
@@ -65,9 +66,9 @@ export const options = {
 
 const TutorSetup = () => {
   const [editMode, setEditMode] = useState(false);
-  let [fname, set_fname] = useState("");
-  let [mname, set_mname] = useState("");
-  let [lname, set_sname] = useState("");
+  // let [fname, set_fname] = useState("");
+  // let [mname, set_mname] = useState("");
+  // let [lname, set_sname] = useState("");
   let [cell, set_cell] = useState("");
   let [add1, set_add1] = useState("");
   let [add2, set_add2] = useState("");
@@ -204,7 +205,7 @@ const TutorSetup = () => {
     };
     postImage();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [photo, userExist, fname, lname, mname, userId, uploadPhotoClicked]);
+  }, [userExist, uploadPhotoClicked]);
 
   const handleEditClick = () => {
     setEditMode(!editMode);
@@ -218,9 +219,9 @@ const TutorSetup = () => {
 
         setUserId(tutor.userId);
         setUserExist(true);
-        set_fname(data.FirstName);
-        set_sname(data.LastName);
-        set_mname(data.MiddleName);
+        // set_fname(data.FirstName);
+        // set_sname(data.LastName);
+        // set_mname(data.MiddleName);
         set_photo(data.Photo);
         set_video(data.Video || "");
 
@@ -255,9 +256,9 @@ const TutorSetup = () => {
     let newTutor;
     if (!tutor.AcademyId) {
       newTutor = {
-        FirstName: "",
-        MiddleName: "",
-        LastName: "",
+        // FirstName: "",
+        // MiddleName: "",
+        // LastName: "",
         CellPhone: "+1",
         Address1: "",
         Address2: "",
@@ -274,9 +275,9 @@ const TutorSetup = () => {
       };
     }
     let formValues = {
-      fname,
-      mname,
-      lname,
+      // fname,
+      // mname,
+      // lname,
       cell,
       add1,
       add2,
@@ -295,9 +296,9 @@ const TutorSetup = () => {
       unsavedChangesHelper(formValues, tutor.AcademyId ? tutor : newTutor)
     );
   }, [
-    fname,
-    mname,
-    lname,
+    // fname,
+    // mname,
+    // lname,
     cell,
     add1,
     add2,
@@ -343,9 +344,9 @@ const TutorSetup = () => {
 
   let saver = async () => {
     const body = {
-      fname,
-      mname,
-      lname,
+      // fname,
+      // mname,
+      // lname,
       cell,
       add1,
       add2,
@@ -587,8 +588,8 @@ const TutorSetup = () => {
   }, [vacation_mode]);
 
   const mandatoryFields = [
-    { name: "fname", filled: !!fname.length, value: fname },
-    { name: "lname", filled: !!lname.length, value: lname },
+    // { name: "fname", filled: !!fname.length, value: fname },
+    // { name: "lname", filled: !!lname.length, value: lname },
     { name: "phone", filled: !!cell?.length, value: cell },
     { name: "rtime", filled: !!response_zone?.length, value: response_zone },
     { name: "country", filled: !!country?.length, value: country },
@@ -621,8 +622,9 @@ const TutorSetup = () => {
           }}
         >
           <div className="highlight w-100 m-0 justify-content-start text-sm">
-         {!!tutor.StatusReason?.length&& <div className=" text-danger w-auto"><FaExclamationCircle color="red" /> {tutor.StatusReason}</div>
-}
+
+            {!!tutor.StatusReason?.length && <div className=" text-danger w-auto"><FaExclamationCircle color="red" /> {tutor.StatusReason}</div>
+            }
             <p>
               <span
                 className="text-danger"
@@ -643,6 +645,10 @@ const TutorSetup = () => {
                 className="d-flex flex-column align-items-center"
                 style={{ width: "15%" }}
               >
+                <div>
+                  <h6 className="m-0"> <span className="text-primary">{tutor.FirstName} {tutor.MiddleName} {tutor.LastName}</span>
+                  </h6>
+                </div>
                 <h6
                   className={`text-start m-0 ${mandatoryFields.find((item) => item.name === "photo").filled
                     ? ""
@@ -736,6 +742,7 @@ const TutorSetup = () => {
                     </p>
                   </div>
                 </label>
+
                 <div className="border p-2 shadow rounded w-100 mb-3">
                   <div
                     className="form-check form-switch d-flex gap-2  mt-2"
@@ -828,14 +835,12 @@ const TutorSetup = () => {
                   </div>
                 </div>
               </div>
-
               <div className="" style={{ width: "23%" }}>
-                <div
+                {/* <div
                   style={{
                     display: "flex",
                     margin: "0 0 10px 0",
                     padding: "0",
-
                     alignItems: "center",
                     width: "100%",
                     whiteSpace: "nowrap",
@@ -856,9 +861,9 @@ const TutorSetup = () => {
                     value={fname}
                     editMode={!nameFieldsDisabled}
                   />
-                </div>
+                </div> */}
 
-                <div
+                {/* <div
                   style={{
                     display: "flex",
                     margin: "0 0 10px 0",
@@ -931,7 +936,7 @@ const TutorSetup = () => {
                       }
                     }}
                   />
-                </div>
+                </div> */}
 
                 <div
                   style={{
@@ -939,7 +944,6 @@ const TutorSetup = () => {
                     margin: "0 0 10px 0",
                     padding: "0",
                     alignItems: "center",
-
                     width: "100%",
                     whiteSpace: "nowrap",
                   }}
@@ -1025,6 +1029,33 @@ const TutorSetup = () => {
                 </div>
 
                 <div>
+
+                  {!!timeZone && (
+                    <div
+                      style={{
+                        margin: "0 0 10px 0",
+                        display: "flex",
+                        width: "100%",
+                        alignItems: "center",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      <Input
+                        label={
+                          <GeneralFieldLabel
+                            editMode={editMode}
+                            label={"UTC"}
+                            tooltipText="Coordinated Universal Time, or 
+                        'UTC,' is the primary time standard by which the world regulates clocks and time.
+                         It's important to ensure that your PC's clock matches the UTC because discrepancies
+                          can lead to issues with scheduling, such as your booked lessons not synchronizing with your local time. To avoid any inconvenience, please verify that your computer's time settings are correctly adjusted to reflect UTC.."
+                          />
+                        }
+                        value={typeof dateTime === "object" ? "" : dateTime}
+                        editMode={false}
+                      />
+                    </div>
+                  )}
                   <div
                     style={{
                       display: "flex",
@@ -1228,33 +1259,6 @@ const TutorSetup = () => {
                   />
                 </div>
 
-                {!!timeZone && (
-                  <div
-                    style={{
-                      display: "flex",
-                      width: "100%",
-
-                      alignItems: "center",
-
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    <Input
-                      label={
-                        <GeneralFieldLabel
-                          editMode={editMode}
-                          label={"UTC"}
-                          tooltipText="Coordinated Universal Time, or 
-                        'UTC,' is the primary time standard by which the world regulates clocks and time.
-                         It's important to ensure that your PC's clock matches the UTC because discrepancies
-                          can lead to issues with scheduling, such as your booked lessons not synchronizing with your local time. To avoid any inconvenience, please verify that your computer's time settings are correctly adjusted to reflect UTC.."
-                        />
-                      }
-                      value={typeof dateTime === "object" ? "" : dateTime}
-                      editMode={false}
-                    />
-                  </div>
-                )}
               </div>
               <div
                 className=" "

@@ -85,3 +85,18 @@
     width: 20px;
     margin-right: 10px;
 }
+
+
+/* ---------intro--------------- */
+.openable-img {
+    transition: all 0.3s ease-in;
+}
+
+.openable-img:hover {
+    cursor: pointer;
+    transform: scale(1.03);
+    filter: brightness(0.7);
+}
+
+
+

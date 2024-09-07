@@ -122,7 +122,7 @@ const TermOfUse = () => {
                     }
                 </div>
                 <div className='px-4 mt-4 student-terms'>
-                    <div className='overflow-auto border shadow p-2' style={{ height: "calc(100vh - 290px" }} >
+                    <div className='overflow-auto border shadow p-2' style={{ maxHeight: "calc(100vh - 290px" , height:"auto"}} >
                         <div className='w-100 text-center p-1'>
                             <img className='' src={`${process.env.REACT_APP_BASE_URL}/logo1.png`} width={350} height={100} alt="logo" />
                         </div>

@@ -51,11 +51,14 @@ const StudentSetup = () => {
   const dispatch = useDispatch();
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+
   let [fname, set_fname] = useState("");
-  const [picUploading, setPicUploading] = useState(false);
   let [mname, set_mname] = useState("");
   let [sname, set_sname] = useState("");
+
   let [email, set_email] = useState("");
+
+  const [picUploading, setPicUploading] = useState(false);
 
   let [cell, set_cell] = useState("");
   let [add1, set_add1] = useState("");
@@ -139,7 +142,7 @@ const StudentSetup = () => {
     if (!isValid) {
       return toast.warning("Please enter the correct phone number");
     }
-    
+
     setSaving(true);
     if (id) {
       upload_student_setup_by_fields(id, {
@@ -170,37 +173,38 @@ const StudentSetup = () => {
         }
       });
     } else {
-      post_student_setup({
-        userId: user.SID,
-        FirstName: fname,
-        MiddleName: mname,
-        LastName: sname,
-        Language: lang,
-        SecLan: secLan,
-        ParentAEmail: parentAEmail,
-        ParentBEmail: parentBEmail,
-        ParentAName: parentAName,
-        ParentBName: parentBName,
-        Over18: is_18,
-        Cell: cell,
-        Grade: grade,
-        Address1: add1,
-        Address2: add2,
-        City: city,
-        State: state,
-        ZipCode: zipCode,
-        Country: country,
-        GMT: timeZone,
-        Photo: photo,
-        Status: "pending",
-        ParentConsent: parentConsent,
-      }).then((response) => {
-        if (!response?.response?.data) {
-          console.log(response[0]);
-          toast.success("Created Successfully!");
-          dispatch(setStudent(response[0]));
-        }
-      });
+      toast.error("Tutor Does not exists!");
+      // post_student_setup({
+      //   userId: user.SID,
+      //   FirstName: fname,
+      //   MiddleName: mname,
+      //   LastName: sname,
+      //   Language: lang,
+      //   SecLan: secLan,
+      //   ParentAEmail: parentAEmail,
+      //   ParentBEmail: parentBEmail,
+      //   ParentAName: parentAName,
+      //   ParentBName: parentBName,
+      //   Over18: is_18,
+      //   Cell: cell,
+      //   Grade: grade,
+      //   Address1: add1,
+      //   Address2: add2,
+      //   City: city,
+      //   State: state,
+      //   ZipCode: zipCode,
+      //   Country: country,
+      //   GMT: timeZone,
+      //   Photo: photo,
+      //   Status: "pending",
+      //   ParentConsent: parentConsent,
+      // }).then((response) => {
+      //   if (!response?.response?.data) {
+      //     console.log(response[0]);
+      //     toast.success("Created Successfully!");
+      //     dispatch(setStudent(response[0]));
+      //   }
+      // });
     }
 
     setSaving(false);
@@ -224,7 +228,7 @@ const StudentSetup = () => {
     Cell: cell,
     City: city,
     Country: country,
-    FirstName: fname,
+    // FirstName: fname,
     GMT: timeZone,
     Grade: grade,
     Language: lang,
@@ -249,9 +253,9 @@ const StudentSetup = () => {
       if (user.role === "student" || user.role === "admin") {
         if (Object.keys(student)) {
           let data = student;
-          set_fname(data.FirstName);
-          set_sname(data.LastName);
-          set_mname(data.MiddleName);
+          // set_fname(data.FirstName);
+          // set_sname(data.LastName);
+          // set_mname(data.MiddleName);
           set_photo(data.Photo);
           set_email(data.Email);
           set_cell(data.Cell);
@@ -425,7 +429,7 @@ const StudentSetup = () => {
   }, [student.Status]);
 
   let handleImage = async (e) => {
-    if(!student.AcademyId) return toast.warning("Please set you Name first!")
+    if (!student.AcademyId) return toast.warning("Please set you Name first!")
     if (e.target.files[0].type.split("/")?.[0] !== "image") {
       alert("Only Image Can Be Uploaded To This Field");
     } else {
@@ -446,9 +450,10 @@ const StudentSetup = () => {
         result.data?.url &&
           upload_student_setup_by_fields(student.AcademyId, {
             Photo: result.data.url,
-          }).then(() =>{
-            dispatch(setStudent({...student, Photo: result.data.url}));
-            toast.success("Uploaded Successfully!")});
+          }).then(() => {
+            dispatch(setStudent({ ...student, Photo: result.data.url }));
+            toast.success("Uploaded Successfully!")
+          });
 
         setPicUploading(false);
       } catch (err) {
@@ -481,8 +486,8 @@ const StudentSetup = () => {
   }, [timeZone]);
 
   const mandatoryFields = [
-    { name: "fname", filled: !!fname?.length, value: fname },
-    { name: "lname", filled: !!sname?.length, value: sname },
+    // { name: "fname", filled: !!fname?.length, value: fname },
+    // { name: "lname", filled: !!sname?.length, value: sname },
     { name: "phone", filled: !!cell, value: cell },
     // { name: "over18", filled: !!is_18?.length, value: is_18 },
     { name: "gmt", filled: !!timeZone?.length, value: timeZone },
@@ -491,7 +496,7 @@ const StudentSetup = () => {
     { name: "country", filled: !!country?.length, value: country },
     { name: "parentAName", filled: !!parentAName?.length, value: parentAName },
     { name: "parentBName", filled: !!parentBName?.length, value: parentBName },
-    {name:"state", filled: !!state?.length, value: state},
+    { name: "state", filled: !!state?.length, value: state },
     {
       name: "parentAEmail",
       filled: !!parentAEmail?.length,
@@ -514,15 +519,19 @@ const StudentSetup = () => {
         background: editMode ? "inherit" : "rgb(233, 236, 239)",
       }}
     >
-     {!!student.StatusReason?.length && <div className="m-3 highlight text-danger w-auto"><FaExclamationCircle color="red" /> {student.StatusReason}</div>
+      {!!student.StatusReason?.length && <div className="m-3 highlight text-danger w-auto"><FaExclamationCircle color="red" /> {student.StatusReason}</div>
       }<div
         className="d-flex justify-content-center container mt-4"
         style={{ height: "100%", gap: "3%" }}
       >
         <div className="text-center" style={{ width: "30%" }}>
-          <h5 style={{ whiteSpace: "nowrap" }} className="fw-bold">
+          <div>
+            <h6 className="m-0"> <span className="text-primary">{student.FirstName} {student.MiddleName} {student.LastName}</span>
+            </h6>
+          </div>
+          <h6 style={{ whiteSpace: "nowrap" }} className="fw-bold">
             Profile Photo
-          </h5>
+          </h6>
           <input
             className="form-control"
             disabled={!editMode}
@@ -569,7 +578,7 @@ const StudentSetup = () => {
         <div className="d-flex flex-column" style={{ width: "66%" }}>
           <div className="d-flex" style={{ width: "100%", gap: "3%" }}>
             <div className="profile-details-cnt" style={{ width: "48%" }}>
-              <div className="input-group mb-2 ">
+              {/* <div className="input-group mb-2 ">
                 <Input
                   validationFn={nameValidations}
                   setValue={set_fname}
@@ -588,9 +597,9 @@ const StudentSetup = () => {
                   }
                   editMode={!nameFieldsDisabled}
                 />
-              </div>
+              </div> */}
 
-              <div className="input-group mb-2 ">
+              {/* <div className="input-group mb-2 ">
                 <Input
                   setErrors={setErrors}
                   errors={errors}
@@ -607,9 +616,9 @@ const StudentSetup = () => {
                   }
                   editMode={!nameFieldsDisabled}
                 />
-              </div>
+              </div> */}
 
-              <div className="input-group mb-2 ">
+              {/* <div className="input-group mb-2 ">
                 <Input
                   setErrors={setErrors}
                   errors={errors}
@@ -627,7 +636,7 @@ const StudentSetup = () => {
                   }
                   editMode={!nameFieldsDisabled}
                 />
-              </div>
+              </div> */}
 
               <div className="input-group mb-2 ">
                 <Input
@@ -662,13 +671,13 @@ const StudentSetup = () => {
                       transform: " translate(0.25rem, -65%) scale(0.8)",
                     }}
                   >
-                     <MandatoryFieldLabel
-                        name="phone"
-                        mandatoryFields={mandatoryFields}
-                        editMode={editMode}
-                        text={"Phone"}
-                      />
-                    
+                    <MandatoryFieldLabel
+                      name="phone"
+                      mandatoryFields={mandatoryFields}
+                      editMode={editMode}
+                      text={"Phone"}
+                    />
+
                   </span>
                 </div>
               </div>
@@ -754,6 +763,27 @@ const StudentSetup = () => {
                   <option value="" disabled={student.Status === "active"}>
                     Select Language
                   </option>
+                  {lang_list.map((item, index) => (
+                    <option value={item} key={index}>
+                      {item}
+                    </option>
+                  ))}
+                </Select>
+              </div>
+
+              <div className="input-group mb-2">
+                <Select
+                  editMode={editMode}
+                  label={
+                    <OptionalFieldLabel
+                      label="Secondry Language(s)"
+                      editMode={editMode}
+                    />
+                  }
+                  setValue={setSecLang}
+                  value={secLan}
+                >
+                  <option value="null">Select Language</option>
                   {lang_list.map((item, index) => (
                     <option value={item} key={index}>
                       {item}
@@ -903,26 +933,6 @@ const StudentSetup = () => {
                   editMode={false}
                 />
               </div>
-              <div className="input-group mb-2">
-                <Select
-                  editMode={editMode}
-                  label={
-                    <OptionalFieldLabel
-                      label="Secondry Language(s)"
-                      editMode={editMode}
-                    />
-                  }
-                  setValue={setSecLang}
-                  value={secLan}
-                >
-                  <option value="null">Select Language</option>
-                  {lang_list.map((item, index) => (
-                    <option value={item} key={index}>
-                      {item}
-                    </option>
-                  ))}
-                </Select>
-              </div>
               <div className="form-check d-flex gap-2 align-items-center">
                 <input
                   style={{ width: "20px", height: "20px" }}
@@ -981,7 +991,7 @@ const StudentSetup = () => {
               <div className="d-flex" style={{ gap: "2%" }}>
                 <div className="input-group mb-2 ">
                   <Input
-                  type="email"
+                    type="email"
                     value={parentAEmail}
                     label={
                       <MandatoryFieldLabel
@@ -1017,7 +1027,7 @@ const StudentSetup = () => {
               <div className="d-flex" style={{ gap: "2%" }}>
                 <div className="input-group mb-2">
                   <Input
-                  type="email"
+                    type="email"
                     value={parentBEmail}
                     label={
                       <MandatoryFieldLabel
