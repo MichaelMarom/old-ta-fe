@@ -540,63 +540,63 @@ export const addDisabledDates = async (date) => {
   }
 };
 
-/**
- *
- * @param {Object} data mandatory keys(fname, lname, mname, userId)
- * @returns
- */
-export const post_tutor_setup = async (data) => {
-  try {
-    let dataObject = {};
-    if (data.photo !== undefined) dataObject.Photo = data.photo;
-    if (data.video !== undefined) dataObject.Video = data.video;
-    if (data.recordedVideo !== undefined)
-      dataObject.VideoRecorded = data.recordedVideo;
-    if (data.fname !== undefined) dataObject.FirstName = data.fname;
-    if (data.mname !== undefined) dataObject.MiddleName = data.mname;
-    if (data.lname !== undefined) dataObject.LastName = data.lname;
-    if (data.add1 !== undefined) dataObject.Address1 = data.add1;
-    if (data.add2 !== undefined) dataObject.Address2 = data.add2;
-    if (data.city !== undefined) dataObject.CityTown = data.city;
-    if (data.state !== undefined) dataObject.StateProvince = data.state;
-    if (data.zipCode !== undefined) dataObject.ZipCode = data.zipCode;
-    if (data.country !== undefined) dataObject.Country = data.country;
-    if (data.cell !== undefined) dataObject.CellPhone = data.cell;
-    if (data.timeZone !== undefined) dataObject.GMT = data.timeZone;
-    if (data.response_zone !== undefined)
-      dataObject.ResponseHrs = data.response_zone;
-    if (data.screenName !== undefined)
-      dataObject.TutorScreenname = data.screenName;
-    if (data.headline !== undefined) dataObject.HeadLine = data.headline;
-    if (data.intro !== undefined) dataObject.Introduction = data.intro;
-    if (data.motivation !== undefined) dataObject.Motivate = data.motivation;
-    if (data.userId !== undefined) dataObject.userId = data.userId;
-    if (data.grades !== undefined)
-      dataObject.Grades = JSON.stringify(data.grades);
-    if (data.start !== undefined) dataObject.StartVacation = data.start;
-    if (data.end !== undefined) dataObject.EndVacation = data.end;
-    if (data.vacation_mode !== undefined)
-      dataObject.VacationMode = data.vacation_mode;
-    if (data.AgreementDate !== undefined)
-      dataObject.AgreementDate = data.AgreementDate;
-    if (data.Step !== undefined) dataObject.Step = data.Step;
-    if (data.Status !== undefined) dataObject.Status = data.Status;
+// /**
+//  *
+//  * @param {Object} data mandatory keys(fname, lname, mname, userId)
+//  * @returns
+//  */
+// export const post_tutor_setup = async (data) => {
+//   try {
+//     let dataObject = {};
+//     if (data.photo !== undefined) dataObject.Photo = data.photo;
+//     if (data.video !== undefined) dataObject.Video = data.video;
+//     if (data.recordedVideo !== undefined)
+//       dataObject.VideoRecorded = data.recordedVideo;
+//     if (data.fname !== undefined) dataObject.FirstName = data.fname;
+//     if (data.mname !== undefined) dataObject.MiddleName = data.mname;
+//     if (data.lname !== undefined) dataObject.LastName = data.lname;
+//     if (data.add1 !== undefined) dataObject.Address1 = data.add1;
+//     if (data.add2 !== undefined) dataObject.Address2 = data.add2;
+//     if (data.city !== undefined) dataObject.CityTown = data.city;
+//     if (data.state !== undefined) dataObject.StateProvince = data.state;
+//     if (data.zipCode !== undefined) dataObject.ZipCode = data.zipCode;
+//     if (data.country !== undefined) dataObject.Country = data.country;
+//     if (data.cell !== undefined) dataObject.CellPhone = data.cell;
+//     if (data.timeZone !== undefined) dataObject.GMT = data.timeZone;
+//     if (data.response_zone !== undefined)
+//       dataObject.ResponseHrs = data.response_zone;
+//     if (data.screenName !== undefined)
+//       dataObject.TutorScreenname = data.screenName;
+//     if (data.headline !== undefined) dataObject.HeadLine = data.headline;
+//     if (data.intro !== undefined) dataObject.Introduction = data.intro;
+//     if (data.motivation !== undefined) dataObject.Motivate = data.motivation;
+//     if (data.userId !== undefined) dataObject.userId = data.userId;
+//     if (data.grades !== undefined)
+//       dataObject.Grades = JSON.stringify(data.grades);
+//     if (data.start !== undefined) dataObject.StartVacation = data.start;
+//     if (data.end !== undefined) dataObject.EndVacation = data.end;
+//     if (data.vacation_mode !== undefined)
+//       dataObject.VacationMode = data.vacation_mode;
+//     if (data.AgreementDate !== undefined)
+//       dataObject.AgreementDate = data.AgreementDate;
+//     if (data.Step !== undefined) dataObject.Step = data.Step;
+//     if (data.Status !== undefined) dataObject.Status = data.Status;
 
-    dataObject.TutorScreenname = data.mname.length
-      ? `${capitalizeFirstLetter(data.fname)}. ${capitalizeFirstLetter(
-          data.mname[0]
-        )}. 
-            ${capitalizeFirstLetter(data.lname[0])}.`
-      : `${capitalizeFirstLetter(data.fname)}. ${capitalizeFirstLetter(
-          data.lname[0]
-        )}.`;
+//     dataObject.TutorScreenname = data.mname.length
+//       ? `${capitalizeFirstLetter(data.fname)}. ${capitalizeFirstLetter(
+//           data.mname[0]
+//         )}. 
+//             ${capitalizeFirstLetter(data.lname[0])}.`
+//       : `${capitalizeFirstLetter(data.fname)}. ${capitalizeFirstLetter(
+//           data.lname[0]
+//         )}.`;
 
-    dataObject.AcademyId = uuidv4();
-    return await apiClient.post("/tutor/setup", dataObject);
-  } catch (err) {
-    showErrorToast(err);
-  }
-};
+//     dataObject.AcademyId = uuidv4();
+//     return await apiClient.post("/tutor/setup", dataObject);
+//   } catch (err) {
+//     showErrorToast(err);
+//   }
+// };
 
 /**
  *

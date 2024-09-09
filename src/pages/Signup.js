@@ -13,7 +13,7 @@ import { useDispatch } from "react-redux";
 import { FaCheck } from "react-icons/fa";
 import { RxCross1 } from "react-icons/rx";
 import Input from "../components/common/Input";
-import { post_tutor_setup, post_tutor_setup_at_signup } from "../axios/tutor";
+import { post_tutor_setup_at_signup } from "../axios/tutor";
 import _ from "lodash";
 import { post_student_setup_at_signup } from "../axios/student";
 import Tooltip from "../components/common/ToolTip";

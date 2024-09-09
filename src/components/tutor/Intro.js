@@ -16,7 +16,7 @@ import AgencyTab from "../../assets/images/tabs/agency-tutor-tab.jpg"; // Adjust
 
 
 import Actions from '../common/Actions';
-import { get_adminConstants, post_termsOfUse } from '../../axios/admin';
+// import { get_adminConstants, post_termsOfUse } from '../../axios/admin';
 import Loading from '../common/Loading';
 import { useSelector } from 'react-redux';
 import { FaRegLightbulb, FaUserCircle, FaUserFriends, FaVideo } from 'react-icons/fa';
@@ -30,55 +30,51 @@ const Intro = () => {
 
     const [db_intro, set_db_intro] = useState('');
     const [intro, set_intro] = useState('');
-    const userRole = localStorage.getItem("user_role");
     const [editMode, setEditMode] = useState(false);
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const result = await get_adminConstants();
-                if (!!result?.data?.[0]?.IntroContent) {
-                    set_intro(result.data[0].IntroContent);
-                    set_db_intro(result.data[0].IntroContent);
-                }
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-            setFetching(false);
-        };
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const result = await get_adminConstants();
+    //             if (!!result?.data?.[0]?.IntroContent) {
+    //                 set_intro(result.data[0].IntroContent);
+    //                 set_db_intro(result.data[0].IntroContent);
+    //             }
+    //         } catch (error) {
+    //             console.error('Error fetching data:', error);
+    //         }
+    //         setFetching(false);
+    //     };
 
-        fetchData();
-    }, []);
+    //     fetchData();
+    // }, []);
 
-    useEffect(() => {
-        setUnsavedChanges(intro !== undefined && db_intro !== undefined &&
-            intro !== db_intro);
-    }, [intro, db_intro]);
+    // useEffect(() => {
+    //     setUnsavedChanges(intro !== undefined && db_intro !== undefined &&
+    //         intro !== db_intro);
+    // }, [intro, db_intro]);
 
-    const handleEditorChange = (value) => {
-        set_intro(value);
-    };
+    // const handleEditorChange = (value) => {
+    //     set_intro(value);
+    // };
 
     const handleEditClick = () => {
         setEditMode(true);
     };
 
-    const handleSave = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        const response = await post_termsOfUse({ IntroContent: intro });
-        set_db_intro(response.data.IntroContent);
-        setEditMode(false);
-        setLoading(false);
-    };
-
-    if (fetching)
-        return <Loading />
+    // const handleSave = async (e) => {
+    //     e.preventDefault();
+    //     setLoading(true);
+    //     const response = await post_termsOfUse({ IntroContent: intro });
+    //     set_db_intro(response.data.IntroContent);
+    //     setEditMode(false);
+    //     setLoading(false);
+    // };
 
     return (
-        <form onSubmit={handleSave}>
+        <div>
             <div className="px-4 m-3  shadow" style={{ maxHeight: "calc(100vh - 170px)", height: "auto", overflow: "auto" }} >
                 <div className='w-100 text-center p-1'>
                     <img className='' src={`${process.env.REACT_APP_BASE_URL}/logo1.png`} width={350} height={100} alt="logo" />
@@ -277,14 +273,14 @@ const Intro = () => {
             </div>
 
             <Actions
-                handleSave={handleSave}
+                saveDisabled
                 loading={loading}
                 disabled={!unSavedChanges || !tutor}
                 editMode={editMode}
                 setEditMode={setEditMode}
                 handleEditClick={handleEditClick}
             />
-        </form>
+        </div>
     );
 };
 

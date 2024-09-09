@@ -9,7 +9,7 @@ import { PhoneNumberUtil } from "google-libphonenumber";
 import { toast } from "react-toastify";
 import { RiRobot2Fill } from "react-icons/ri";
 
-import { post_tutor_setup, updateTutorSetup } from "../../axios/tutor";
+import { updateTutorSetup } from "../../axios/tutor";
 import { useDispatch } from "react-redux";
 import { convertGMTOffsetToLocalString, showDate } from "../../utils/moment";
 import WebcamCapture from "./Recorder/VideoRecorder";
@@ -161,11 +161,7 @@ const TutorSetup = () => {
       convertToDate(tutor.EndVacation).getTime() < new Date().getTime() &&
       tutor.VacationMode
     ) {
-      post_tutor_setup({
-        userId: tutor.userId,
-        fname: tutor.FirstName,
-        lname: tutor.LastName,
-        mname: tutor.MiddleName,
+      updateTutorSetup(tutor.AcademyId, {
         vacation_mode: false,
       });
       dispatch(setTutor({ ...tutor, vacation_mode: false }));
@@ -325,21 +321,33 @@ const TutorSetup = () => {
     }
 
     setSavingRecord(true);
-    let response = await saver();
+    await saver();
     setSavingRecord(false);
-    dispatch(setMissingFeildsAndTabs());
-    if (response && response.status === 200) {
-      dispatch(setTutor());
-      localStorage.setItem(
-        "tutor_screen_name",
-        response.data?.[0]?.TutorScreenname
-      );
-      localStorage.setItem("tutor_user_id", response.data?.[0]?.AcademyId);
-      setEditMode(false);
-      toast.success("Data saved successfully");
-    } else {
-      toast.error("Error saving the Data ");
-    }
+
+    dispatch(setTutor({...tutor,
+      CellPhone: cell,
+      Address1: add1,
+      Address2: add2,
+      CityTown: city,
+      StateProvince: state,
+      ZipCode: zipCode,
+      Country: country,
+      GMT: timeZone,
+      ResponseHrs: response_zone,
+      Introduction: intro,
+      Motivate: motivation,
+      HeadLine: headline,
+      StartVacation: vacation_mode ? start : moment().toDate(),
+      EndVacation: vacation_mode ? end : moment().endOf().toDate(),
+      VacationMode: vacation_mode,
+      Step: 2,
+      Video: video,
+      Photo: photo
+    }));
+
+    localStorage.setItem("tutor_user_id", tutor.AcademyId);
+    setEditMode(false);
+    toast.success("Data saved successfully");
   };
 
   let saver = async () => {
@@ -347,28 +355,27 @@ const TutorSetup = () => {
       // fname,
       // mname,
       // lname,
-      cell,
-      add1,
-      add2,
-      city,
-      state,
-      zipCode,
-      country,
-      timeZone,
-      response_zone,
-      intro,
-      motivation,
-      headline,
-      userId: tutor.userId ? tutor.userId : user?.SID,
-      start: vacation_mode ? start : moment().toDate(),
-      end: vacation_mode ? end : moment().endOf().toDate(),
-      vacation_mode,
+      CellPhone: cell,
+      Address1: add1,
+      Address2: add2,
+      CityTown: city,
+      StateProvince: state,
+      ZipCode: zipCode,
+      Country: country,
+      GMT: timeZone,
+      ResponseHrs: response_zone,
+      Introduction: intro,
+      Motivate: motivation,
+      HeadLine: headline,
+      StartVacation: vacation_mode ? start : moment().toDate(),
+      EndVacation: vacation_mode ? end : moment().endOf().toDate(),
+      VacationMode: vacation_mode,
+      Step: 2,
+      Video: video,
+      Photo: photo
     };
-    if (!tutor.FirstName) body.video = video;
-    if (!tutor.FirstName) body.photo = photo;
-    if (!tutor.AcademyId) body.Step = 2;
 
-    let response = await post_tutor_setup(body);
+    let response = await updateTutorSetup(tutor.AcademyId, body);
     return response;
   };
 

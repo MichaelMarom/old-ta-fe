@@ -3,7 +3,7 @@ import StudentLayout from '../../layouts/StudentLayout'
 import Actions from '../../components/common/Actions'
 import { useDispatch, useSelector } from 'react-redux'
 import RichTextEditor from '../../components/common/RichTextEditor/RichTextEditor'
-import { get_adminConstants, post_termsOfUse } from '../../axios/admin'
+// import { get_adminConstants, post_termsOfUse } from '../../axios/admin'
 import Loading from '../../components/common/Loading'
 import { toast } from 'react-toastify'
 import { showDate } from '../../utils/moment'
@@ -15,12 +15,9 @@ import _ from 'lodash'
 
 const TermOfUse = () => {
     const { user } = useSelector(state => state.user)
-    const [terms, setTerms] = useState('');
     const [editMode, setEditMode] = useState(false)
     const [unSavedChanges, setUnSavedChanges] = useState(false)
     const [loading, setLoading] = useState(false)
-    const [db_terms, set_db_terms] = useState('');
-    const [fetching, setFetching] = useState(true);
     const { student } = useSelector(state => state.student)
     const { studentMissingFields } = useSelector(state => state.studentMissingFields)
     const [agreed, setAgreed] = useState();
@@ -33,47 +30,47 @@ const TermOfUse = () => {
         }
     }, [student])
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const result = await get_adminConstants(2);
-                if (!result?.response?.data) {
-                    setTerms(result.data[0].TermContent);
-                    set_db_terms(result.data[0].TermContent);
-                }
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-            setFetching(false)
-        };
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const result = await get_adminConstants(2);
+    //             if (!result?.response?.data) {
+    //                 setTerms(result.data[0].TermContent);
+    //                 set_db_terms(result.data[0].TermContent);
+    //             }
+    //         } catch (error) {
+    //             console.error('Error fetching data:', error);
+    //         }
+    //         setFetching(false)
+    //     };
 
-        fetchData();
-    }, []);
+    //     fetchData();
+    // }, []);
 
     useEffect(() => {
-        if ((terms !== undefined && db_terms !== undefined && terms !== db_terms && editMode) ||
-            (!student.AgreementDate && agreed)) {
+        // (terms !== undefined && db_terms !== undefined && terms !== db_terms && editMode)
+        if ((!student.AgreementDate && agreed)) {
             setUnSavedChanges(true);
         } else {
             setUnSavedChanges(false);
         }
-    }, [terms, db_terms, agreed, student, editMode])
+    }, [ agreed, student, editMode])
 
-    const handleSave = async (e) => {
-        e.preventDefault()
-        setLoading(true)
-        const response = await post_termsOfUse({ id: 2, TermContent: terms });
-        if (response.message) {
-            toast.error(response.message)
-        }
-        else {
-            toast.success('Successfully save the terms!');
-            setAgreementDateToNullForAllStudents()
-            set_db_terms(response.data.TermContent);
-        }
-        setEditMode(false);
-        setLoading(false)
-    }
+    // const handleSave = async (e) => {
+    //     e.preventDefault()
+    //     setLoading(true)
+    //     const response = await post_termsOfUse({ id: 2, TermContent: terms });
+    //     if (response.message) {
+    //         toast.error(response.message)
+    //     }
+    //     else {
+    //         toast.success('Successfully save the terms!');
+    //         setAgreementDateToNullForAllStudents()
+    //         set_db_terms(response.data.TermContent);
+    //     }
+    //     setEditMode(false);
+    //     setLoading(false)
+    // }
 
     const handleSaveAgreement = async (e) => {
         e.preventDefault()
@@ -95,13 +92,9 @@ const TermOfUse = () => {
         setLoading(false)
     }
 
-    const handleEditorChange = (value) => { setTerms(value) }
-
-    if (fetching)
-        return <Loading />
     return (
         <>
-            <form onSubmit={user.role === 'admin' ? handleSave : handleSaveAgreement}>
+            <form onSubmit={user.role === 'tutor' ? handleSaveAgreement : null}>
                 <div className="d-block py-3 px-5">
                     <h4 style={{ fontSize: "16px" }}><span className="text-danger" style={{ fontWeight: "bold", fontSize: "20px" }}>*</span>CHECKING THE BOX BELOW, CONSITUTES YOUR ACCPETANCE OF THESE TERMS OF USE
                     </h4>
@@ -122,7 +115,7 @@ const TermOfUse = () => {
                     }
                 </div>
                 <div className='px-4 mt-4 student-terms'>
-                    <div className='overflow-auto border shadow p-2' style={{ maxHeight: "calc(100vh - 290px" , height:"auto"}} >
+                    <div className='overflow-auto border shadow p-2' style={{ maxHeight: "calc(100vh - 290px", height: "auto" }} >
                         <div className='w-100 text-center p-1'>
                             <img className='' src={`${process.env.REACT_APP_BASE_URL}/logo1.png`} width={350} height={100} alt="logo" />
                         </div>
@@ -147,7 +140,7 @@ const TermOfUse = () => {
                             </li>
                         </ol>
                         <p className='text-success'>
-                            If you have any questions or concerns about these terms of use, please contact us at 
+                            If you have any questions or concerns about these terms of use, please contact us at
                             <span className='text-primary'>
                                 &nbsp;admin@tutoring-academy.com
                             </span>.

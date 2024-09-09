@@ -34,8 +34,7 @@ const Header = () => {
   const [filteredSessions, setFilteredSessions] = useState([]);
   const { sessions } = useSelector((state) => state.studentSessions);
   const { studentMissingFields } = useSelector((state) => state.studentMissingFields);
-  console.log(studentMissingFields)
-
+  const [isOverflowing, setIsOverflowing] = useState(false);
   const [profileDropdownOpened, setProfileDropdownOpened] = useState(false);
   const scrollRef = useRef();
   const profileDropdownRef = useRef();
@@ -44,6 +43,24 @@ const Header = () => {
 
 
   const { student } = useSelector((state) => state.student);
+
+  useEffect(() => {
+    const checkOverflow = () => {
+      const el = scrollRef.current;
+      if (el) {
+        const hasOverflow = el.scrollWidth > el.clientWidth || el.scrollHeight > el.clientHeight;
+        setIsOverflowing(hasOverflow);
+      }
+    };
+
+    checkOverflow(); // Check on mount
+
+    // Optional: Check on window resize
+    window.addEventListener('resize', checkOverflow);
+    return () => window.removeEventListener('resize', checkOverflow);
+  }, []);
+
+
   const tabs = [
     { name: "Introduction", url: "/student/intro" },
     { name: "Setup", url: "/student/setup" },
@@ -271,18 +288,19 @@ const Header = () => {
           </ul>
         </div>
       </div>
-      <div
+      {isOverflowing && <div
         onClick={handleScrollLeft}
         style={{ marginLeft: "30px" }}
         className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
       >
         <IoChevronBackOutline color="#47c176" size={30} />
-      </div>
+      </div>}
       <ul
         ref={scrollRef}
         className={`header`}
         style={{
           background: "inherit",
+          // justifyContent: "center",
           // tutor.Status === (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
           // user.role !== "admin"
           //   ? "#737476"
@@ -373,13 +391,13 @@ const Header = () => {
           </div>
         ))}
       </ul>
-
-      <div
-        onClick={handleScrollRight}
-        className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
-      >
-        <IoChevronForwardOutline color="#47c176" size={30} />
-      </div>
+      {isOverflowing &&
+        <div
+          onClick={handleScrollRight}
+          className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
+        >
+          <IoChevronForwardOutline color="#47c176" size={30} />
+        </div>}
       <TabInfoVideoToast
         video={tabs.find((tab) => tab.url === isOpen)?.video}
         isOpen={isOpen}

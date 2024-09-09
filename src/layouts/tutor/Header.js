@@ -44,6 +44,7 @@ const Header = () => {
   const { sessions } = useSelector((state) => state.tutorSessions);
   const [isOpen, setIsOpen] = useState(false);
   const [profileDropdownOpened, setProfileDropdownOpened] = useState(false);
+  const [isOverflowing, setIsOverflowing] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -52,6 +53,22 @@ const Header = () => {
   const scrollRef = useRef(null);
   const profileDropdownRef = useRef(null);
   const scrollStep = 500; // Adjust the scroll step as needed
+
+  useEffect(() => {
+    const checkOverflow = () => {
+      const el = scrollRef.current;
+      if (el) {
+        const hasOverflow = el.scrollWidth > el.clientWidth || el.scrollHeight > el.clientHeight;
+        setIsOverflowing(hasOverflow);
+      }
+    };
+
+    checkOverflow(); // Check on mount
+
+    // Optional: Check on window resize
+    window.addEventListener('resize', checkOverflow);
+    return () => window.removeEventListener('resize', checkOverflow);
+  }, []);
 
   const handleScrollLeft = () => {
     if (scrollRef.current) {
@@ -164,82 +181,27 @@ const Header = () => {
   }, [sessions]);
 
   return (
-    <>
-      <div className="tutor-tab-header shadow-sm">
-        <div
-         ref={profileDropdownRef}
-          className={`screen-name position-relative flex-column px-1 gap-2`}
-          style={{
-            width: "170px",
-            fontSize: "14px",
-            whiteSpace: "nowrap",
-            marginLeft: "20px",
-            height: "50px",
-            transition: "all 0.3s ease-in-out",
-            display: "flex",
-            // display: !tutor.TutorScreenname ? "none" : "flex",
-            color: statesColours[tutor.Status]?.bg,
-          }}
-        >
-          {!tutor.TutorScreenname ? (
-            <div
-              className="screen-name position-relative d-flex align-items-center px-1 gap-2"
-              style={{ width: "170px", marginLeft: "20px", height: "50px" }}
-            >
-              <div
-                className="d-flex align-items-center cursor-pointer"
-                onClick={() =>
-                  setProfileDropdownOpened(!profileDropdownOpened)
-                }
-              >
-                <div>
-                  <div
-                    className="bg-secondary rounded-circle"
-                    style={{ width: "35px", height: "35px" }}
-                  ></div>
-                </div>
-                <div className="ms-2">
-                  <div
-                    className="bg-secondary"
-                    style={{
-                      width: "100px",
-                      height: "14px",
-                      borderRadius: "4px",
-                    }}
-                  ></div>
-                  <div
-                    className="bg-secondary mt-1"
-                    style={{
-                      width: "80px",
-                      height: "12px",
-                      borderRadius: "4px",
-                    }}
-                  ></div>
-                </div>
-                {/* <div className="ms-2">
-                <div
-                  className="bg-secondary"
-                  style={{ width: "20px", height: "20px", borderRadius: "50%" }}
-                ></div>
-              </div> */}
-                <div
-                  style={{
-                    marginLeft: "5px",
-                    transition: "transform 0.3s ease-in-out",
-                    transform: profileDropdownOpened
-                      ? "rotate(180deg)"
-                      : "rotate(0deg)",
-                  }}
-                >
-                  {profileDropdownOpened ? (
-                    <FaChevronUp color="white" />
-                  ) : (
-                    <FaChevronDown color="white" />
-                  )}
-                </div>
-              </div>
-            </div>
-          ) : (
+    <div className="tutor-tab-header shadow-sm">
+      <div
+        ref={profileDropdownRef}
+        className={`screen-name position-relative flex-column px-1 gap-2`}
+        style={{
+          width: "170px",
+          fontSize: "14px",
+          whiteSpace: "nowrap",
+          marginLeft: "20px",
+          height: "50px",
+          transition: "all 0.3s ease-in-out",
+          display: "flex",
+          // display: !tutor.TutorScreenname ? "none" : "flex",
+          color: statesColours[tutor.Status]?.bg,
+        }}
+      >
+        {!tutor.TutorScreenname ? (
+          <div
+            className="screen-name position-relative d-flex align-items-center px-1 gap-2"
+            style={{ width: "170px", marginLeft: "20px", height: "50px" }}
+          >
             <div
               className="d-flex align-items-center cursor-pointer"
               onClick={() =>
@@ -247,21 +209,35 @@ const Header = () => {
               }
             >
               <div>
-                <Avatar
-                  avatarSrc={tutor.Photo}
-                  size="35"
-                  indicSize="8px"
-                  borderSize="1px"
-                />
+                <div
+                  className="bg-secondary rounded-circle"
+                  style={{ width: "35px", height: "35px" }}
+                ></div>
               </div>
-              <div className="">
-                <div style={{ fontWeight: "bold" }}>
-                  {tutor.TutorScreenname}
-                </div>
-                <div style={{ fontSize: "12px", fontWeight: "700" }}>
-                  {StatusValues[tutor.Status]}
-                </div>
+              <div className="ms-2">
+                <div
+                  className="bg-secondary"
+                  style={{
+                    width: "100px",
+                    height: "14px",
+                    borderRadius: "4px",
+                  }}
+                ></div>
+                <div
+                  className="bg-secondary mt-1"
+                  style={{
+                    width: "80px",
+                    height: "12px",
+                    borderRadius: "4px",
+                  }}
+                ></div>
               </div>
+              {/* <div className="ms-2">
+                <div
+                  className="bg-secondary"
+                  style={{ width: "20px", height: "20px", borderRadius: "50%" }}
+                ></div>
+              </div> */}
               <div
                 style={{
                   marginLeft: "5px",
@@ -271,119 +247,160 @@ const Header = () => {
                     : "rotate(0deg)",
                 }}
               >
-                {profileDropdownOpened ? <FaChevronUp /> : <FaChevronDown />}
+                {profileDropdownOpened ? (
+                  <FaChevronUp color="white" />
+                ) : (
+                  <FaChevronDown color="white" />
+                )}
               </div>
             </div>
-          )}
-          <div
-           
-            className={`position-absolute text-bg-light shadow w-100`}
-            style={{
-              marginTop: "50px",
-              maxHeight: profileDropdownOpened ? "200px" : "0",
-              transition: "max-height 0.3s ease-in-out",
-              overflow: "hidden",
-              border: "1px solid lightgray",
-              borderTop: "none",
-              zIndex: 9,
-            }}
-          >
-            <ul
-              className="d-flex flex-column align-items-start p-2"
-              style={{ background: "#212f3c", color: "white" }}
-            >
-              <li
-                className="p-0 text-start border-bottom w-100"
-                style={{ fontSize: "12px" }}
-              >
-                <span style={{ marginRight: "5px" }}>
-                  <FaClock color="white" />
-                </span>
-                {showDate(moment().toDate(), wholeDateFormat)}
-              </li>
-              <li
-                style={{ color: "#e14c4c" }}
-                className="p-0 text-start w-100"
-                onClick={() => signOut(() => handleSignOut())}
-              >
-                Signout
-                <span style={{ marginLeft: "5px" }}>
-                  <FaSignOutAlt color="#e14c4c" />
-                </span>
-              </li>
-            </ul>
           </div>
-        </div>
-
+        ) : (
+          <div
+            className="d-flex align-items-center cursor-pointer"
+            onClick={() =>
+              setProfileDropdownOpened(!profileDropdownOpened)
+            }
+          >
+            <div>
+              <Avatar
+                avatarSrc={tutor.Photo}
+                size="35"
+                indicSize="8px"
+                borderSize="1px"
+              />
+            </div>
+            <div className="">
+              <div style={{ fontWeight: "bold" }}>
+                {tutor.TutorScreenname}
+              </div>
+              <div style={{ fontSize: "12px", fontWeight: "700" }}>
+                {StatusValues[tutor.Status]}
+              </div>
+            </div>
+            <div
+              style={{
+                marginLeft: "5px",
+                transition: "transform 0.3s ease-in-out",
+                transform: profileDropdownOpened
+                  ? "rotate(180deg)"
+                  : "rotate(0deg)",
+              }}
+            >
+              {profileDropdownOpened ? <FaChevronUp /> : <FaChevronDown />}
+            </div>
+          </div>
+        )}
         <div
-          onClick={handleScrollLeft}
-          style={{ marginLeft: "30px" }}
-          className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
-        >
-          <IoChevronBackOutline color="#47c176" size={30} />
-        </div>
-        <ul
-          ref={scrollRef}
-          className={`header`}
+
+          className={`position-absolute text-bg-light shadow w-100`}
           style={{
-            background: "inherit",
-            // tutor.Status === (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
-            // user.role !== "admin"
-            //   ? "#737476"
-            //   : "inherit",
-            // pointerEvents:
-            //   tutor.Status === (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
-            //   user.role !== "admin"
-            //     ? "none"
-            //     : "auto",
-            width: "calc(100% - 400px)",
-            margin: "0 -10px",
-            zIndex: 1,
+            marginTop: "50px",
+            maxHeight: profileDropdownOpened ? "200px" : "0",
+            transition: "max-height 0.3s ease-in-out",
+            overflow: "hidden",
+            border: "1px solid lightgray",
+            borderTop: "none",
+            zIndex: 9,
           }}
         >
-          {tabs.map((tab) => {
-            return (
-              (user.role !== "admin" || tab.url !== "/collab") && (
-                <div
-                  id={getId(tab)}
+          <ul
+            className="d-flex flex-column align-items-start p-2"
+            style={{ background: "#212f3c", color: "white" }}
+          >
+            <li
+              className="p-0 text-start border-bottom w-100"
+              style={{ fontSize: "12px" }}
+            >
+              <span style={{ marginRight: "5px" }}>
+                <FaClock color="white" />
+              </span>
+              {showDate(moment().toDate(), wholeDateFormat)}
+            </li>
+            <li
+              style={{ color: "#e14c4c" }}
+              className="p-0 text-start w-100"
+              onClick={() => signOut(() => handleSignOut())}
+            >
+              Signout
+              <span style={{ marginLeft: "5px" }}>
+                <FaSignOutAlt color="#e14c4c" />
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      {isOverflowing && <div
+        onClick={handleScrollLeft}
+        style={{ marginLeft: "30px" }}
+        className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
+      >
+        <IoChevronBackOutline color="#47c176" size={30} />
+      </div>}
+      <ul
+        ref={scrollRef}
+        className={`header`}
+        style={{
+          // justifyContent:"center",
+          background: "inherit",
+          // tutor.Status === (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
+          // user.role !== "admin"
+          //   ? "#737476"
+          //   : "inherit",
+          // pointerEvents:
+          //   tutor.Status === (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
+          //   user.role !== "admin"
+          //     ? "none"
+          //     : "auto",
+          width: "calc(100% - 400px)",
+          margin: "0 -10px",
+          zIndex: 1,
+        }}
+      >
+        {tabs.map((tab) => {
+          return (
+            (user.role !== "admin" || tab.url !== "/collab") && (
+              <div
+                id={getId(tab)}
+                key={tab.url}
+                className="navitem d-flex justify-content-center align-items-center"
+              >
+                <li
                   key={tab.url}
-                  className="navitem d-flex justify-content-center align-items-center"
+                  className="navitem-li"
+                  data-url={tab.url}
+                  onClick={() =>
+                    ((tutor.Status !== PROFILE_STATUS.PENDING &&
+                      tutor.AcademyId) ||
+                      user.role === "admin") &&
+                    nav(tab.url)
+                  }
+                  style={{
+                    color:
+                      tutor.Status ===
+                        (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
+                        user.role !== "admin"
+                        ? "#b5b5b5"
+                        : "white",
+                    cursor:
+                      tutor.Status ===
+                        (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
+                        user.role !== "admin"
+                        ? "not-allowed"
+                        : "pointer",
+                    // pointerEvents:
+                    //   tutor.Status ===
+                    //     (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
+                    //   user.role !== "admin"
+                    //     ? "none"
+                    //     : "auto",
+                  }}
                 >
-                  <li
-                    key={tab.url}
-                    className="navitem-li"
-                    data-url={tab.url}
-                    onClick={() =>
-                      ((tutor.Status !== PROFILE_STATUS.PENDING &&
-                        tutor.AcademyId) ||
-                        user.role === "admin") &&
-                      nav(tab.url)
-                    }
-                    style={{
-                      color:
-                        tutor.Status ===
-                          (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
-                        user.role !== "admin"
-                          ? "#b5b5b5"
-                          : "white",
-                      cursor:
-                        tutor.Status ===
-                          (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
-                        user.role !== "admin"
-                          ? "not-allowed"
-                          : "pointer",
-                      // pointerEvents:
-                      //   tutor.Status ===
-                      //     (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
-                      //   user.role !== "admin"
-                      //     ? "none"
-                      //     : "auto",
-                    }}
-                  >
-                    <h5 className="m-0 d-flex gap-2" style={{fontSize:"14px"}}>
-                      {!!missingFields.find(
-                        (field) => field.tab === tab.name
-                      ) && (
+                  <h5 className="m-0 d-flex gap-2 align-items-center" style={{ fontSize: "14px" }}>
+                    {!!missingFields.find(
+                      (field) => field.tab === tab.name
+                    ) && (
                         <span
                           className="rounded-circle m-1 bg-light d-flex justify-content-center align-items-center"
                           style={{ width: "15px", height: "15px" }}
@@ -395,65 +412,64 @@ const Header = () => {
                           />
                         </span>
                       )}
-                      {tab.name}
-                      {!!filteredSessions.length &&
-                        tab.url === "/tutor/feedback" && (
-                          <span
-                            className="text-bg-danger p-1 rounded-circle"
-                            style={{
-                              display: "inline-flex",
-                              width: "19px",
-                              height: "19px",
-                              fontSize: "10px",
-                              flexDirection: "row",
-                              justifyContent: "center",
-                              alignItems: "center",
-                            }}
-                          >
-                            {filteredSessions.length}
-                          </span>
-                        )}
-                    </h5>
-                  </li>
-                  {tab.video && (
-                    <div
-                      className="cursor-pointer mx-2 video-nav-icon"
-                      style={{ transform: "skew(0)" }}
-                      onClick={() =>
-                        setIsOpen(tab.url)
+                    {tab.name}
+                    {!!filteredSessions.length &&
+                      tab.url === "/tutor/feedback" && (
+                        <span
+                          className="text-bg-danger p-1 rounded-circle"
+                          style={{
+                            display: "inline-flex",
+                            width: "19px",
+                            height: "19px",
+                            fontSize: "10px",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          {filteredSessions.length}
+                        </span>
+                      )}
+                  </h5>
+                </li>
+                {tab.video && (
+                  <div
+                    className="cursor-pointer mx-2 video-nav-icon"
+                    style={{ transform: "skew(0)" }}
+                    onClick={() =>
+                      setIsOpen(tab.url)
+                    }
+                  >
+                    <PiVideoBold
+                      color={
+                        location.pathname === tab.url
+                          ? "#ff4e4e"
+                          : "rgb(153 132 132)"
                       }
-                    >
-                      <PiVideoBold
-                        color={
-                          location.pathname === tab.url
-                            ? "#ff4e4e"
-                            : "rgb(153 132 132)"
-                        }
-                        size="28"
-                        className="video-nav-icon"
-                      />
-                    </div>
-                  )}
-                </div>
-              )
-            );
-          })}
-        </ul>
+                      size="28"
+                      className="video-nav-icon"
+                    />
+                  </div>
+                )}
+              </div>
+            )
+          );
+        })}
+      </ul>
 
-        <div
-          onClick={handleScrollRight}
-          className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
-        >
-          <IoChevronForwardOutline color="#47c176" size={30} />
-        </div>
-
-        <TabInfoVideoToast
-          video={tabs.find((tab) => tab.url === isOpen)?.video}
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-        />
+      {isOverflowing && <div
+        onClick={handleScrollRight}
+        className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
+      >
+        <IoChevronForwardOutline color="#47c176" size={30} />
       </div>
-    </>
+      }
+      <TabInfoVideoToast
+        video={tabs.find((tab) => tab.url === isOpen)?.video}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      />
+    </div>
   );
 };
 

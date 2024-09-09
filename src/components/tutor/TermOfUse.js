@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import RichTextEditor from "../common/RichTextEditor/RichTextEditor";
 import Actions from "../common/Actions";
-import { get_adminConstants, post_termsOfUse, send_sms } from "../../axios/admin";
+import {
+  // get_adminConstants,
+  //  post_termsOfUse,
+  send_sms
+} from "../../axios/admin";
 import {
   setAgreementDateToNullForAll,
   updateTutorSetup,
@@ -20,12 +24,10 @@ import _ from "lodash";
 import { MandatoryFieldLabel } from "./TutorSetup";
 import { setMissingFeildsAndTabs } from "../../redux/tutor/missingFieldsInTabs";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { BsNutFill } from "react-icons/bs";
 
 const TermOfUse = () => {
   const [unSavedChanges, setUnSavedChanges] = useState(false);
-  const [terms, set_terms] = useState("");
-  const [db_terms, set_db_terms] = useState("");
-  const [userRole, setUserRole] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
@@ -35,23 +37,23 @@ const TermOfUse = () => {
   const { missingFields } = useSelector((state) => state.missingFields);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const storedUserRole = user.role;
-        const result = await get_adminConstants();
-        if (result?.data?.[0]?.TermContent) {
-          set_terms(result.data[0].TermContent);
-          set_db_terms(result.data[0].TermContent);
-        }
-        setUserRole(storedUserRole);
-      } catch (error) {
-        toast.error(error.message);
-      }
-      setFetching(false);
-    };
-    fetchData();
-  }, [user]);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const storedUserRole = user.role;
+  //       const result = await get_adminConstants();
+  //       if (result?.data?.[0]?.TermContent) {
+  //         set_terms(result.data[0].TermContent);
+  //         set_db_terms(result.data[0].TermContent);
+  //       }
+  //       setUserRole(storedUserRole);
+  //     } catch (error) {
+  //       toast.error(error.message);
+  //     }
+  //     setFetching(false);
+  //   };
+  //   fetchData();
+  // }, [user]);
 
   useEffect(() => {
     if (tutor.AgreementDate) setAgreed(true);
@@ -59,31 +61,27 @@ const TermOfUse = () => {
 
   useEffect(() => {
     if (
-      (terms !== undefined &&
-        db_terms !== undefined &&
-        terms !== db_terms &&
-        editMode) ||
       (!tutor.AgreementDate && agreed)
     ) {
       setUnSavedChanges(true);
     } else {
       setUnSavedChanges(false);
     }
-  }, [terms, db_terms, agreed, tutor, editMode]);
+  }, [agreed, tutor, editMode]);
 
-  const handleEditorChange = (value) => {
-    set_terms(value);
-  };
+  // const handleEditorChange = (value) => {
+  //   set_terms(value);
+  // };
 
-  const handleSaveTerms = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    const response = await post_termsOfUse({ TermContent: terms });
-    await setAgreementDateToNullForAll();
-    response?.data?.TermContent && set_db_terms(response.data.TermContent);
-    setEditMode(false);
-    setLoading(false);
-  };
+  // const handleSaveTerms = async (e) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+  //   const response = await post_termsOfUse({ TermContent: terms });
+  //   await setAgreementDateToNullForAll();
+  //   response?.data?.TermContent && set_db_terms(response.data.TermContent);
+  //   setEditMode(false);
+  //   setLoading(false);
+  // };
 
   const handleSaveAgreement = async (e) => {
     e.preventDefault();
@@ -110,11 +108,10 @@ const TermOfUse = () => {
     dispatch(setTutor({ ...tutor, ...body }));
   };
 
-  if (fetching) return <Loading />;
   return (
     <div className="form-term-of-use h-100">
       <form
-        onSubmit={userRole === "admin" ? handleSaveTerms : handleSaveAgreement}
+        onSubmit={user.role === "tutor" ? handleSaveAgreement : null}
       >
         <div className="d-block p-5">
           <h4 style={{ fontSize: "16px" }}>
@@ -149,9 +146,9 @@ const TermOfUse = () => {
               checked={agreed}
               onChange={() => setAgreed(true)}
               disabled={
-                tutor.AgreementDate || userRole !== "tutor" || !editMode
+                tutor.AgreementDate || user.role !== "tutor" || !editMode
               }
-              required={userRole === "tutor"}
+              required={user.role === "tutor"}
             />
             <label className="form-check-label fs-6">
               By checking the box you agree with the terms of the tutoring
@@ -303,7 +300,7 @@ const TermOfUse = () => {
           {/* <RichTextEditor
             value={terms}
             onChange={handleEditorChange}
-            readOnly={!editMode || userRole !== "admin" || !editMode}
+            readOnly={!editMode || user.role !== "admin" || !editMode}
             placeholder="Enter Term Of  Service"
             height="calc(100vh - 190px)"
             className="mb-5"
@@ -313,7 +310,7 @@ const TermOfUse = () => {
         <Actions
           loading={loading}
           saveDisabled={
-            !editMode || (tutor.AgreementDate && userRole === "tutor")
+            !editMode || (tutor.AgreementDate && user.role === "tutor")
           }
           editDisabled={editMode}
           onEdit={() => setEditMode(true)}

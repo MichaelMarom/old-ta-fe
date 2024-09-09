@@ -53,10 +53,10 @@ const App = () => {
   const { education } = useSelector((state) => state.edu);
   const { discount } = useSelector((state) => state.discount);
 
-  
+
   const { studentBank } = useSelector(state => state.studentBank)
   console.log(studentBank)
-  
+
   const [activeRoutes, setActiveRoutes] = useState([]);
   const tutorUserId = localStorage.getItem("tutor_user_id");
   const studentLoggedIn = user?.role === "student";
@@ -67,7 +67,11 @@ const App = () => {
     const isExpired = result?.response?.data?.message?.includes("expired");
     const isMalformed = result?.response?.data?.message?.includes("malformed");
     const missingToken = result?.response?.data?.reason?.includes("attached");
-    if ((isExpired || isMalformed) && !missingToken) {
+
+    //TODO: why missing token
+    // if ((isExpired || isMalformed) && !missingToken) {
+    if ((isExpired || isMalformed)) {
+
       return redirect_to_login(
         navigate,
         signOut,
@@ -170,6 +174,7 @@ const App = () => {
           const studentSessions = await dispatch(
             await setStudentSessions(student)
           );
+          console.log(studentSessions, "studentSessions")
 
           if (handleExpiredToken(studentSessions)) clearInterval(intervalId);
         }, 60000);
