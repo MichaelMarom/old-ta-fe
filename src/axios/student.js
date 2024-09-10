@@ -277,7 +277,7 @@ export const getTutorsAccordingToSubjectandFaculty = async (
 ) => {
   try {
     const { data } = await apiClient.get(
-      `/student/${studentId}/subject/${subjectName}/faculty/${facultyId}`
+      `/student/${studentId}/subject/${encodeURIComponent(subjectName)}/faculty/${facultyId}`
     );
     return data;
   } catch (err) {

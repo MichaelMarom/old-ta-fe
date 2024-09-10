@@ -11,6 +11,7 @@ import {
   checkSelectedSlots,
   isFutureDate,
 } from "../utils/calenderUtils";
+import { convertToDate } from "../Calendar";
 
 const useSlotPropGetter = ({
   isStudentLoggedIn,
@@ -25,7 +26,7 @@ const useSlotPropGetter = ({
   disableDates,
   disabledHours,
   disableColor,
-  convertToDate,
+  // convertToDate,
   lessons
 }) => {
   return useCallback(

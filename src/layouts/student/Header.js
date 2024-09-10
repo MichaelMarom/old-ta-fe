@@ -364,6 +364,7 @@ const Header = () => {
                         position: "absolute",
                         fontSize: "10px",
                         bottom: "6px",
+                        left:"0"
                       }}
                     >
                       {filteredSessions.length}

@@ -41,11 +41,11 @@ export const convertToDate = (date) =>
   date instanceof Date ? date : new Date(date);
 
 const ShowCalendar = ({
-  setIsModalOpen = () => {}, //FOR STUDENT
+  setIsModalOpen = () => { }, //FOR STUDENT
   isModalOpen = false, //FOR STUDENT
   timeDifference = null, //FOR STUDENT
-  setActiveTab = () => {}, //FOR Tutor
-  setDisableColor = () => {}, //FOR Tutor
+  setActiveTab = () => { }, //FOR Tutor
+  setDisableColor = () => { }, //FOR Tutor
   disableColor = "", //FOR Tutor
   activeTab,
   disableWeekDays,
@@ -67,8 +67,8 @@ const ShowCalendar = ({
     user.role === "student"
       ? true
       : user.role === "admin" && isStudentRoute
-      ? true
-      : false;
+        ? true
+        : false;
   const [timeZone, setTimeZone] = useState();
 
   const [enabledDays, setEnabledDays] = useState([]);
@@ -88,12 +88,12 @@ const ShowCalendar = ({
   // const [isModalOpen, setIsModalOpen] = useState(false);
   const [clickedSlot, setClickedSlot] = useState({});
   const { student } = useSelector((state) => state.student);
-  const tutorId = selectedTutor.academyId;
-  const studentId = student?.AcademyId;
-  const subjectName = selectedTutor?.subject;
+  // const tutorId = selectedTutor.academyId;
+  // const studentId = student?.AcademyId;
+  // const subjectName = selectedTutor?.subject;
   const [weekDaysTimeSlots, setWeekDaysTimeSlots] = useState([]);
 
-  let { reservedSlots, bookedSlots, lessons } = useSelector(
+  let { lessons } = useSelector(
     (state) => state.bookings
   );
 
@@ -365,8 +365,8 @@ const ShowCalendar = ({
   }
 
   const eventPropGetter = useEventPropGetter({
-    reservedSlots,
-    bookedSlots,
+    // reservedSlots,
+    // bookedSlots,
     isStudentLoggedIn,
     selectedTutor,
     student,
@@ -390,7 +390,7 @@ const ShowCalendar = ({
     isStudentLoggedIn,
     timeDifference,
     timeZone,
-    reservedSlots,
+    // reservedSlots,
     selectedSlots,
     selectedTutor,
     weekDaysTimeSlots,
@@ -420,7 +420,7 @@ const ShowCalendar = ({
           event: (event) => (
             <CustomEvent
               {...event}
-              reservedSlots={reservedSlots}
+              // reservedSlots={reservedSlots}
               handleEventClick={handleEventClick}
               isStudentLoggedIn={isStudentLoggedIn}
               clickedSlot={clickedSlot}
@@ -437,8 +437,8 @@ const ShowCalendar = ({
         onSelectSlot={(slotInfo) =>
           handleSlotDoubleClick(
             slotInfo,
-            reservedSlots,
-            bookedSlots,
+            // reservedSlots,
+            // bookedSlots,
             disableColor,
             isStudentLoggedIn,
             activeView,
@@ -457,7 +457,8 @@ const ShowCalendar = ({
             selectedSlots,
             setSelectedSlots,
             setIsModalOpen,
-            selectedTutor
+            selectedTutor,
+            lessons
           )
         }
         dayPropGetter={dayPropGetter}
@@ -467,21 +468,21 @@ const ShowCalendar = ({
       />
       <EventModal
         isOpen={isModalOpen}
-        lessons={lessons}
+        // lessons={lessons}
         onRequestClose={onStudentModalRequestClose}
         student={student}
         isStudentLoggedIn={isStudentLoggedIn}
         selectedSlots={selectedSlots}
         setSelectedSlots={setSelectedSlots}
         handleBulkEventCreate={handleBulkEventCreate}
-        reservedSlots={reservedSlots}
-        bookedSlots={bookedSlots}
+        // reservedSlots={reservedSlots}
+        // bookedSlots={bookedSlots}
         clickedSlot={clickedSlot}
         setClickedSlot={setClickedSlot}
         timeZone={timeZone}
-        studentId={studentId}
-        subjectName={subjectName}
-        tutorId={tutorId}
+      // studentId={studentId}
+      // subjectName={subjectName}
+      // tutorId={tutorId}
       />
       <TutorEventModal
         isOpen={isTutorSideSessionModalOpen}

@@ -111,7 +111,7 @@ function CustomEvent({
             ? ``
             : ` ${
                 isStudentLoggedIn
-                  ? `from ${convertTutorIdToName(event.tutorId)}`
+                  ? `from ${event.tutorScreenName || "unknown"}`
                   : `by ${event.studentName}`
               }`}
           {event.type === "reserved" && (

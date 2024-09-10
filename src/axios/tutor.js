@@ -290,7 +290,7 @@ export const student_public_profile = async (studentId, tutorId = null) => {
 export let upload_tutor_rates = async (rate, grades, id, faculty, subject) => {
   try {
     const { data } = await apiClient.post(
-      `/tutor/rates/${faculty}/${subject}/${id}`,
+      `/tutor/rates/${faculty}/${encodeURIComponent(subject)}/${id}`,
       {
         grades,
         rate,

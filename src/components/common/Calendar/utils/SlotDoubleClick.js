@@ -9,8 +9,8 @@ import { toast } from "react-toastify";
 
 export const handleSlotDoubleClick = (
   slotInfo,
-  reservedSlots,
-  bookedSlots,
+  // reservedSlots,
+  // bookedSlots,
   disableColor,
   isStudentLoggedIn,
   activeView,
@@ -31,7 +31,8 @@ export const handleSlotDoubleClick = (
   selectedSlots,
   setSelectedSlots,
   setIsModalOpen,
-  selectedTutor
+  selectedTutor,
+  lessons
 ) => {
 
   //do nothing on single click
@@ -47,7 +48,7 @@ export const handleSlotDoubleClick = (
       slotInfo,
       disableColor,
       isStudentLoggedIn,
-      reservedSlots.concat(bookedSlots)
+      lessons
     )
   )
     return;
@@ -79,7 +80,7 @@ export const handleSlotDoubleClick = (
       disableDates,
       setDisableHourSlots,
       disableHourSlots,
-      reservedSlots
+      // reservedSlots
     );
   } else {
     handleSlotDoubleClickForStudent(
@@ -90,13 +91,14 @@ export const handleSlotDoubleClick = (
       disableDates,
       disableHourSlots,
       enableHourSlots,
-      reservedSlots,
+      // reservedSlots,
       disableWeekDays,
       disabledHours,
       selectedSlots,
       selectedTutor,
       setIsModalOpen,
-      setSelectedSlots
+      setSelectedSlots,
+      lessons
     );
   }
 };
@@ -117,7 +119,7 @@ export const handleSlotDoubleClickForTutor = (
   disableDates,
   setDisableHourSlots,
   disableHourSlots,
-  reservedSlots
+  // reservedSlots
 ) => {
   const dayName = moment(slotInfo.start).format("dddd");
   if (disableWeekDays && disableWeekDays.includes(dayName)) {
@@ -170,13 +172,14 @@ export const handleSlotDoubleClickForStudent = (
   disableDates,
   disableHourSlots,
   enableHourSlots,
-  reservedSlots,
+  // reservedSlots,
   disableWeekDays,
   disabledHours,
   selectedSlots,
   selectedTutor,
   setIsModalOpen,
-  setSelectedSlots
+  setSelectedSlots,
+  lessons
 ) => {
   handleStudentClickInWeekOrDayTab(
     slotInfo,
@@ -186,13 +189,14 @@ export const handleSlotDoubleClickForStudent = (
     disableDates,
     disableHourSlots,
     enableHourSlots,
-    reservedSlots,
+    // reservedSlots,
     disableWeekDays,
     disabledHours,
     selectedSlots,
     selectedTutor,
     setIsModalOpen,
-    setSelectedSlots
+    setSelectedSlots,
+    lessons
   );
   // if (activeView === views.MONTH) {
   //   handleSlotMonthView(slotInfo, setDisableDateRange, setDisableDates);
@@ -291,13 +295,14 @@ const handleStudentClickInWeekOrDayTab = (
   disableDates,
   disableHourSlots,
   enableHourSlots,
-  reservedSlots,
+  // reservedSlots,
   disableWeekDays,
   disabledHours,
   selectedSlots,
   selectedTutor,
   setIsModalOpen,
-  setSelectedSlots
+  setSelectedSlots,
+  lessons
 ) => {
   if (activeView !== views.MONTH) {
     //slots/month
@@ -333,7 +338,7 @@ const handleStudentClickInWeekOrDayTab = (
     );
 
     //student general
-    const existInReservedSlots = reservedSlots?.some(
+    const existInReservedSlots = lessons.filter(lesson=>lesson.type==='reserved')?.some(
       (dateTime) => convertToDate(dateTime).getTime() === clickedDate.getTime()
     );
     if (
@@ -390,8 +395,7 @@ const haveErrorsWhenDoubleClick = (
   }
   if (isPastDate(slotInfo.start)) {
     return toast.warning(
-      `Cannot ${
-        !isStudentLoggedIn ? "Disable/Enable " : "Book/Reserve"
+      `Cannot ${!isStudentLoggedIn ? "Disable/Enable " : "Book/Reserve"
       } older slots.`
     );
   }

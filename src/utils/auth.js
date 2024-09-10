@@ -1,3 +1,6 @@
+import { setLessons } from "../redux/student/studentBookings";
+import { setStudentSessions } from "../redux/student/studentSessions";
+
 export const redirect_to_login = async (
   navigate,
   signOut,
@@ -10,6 +13,11 @@ export const redirect_to_login = async (
       dispatch(setTutor({}));
       dispatch(setUser({}));
       dispatch(setStudent({}));
+      dispatch(setLessons([]))
+      
+      // dispatch(setStudentSessions([]))
+      // dispatch(setTutorSessions([]))
+
 
     
       localStorage.removeItem("access_token");

@@ -92,8 +92,7 @@ const SubjectCard = ({ subject, rateVal, gradesVal, faculty, id }) => {
 
         setEditable(false);
         const data = await upload_tutor_rates(`$${rate}.00`, grades, tutorId, faculty, subject)
-
-        if (data?.response?.status === 400) {
+        if (data?.response?.data) {
             toast.error('Failed to Save Record')
         }
         else {

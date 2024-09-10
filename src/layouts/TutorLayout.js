@@ -6,6 +6,7 @@ import { generateUpcomingSessionMessage } from '../utils/common'
 import { Outlet, useNavigate } from 'react-router-dom'
 import MobileScreen from '../pages/MobileScreen'
 import { widthResolutionAllowed } from '../constants/constants'
+import ClosedAccPage from '../pages/ClosedAccPage'
 
 const TutorLayout = ({ children }) => {
     const [resolution, setResolution] = useState({ width: window.innerWidth, height: window.innerHeight });
@@ -52,7 +53,7 @@ const TutorLayout = ({ children }) => {
     }, [currentSession.end]);
 
     if (user.role !== 'admin' && (tutor.Status === 'closed'))
-        return <div className='text-danger'>Your Account is Closed or Suspended. Please contact adminitrator.</div>
+        return <ClosedAccPage />
     if (user.role === 'admin' && !localStorage.getItem('tutor_user_id'))
         return <div className='text-danger'>Please Select Tutor  From Tutor-Table to view tutor records</div>
     return resolution.width < widthResolutionAllowed ? <MobileScreen /> :

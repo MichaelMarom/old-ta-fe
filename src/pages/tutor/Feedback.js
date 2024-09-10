@@ -1,33 +1,22 @@
 import React, { useEffect, useState } from "react";
-import TutorLayout from "../../layouts/TutorLayout";
-import { showDate } from "../../utils/moment";
-import QuestionFeedback from "../../components/tutor/Feedback/QuestionFeedback";
-import SessionsTable from "../../components/tutor/Feedback/SessionsTable";
-import { wholeDateFormat } from "../../constants/constants";
-import TAButton from "../../components/common/TAButton";
-import {
-  formatted_tutor_sessions,
-  get_tutor_feedback_questions,
-} from "../../axios/tutor";
 import {
   fetch_student_photos,
   get_feedback_to_question,
   post_feedback_to_question,
 } from "../../axios/calender";
+import {
+  formatted_tutor_sessions,
+  get_tutor_feedback_questions,
+} from "../../axios/tutor";
+import SessionsTable from "../../components/tutor/Feedback/SessionsTable";
 
-import { useDispatch, useSelector } from "react-redux";
-import { updateStudentLesson } from "../../redux/student/studentBookings";
-import Actions from "../../components/common/Actions";
-import Tooltip from "../../components/common/ToolTip";
-import Loading from "../../components/common/Loading";
-import DebounceInput from "../../components/common/DebounceInput";
 import _ from "lodash";
-import { setOnlySessions } from "../../redux/tutor/tutorSessions";
-import CenteredModal from "../../components/common/Modal";
-import Avatar from "../../components/common/Avatar";
-import { CiClock2 } from "react-icons/ci";
-import FeedbackModal from "../../components/common/FeedbackModal";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import Actions from "../../components/common/Actions";
+import FeedbackModal from "../../components/common/FeedbackModal";
+import Loading from "../../components/common/Loading";
+import { updateStudentLesson } from "../../redux/student/studentBookings";
 
 const Feedback = () => {
   const dispatch = useDispatch();

@@ -12,7 +12,7 @@ import Avatar from "../../common/Avatar";
 import TableHeader from "../../common/TableHeader";
 import { capitalize } from "lodash";
 import Tooltip from "../../common/ToolTip";
-import { FaComment } from "react-icons/fa";
+import { FaComment, FaCommentAlt } from "react-icons/fa";
 
 function SessionsTable({ events = [], setSelectedEvent, selectedEvent }) {
   const { tutor } = useSelector((state) => state.tutor);
@@ -141,15 +141,20 @@ function SessionsTable({ events = [], setSelectedEvent, selectedEvent }) {
                 </td>
 
                 <td style={{ width: Header[0].width }}>
-                  <Tooltip direction="top" width="20px" text={event.ratingByTutor}>
-                    {" "}
-                    <StarRating rating={event.ratingByTutor} />
-                  </Tooltip>
+                  <div className="d-flex justify-content-center">
+                    <Tooltip direction="top" width="50px" text={event.ratingByTutor}>
+                      <StarRating rating={event.ratingByTutor} />
+                    </Tooltip>
+                  </div>
                 </td>
                 <td style={{ width: Header[0].width }}>
-                  <Tooltip direction="bottomright" text={event.commentByTutor}>
-                    <FaComment size={20} color="green" />
-                  </Tooltip>
+                  {event.commentByTutor ? <div className="d-flex justify-content-center">
+                    <Tooltip direction="bottomright" text={event.commentByTutor}>
+                      <FaComment size={20} color="green" />
+                    </Tooltip>
+                  </div> :
+                    <FaComment color="gray" />
+                  }
                   {/* <Comment comment={event.commentByTutor} /> */}
                 </td>
 

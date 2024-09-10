@@ -39,6 +39,7 @@ const StudentFaculties = () => {
         photo: item.Photo,
         academyId: item.AcademyId,
         GMT: item.GMT,
+        tutorScreenName:item.TutorScreenname,
         firstName: item.FirstName,
         lastName: item.LastName,
         subject: selectedSubject.SubjectName,
@@ -477,7 +478,7 @@ const StudentFaculties = () => {
                                       }}
                                       className=""
                                     >
-                                      {capitalizeFirstLetter(item?.FirstName)}
+                                      {item?.TutorScreenname}
                                     </td>
                                     <td
                                       style={{

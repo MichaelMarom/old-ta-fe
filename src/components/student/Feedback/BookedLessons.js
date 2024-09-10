@@ -9,6 +9,8 @@ import TAButton from "../../common/TAButton";
 import { convertTutorIdToName } from "../../../utils/common";
 import Avatar from "../../common/Avatar";
 import { moment } from "../../../config/moment";
+import Tooltip from "../../common/ToolTip";
+import { FaComment } from "react-icons/fa";
 
 function BookedLessons({ events, handleRowSelect }) {
   const [sortedEvents, setSortedEvents] = useState([]);
@@ -136,13 +138,23 @@ function BookedLessons({ events, handleRowSelect }) {
                 </td>
 
                 <td style={{ width: Header[0].width }}>
-                  <StarRating rating={event.ratingByStudent} />
+                  <div className="d-flex justify-content-center">
+                    <Tooltip direction="top" width="50px" text={event.ratingByStudent}>
+                      <StarRating rating={event.ratingByStudent} />
+                    </Tooltip>
+                  </div>
                 </td>
                 <td style={{ width: Header[0].width }}>
-                  <Comment comment={event.commentByStudent} />
+                  <div className="d-flex justify-content-center ">
+                    <Tooltip direction="bottomright" text={event.commentByStudent}>
+                      <FaComment size={20} color="green" />
+                    </Tooltip>
+                  </div>
+                  {/* <Comment comment={event.commentByStudent} /> */}
                 </td>
 
                 <td style={{ width: Header[0].width }}>
+
                   <TAButton
                     className={``}
                     buttonText={"Select"}

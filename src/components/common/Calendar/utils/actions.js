@@ -148,6 +148,7 @@ export const handleBulkEventCreate = async (
       studentName: student.FirstName,
       studentId: student.AcademyId,
       subject: selectedTutor.subject,
+      tutorScreenName:selectedTutor.tutorScreenName,
       // invoiceNum: invoiceNum, // TODO: send same invoiceNumber for grouped selected slots, currently setting invoiceNumber differntly for indivualy slot
       tutorId: selectedTutor.academyId,
       rate:

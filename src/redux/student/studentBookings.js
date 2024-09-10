@@ -75,11 +75,11 @@ export default slice.reducer;
 
 // ACTIONS
 
-export const setReservedSlots = (reservedSlots) => {
-  return async (dispatch) => {
-    dispatch(slice.actions.setReservedSlots(reservedSlots));
-  };
-};
+// export const setReservedSlots = (reservedSlots) => {
+//   return async (dispatch) => {
+//     dispatch(slice.actions.setReservedSlots(reservedSlots));
+//   };
+// };
 
 export const setLessons = (lessons) => {
   return async (dispatch) => {
@@ -87,37 +87,37 @@ export const setLessons = (lessons) => {
   };
 };
 
-export const setBookedSlots = (bookedSlots) => {
-  return async (dispatch) => {
-    dispatch(slice.actions.setBookedSlots(bookedSlots));
-  };
-};
+// export const setBookedSlots = (bookedSlots) => {
+//   return async (dispatch) => {
+//     dispatch(slice.actions.setBookedSlots(bookedSlots));
+//   };
+// };
 
-export function getStudentBookings(studentId, tutorId) {
-  return async (dispatch) => {
-    dispatch(slice.actions.isLoading(true));
-    const result = await get_student_tutor_events(studentId, tutorId);
-    if (result?.length) {
-      const reservedSlots = result
-        .map((data) => JSON.parse(data.reservedSlots))
-        .flat();
-      const bookedSlots = result
-        .map((data) => JSON.parse(data.bookedSlots))
-        .flat();
-      dispatch(slice.actions.setReservedSlots(reservedSlots));
-      dispatch(slice.actions.setBookedSlots(bookedSlots));
-    }
-    return result;
-  };
-}
+// export function getStudentBookings(studentId, tutorId) {
+//   return async (dispatch) => {
+//     dispatch(slice.actions.isLoading(true));
+//     const result = await get_student_tutor_events(studentId, tutorId);
+//     if (result?.length) {
+//       const reservedSlots = result
+//         .map((data) => JSON.parse(data.reservedSlots))
+//         .flat();
+//       const bookedSlots = result
+//         .map((data) => JSON.parse(data.bookedSlots))
+//         .flat();
+//       dispatch(slice.actions.setReservedSlots(reservedSlots));
+//       dispatch(slice.actions.setBookedSlots(bookedSlots));
+//     }
+//     return result;
+//   };
+// }
 
-export function postStudentBookings(data) {
-  return async (dispatch) => {
-    dispatch(slice.actions.isLoading(true));
-    await save_student_events(data);
-    return await dispatch(getStudentBookings(data.studentId, data.tutorId));
-  };
-}
+// export function postStudentBookings(data) {
+//   return async (dispatch) => {
+//     dispatch(slice.actions.isLoading(true));
+//     await save_student_events(data);
+//     return await dispatch(getStudentBookings(data.studentId, data.tutorId));
+//   };
+// }
 
 //lessons
 export function postStudentLesson(data) {

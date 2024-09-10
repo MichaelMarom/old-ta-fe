@@ -122,6 +122,7 @@ const Header = () => {
                         position: "absolute",
                         bottom: "6px",
                         marginRight: "5px",
+                        left:"0"
                       }}
                     >
                       {count}

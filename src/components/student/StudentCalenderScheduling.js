@@ -26,7 +26,7 @@ const StudentCalenderScheduling = () => {
   const [subscriptionHours, setActiveSubscriptionHours] = useState(null);
   const { selectedTutor } = useSelector((state) => state.selectedTutor);
   const [studentModalOpen, setStudentModalOpen] = useState(false);
-
+console.log(selectedTutor,'selectedTutor')
   const { student } = useSelector((state) => state.student);
 
   useEffect(() => {
