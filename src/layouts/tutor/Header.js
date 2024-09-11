@@ -33,6 +33,7 @@ import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
 import Avatar from "../../components/common/Avatar";
 import { showDate } from "../../utils/moment";
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
+import { setLessons } from "../../redux/student/studentBookings";
 
 const Header = () => {
   const { signOut } = useClerk();
@@ -83,6 +84,7 @@ const Header = () => {
     localStorage.removeItem("user");
     dispatch(setUser({}));
     dispatch(setTutor({}));
+    dispatch(setLessons([]))
     dispatch(setStudent({}));
     nav("/login");
   };

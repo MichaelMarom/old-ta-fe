@@ -200,13 +200,14 @@ function EventModal({
         slot.type === "intro" &&
         slot.subject === selectedTutor.subject &&
         slot.studentId === student.AcademyId &&
-        slot.end.getTime() < new Date().getTime() &&
-        !slot.ratingByStudent
+        slot.end.getTime() < (new Date()).getTime() &&
+        slot.ratingByStudent
       );
     });
     return { introExist, feedbackedIntro };
   };
 
+  console.log(conductedAndReviewedIntroLesson(), clickedSlot, lessons, student, selectedTutor)
   return (
     <LeftSideBar
       isOpen={isOpen}
@@ -246,8 +247,8 @@ function EventModal({
             </div>
           )}
           <div className="form-group d-flex flex-column">
-            {!conductedAndReviewedIntroLesson().introExist ||
-            (clickedSlot.start && clickedSlot.type !== "intro") ? (
+            {(!conductedAndReviewedIntroLesson().introExist &&
+              !clickedSlot.type) ? (
               <button
                 type="button"
                 className={` btn btn-sm btn-primary`}
@@ -257,11 +258,12 @@ function EventModal({
                 Mark as Intro Session
               </button>
             ) : (
-              ((conductedAndReviewedIntroLesson().introExist &&
-                conductedAndReviewedIntroLesson().feedbackedIntro) ||
-                clickedSlot.start) && (
-                <>
-                  {clickedSlot.type === "reserved" && (
+              // ((conductedAndReviewedIntroLesson().introExist &&
+              //   conductedAndReviewedIntroLesson().feedbackedIntro) ||
+              //   clickedSlot.start) && (
+              <>
+                {((clickedSlot.start && clickedSlot.type === "reserved" ) || (!clickedSlot.start && conductedAndReviewedIntroLesson().introExist &&
+                  conductedAndReviewedIntroLesson().feedbackedIntro) ) && (
                     <button
                       type="button"
                       className=" btn btn-sm btn-success"
@@ -270,7 +272,8 @@ function EventModal({
                       Mark as Booking Session
                     </button>
                   )}
-                  {!clickedSlot.start && (
+                {(!clickedSlot.start && (conductedAndReviewedIntroLesson().introExist &&
+                  conductedAndReviewedIntroLesson().feedbackedIntro)) && (
                     <button
                       type="button"
                       className="btn  btn-sm btn-warning"
@@ -281,18 +284,18 @@ function EventModal({
                       Mark as Reserved Session
                     </button>
                   )}
-                  {clickedSlot.start && (
-                    <button
-                      type="button"
-                      className=" btn btn-sm btn-danger"
-                      onClick={() => setSelectedType("delete")}
-                    >
-                      Delete
-                    </button>
-                  )}
-                  {clickedSlot.request === "postpone" && (
-                    <div className="d-flex justify-content-between align-items-center h-100">
-                      {/* <DatePicker
+                {clickedSlot.start && (
+                  <button
+                    type="button"
+                    className=" btn btn-sm btn-danger"
+                    onClick={() => setSelectedType("delete")}
+                  >
+                    Delete
+                  </button>
+                )}
+                {clickedSlot.request === "postpone" && (
+                  <div className="d-flex justify-content-between align-items-center h-100">
+                    {/* <DatePicker
                         selected={formatUTC(rescheduleTime, true)}
                         onChange={(date) => setRescheduleTime(formatUTC(date))}
                         showTimeSelect
@@ -300,24 +303,24 @@ function EventModal({
                         className="form-control m-2 w-80"
                         timeIntervals={60}
                       /> */}
-                      <DatePicker
-                        selected={rescheduleTime}
-                        onChange={(date) => setRescheduleTime(date)}
-                        showTimeSelect
-                        dateFormat="MMM d, yyyy hh:mm aa"
-                        className="form-control m-2 w-80"
-                        timeIntervals={60}
-                      />
-                      <Button
-                        className="btn-success btn-sm"
-                        onClick={() => handleReschedule()}
-                      >
-                        Postpone
-                      </Button>
-                    </div>
-                  )}
-                </>
-              )
+                    <DatePicker
+                      selected={rescheduleTime}
+                      onChange={(date) => setRescheduleTime(date)}
+                      showTimeSelect
+                      dateFormat="MMM d, yyyy hh:mm aa"
+                      className="form-control m-2 w-80"
+                      timeIntervals={60}
+                    />
+                    <Button
+                      className="btn-success btn-sm"
+                      onClick={() => handleReschedule()}
+                    >
+                      Postpone
+                    </Button>
+                  </div>
+                )}
+              </>
+              //)
             )}
           </div>
         </div>

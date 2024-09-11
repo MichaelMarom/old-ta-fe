@@ -23,6 +23,7 @@ import collabVideo from "../../assets/videos/collaboration.mp4";
 import { PiVideoBold } from "react-icons/pi";
 import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
+import { setLessons } from "../../redux/student/studentBookings";
 
 const Header = () => {
   const { signOut } = useClerk();
@@ -124,12 +125,15 @@ const Header = () => {
   };
 
   const handleSignOut = () => {
+
     localStorage.removeItem("access_token");
     localStorage.removeItem("student_user_id");
     localStorage.removeItem("tutor_user_id");
     localStorage.removeItem("user");
     dispatch(setUser({}));
     dispatch(setTutor({}));
+    dispatch(setLessons([]))
+
     dispatch(setStudent({}));
     nav("/login");
   };
@@ -364,7 +368,7 @@ const Header = () => {
                         position: "absolute",
                         fontSize: "10px",
                         bottom: "6px",
-                        left:"0"
+                        left: "0"
                       }}
                     >
                       {filteredSessions.length}

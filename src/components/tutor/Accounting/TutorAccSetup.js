@@ -16,7 +16,7 @@ import Tooltip from "../../common/ToolTip";
 import Input from "../../common/Input";
 import { GeneralFieldLabel, MandatoryFieldLabel } from "../TutorSetup";
 import Select from "../../common/Select";
-import { setMissingFeildsAndTabs } from "../../../redux/tutor/missingFieldsInTabs";
+import { setMissingFieldsAndTabs } from "../../../redux/tutor/missingFieldsInTabs";
 import {
   updateAccounting,
   updateAccountingState,
@@ -129,7 +129,7 @@ const TutorAccSetup = ({
           toast.error("Error while Saving the Bank Info.");
         }
       }
-      dispatch(setMissingFeildsAndTabs());
+      dispatch(setMissingFieldsAndTabs());
       setSaving(false);
     }
   };

@@ -54,7 +54,7 @@ const TermOfUse = () => {
         } else {
             setUnSavedChanges(false);
         }
-    }, [ agreed, student, editMode])
+    }, [agreed, student, editMode])
 
     // const handleSave = async (e) => {
     //     e.preventDefault()
@@ -74,27 +74,29 @@ const TermOfUse = () => {
 
     const handleSaveAgreement = async (e) => {
         e.preventDefault()
-        const missingFieldsExceptTOU = _.chain(studentMissingFields).filter((item) => item.tab !== "Terms Of Use").map(item => `"${item.tab}" `).value()
-        if (missingFieldsExceptTOU.length)
-            return toast.warning(
-                `Mandatory fields are missing from ${_.uniq(
-                    _.chain(studentMissingFields).filter((item) => item.tab !== "Terms Of Use").map(item => `"${item.tab}" `).value()
-                )} Tab`
-            );
+        if (user.role === "student") {
+            const missingFieldsExceptTOU = _.chain(studentMissingFields).filter((item) => item.tab !== "Terms Of Use").map(item => `"${item.tab}" `).value()
+            if (missingFieldsExceptTOU.length)
+                return toast.warning(
+                    `Mandatory fields are missing from ${_.uniq(
+                        _.chain(studentMissingFields).filter((item) => item.tab !== "Terms Of Use").map(item => `"${item.tab}" `).value()
+                    )} Tab`
+                );
 
-        setLoading(true)
+            setLoading(true)
 
-        const data = await post_student_agreement(user.SID, { AgreementDate: new Date(), Status: 'under-review' })
-        if (data?.[0]) {
-            dispatch(setStudent(data[0]))
+            const data = await post_student_agreement(user.SID, { AgreementDate: new Date(), Status: 'under-review' })
+            if (data?.[0]) {
+                dispatch(setStudent(data[0]))
+            }
+            setEditMode(false)
+            setLoading(false)
         }
-        setEditMode(false)
-        setLoading(false)
     }
 
     return (
         <>
-            <form onSubmit={user.role === 'tutor' ? handleSaveAgreement : null}>
+            <form onSubmit={handleSaveAgreement}>
                 <div className="d-block py-3 px-5">
                     <h4 style={{ fontSize: "16px" }}><span className="text-danger" style={{ fontWeight: "bold", fontSize: "20px" }}>*</span>CHECKING THE BOX BELOW, CONSITUTES YOUR ACCPETANCE OF THESE TERMS OF USE
                     </h4>

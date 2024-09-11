@@ -141,11 +141,14 @@ function SessionsTable({ events = [], setSelectedEvent, selectedEvent }) {
                 </td>
 
                 <td style={{ width: Header[0].width }}>
-                  <div className="d-flex justify-content-center">
-                    <Tooltip direction="top" width="50px" text={event.ratingByTutor}>
+                  {
+                    event.ratingByTutor ? <div className="d-flex justify-content-center">
+                      <Tooltip direction="top" width="50px" text={event.ratingByTutor}>
+                        <StarRating rating={event.ratingByTutor} />
+                      </Tooltip>
+                    </div> :
                       <StarRating rating={event.ratingByTutor} />
-                    </Tooltip>
-                  </div>
+                  }
                 </td>
                 <td style={{ width: Header[0].width }}>
                   {event.commentByTutor ? <div className="d-flex justify-content-center">

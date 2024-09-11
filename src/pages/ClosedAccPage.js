@@ -22,7 +22,8 @@ const ClosedAccPage = () => {
                     <FaEnvelope className="me-2" />
                     <span>Contact: admin@example.com</span>
                 </div>
-                <button className="btn btn-outline-danger mt-3" onClick={() => redirect_to_login(navigate, signOut, dispatch, setTutor, setStudent, setUser)}>
+                <button className="btn btn-outline-danger mt-3" onClick={() => redirect_to_login(
+                    navigate, signOut, dispatch, setTutor, setStudent, setUser)}>
                     <FaSignOutAlt className="me-2" /> Sign Out
                 </button>
             </div>

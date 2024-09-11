@@ -22,7 +22,7 @@ import {
 import { toast } from "react-toastify";
 import _ from "lodash";
 import { MandatoryFieldLabel } from "./TutorSetup";
-import { setMissingFeildsAndTabs } from "../../redux/tutor/missingFieldsInTabs";
+import { setMissingFieldsAndTabs } from "../../redux/tutor/missingFieldsInTabs";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { BsNutFill } from "react-icons/bs";
 
@@ -86,32 +86,34 @@ const TermOfUse = () => {
   const handleSaveAgreement = async (e) => {
     e.preventDefault();
 
-    const missingFieldsExceptTOU = _.chain(missingFields).filter((item) => item.tab !== "Terms Of Use").map(item => `"${item.tab}" `).value()
-    if (missingFieldsExceptTOU.length)
-      return toast.warning(
-        `Mandatory fields are missing from ${_.uniq(
-          _.chain(missingFields).filter((item) => item.tab !== "Terms Of Use").map(item => `"${item.tab}" `).value()
-        )} Tab`
-      );
+    if (user.role === "tutor") {
+      const missingFieldsExceptTOU = _.chain(missingFields).filter((item) => item.tab !== "Terms Of Use").map(item => `"${item.tab}" `).value()
+      if (missingFieldsExceptTOU.length)
+        return toast.warning(
+          `Mandatory fields are missing from ${_.uniq(
+            _.chain(missingFields).filter((item) => item.tab !== "Terms Of Use").map(item => `"${item.tab}" `).value()
+          )} Tab`
+        );
 
-    setLoading(true);
-    let body = {
-      AgreementDate: new Date(),
-    };
-    if (tutor.Status === PROFILE_STATUS.PENDING)
-      body.Status = PROFILE_STATUS.UNDER_REVIEW;
-    await updateTutorSetup(tutor.AcademyId, body);
+      setLoading(true);
+      let body = {
+        AgreementDate: new Date(),
+      };
+      if (tutor.Status === PROFILE_STATUS.PENDING)
+        body.Status = PROFILE_STATUS.UNDER_REVIEW;
+      await updateTutorSetup(tutor.AcademyId, body);
 
-    dispatch(setMissingFeildsAndTabs({ ...tutor, ...body }));
-    tutor.CellPhone.startsWith("+1") && await send_sms({ message: "Your Account is Currently Under Review,. You will get response within 24 hrs", numbers: [tutor.CellPhone.replace("+", "")], id: tutor.AcademyId })
-    setLoading(false);
-    dispatch(setTutor({ ...tutor, ...body }));
+      dispatch(setMissingFieldsAndTabs({ ...tutor, ...body }));
+      tutor.CellPhone.startsWith("+1") && await send_sms({ message: "Your Account is Currently Under Review,. You will get response within 24 hrs", numbers: [tutor.CellPhone.replace("+", "")], id: tutor.AcademyId })
+      setLoading(false);
+      dispatch(setTutor({ ...tutor, ...body }));
+    }
   };
 
   return (
     <div className="form-term-of-use h-100">
       <form
-        onSubmit={user.role === "tutor" ? handleSaveAgreement : null}
+        onSubmit={handleSaveAgreement}
       >
         <div className="d-block p-5">
           <h4 style={{ fontSize: "16px" }}>

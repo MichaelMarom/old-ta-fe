@@ -74,6 +74,7 @@ const ShowCalendar = ({
   const [enabledDays, setEnabledDays] = useState([]);
   const [disableDates, setDisableDates] = useState([]);
   const { tutor } = useSelector((state) => state.tutor);
+
   const [enableHourSlots, setEnableHourSlots] = useState([]);
   const [disableHourSlots, setDisableHourSlots] = useState([]);
   const [dataFetched, setDataFetched] = useState(false);
@@ -292,9 +293,9 @@ const ShowCalendar = ({
       return;
     }
     setClickedSlot(event);
-    const pastEvent =
+    const isPastEvent =
       convertToDate(convertToDate(event.end)).getTime() < new Date().getTime();
-    if (isStudentLoggedIn && !pastEvent) {
+    if (isStudentLoggedIn && !isPastEvent) {
       setIsModalOpen(true);
       setIsTutorSideSessionModalOpen(false);
     } else {

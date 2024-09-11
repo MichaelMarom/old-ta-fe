@@ -33,7 +33,7 @@ import DebounceInput from "../../common/DebounceInput";
 import { MandatoryFieldLabel } from "../TutorSetup";
 import FormSelect from "../../common/Select";
 import _ from "lodash";
-import { setMissingFeildsAndTabs } from "../../../redux/tutor/missingFieldsInTabs";
+import { setMissingFieldsAndTabs } from "../../../redux/tutor/missingFieldsInTabs";
 import { postEducation } from "../../../redux/tutor/education";
 
 const languageOptions = LANGUAGES.map((language) => ({
@@ -346,7 +346,7 @@ const Education = () => {
 
   let saver = async () => {
     let Step = 3;
-    dispatch(setMissingFeildsAndTabs(tutor));
+    dispatch(setMissingFieldsAndTabs(tutor));
     await updateTutorSetup(tutor.AcademyId, {
       Step,
     });

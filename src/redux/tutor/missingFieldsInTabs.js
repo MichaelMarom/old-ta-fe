@@ -24,7 +24,7 @@ const slice = createSlice({
 export default slice.reducer;
 export const { setFieldsAndTabs } = slice.actions;
 
-export const setMissingFeildsAndTabs = () => {
+export const setMissingFieldsAndTabs = () => {
   return async (dispatch, getState) => {
     dispatch(slice.actions.isLoading());
     const edu = getState().edu.education;

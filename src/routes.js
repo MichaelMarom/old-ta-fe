@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { isExpired } from "react-jwt";
 import React from "react";
@@ -29,7 +29,7 @@ import { setTutorSessions } from "./redux/tutor/tutorSessions";
 import Collaboration from "./pages/tutor/Collaboration";
 import { setNewSubjCount } from "./redux/admin/newSubj";
 import Loading from "./components/common/Loading";
-import { setMissingFeildsAndTabs } from "./redux/tutor/missingFieldsInTabs";
+import { setMissingFieldsAndTabs } from "./redux/tutor/missingFieldsInTabs";
 import { setEducation } from "./redux/tutor/education";
 import { setAccounting } from "./redux/tutor/accounting";
 import { setDiscount } from "./redux/tutor/discount";
@@ -62,6 +62,8 @@ const App = () => {
   const studentLoggedIn = user?.role === "student";
   const loggedInUserDetail = studentLoggedIn ? student : tutor;
   const role = studentLoggedIn ? "student" : "tutor";
+  const intervalTutorRef = useRef(null);
+  const intervalStudentRef = useRef(null);
 
   const handleExpiredToken = (result) => {
     const isExpired = result?.response?.data?.message?.includes("expired");
@@ -78,7 +80,9 @@ const App = () => {
         dispatch,
         setTutor,
         setStudent,
-        setUser
+        setUser,
+        intervalStudentRef,
+        intervalTutorRef
       );
     }
   };
@@ -91,7 +95,7 @@ const App = () => {
           data?.response?.data?.message?.includes("expired") ||
           data?.response?.data?.message?.includes("malformed")
         ) {
-          return redirect_to_login(navigate, signOut);
+          return redirect_to_login(navigate, signOut, dispatch, setTutor, setStudent, setUser, intervalStudentRef, intervalTutorRef);
         }
         if (data) {
           dispatch(setUser(data));
@@ -129,7 +133,7 @@ const App = () => {
 
   //checking missing mandatory fields and update header//tutor
   useEffect(() => {
-    dispatch(setMissingFeildsAndTabs());
+    dispatch(setMissingFieldsAndTabs());
   }, [education, discount, bank, tutor]);
 
   useEffect(() => {
@@ -147,16 +151,21 @@ const App = () => {
         const tutorSessions = await dispatch(await setTutorSessions(tutor));
         handleExpiredToken(tutorSessions);
 
-        const intervalId = setInterval(async () => {
+         intervalTutorRef.current = setInterval(async () => {
           const tutorSessions = await dispatch(await setTutorSessions(tutor));
-          console.log(tutorSessions)
-          if (handleExpiredToken(tutorSessions)) clearInterval(intervalId);
+          console.log(tutorSessions, 'tutor session', tutor.AcademyId)
+          if (handleExpiredToken(tutorSessions)) clearInterval(intervalTutorRef.current);
         }, 60000);
 
-        return () => clearInterval(intervalId);
+        // return () => clearInterval(intervalTutorRef.current);
       };
       dispatchUserSessions();
     }
+     return () => {
+      if (intervalTutorRef.current) {
+        clearInterval(intervalTutorRef.current);
+      }
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tutor.AcademyId, token]);
 
@@ -170,19 +179,24 @@ const App = () => {
         );
         handleExpiredToken(studentSessions);
 
-        const intervalId = setInterval(async () => {
+       intervalStudentRef.current = setInterval(async () => {
           const studentSessions = await dispatch(
             await setStudentSessions(student)
           );
           console.log(studentSessions, "studentSessions")
 
-          if (handleExpiredToken(studentSessions)) clearInterval(intervalId);
+          if (handleExpiredToken(studentSessions)) clearInterval(intervalStudentRef.current);
         }, 60000);
 
-        return () => clearInterval(intervalId);
+        // return () => clearInterval(intervalStudentRef.current);
       };
       dispatchUserSessions();
     }
+      return () => {
+      if (intervalStudentRef.current) {
+        clearInterval(intervalStudentRef.current);
+      }
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [student.AcademyId, token]);
 

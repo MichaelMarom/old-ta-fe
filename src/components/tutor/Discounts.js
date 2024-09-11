@@ -14,7 +14,7 @@ import { setTutor } from "../../redux/tutor/tutorData";
 import Select from "../common/Select";
 import SendCodeModal from "./SendCodeModal";
 import { GeneralFieldLabel, MandatoryFieldLabel } from "./TutorSetup";
-import { setMissingFeildsAndTabs } from "../../redux/tutor/missingFieldsInTabs";
+import { setMissingFieldsAndTabs } from "../../redux/tutor/missingFieldsInTabs";
 import { postDiscount, updateDiscount } from "../../redux/tutor/discount";
 
 const generateDiscountCode = () => {
@@ -239,7 +239,7 @@ const Discounts = () => {
     setLoading(true);
 
     let res = await saver();
-    dispatch(setMissingFeildsAndTabs(tutor));
+    dispatch(setMissingFieldsAndTabs(tutor));
     if (Step) {
       await updateTutorSetup(tutor.AcademyId, { Step });
       dispatch(setTutor({ ...tutor, Step }));

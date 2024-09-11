@@ -1,5 +1,6 @@
 import { setLessons } from "../redux/student/studentBookings";
 import { setStudentSessions } from "../redux/student/studentSessions";
+import { setTutorSessions } from "../redux/tutor/tutorSessions";
 
 export const redirect_to_login = async (
   navigate,
@@ -7,7 +8,9 @@ export const redirect_to_login = async (
   dispatch,
   setTutor,
   setStudent,
-  setUser
+  setUser,
+  studentSessionInterval={},
+  tutorSessionInterval={}
 ) => {
   await signOut(()=>{
       dispatch(setTutor({}));
@@ -18,7 +21,12 @@ export const redirect_to_login = async (
       // dispatch(setStudentSessions([]))
       // dispatch(setTutorSessions([]))
 
-
+      // if (studentSessionInterval.current) {
+      //   clearInterval(studentSessionInterval.current);
+      // }
+      //   if (tutorSessionInterval.current) {
+      //   clearInterval(tutorSessionInterval.current);
+      // }
     
       localStorage.removeItem("access_token");
       localStorage.removeItem("user");

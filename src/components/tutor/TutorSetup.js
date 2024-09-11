@@ -42,7 +42,7 @@ import Select from "../common/Select";
 
 import VacationSettingModal from "./VacationSettingModal";
 import { uploadTutorImage } from "../../axios/file";
-import { setMissingFeildsAndTabs } from "../../redux/tutor/missingFieldsInTabs";
+import { setMissingFieldsAndTabs } from "../../redux/tutor/missingFieldsInTabs";
 import _ from 'lodash';
 import { FaExclamationCircle } from "react-icons/fa";
 import { AiOutlineInfoCircle } from "react-icons/ai";

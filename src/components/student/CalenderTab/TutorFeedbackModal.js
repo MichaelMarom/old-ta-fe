@@ -56,7 +56,7 @@ export const TutorFeedbackModal = ({
               style={{ fontSize: "14px", fontWeight: "700" }}
             >
               {showDate(clickedSlot.start, wholeDateFormat)} -{" "}
-              {convertTutorIdToName(clickedSlot.tutorId)}
+              {clickedSlot.tutorScreenName}
             </p>
           </div>
         </div>

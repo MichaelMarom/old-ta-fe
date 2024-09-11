@@ -229,9 +229,9 @@ console.log(selectedTutor,'selectedTutor')
               </div>
             </div>
             <div className="highlight small lh-sm mb-3">
-              Double click on an aviable (unblocked) slots. You must first book an
+              Double click on an available (unblocked) slots. You must first book an
               introduction lesson. Most tutors will discount the 'intro' by 50%. You
-              must conduct the "Introductionary" (Intro) lesson, and provide feedback
+              must conduct the "Introductory" (Intro) lesson, and provide feedback
               before you can "Book" the next lesson with that tutor. You can book
               multiple lessons for a discount. For that reason you can "Reserve" up to
               6 time slots for 60 minutes until you make your final decision.

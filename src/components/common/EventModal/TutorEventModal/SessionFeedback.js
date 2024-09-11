@@ -7,7 +7,7 @@ export const SessionFeedback = ({ clickedSlot, questions, questionLoading, showT
     return (
         <div>
             <div className='m-2'>
-                <h5 className='text-center'>{showTutorFeedback ? convertTutorIdToName(clickedSlot.tutorId) : clickedSlot.studentName} Reviews</h5>
+                <h5 className='text-center'>"{showTutorFeedback ? clickedSlot.tutorScreenName : clickedSlot.studentName}"" Reviews</h5>
                 <div className='rounded-pill border border-secondary px-3 d-flex' style={{ width: "100%", height: "30px" }}>
                     <div style={{ width: "60%" }}>
                         <StarRating rating={showTutorFeedback ? clickedSlot.ratingByTutor : clickedSlot.ratingByStudent} />
@@ -29,7 +29,7 @@ export const SessionFeedback = ({ clickedSlot, questions, questionLoading, showT
                 }
             </div>
             <div className='m-4'>
-                <h6>{showTutorFeedback ? convertTutorIdToName(clickedSlot.tutorId) : clickedSlot.studentName} - Comment</h6>
+                <h6>{showTutorFeedback ? clickedSlot.tutorScreenName : clickedSlot.studentName} - Comment</h6>
                 <pre className='rounded p-2 border border-secondary m-0' style={{ fontSize: "14px", height: "auto" }}>
                     {showTutorFeedback ? clickedSlot.commentByTutor : clickedSlot.commentByStudent}
                 </pre>

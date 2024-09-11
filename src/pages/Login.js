@@ -87,9 +87,7 @@ const LoginPage = () => {
     }
   }, [isLoaded,])
 
-  console.log(user, )
   useEffect(() => {
-    console.log(userId, isSignedIn,"sused")
     if (userId && isSignedIn) {
       fetchUser(userId);
     } else {

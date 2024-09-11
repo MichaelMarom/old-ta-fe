@@ -959,8 +959,10 @@ button.Toastify__close-button.Toastify__close-button--light {
   content: "";
   position: absolute;
   bottom: 100%;
-  left: 5%;
-  top: -4px;
+  width: 10px;
+  height: 10px;
+  left: 8%;
+  top: -4.7px;
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;

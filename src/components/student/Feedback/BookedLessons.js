@@ -127,7 +127,7 @@ function BookedLessons({ events, handleRowSelect }) {
                   <Avatar showOnlineStatus={false} avatarSrc={event.photo} />
                 </td>
                 <td style={{ width: Header[0].width }}>
-                  {event.tutorName}
+                  {event.tutorScreenName}
                 </td>
                 <td style={{ width: Header[0].width }}>
                   {showDate(convertToDate(event.start), wholeDateFormat)}
@@ -138,18 +138,22 @@ function BookedLessons({ events, handleRowSelect }) {
                 </td>
 
                 <td style={{ width: Header[0].width }}>
-                  <div className="d-flex justify-content-center">
+                 {event.ratingByStudent ? <div className="d-flex justify-content-center">
                     <Tooltip direction="top" width="50px" text={event.ratingByStudent}>
                       <StarRating rating={event.ratingByStudent} />
                     </Tooltip>
-                  </div>
+                  </div> :
+                      <StarRating rating={event.ratingByStudent} />
+                  }
                 </td>
                 <td style={{ width: Header[0].width }}>
-                  <div className="d-flex justify-content-center ">
+                  {event.commentByStudent ? <div className="d-flex justify-content-center">
                     <Tooltip direction="bottomright" text={event.commentByStudent}>
                       <FaComment size={20} color="green" />
                     </Tooltip>
-                  </div>
+                  </div> :
+                    <FaComment color="gray" />
+                  }
                   {/* <Comment comment={event.commentByStudent} /> */}
                 </td>
 
