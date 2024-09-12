@@ -19,6 +19,8 @@ import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { FaBook, FaCheckCircle, FaChevronRight } from "react-icons/fa";
 import { MdCancel } from "react-icons/md";
 import _ from 'lodash'
+import moment from 'moment';
+import TutorCard from "./TutorSubjectCard";
 
 const StudentFaculties = () => {
   const dispatch = useDispatch();
@@ -39,7 +41,7 @@ const StudentFaculties = () => {
         photo: item.Photo,
         academyId: item.AcademyId,
         GMT: item.GMT,
-        tutorScreenName:item.TutorScreenname,
+        tutorScreenName: item.TutorScreenname,
         firstName: item.FirstName,
         lastName: item.LastName,
         subject: selectedSubject.SubjectName,
@@ -59,11 +61,7 @@ const StudentFaculties = () => {
   const handleNavigateToFeedback = (id) =>
     navigate(`/student/tutor/feedback/${id}`);
 
-  function convertGMTToLocalTime(gmtOffset) {
-    const utcTime = new Date();
-    const localTime = new Date(utcTime.getTime() + gmtOffset * 60 * 60 * 1000);
-    return localTime;
-  }
+
 
   useEffect(() => {
     setSelectedSubject({});
@@ -219,31 +217,6 @@ const StudentFaculties = () => {
     navigate(`/student/tutor-profile/${id}`);
   };
 
-  const calculateTimeDifference = (tutorGMT) => {
-    try {
-      if (tutorGMT && student.GMT) {
-        const studentOffset = parseInt(student.GMT, 10);
-        const tutorOffset = parseInt(tutorGMT, 10);
-
-        const difference = studentOffset - tutorOffset;
-        return difference;
-      }
-      else return '-'
-    } catch (error) {
-      console.log("Invalid GMT offset format");
-    }
-  };
-
-  const classByDifference = (difference) => {
-    if (typeof (difference) !== 'number') return ''
-    if (difference >= -3 && difference <= 3) {
-      return "text-bg-success";
-    } else if (difference >= -6 && difference <= 6) {
-      return "text-bg-warning";
-    } else {
-      return "text-bg-danger blinking-frame-red";
-    }
-  };
 
   return (
     <>
@@ -267,7 +240,7 @@ const StudentFaculties = () => {
             view your preferred tutor's calendar.
           </div>
           <div className="d-flex gap-3 m-3">
-            <div style={{width:"20%"}}>
+            <div style={{ width: "20%" }}>
 
               <div className="p-3 rounded-3" style={{ width: '100%', height: "calc(100vh - 250px)", overflowY: "auto", backgroundColor: 'rgb(33 47 61)', color: 'white' }}>
                 <h4 className="text-light text-center">{faculties.length} Faculties</h4>
@@ -292,19 +265,20 @@ const StudentFaculties = () => {
                 </ul>
               </div>
             </div>
-            <div style={{width:"75%"}}>
+            <div style={{ width: "75%" }}>
 
-              <div
-                className="d-flex  rounded justify-content-between
+              {!selectedSubject.SubjectName ?
+                <div
+                  className="d-flex  rounded justify-content-between
                          align-items-center
                          p-2"
-                style={{ color: "white", background: "#2471A3" }}
-              >
-                {subjects.length} subjects. Select the subject of interest from the
-                list bellow.
-              </div>
+                  style={{ color: "white", background: "#2471A3" }}
+                >
+                  {subjects.length} subjects. Select the subject of interest from the
+                  list bellow.
+                </div>
+                :
 
-              {selectedSubject.SubjectName && (
                 <div className="d-flex align-items-center " style={{ gap: "30px" }}>
                   <div
                     className="d-flex align-items-center blinking-button"
@@ -318,7 +292,7 @@ const StudentFaculties = () => {
                     {selectedSubject.SubjectName}
                   </p>
                 </div>
-              )}
+              }
 
               <div>
                 {!selectedSubject.SubjectName && (
@@ -337,13 +311,13 @@ const StudentFaculties = () => {
                           type="radio"
                           disabled={!subj.tutor_count}
                           name="options"
-                          id="subject"
+                          id={subj.Id}
                           checked={selectedSubject.Id === subj.Id}
                           onChange={() =>
                             subj.tutor_count && setSelectedSubject(subj)
                           }
                         />
-                        <label className="form-check-label cursor-pointer" htmlFor="subject">
+                        <label className="form-check-label cursor-pointer" htmlFor={subj.Id}>
                           {subj.SubjectName}
                         </label>
                       </div>
@@ -356,7 +330,7 @@ const StudentFaculties = () => {
                   <>
                     {tutorsWithRates.length ? (
                       <>
-                        <div
+                        {/* <div
                           className="d-flex rounded justify-content-between  align-items-center "
                           style={{ color: "white", background: "#2471A3" }}
                         >
@@ -372,7 +346,7 @@ const StudentFaculties = () => {
                               <div style={{ float: "right" }}>{item.tooltip}</div>
                             </div>
                           ))}
-                        </div>
+                        </div> */}
 
                         <div
                           className="tables"
@@ -382,7 +356,19 @@ const StudentFaculties = () => {
                             overflowY: "auto",
                           }}
                         >
-                          <table>
+                          <div className="row gap-2 m-1">
+                            {tutorsWithRates.map((item, index) => (
+                              <div className=" col-12 mb-4 " style={{
+                                borderRadius: "20px",
+                                width: "30%",
+                                boxShadow: "1px 2px 12px 2px #bbbbbb"
+                              }} key={index}>
+                                <TutorCard handleNavigateToFeedback={handleNavigateToFeedback} handleNavigateToSchedule={handleNavigateToSchedule} redirect_to_tutor_profile={redirect_to_tutor_profile} key={index} tutor={item} />
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* <table>
                             <thead className="d-none"></thead>
 
                             <tbody>
@@ -459,17 +445,7 @@ const StudentFaculties = () => {
                                       ) : (
                                         <MdCancel size={20} color="red" />
                                       )}
-                                      {/* <input
-                                    type="checkbox"
-                                    style={{
-                                      height: "20px",
-                                      width: "20px",
-                                      cursor: "pointer",
-                                    }}
-                                    defaultChecked={
-                                      item?.IntroSessionDiscount || false
-                                    }
-                                  /> */}
+
                                     </td>
                                     <td
                                       style={{
@@ -620,7 +596,7 @@ const StudentFaculties = () => {
                                 );
                               })}
                             </tbody>
-                          </table>
+                          </table> */}
                         </div>
                       </>
                     ) : (

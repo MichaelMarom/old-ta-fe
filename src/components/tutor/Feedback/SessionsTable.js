@@ -59,7 +59,7 @@ function SessionsTable({ events = [], setSelectedEvent, selectedEvent }) {
     //   return event;
     // });
 
-    let sorted = [...events].sort((a, b) => {
+    let sorted = [...events].filter(eve=>eve.type!=="reserved").sort((a, b) => {
       const startDateA = new Date(a.start);
       const startDateB = new Date(b.start);
 

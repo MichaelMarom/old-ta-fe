@@ -903,27 +903,27 @@ export const STATES = [
 export const RESPONSE = [
   {
     id: 1,
-    Response: "4 Hours",
+    Response:4,
   },
   {
     id: 2,
-    Response: "8 Hours",
+    Response:8,
   },
   {
     id: 3,
-    Response: "12 Hours",
+    Response:12,
   },
   {
     id: 4,
-    Response: "24 Hours",
+    Response: 24 ,
   },
   {
     id: 5,
-    Response: "48 Hours",
+    Response: 48,
   },
   {
     id: 6,
-    Response: "72 Hours",
+    Response: 72 ,
   },
 ];
 

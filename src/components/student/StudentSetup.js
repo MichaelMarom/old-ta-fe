@@ -944,11 +944,11 @@ const StudentSetup = () => {
                   onChange={(e) => set_is_18(!is_18)}
                 />
                 <label className="form-check-label" htmlFor="exampleCheckbox">
-                  Are you Over 18?
+                  Are you over 18?
                 </label>
               </div>
 
-              {!!is_18 && (
+              {["Freshman", "Junior", "Senior", "Sophmore"].includes(grade) && (
                 <div
                   className="d-flex flex-column justify-content-center"
                   style={{

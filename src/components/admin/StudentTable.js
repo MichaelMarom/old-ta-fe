@@ -354,9 +354,9 @@ const StudentTable = () => {
                                             <td data-src={null}>
                                                 <Avatar showOnlineStatus={false} avatarSrc={item.Photo} />
                                             </td>
-                                            <td data-src={item.AcademyId}>{item.AcademyId}</td>
+                                            <td data-src={item.ScreenName}>{item.ScreenName}</td>
                                             <td data-src={item.FirstName + ' ' + item.LastName}>{item.FirstName + ' ' + item.LastName}</td>
-                                            <td data-src={item.Email}>{item.Email}</td>
+                                            <td data-src={item.Email}>{item.email}</td>
                                             <td data-src={item.Cell}>{item.Cell}</td>
                                             <td data-src={item.GMT}>{convertGMTOffsetToLocalString(item.GMT)}</td>
                                             <td data-src={item.ResponseHrs}>{item.ResponseHrs}</td>

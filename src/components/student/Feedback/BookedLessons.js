@@ -16,7 +16,7 @@ function BookedLessons({ events, handleRowSelect }) {
   const [sortedEvents, setSortedEvents] = useState([]);
   const { student } = useSelector((state) => state.student);
   useEffect(() => {
-    const sortedEvents = events.sort((a, b) => {
+    const sortedEvents = events.filter(eve=>eve.type!=="reserved").sort((a, b) => {
       const startDateA = new Date(a.start);
       const startDateB = new Date(b.start);
 
