@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { get_tutor_data, get_user_list, send_sms, set_tutor_status } from "../../axios/admin";
+import {
+  get_tutor_data,
+  get_user_list,
+  send_sms,
+  set_tutor_status,
+} from "../../axios/admin";
 import { convertGMTOffsetToLocalString } from "../../utils/moment";
 import Loading from "../common/Loading";
 
@@ -21,38 +26,43 @@ const TutorTable = () => {
   const [status, setStatus] = useState("pending");
   const [openDegModal, setOpenDegModal] = useState(false);
   const [openCertModal, setOpenCertModal] = useState(false);
-  const [docUrl, setDocUrl] = useState('');
+  const [docUrl, setDocUrl] = useState("");
   const [statusCount, setStatusCount] = useState([]);
   const [statusReason, setStatusReason] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState({});
   const [selectedStatus, setSelectedStatus] = useState("");
 
-
   const handleReasonStatus = (user, status) => {
     setModalOpen(true);
-    setSelectedUser(user)
-    console.log(user, status)
-    setSelectedStatus(status)
-  }
+    setSelectedUser(user);
+    console.log(user, status);
+    setSelectedStatus(status);
+  };
 
   const handleProceed = async (e) => {
-    e.preventDefault()
-    setModalOpen(false);
-    setSelectedUser({})
-    setSelectedStatus("")
+    e.preventDefault();
+
     setUpdatingStatus(true);
 
-    let response = selectedUser.AcademyId && await updateTutorSetup(selectedUser.AcademyId, { Status: selectedStatus, StatusReason: statusReason });
-    setStatusReason("")
+    let response =
+      selectedUser.AcademyId &&
+      (await updateTutorSetup(selectedUser.AcademyId, {
+        Status: selectedStatus,
+        StatusReason: statusReason,
+      }));
+    setStatusReason("");
 
-    // !!phone && !!phone.startsWith("+1") && await send_sms({
-    //   message: `Your account is currently in "${status}" state.`,
-    //   numbers: [phone.replace("+", "")],
-    //   id
-    // })
+    console.log(selectedUser,'rpocedd')
+    !!selectedUser.CellPhone &&
+      !!selectedUser.CellPhone.startsWith("+92") &&
+      (await send_sms({
+        message: `Your account is currently in "${status}" state.`,
+        numbers: [selectedUser.CellPhone.replace("+", "")],
+        id: selectedUser.AcademyId,
+      }));
 
-    setStatus(selectedStatus)
+    setStatus(selectedStatus);
     const result = await get_tutor_data(status);
     get_role_count_by_status().then(
       (data) => !data?.response?.data && setStatusCount(data)
@@ -61,8 +71,10 @@ const TutorTable = () => {
       set_data(result);
       setUpdatingStatus(false);
     }
-  }
-
+    setModalOpen(false);
+    setSelectedUser({});
+    setSelectedStatus("");
+  };
 
   const COLUMNS = [
     {
@@ -101,7 +113,7 @@ const TutorTable = () => {
     {
       Header: "ID Verified",
     },
-    
+
     {
       Header: "Reason",
     },
@@ -111,7 +123,7 @@ const TutorTable = () => {
   ];
 
   useEffect(() => {
-    get_role_count_by_status('tutor').then(
+    get_role_count_by_status("tutor").then(
       (data) => !data?.response?.data && setStatusCount(data)
     );
   }, []);
@@ -135,38 +147,44 @@ const TutorTable = () => {
   // }, [])
 
   let handleStatusChange = async (item, status, currentStatus, phone) => {
-    if (currentStatus === "pending" || currentStatus === 'closed')
+    if (currentStatus === "pending" || currentStatus === "closed")
       return toast.warning(
         `You cannot change status of "${currentStatus}" users!`
       );
     if (currentStatus === status)
       return toast.warning(`You already on "${status}" Status`);
 
-    if (status === "suspended" || status === "disapproved" || status === "closed") {
-      return handleReasonStatus(item, status)
+    if (
+      status === "suspended" ||
+      status === "disapproved" ||
+      status === "closed"
+    ) {
+      return handleReasonStatus(item, status);
     }
 
     setUpdatingStatus(true);
- await updateTutorSetup(item.AcademyId, { Status: status, StatusReason: "" });
+    await updateTutorSetup(item.AcademyId, {
+      Status: status,
+      StatusReason: "",
+    });
 
+    !!phone &&
+      !!phone.startsWith("+1") &&
+      (await send_sms({
+        message: `Your account is currently in "${status}" state.`,
+        numbers: [phone.replace("+", "")],
+        id: item.Academy,
+      }));
 
-
-    !!phone && !!phone.startsWith("+1") && await send_sms({
-      message: `Your account is currently in "${status}" state.`,
-      numbers: [phone.replace("+", "")],
-      id: item.Academy
-    })
-
-
-      setStatus(status)
-      const result = await get_tutor_data(status);
-      get_role_count_by_status().then(
-        (data) => !data?.response?.data && setStatusCount(data)
-      );
-      if (!result?.response?.data) {
-        set_data(result);
-        setUpdatingStatus(false);
-      }
+    setStatus(status);
+    const result = await get_tutor_data(status);
+    get_role_count_by_status().then(
+      (data) => !data?.response?.data && setStatusCount(data)
+    );
+    if (!result?.response?.data) {
+      set_data(result);
+      setUpdatingStatus(false);
+    }
   };
 
   let redirect_to_tutor_setup = (tutor_user_id, screenName) => {
@@ -196,7 +214,8 @@ const TutorTable = () => {
             background: statesColours["pending"].bg,
             border: status === "pending" ? "2px solid #268daf" : "none",
           }}
-        >Pending
+        >
+          Pending
           {statusCount.find((rec) => rec.Status === "pending")?.count && (
             <span
               className="rounded-circle text-bg-danger p-1 d-flex justify-content-center align-items-center"
@@ -336,13 +355,18 @@ const TutorTable = () => {
         <Loading height="60vh" />
       ) : data.length > 0 ? (
         <table style={{ position: "relative" }}>
-          <thead >
+          <thead>
             <tr>
               {COLUMNS.map((item) => (
-                <th style={{
-                  background: statesColours[status].bg,
-                  color: statesColours[status].color
-                }} key={item.Header}>{item.Header}</th>
+                <th
+                  style={{
+                    background: statesColours[status].bg,
+                    color: statesColours[status].color,
+                  }}
+                  key={item.Header}
+                >
+                  {item.Header}
+                </th>
               ))}
             </tr>
           </thead>
@@ -352,23 +376,34 @@ const TutorTable = () => {
                 <td>{index + 1}</td>
                 <td data-src={null} className="col-2">
                   <div className="col-10 m-auto">
-                    <select value={item.Status}
+                    <select
+                      value={item.Status}
                       onChange={(e) =>
                         handleStatusChange(
                           item,
                           e.target.value,
                           item.Status,
                           item.CellPhone
-                        )} className="form-select"
-                      style={{ fontSize: "12px", padding: "5px", height: "25px" }}>
-                      <option value={"pending"} disabled >Pending</option>
-                      <option value={"under-review"} disabled >Under Review</option>
+                        )
+                      }
+                      className="form-select"
+                      style={{
+                        fontSize: "12px",
+                        padding: "5px",
+                        height: "25px",
+                      }}
+                    >
+                      <option value={"pending"} disabled>
+                        Pending
+                      </option>
+                      <option value={"under-review"} disabled>
+                        Under Review
+                      </option>
 
                       <option value={"active"}>Active</option>
                       <option value={"suspended"}>Suspend</option>
                       <option value={"disapproved"}>Disapprove</option>
                       <option value={"closed"}>Close</option>
-
                     </select>
                   </div>
                 </td>
@@ -402,27 +437,39 @@ const TutorTable = () => {
                 <td data-src={null}>{null}</td>
                 <td data-src={item.IdVerified}>{item.IdVerified}</td>
                 <td>
-                  
-                  {!!item.StatusReason ? <Tooltip width="200px" text={item.StatusReason} >
-                  <IoChatbox size={25} />
-                  </Tooltip>: "-"}</td>
+                  {!!item.StatusReason ? (
+                    <Tooltip width="200px" text={item.StatusReason}>
+                      <IoChatbox size={25} />
+                    </Tooltip>
+                  ) : (
+                    "-"
+                  )}
+                </td>
                 <td className="p-1">
-                  <button className="m-0 mb-1 w-100 btn btn-success" onClick={() => {
-                    getDoc("degree", item.AcademyId).then((res => setDocUrl(res?.[0]?.DegFileName)))
-                    setOpenDegModal(true)
-                  }}>
+                  <button
+                    className="m-0 mb-1 w-100 btn btn-success"
+                    onClick={() => {
+                      getDoc("degree", item.AcademyId).then((res) =>
+                        setDocUrl(res?.[0]?.DegFileName)
+                      );
+                      setOpenDegModal(true);
+                    }}
+                  >
                     View Degree
                   </button>
-                  <button className="btn m-0 btn-primary w-100" onClick={() => {
-                    getDoc("certificate", item.AcademyId).then((res => setDocUrl(res?.[0]?.CertFileName)))
+                  <button
+                    className="btn m-0 btn-primary w-100"
+                    onClick={() => {
+                      getDoc("certificate", item.AcademyId).then((res) =>
+                        setDocUrl(res?.[0]?.CertFileName)
+                      );
 
-                    setOpenCertModal(true)
-                  }}>
+                      setOpenCertModal(true);
+                    }}
+                  >
                     View Certificate
                   </button>
-
                 </td>
-
               </tr>
             ))}
           </tbody>
@@ -431,16 +478,30 @@ const TutorTable = () => {
         <div className="text-danger"> No record Found!</div>
       )}
 
-      <StatusReason open={modalOpen} status={selectedStatus} user={selectedUser}
+      <StatusReason
+        open={modalOpen}
+        status={selectedStatus}
+        user={selectedUser}
         handleProceed={handleProceed}
         onClose={() => {
-          setModalOpen(false)
-          setSelectedStatus("")
-          setSelectedUser({})
-          setStatusReason("")
-        }} statusReason={statusReason} setStatusReason={setStatusReason} />
-      <CertificateModal open={openCertModal} docUrl={docUrl} onClose={() => setOpenCertModal(false)} />
-      <DegreeModal open={openDegModal} docUrl={docUrl} onClose={() => setOpenDegModal(false)} />
+          setModalOpen(false);
+          setSelectedStatus("");
+          setSelectedUser({});
+          setStatusReason("");
+        }}
+        statusReason={statusReason}
+        setStatusReason={setStatusReason}
+      />
+      <CertificateModal
+        open={openCertModal}
+        docUrl={docUrl}
+        onClose={() => setOpenCertModal(false)}
+      />
+      <DegreeModal
+        open={openDegModal}
+        docUrl={docUrl}
+        onClose={() => setOpenDegModal(false)}
+      />
     </div>
   );
 };

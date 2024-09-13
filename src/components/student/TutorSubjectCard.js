@@ -127,19 +127,19 @@ const TutorCard = ({ tutor, handleNavigateToFeedback, redirect_to_tutor_profile,
                     <div className="">
                         {/* Row for Response Time */}
                         <div className="row py-2 w-100" style={{ backgroundColor: '#e9ecef' }}>
-                            <div className="col-6 text-start"><strong style={{ whiteSpace: "nowrap", textOverflow: "ellipsis", display: "block", overflow: "hidden" }}>Response Time:</strong></div>
+                            <div className="col-6 text-start"><strong title="Response Time"  style={{ whiteSpace: "nowrap", textOverflow: "ellipsis", display: "block", overflow: "hidden" }}>Response Time:</strong></div>
                             <div className="col-6 text-end">{ResponseHrs} hrs</div>
                         </div>
 
                         {/* Row for Cancellation Policy */}
                         <div className="row py-2 w-100" style={{ backgroundColor: '#f8f9fa' }}>
-                            <div className="col-6 text-start"><strong style={{ whiteSpace: "nowrap", textOverflow: "ellipsis", display: "block", overflow: "hidden" }}>Cancellation Policy:</strong></div>
+                            <div className="col-6 text-start"><strong title="Cancellation Policy" style={{ whiteSpace: "nowrap", textOverflow: "ellipsis", display: "block", overflow: "hidden" }}>Cancellation Policy:</strong></div>
                             <div className="col-6 text-end">{CancellationPolicy ? `${CancellationPolicy} hrs` : 'N/A'}</div>
                         </div>
 
                         {/* Row for Discount */}
                         <div className="row py-2 w-100" style={{ backgroundColor: '#e9ecef' }}>
-                            <div className="col-6 text-start"><strong style={{ whiteSpace: "nowrap", textOverflow: "ellipsis", display: "block", overflow: "hidden" }}>Intro Discount:</strong></div>
+                            <div className="col-6 text-start"><strong title="Introduction Discount"  style={{ whiteSpace: "nowrap", textOverflow: "ellipsis", display: "block", overflow: "hidden" }}>Intro Discount:</strong></div>
                             <div className="col-6 text-end">{!IntroSessionDiscount ? <FaCheckCircle color='green' /> : <MdCancel color="red" />}</div>
                         </div>
                         <div className="row py-2 w-100" style={{ backgroundColor: '#f8f9fa' }}>
