@@ -33,7 +33,7 @@ import StudentLayout from "../../layouts/StudentLayout";
 import { PiChalkboardTeacherFill } from "react-icons/pi";
 import StarRating from "../../components/common/StarRating";
 
-const TutorProfile = () => {
+const TutorPublicProfile = () => {
   const videoRef = useRef(null);
   const params = useParams();
   // const navigate = useNavigate();
@@ -517,7 +517,7 @@ const TutorProfile = () => {
                         />
                         - Native
                       </div>
-                      {JSON.parse(edu.NativeLangOtherLang).map((lang) => (
+                      {!!edu.NativeLangOtherLang && JSON.parse(edu.NativeLangOtherLang).map((lang) => (
                         <div
                           className="d-flex align-items-center"
                           key={lang.value}
@@ -1109,4 +1109,4 @@ const TutorProfile = () => {
   );
 };
 
-export default TutorProfile;
+export default TutorPublicProfile;

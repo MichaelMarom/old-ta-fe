@@ -34,7 +34,9 @@ const Header = () => {
   const dispatch = useDispatch();
   const [filteredSessions, setFilteredSessions] = useState([]);
   const { sessions } = useSelector((state) => state.studentSessions);
-  const { studentMissingFields } = useSelector((state) => state.studentMissingFields);
+  const { studentMissingFields } = useSelector(
+    (state) => state.studentMissingFields
+  );
   const [isOverflowing, setIsOverflowing] = useState(false);
   const [profileDropdownOpened, setProfileDropdownOpened] = useState(false);
   const scrollRef = useRef();
@@ -42,14 +44,14 @@ const Header = () => {
   const scrollStep = 500;
   let location = useLocation();
 
-
   const { student } = useSelector((state) => state.student);
 
   useEffect(() => {
     const checkOverflow = () => {
       const el = scrollRef.current;
       if (el) {
-        const hasOverflow = el.scrollWidth > el.clientWidth || el.scrollHeight > el.clientHeight;
+        const hasOverflow =
+          el.scrollWidth > el.clientWidth || el.scrollHeight > el.clientHeight;
         setIsOverflowing(hasOverflow);
       }
     };
@@ -57,10 +59,9 @@ const Header = () => {
     checkOverflow(); // Check on mount
 
     // Optional: Check on window resize
-    window.addEventListener('resize', checkOverflow);
-    return () => window.removeEventListener('resize', checkOverflow);
+    window.addEventListener("resize", checkOverflow);
+    return () => window.removeEventListener("resize", checkOverflow);
   }, []);
-
 
   const tabs = [
     { name: "Introduction", url: "/student/intro" },
@@ -125,14 +126,13 @@ const Header = () => {
   };
 
   const handleSignOut = () => {
-
     localStorage.removeItem("access_token");
     localStorage.removeItem("student_user_id");
     localStorage.removeItem("tutor_user_id");
     localStorage.removeItem("user");
     dispatch(setUser({}));
     dispatch(setTutor({}));
-    dispatch(setLessons([]))
+    dispatch(setLessons([]));
 
     dispatch(setStudent({}));
     nav("/login");
@@ -155,7 +155,6 @@ const Header = () => {
 
   return (
     <div className="tutor-tab-header shadow-sm">
-
       <div
         ref={profileDropdownRef}
         className={`screen-name position-relative flex-column px-1 gap-2`}
@@ -177,7 +176,7 @@ const Header = () => {
             style={{ width: "170px", marginLeft: "20px", height: "50px" }}
           >
             <div
-              className="d-flex align-items-center"
+              className="d-flex align-items-center cursor-pointer"
               onClick={() => setProfileDropdownOpened(!profileDropdownOpened)}
             >
               <div>
@@ -223,7 +222,7 @@ const Header = () => {
           </div>
         ) : (
           <div
-            className="d-flex align-items-center"
+            className="d-flex align-items-center  cursor-pointer"
             onClick={() => setProfileDropdownOpened(!profileDropdownOpened)}
           >
             <div>
@@ -254,7 +253,6 @@ const Header = () => {
           </div>
         )}
         <div
-
           className={`position-absolute text-bg-light shadow w-100`}
           style={{
             marginTop: "50px",
@@ -292,13 +290,15 @@ const Header = () => {
           </ul>
         </div>
       </div>
-      {isOverflowing && <div
-        onClick={handleScrollLeft}
-        style={{ marginLeft: "30px" }}
-        className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
-      >
-        <IoChevronBackOutline color="#47c176" size={30} />
-      </div>}
+      {isOverflowing && (
+        <div
+          onClick={handleScrollLeft}
+          style={{ marginLeft: "30px" }}
+          className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
+        >
+          <IoChevronBackOutline color="#47c176" size={30} />
+        </div>
+      )}
       <ul
         ref={scrollRef}
         className={`header`}
@@ -323,36 +323,37 @@ const Header = () => {
           <div
             id={
               activeTab.includes(tab.url) ||
-                (activeTab.split("/").length > 3 &&
-                  activeTab.split("/")[2] === tab.url)
+              (activeTab.split("/").length > 3 &&
+                activeTab.split("/")[2] === tab.url)
                 ? "tutor-tab-header-list-active1"
                 : ""
             }
             key={tab.url}
             className="navitem d-flex justify-content-center align-items-center"
           >
-
             <li
               data-url={tab.url}
               onClick={handleTabClick}
               className="navitem-li"
-
             >
-              <h5 className="m-0 d-flex align-items-center gap-2" style={{ fontSize: "14px" }}>
+              <h5
+                className="m-0 d-flex align-items-center gap-2"
+                style={{ fontSize: "14px" }}
+              >
                 {!!studentMissingFields.find(
                   (field) => field.tab === tab.name
                 ) && (
-                    <span
-                      className="rounded-circle m-1 bg-light d-flex justify-content-center align-items-center"
-                      style={{ width: "15px", height: "15px" }}
-                    >
-                      <FaExclamation
-                        className="blinking-button"
-                        color="rgb(255, 78, 78)"
-                        size={10}
-                      />
-                    </span>
-                  )}
+                  <span
+                    className="rounded-circle m-1 bg-light d-flex justify-content-center align-items-center"
+                    style={{ width: "15px", height: "15px" }}
+                  >
+                    <FaExclamation
+                      className="blinking-button"
+                      color="rgb(255, 78, 78)"
+                      size={10}
+                    />
+                  </span>
+                )}
                 {tab.name}
                 {!!filteredSessions.length &&
                   tab.url === "/student/feedback" && (
@@ -368,7 +369,7 @@ const Header = () => {
                         position: "absolute",
                         fontSize: "10px",
                         bottom: "6px",
-                        left: "0"
+                        left: "0",
                       }}
                     >
                       {filteredSessions.length}
@@ -396,13 +397,14 @@ const Header = () => {
           </div>
         ))}
       </ul>
-      {isOverflowing &&
+      {isOverflowing && (
         <div
           onClick={handleScrollRight}
           className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
         >
           <IoChevronForwardOutline color="#47c176" size={30} />
-        </div>}
+        </div>
+      )}
       <TabInfoVideoToast
         video={tabs.find((tab) => tab.url === isOpen)?.video}
         isOpen={isOpen}

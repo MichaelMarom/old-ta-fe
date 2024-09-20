@@ -106,6 +106,7 @@ const Schedules = () => {
             </div>
             <TutorFeedbackModal
                 isOpen={isModalOpen}
+                showTutorFeedback={true}
                 clickedSlot={clickedSlot}
                 onClose={() => setIsModalOpen(false)}
             />

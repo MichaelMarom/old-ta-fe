@@ -18,6 +18,8 @@ import { getDoc, updateTutorSetup } from "../../axios/tutor";
 import StatusReason from "./StatusReason";
 import Tooltip from "../common/ToolTip";
 import { IoChatbox } from "react-icons/io5";
+import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
+
 
 const TutorTable = () => {
   let [data, set_data] = useState([]);
@@ -32,7 +34,7 @@ const TutorTable = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState({});
   const [selectedStatus, setSelectedStatus] = useState("");
-
+ 
   const handleReasonStatus = (user, status) => {
     setModalOpen(true);
     setSelectedUser(user);
@@ -53,14 +55,13 @@ const TutorTable = () => {
       }));
     setStatusReason("");
 
-    console.log(selectedUser,'rpocedd')
     !!selectedUser.CellPhone &&
       !!selectedUser.CellPhone.startsWith("+92") &&
       (await send_sms({
         message: `Your account is currently in "${status}" state.`,
         numbers: [selectedUser.CellPhone.replace("+", "")],
         id: selectedUser.AcademyId,
-      }));
+      }).then((result) => toast.success(`Status Code "${result.status}" `)));
 
     setStatus(selectedStatus);
     const result = await get_tutor_data(status);
@@ -174,7 +175,7 @@ const TutorTable = () => {
         message: `Your account is currently in "${status}" state.`,
         numbers: [phone.replace("+", "")],
         id: item.Academy,
-      }));
+      }).then(({status}) => toast.success(`Status Code "${status}" `)));
 
     setStatus(status);
     const result = await get_tutor_data(status);

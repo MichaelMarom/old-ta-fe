@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 
 export const handleSlotDoubleClick = (
   slotInfo,
+  student,
   // reservedSlots,
   // bookedSlots,
   disableColor,
@@ -34,7 +35,6 @@ export const handleSlotDoubleClick = (
   selectedTutor,
   lessons
 ) => {
-
   //do nothing on single click
   // const clickedUpperSlot =
   //   moment(convertToDate(slotInfo.end)).diff(
@@ -79,12 +79,13 @@ export const handleSlotDoubleClick = (
       enabledDays,
       disableDates,
       setDisableHourSlots,
-      disableHourSlots,
+      disableHourSlots
       // reservedSlots
     );
   } else {
     handleSlotDoubleClickForStudent(
       slotInfo,
+      student,
       activeView,
       enabledDays,
       slotInfo.start,
@@ -118,7 +119,7 @@ export const handleSlotDoubleClickForTutor = (
 
   disableDates,
   setDisableHourSlots,
-  disableHourSlots,
+  disableHourSlots
   // reservedSlots
 ) => {
   const dayName = moment(slotInfo.start).format("dddd");
@@ -166,6 +167,7 @@ export const handleSlotDoubleClickForTutor = (
 
 export const handleSlotDoubleClickForStudent = (
   slotInfo,
+  student,
   activeView,
   enabledDays,
   clickedDate,
@@ -183,6 +185,7 @@ export const handleSlotDoubleClickForStudent = (
 ) => {
   handleStudentClickInWeekOrDayTab(
     slotInfo,
+    student,
     activeView,
     enabledDays,
     clickedDate,
@@ -289,6 +292,7 @@ const handleMonthViewDisable = (
 
 const handleStudentClickInWeekOrDayTab = (
   slotInfo,
+  student,
   activeView,
   enabledDays,
   clickedDate,
@@ -338,8 +342,18 @@ const handleStudentClickInWeekOrDayTab = (
     );
 
     //student general
-    const existInReservedSlots = lessons.filter(lesson=>lesson.type==='reserved')?.some(
-      (dateTime) => convertToDate(dateTime).getTime() === clickedDate.getTime()
+    const existInReservedSlots = lessons
+      .filter((lesson) => lesson.type === "reserved")
+      ?.some(
+        (dateTime) =>
+          convertToDate(dateTime).getTime() === clickedDate.getTime()
+      );
+
+    const introExistsInLessons = lessons.some(
+      (lesson) =>
+        lesson.type === "intro" &&
+        lesson.studentId === student.AcademyId &&
+        lesson.subject === selectedTutor.subject
     );
     if (
       (!existInEnableSlots &&
@@ -359,10 +373,30 @@ const handleStudentClickInWeekOrDayTab = (
     ) {
       alert("This slot is blocked, please select a white slot.");
     } else {
+      console.log(
+        introExistsInLessons,
+        existInReservedSlots,
+        lessons,
+        student,
+        selectedTutor
+      );
       if (!existInReservedSlots) {
-        if (selectedSlots.length < 6) {
+        if (introExistsInLessons) {
+          if (selectedSlots.length < 6) {
+            setSelectedSlots([
+              ...selectedSlots,
+              {
+                start: startEventTime.toDate(),
+                end: endEventTime.toDate(),
+                subject: selectedTutor.subject,
+              },
+            ]);
+            setIsModalOpen(true);
+          } else {
+            toast.error("You can not Place Hold more than 6 Slots! ");
+          }
+        } else {
           setSelectedSlots([
-            ...selectedSlots,
             {
               start: startEventTime.toDate(),
               end: endEventTime.toDate(),
@@ -370,8 +404,6 @@ const handleStudentClickInWeekOrDayTab = (
             },
           ]);
           setIsModalOpen(true);
-        } else {
-          toast.error("You can not Place Hold more than 6 Slots! ");
         }
       }
     }
@@ -395,7 +427,8 @@ const haveErrorsWhenDoubleClick = (
   }
   if (isPastDate(slotInfo.start)) {
     return toast.warning(
-      `Cannot ${!isStudentLoggedIn ? "Disable/Enable " : "Book/Reserve"
+      `Cannot ${
+        !isStudentLoggedIn ? "Disable/Enable " : "Book/Reserve"
       } older slots.`
     );
   }

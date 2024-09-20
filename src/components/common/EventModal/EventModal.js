@@ -207,7 +207,7 @@ function EventModal({
     return { introExist, feedbackedIntro };
   };
 
-  console.log(conductedAndReviewedIntroLesson(), clickedSlot, lessons, student, selectedTutor)
+  console.log(selectedSlots, clickedSlot, lessons, student, selectedTutor)
   return (
     <LeftSideBar
       isOpen={isOpen}

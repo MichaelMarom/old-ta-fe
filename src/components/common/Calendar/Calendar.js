@@ -398,6 +398,7 @@ const ShowCalendar = ({
     tutor,
     lessons,
   });
+console.log(isStudentLoggedIn)
 
   const localizer = momentLocalizer(moment);
   if (!dataFetched) return <Loading height="60vh" />;
@@ -438,6 +439,7 @@ const ShowCalendar = ({
         onSelectSlot={(slotInfo) =>
           handleSlotDoubleClick(
             slotInfo,
+            student,
             // reservedSlots,
             // bookedSlots,
             disableColor,
@@ -488,6 +490,7 @@ const ShowCalendar = ({
       <TutorEventModal
         isOpen={isTutorSideSessionModalOpen}
         onClose={onTutorModalRequestClose}
+        showTutorFeedback={isStudentLoggedIn}
         handleDeleteSessionByTutor={() =>
           handleDeleteSessionByTutor(
             setIsTutorSideSessionModalOpen,

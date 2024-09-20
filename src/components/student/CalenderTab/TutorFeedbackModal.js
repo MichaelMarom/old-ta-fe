@@ -4,12 +4,13 @@ import { wholeDateFormat } from "../../../constants/constants";
 import { showDate } from "../../../utils/moment";
 import LeftSideBar from "../../common/LeftSideBar";
 import { SessionFeedback } from "../../common/EventModal/TutorEventModal/SessionFeedback";
-import { convertTutorIdToName } from "../../../utils/common";
+import CenteredModal from "../../common/Modal";
 
 export const TutorFeedbackModal = ({
   isOpen,
   onClose,
   clickedSlot,
+  showTutorFeedback,
   handlePostpone,
   handleDeleteSessionByTutor,
 }) => {
@@ -47,21 +48,24 @@ export const TutorFeedbackModal = ({
   };
 
   return (
-    <LeftSideBar isOpen={isOpen} onClose={handleClose}>
-      <div className="">
-        <div className="modal-header">
-          <div className="text-center" style={{ width: "90%" }}>
-            <p
-              className="modal-title fs-5"
-              style={{ fontSize: "14px", fontWeight: "700" }}
-            >
-              {showDate(clickedSlot.start, wholeDateFormat)} -{" "}
-              {clickedSlot.tutorScreenName}
-            </p>
-          </div>
+    <CenteredModal
+      isTitleReactNode
+      title={
+        <div className="text-center" style={{ width: "90%" }}>
+          <p
+            className="modal-title fs-5"
+            style={{ fontSize: "14px", fontWeight: "700" }}
+          >
+            {showDate(clickedSlot.start, wholeDateFormat)} -{" "}
+            {clickedSlot.tutorScreenName}
+          </p>
         </div>
+      }
+      show={isOpen}
+      handleClose={handleClose}
+    >
+      <div className="">
         {
-          // (convertToDate(clickedSlot.end).getTime() <= (new Date()).getTime()) ?
           !clickedSlot.ratingByTutor ? (
             <div
               className="p-3 text-danger text-center"
@@ -74,20 +78,11 @@ export const TutorFeedbackModal = ({
               clickedSlot={clickedSlot}
               questions={questions}
               questionLoading={questionLoading}
-              showTutorFeedback
+              showTutorFeedback={showTutorFeedback}
             />
           )
-          // :
-          // <SessionActions
-          //     setConfirmDelete={setConfirmDelete}
-          //     confirmDelete={confirmDelete}
-          //     clickedSlot={clickedSlot}
-          //     handlePostpone={handlePostpone}
-          //     handleDeleteSessionByTutor={handleDeleteSessionByTutor}
-          //     handleClose={handleClose}
-          // />
         }
       </div>
-    </LeftSideBar>
+    </CenteredModal>
   );
 };

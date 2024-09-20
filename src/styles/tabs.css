@@ -223,7 +223,8 @@ table {
 }
 
 td {
-    border: 1px solid gray;
+    /* border: 1px solid gray; */
+    border: none;
     /* border-radius: 10px; */
     text-align: left;
     width: 20px;
@@ -231,9 +232,14 @@ td {
     text-align: center;
     height: 40px;
 }
+tr:nth-child(odd){
+    background-color: rgb(240, 240, 240);
+}
 
 th {
-    border: 1px solid gray;
+    border: none;
+
+    /* border: 1px solid gray; */
     text-align: left;
     width: 20px;
     padding: 0;
