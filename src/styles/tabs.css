@@ -225,6 +225,9 @@ table {
     width: 100%;
     text-align: center;
     position: relative;
+    font-size: 13px;
+    color: #6a6a6a;
+    /* margin: 10px; */
 }
 
 td {
