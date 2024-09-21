@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   get_tutor_data,
   get_user_list,
@@ -18,8 +18,7 @@ import { getDoc, updateTutorSetup } from "../../axios/tutor";
 import StatusReason from "./StatusReason";
 import Tooltip from "../common/ToolTip";
 import { IoChatbox } from "react-icons/io5";
-import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
-
+import { BsThreeDotsVertical, FaSortUp, FaSortDown } from "react-icons/bs";
 
 const TutorTable = () => {
   let [data, set_data] = useState([]);
@@ -34,7 +33,13 @@ const TutorTable = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState({});
   const [selectedStatus, setSelectedStatus] = useState("");
- 
+  const dropdownRef = useRef(null);
+
+  const [dropdownOpen, setDropdownOpen] = useState(null);
+  const handleDropdownClick = (index) => {
+    setDropdownOpen(dropdownOpen === index ? null : index);
+  };
+
   const handleReasonStatus = (user, status) => {
     setModalOpen(true);
     setSelectedUser(user);
@@ -87,9 +92,9 @@ const TutorTable = () => {
     {
       Header: "Photo",
     },
-    {
-      Header: "Screen Id",
-    },
+    // {
+    //   Header: "Screen Id",
+    // },
     {
       Header: "Tutor Name",
     },
@@ -100,7 +105,7 @@ const TutorTable = () => {
       Header: "Phone",
     },
     {
-      Header: "GMT",
+      Header: "Time",
     },
     {
       Header: "Tot. Hours",
@@ -111,10 +116,6 @@ const TutorTable = () => {
     {
       Header: "Last Active",
     },
-    {
-      Header: "ID Verified",
-    },
-
     {
       Header: "Reason",
     },
@@ -175,7 +176,7 @@ const TutorTable = () => {
         message: `Your account is currently in "${status}" state.`,
         numbers: [phone.replace("+", "")],
         id: item.Academy,
-      }).then(({status}) => toast.success(`Status Code "${status}" `)));
+      }).then(({ status }) => toast.success(`Status Code "${status}" `)));
 
     setStatus(status);
     const result = await get_tutor_data(status);
@@ -194,6 +195,19 @@ const TutorTable = () => {
     window.localStorage.setItem("user_role", "admin");
     window.open(`${process.env.REACT_APP_BASE_URL}/tutor/setup`, "_blank");
   };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setDropdownOpen(null);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div
@@ -354,7 +368,7 @@ const TutorTable = () => {
       </div>
       {!!fetching || !!updatingStatus ? (
         <Loading height="60vh" />
-      ) : data.length > 0 ? (
+      ) : !!data.length ? (
         <table style={{ position: "relative" }}>
           <thead>
             <tr>
@@ -375,7 +389,7 @@ const TutorTable = () => {
             {data.map((item, index) => (
               <tr key={index}>
                 <td>{index + 1}</td>
-                <td data-src={null} className="col-2">
+                <td className="col-1">
                   <div className="col-10 m-auto">
                     <select
                       value={item.Status}
@@ -408,7 +422,6 @@ const TutorTable = () => {
                     </select>
                   </div>
                 </td>
-
                 <td
                   className="col-1"
                   onDoubleClick={() => {
@@ -422,21 +435,16 @@ const TutorTable = () => {
                 >
                   <Avatar avatarSrc={item.Photo} showOnlineStatus={false} />
                 </td>
-                <td data-src={item.TutorScreenname}>{item.TutorScreenname}</td>
-                <td data-src={item.FirstName + " " + item.LastName}>
-                  {item.FirstName + " " + item.LastName}
-                </td>
-                <td data-src={item.Email}>{item.Email}</td>
-                <td data-src={item.CellPhone} className="col-1">
-                  {item.CellPhone}
-                </td>
-                <td data-src={item.GMT} className="col-1">
+                {/* <td>{item.TutorScreenname}</td> */}
+                <td>{item.FirstName + " " + item.LastName}</td>
+                <td className="col-1">{item.Email}</td>
+                <td className="col-1">{item.CellPhone}</td>
+                <td className="col-2">
                   {convertGMTOffsetToLocalString(item.GMT)}
                 </td>
-                <td data-src={item.ResponseHrs}>{item.ResponseHrs}</td>
-                <td data-src={null}>{null}</td>
-                <td data-src={null}>{null}</td>
-                <td data-src={item.IdVerified}>{item.IdVerified}</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
                 <td>
                   {!!item.StatusReason ? (
                     <Tooltip width="200px" text={item.StatusReason}>
@@ -446,7 +454,54 @@ const TutorTable = () => {
                     "-"
                   )}
                 </td>
-                <td className="p-1">
+                <td className="p-1 ">
+                  <div className="" ref={dropdownRef}>
+                    <BsThreeDotsVertical
+                      onClick={() => handleDropdownClick(index)}
+                      style={{ cursor: "pointer" }}
+                    />
+                    <div
+                      className=" list-group position-absolute shadow"
+                      style={{
+                        right: "0",
+                        transition: "height 0.3s ease",
+                        height: dropdownOpen === index ? "120px" : "0",
+                        overflow: "hidden",
+                      }}
+                    >
+                       <div
+                        className="list-group-item list-group-item-action text-start cursor-pointer"
+                        onClick={() => {
+                          setDropdownOpen(null); 
+                          redirect_to_tutor_setup(item.AcademyId, item.TutorScreenname);
+                        }}
+                      >
+                        View Profile
+                      </div>
+                      <div
+                        className="list-group-item list-group-item-action text-start cursor-pointer"
+                        onClick={() => {
+                          setOpenDegModal(true);
+                          setDocUrl(item.Degree);
+                          setDropdownOpen(null); 
+                        }}
+                      >
+                        View Degree
+                      </div>
+                      <div
+                        className="list-group-item list-group-item-action text-start cursor-pointer"
+                        onClick={() => {
+                          setOpenCertModal(true);
+                          setDocUrl(item.Certificate);
+                          setDropdownOpen(null); 
+                        }}
+                      >
+                        View Certificate
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                {/* <td className="p-1 col-1">
                   <button
                     className="m-0 mb-1 w-100 btn btn-success"
                     onClick={() => {
@@ -470,7 +525,7 @@ const TutorTable = () => {
                   >
                     View Certificate
                   </button>
-                </td>
+                </td> */}
               </tr>
             ))}
           </tbody>

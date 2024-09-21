@@ -3,12 +3,12 @@ import CenteredModal from '../common/Modal'
 import TAButton from '../common/TAButton'
 import Avatar from '../common/Avatar'
 
-const StatusReason = ({ open, onClose, statusReason, setStatusReason, status, user, handleProceed }) => {
+const StatusReason = ({ open, onClose, statusReason, setStatusReason, status, user={}, handleProceed }) => {
     return (
         <CenteredModal show={open} handleClose={onClose} title={"Reason for Changing Status"}>
             <form className='d-flex flex-column gap-3'  onSubmit={handleProceed}>
                 <div className='d-flex align-items-center shadow rounded-3'>
-                    <Avatar avatarSrc={user.Photo} />
+                    <Avatar avatarSrc={user?.Photo} />
                     <div className='d-flex flex-column'>
                     <div><span className='fw-bold'>Name:</span> {user.TutorScreenname}</div>
                     <div><span className='fw-bold'>Current Status:</span> {user.Status}</div>
