@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Tabs from '../../../components/common/Tabs'
-import Ads from '../../../components/student/Ads'
+import Ads from '../../student/MarketPlace/Ad'
 import List from '../../../components/tutor/Ads/ListComponent'
 import Classified from './Classified'
 
