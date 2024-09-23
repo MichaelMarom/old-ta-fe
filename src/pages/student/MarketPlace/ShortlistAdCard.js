@@ -48,7 +48,9 @@ const ShortlistAdCard = ({
         </div>
         <Avatar avatarSrc={photo} size="100px" showOnlineStatus={false} />
         <div className="d-flex top-0 start-0 p-1 " style={{ gap: "5px" }}>
-          <h6 className="mr-2">{name}</h6>
+          {/* TODO: fetch name */}
+
+          <h6 className="mr-2">{"fetch name"}</h6>
           <img
             src={`https://flagcdn.com/w20/${code}.png`}
             srcSet={`https://flagcdn.com/w40/${code}.png 2x, https://flagcdn.com/48x36/${code}.png 3x`}
