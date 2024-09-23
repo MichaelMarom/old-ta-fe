@@ -43,10 +43,9 @@ import Select from "../common/Select";
 import VacationSettingModal from "./VacationSettingModal";
 import { uploadTutorImage } from "../../axios/file";
 import { setMissingFieldsAndTabs } from "../../redux/tutor/missingFieldsInTabs";
-import _ from 'lodash';
+import _ from "lodash";
 import { FaExclamationCircle } from "react-icons/fa";
 import { AiOutlineInfoCircle } from "react-icons/ai";
-
 
 const phoneUtil = PhoneNumberUtil.getInstance();
 const isPhoneValid = (phone) => {
@@ -116,7 +115,7 @@ const TutorSetup = () => {
   const [nameFieldsDisabled, setNameFieldsDisabled] = useState(false);
   let [isRecording, setIsRecording] = useState(false);
   const toastId = "pending-status-toast";
-  let toastRef = useRef()
+  let toastRef = useRef();
 
   const nameValidations = (value, field) => {
     if (!/^[a-zA-Z]+$/.test(value)) {
@@ -146,7 +145,6 @@ const TutorSetup = () => {
         );
       }
     }
-
 
     return () => {
       if (toastRef.current) {
@@ -314,7 +312,8 @@ const TutorSetup = () => {
 
   const saveTutorSetup = async (e) => {
     e.preventDefault();
-    if (_.some(errors, (value) => typeof value === 'string')) return toast.error("Please fix validation errors!")
+    if (_.some(errors, (value) => typeof value === "string"))
+      return toast.error("Please fix validation errors!");
 
     if (!isValid) {
       return toast.warning("Please enter the correct phone number");
@@ -324,26 +323,29 @@ const TutorSetup = () => {
     await saver();
     setSavingRecord(false);
 
-    dispatch(setTutor({...tutor,
-      CellPhone: cell,
-      Address1: add1,
-      Address2: add2,
-      CityTown: city,
-      StateProvince: state,
-      ZipCode: zipCode,
-      Country: country,
-      GMT: timeZone,
-      ResponseHrs: response_zone,
-      Introduction: intro,
-      Motivate: motivation,
-      HeadLine: headline,
-      StartVacation: vacation_mode ? start : moment().toDate(),
-      EndVacation: vacation_mode ? end : moment().endOf().toDate(),
-      VacationMode: vacation_mode,
-      Step: 2,
-      Video: video,
-      Photo: photo
-    }));
+    dispatch(
+      setTutor({
+        ...tutor,
+        CellPhone: cell,
+        Address1: add1,
+        Address2: add2,
+        CityTown: city,
+        StateProvince: state,
+        ZipCode: zipCode,
+        Country: country,
+        GMT: timeZone,
+        ResponseHrs: response_zone,
+        Introduction: intro,
+        Motivate: motivation,
+        HeadLine: headline,
+        StartVacation: vacation_mode ? start : moment().toDate(),
+        EndVacation: vacation_mode ? end : moment().endOf().toDate(),
+        VacationMode: vacation_mode,
+        Step: 2,
+        Video: video,
+        Photo: photo,
+      })
+    );
 
     localStorage.setItem("tutor_user_id", tutor.AcademyId);
     setEditMode(false);
@@ -372,7 +374,7 @@ const TutorSetup = () => {
       VacationMode: vacation_mode,
       Step: 2,
       Video: video,
-      Photo: photo
+      Photo: photo,
     };
 
     let response = await updateTutorSetup(tutor.AcademyId, body);
@@ -539,7 +541,6 @@ const TutorSetup = () => {
 
     const file = e.target.files[0];
 
-
     // if (file.size > 52428800)
     //   return toast.warning("Video size should be less than 50MB");
     if (!file?.type || file.type.split("/")?.[0] !== "video") {
@@ -549,14 +550,13 @@ const TutorSetup = () => {
       let reader = new FileReader({});
 
       reader.onload = (result) => {
-        const videoElement = document.createElement('video');
+        const videoElement = document.createElement("video");
         videoElement.src = reader.result;
 
         videoElement.onloadedmetadata = async () => {
           // toast.warning(`Size is ${file.size / 1024} KB and duration ${videoElement.duration}`)
 
           if (videoElement.duration <= 59.59) {
-
             set_video(reader.result);
             const { data } = await uploadVideoToAzure(
               file,
@@ -568,18 +568,16 @@ const TutorSetup = () => {
             dispatch(setTutor({ ...tutor, Video: data.url }));
             console.log(data.url);
             setVideoUploading(false);
-          }
-          else {
+          } else {
             videoElement.src = null;
-            set_video(tutor.Video)
-            toast.error("Video duration should be less than 1 minute")
-
+            set_video(tutor.Video);
+            toast.error("Video duration should be less than 1 minute");
           }
           setVideoUploading(false);
-        }
+        };
       };
       reader.readAsDataURL(file);
-    };
+    }
   };
 
   useEffect(() => {
@@ -620,7 +618,7 @@ const TutorSetup = () => {
         }}
       >
         <div
-          className="d-flex justify-content-between flex-column"
+          className="container mt-2 d-flex justify-content-between flex-column"
           style={{
             gap: "25px",
             marginLeft: "20px",
@@ -628,20 +626,22 @@ const TutorSetup = () => {
             marginTop: "0",
           }}
         >
-          <div className="highlight w-100 m-0 justify-content-start text-sm">
-
-            {!!tutor.StatusReason?.length && <div className=" text-danger w-auto"><FaExclamationCircle color="red" /> {tutor.StatusReason}</div>
-            }
-            <p>
+          {!!tutor.StatusReason?.length && (
+            <div className="highlight w-100 m-0 justify-content-start text-sm">
+              <div className=" text-danger w-auto">
+                <FaExclamationCircle color="red" /> {tutor.StatusReason}
+              </div>
+              {/* <p>
               <span
-                className="text-danger"
-                style={{ fontSize: "20px", fontWeight: "bold" }}
+              className="text-danger"
+              style={{ fontSize: "20px", fontWeight: "bold" }}
               >
-                *
+              *
               </span>{" "}
-              = Mandatory Fields</p>
-
-          </div>
+              = Mandatory Fields
+            </p> */}
+            </div>
+          )}
 
           <div className="d-flex flex-column">
             <div
@@ -650,17 +650,28 @@ const TutorSetup = () => {
             >
               <div
                 className="d-flex flex-column align-items-center"
-                style={{ width: "15%" }}
+                style={{ width: "20%" }}
               >
                 <div>
-                  <h6 className="m-0"> <span className="text-primary">{tutor.FirstName} {tutor.MiddleName} {tutor.LastName}</span>
+                  <h6 className="m-0 text-center">
+                    {" "}
+                    <span className="text-primary">
+                      {tutor.FirstName} {tutor.MiddleName} {tutor.LastName}
+                    </span>
                   </h6>
+                  <p className="text-center" style={{ fontSize: "12px" }}>
+                    ({email})
+                  </p>
+                  <p className="text-center" style={{ fontSize: "12px" }}>
+                    {dateTime}
+                  </p>
                 </div>
                 <h6
-                  className={`text-start m-0 ${mandatoryFields.find((item) => item.name === "photo").filled
-                    ? ""
-                    : "blink_me"
-                    }`}
+                  className={`text-start m-0 ${
+                    mandatoryFields.find((item) => item.name === "photo").filled
+                      ? ""
+                      : "blink_me"
+                  }`}
                   style={{ whiteSpace: "nowrap" }}
                 >
                   Profile Photo
@@ -842,8 +853,185 @@ const TutorSetup = () => {
                   </div>
                 </div>
               </div>
-              <div className="" style={{ width: "23%" }}>
-                {/* <div
+              <div
+                className="d-flex flex-column gap-2"
+                style={{ width: "40%" }}
+              >
+                <p className="highlight my-2 p-1" style={{ fontSize: "12px" }}>
+                  <span
+                    className="text-danger"
+                    style={{ fontSize: "16px", fontWeight: "bold" }}
+                  >
+                    *
+                  </span>{" "}
+                  = Mandatory Fields
+                </p>
+                <div className="d-flex gap-3">
+                  <div className="" style={{ width: "100%" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        width: "100%",
+                        margin: "0 0 10px 0",
+                        padding: "0",
+
+                        alignItems: "center",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      <Input
+                        label={
+                          <OptionalFieldLabel
+                            label={"Address 1"}
+                            editMode={editMode}
+                          />
+                        }
+                        required={false}
+                        value={add1}
+                        setValue={set_add1}
+                        editMode={editMode}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        width: "100%",
+
+                        alignItems: "center",
+                        margin: "0 0 10px 0",
+
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      <Input
+                        label={
+                          <OptionalFieldLabel
+                            label={"Address 2"}
+                            editMode={editMode}
+                          />
+                        }
+                        value={add2}
+                        required={false}
+                        setValue={set_add2}
+                        editMode={editMode}
+                      />
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        width: "100%",
+                        alignItems: "center",
+                        margin: "0 0 10px 0",
+
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      <Input
+                        label={
+                          <OptionalFieldLabel
+                            label={"City/Town"}
+                            editMode={editMode}
+                          />
+                        }
+                        value={city}
+                        required={false}
+                        setValue={set_city}
+                        editMode={editMode}
+                      />
+                    </div>
+                    <div
+                      className="w-100"
+                      style={{
+                        display: "flex",
+                        width: "100%",
+                        alignItems: "center",
+                        margin: "0 0 10px 0",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      <Select
+                        setValue={set_country}
+                        value={country}
+                        mandatory={true}
+                        editMode={editMode}
+                        label={
+                          <MandatoryFieldLabel
+                            name="country"
+                            mandatoryFields={mandatoryFields}
+                            text="Country"
+                            editMode={editMode}
+                          />
+                        }
+                      >
+                        {countryList}
+                      </Select>
+                    </div>
+                    {(options[country] ?? [])?.length ? (
+                      <div
+                        className="mb-2"
+                        style={{
+                          display: "flex",
+                          width: "100%",
+                          alignItems: "center",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        <Select
+                          setValue={set_state}
+                          value={state}
+                          editMode={editMode}
+                          required={tutor.Status === "active"}
+                          label={
+                            <MandatoryFieldLabel
+                              name="state"
+                              mandatoryFields={mandatoryFields}
+                              text="State/Province"
+                              editMode={editMode}
+                            />
+                          }
+                        >
+                          <option value="" disabled>
+                            Select State
+                          </option>
+                          {options[country].map((item, index) => (
+                            <option key={index} value={item}>
+                              {item}
+                            </option>
+                          ))}
+                        </Select>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+
+                    <div
+                      style={{
+                        display: "flex",
+                        width: "100%",
+
+                        alignItems: "center",
+                        margin: "0 0 10px 0",
+
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      <Input
+                        label={
+                          <OptionalFieldLabel
+                            label={"Zip Code"}
+                            editMode={editMode}
+                          />
+                        }
+                        value={zipCode}
+                        required={false}
+                        setValue={set_zipCode}
+                        editMode={editMode}
+                      />
+                    </div>
+                  </div>
+                  <div className="" style={{ width: "100%" }}>
+                    {/* <div
                   style={{
                     display: "flex",
                     margin: "0 0 10px 0",
@@ -870,7 +1058,7 @@ const TutorSetup = () => {
                   />
                 </div> */}
 
-                {/* <div
+                    {/* <div
                   style={{
                     display: "flex",
                     margin: "0 0 10px 0",
@@ -945,7 +1133,7 @@ const TutorSetup = () => {
                   />
                 </div> */}
 
-                <div
+                    {/* <div
                   style={{
                     display: "flex",
                     margin: "0 0 10px 0",
@@ -962,82 +1150,83 @@ const TutorSetup = () => {
                     }
                     value={email}
                   />
-                </div>
+                </div> */}
 
-                <div
-                  style={{
-                    display: "flex",
-                    margin: "0 0 10px 0",
-                    padding: "0",
-
-                    alignItems: "center",
-                    width: "100%",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  <div className="input w-100">
-                    <PhoneInput
-                      defaultCountry="us"
-                      value={cell || ''}
-                      onChange={(cell) => set_cell(cell)}
-                      disabled={!editMode}
-                      style={{ width: "100%" }}
-                    />
-                    <span
-                      className="input__label roboto-medium"
+                    <div
                       style={{
-                        top: "7px",
-                        zIndex: "99",
-                        fontSize: "14px",
-                        padding: "2px",
-                        color: "black",
-                        background: "transparent",
-                        transform: " translate(0.25rem, -65%) scale(0.8)",
+                        display: "flex",
+                        margin: "0 0 10px 0",
+                        padding: "0",
+
+                        alignItems: "center",
+                        width: "100%",
+                        whiteSpace: "nowrap",
                       }}
-                    > <MandatoryFieldLabel
-                        name="phone"
-                        mandatoryFields={mandatoryFields}
+                    >
+                      <div className="input w-100">
+                        <PhoneInput
+                          defaultCountry="us"
+                          value={cell || ""}
+                          onChange={(cell) => set_cell(cell)}
+                          disabled={!editMode}
+                          style={{ width: "100%" }}
+                        />
+                        <span
+                          className="input__label roboto-medium"
+                          style={{
+                            top: "7px",
+                            zIndex: "99",
+                            fontSize: "14px",
+                            padding: "2px",
+                            color: "black",
+                            background: "transparent",
+                            transform: " translate(0.25rem, -65%) scale(0.8)",
+                          }}
+                        >
+                          {" "}
+                          <MandatoryFieldLabel
+                            name="phone"
+                            mandatoryFields={mandatoryFields}
+                            editMode={editMode}
+                            text={"Phone"}
+                          />
+                        </span>
+                      </div>
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        width: "100%",
+
+                        alignItems: "center",
+                        margin: "0 0 10px 0",
+
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      <Select
+                        setValue={set_response_zone}
+                        value={response_zone}
                         editMode={editMode}
-                        text={"Phone"}
-                      />
-                    </span>
-                  </div>
-                </div>
-
-                <div
-                  style={{
-                    display: "flex",
-                    width: "100%",
-
-                    alignItems: "center",
-                    margin: "0 0 10px 0",
-
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  <Select
-                    setValue={set_response_zone}
-                    value={response_zone}
-                    editMode={editMode}
-                    label={
-                      <MandatoryFieldLabel
-                        name="rtime"
-                        toolTipText={
-                          "Select your response time answering the student during business time in your time zone. Please take notice that the student take this fact as one of the considurations of selecting you as tutor."
+                        label={
+                          <MandatoryFieldLabel
+                            name="rtime"
+                            toolTipText={
+                              "Select your response time answering the student during business time in your time zone. Please take notice that the student take this fact as one of the considurations of selecting you as tutor."
+                            }
+                            mandatoryFields={mandatoryFields}
+                            text="Response Time"
+                            editMode={editMode}
+                          />
                         }
-                        mandatoryFields={mandatoryFields}
-                        text="Response Time"
-                        editMode={editMode}
-                      />
-                    }
-                  >
-                    {response_list}
-                  </Select>
-                </div>
+                      >
+                        {response_list}
+                      </Select>
+                    </div>
 
-                <div>
-
-                  {!!timeZone && (
+                    <div>
+                      {/* {!!timeZone && (
                     <div
                       style={{
                         margin: "0 0 10px 0",
@@ -1062,210 +1251,86 @@ const TutorSetup = () => {
                         editMode={false}
                       />
                     </div>
-                  )}
-                  <div
-                    style={{
-                      display: "flex",
-                      width: "100%",
+                  )} */}
+                      <div
+                        style={{
+                          display: "flex",
+                          width: "100%",
 
-                      alignItems: "center",
+                          alignItems: "center",
 
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    <Select
-                      setValue={set_timeZone}
-                      value={timeZone}
-                      editMode={editMode}
-                      label={
-                        <MandatoryFieldLabel
-                          toolTipText={
-                            "Select the Greenwich Mean Time (GMT) zone where you reside. It will let the student configure his time availability conducting lessons with you, when in a different time zone. "
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        <Select
+                          setValue={set_timeZone}
+                          value={timeZone}
+                          editMode={editMode}
+                          label={
+                            <MandatoryFieldLabel
+                              toolTipText={
+                                "Select the Greenwich Mean Time (GMT) zone where you reside. It will let the student configure his time availability conducting lessons with you, when in a different time zone. "
+                              }
+                              name="timezone"
+                              mandatoryFields={mandatoryFields}
+                              text="Timezone"
+                              editMode={editMode}
+                            />
                           }
-                          name="timezone"
-                          mandatoryFields={mandatoryFields}
-                          text="Timezone"
-                          editMode={editMode}
-                        />
-                      }
-                    >
-                      {GMTList}
-                    </Select>
+                        >
+                          {GMTList}
+                        </Select>
+                      </div>
+                      <Link
+                        className="m-0"
+                        style={{ fontSize: "12px" }}
+                        target="_blank"
+                        to={"https://24timezones.com/timezone-map"}
+                      >
+                        See your timezone from map.
+                      </Link>
+                    </div>
                   </div>
-                  <Link
-                    className="m-0"
-                    style={{ fontSize: "12px" }}
-                    target="_blank"
-                    to={"https://24timezones.com/timezone-map"}
-                  >
-                    See your timezone from map.
-                  </Link>
                 </div>
-              </div>
-
-              <div className="" style={{ width: "23%" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    width: "100%",
-                    margin: "0 0 10px 0",
-                    padding: "0",
-
-                    alignItems: "center",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  <Input
-                    label={
-                      <OptionalFieldLabel
-                        label={"Adress 1"}
-                        editMode={editMode}
-                      />
-                    }
-                    required={false}
-                    value={add1}
-                    setValue={set_add1}
-                    editMode={editMode}
-                  />
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    width: "100%",
-
-                    alignItems: "center",
-                    margin: "0 0 10px 0",
-
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  <Input
-                    label={
-                      <OptionalFieldLabel
-                        label={"Adress 2"}
-                        editMode={editMode}
-                      />
-                    }
-                    value={add2}
-                    required={false}
-                    setValue={set_add2}
-                    editMode={editMode}
-                  />
-                </div>
-
-                <div
-                  style={{
-                    display: "flex",
-                    width: "100%",
-                    alignItems: "center",
-                    margin: "0 0 10px 0",
-
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  <Input
-                    label={
-                      <OptionalFieldLabel
-                        label={"City/Town"}
-                        editMode={editMode}
-                      />
-                    }
-                    value={city}
-                    required={false}
-                    setValue={set_city}
-                    editMode={editMode}
-                  />
-                </div>
-                <div
-                  className="w-100"
-                  style={{
-                    display: "flex",
-                    width: "100%",
-                    alignItems: "center",
-                    margin: "0 0 10px 0",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  <Select
-                    setValue={set_country}
-                    value={country}
-                    mandatory={true}
-                    editMode={editMode}
-                    label={
-                      <MandatoryFieldLabel
-                        name="country"
-                        mandatoryFields={mandatoryFields}
-                        text="Country"
-                        editMode={editMode}
-                      />
-                    }
-                  >
-                    {countryList}
-                  </Select>
-                </div>
-                {(options[country] ?? [])?.length ? (
+                <div className="input w-100">
                   <div
-                    className="mb-2"
                     style={{
-                      display: "flex",
-                      width: "100%",
-                      alignItems: "center",
-                      whiteSpace: "nowrap",
+                      fontWeight: "900",
+                      fontSize: "14px",
+                      float: "right",
                     }}
                   >
-                    <Select
-                      setValue={set_state}
-                      value={state}
-                      editMode={editMode}
-                      required={tutor.Status === "active"}
-                      label={
-                        <MandatoryFieldLabel
-                          name="state"
-                          mandatoryFields={mandatoryFields}
-                          text="State/Province"
-                          editMode={editMode}
-                        />
-                      }
-                    >
-                      <option value="" disabled>
-                        Select State
-                      </option>
-                      {options[country].map((item, index) => (
-                        <option key={index} value={item}>
-                          {item}
-                        </option>
-                      ))}
-                    </Select>
+                    {headline?.length}/80
                   </div>
-                ) : (
-                  ""
-                )}
-
-                <div
-                  style={{
-                    display: "flex",
-                    width: "100%",
-
-                    alignItems: "center",
-                    margin: "0 0 10px 0",
-
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  <Input
-                    label={
-                      <OptionalFieldLabel
-                        label={"Zip Code"}
-                        editMode={editMode}
-                      />
-                    }
-                    value={zipCode}
-                    required={false}
-                    setValue={set_zipCode}
-                    editMode={editMode}
+                  <input
+                    className="input__field m-0 shadow form-control"
+                    value={headline}
+                    maxLength={80}
+                    spellCheck="true"
+                    disabled={!editMode}
+                    placeholder="Write A Catchy Headline.. Example: 21 years experienced nuclear science professor."
+                    onChange={(e) => set_headline(e.target.value)}
+                    type="text"
+                    required={tutor.Status === "active"}
                   />
+                  <span
+                    className=""
+                    style={{
+                      position: "absolute",
+                      top: "-5px",
+                      left: "10px",
+                      padding: "2px",
+                      fontSize: "12px",
+                    }}
+                  >
+                    <MandatoryFieldLabel
+                      name="headline"
+                      mandatoryFields={mandatoryFields}
+                      text={"Profile Headline"}
+                      editMode={editMode}
+                    />
+                  </span>
                 </div>
-
               </div>
               <div
                 className=" "
@@ -1277,10 +1342,11 @@ const TutorSetup = () => {
                 }}
               >
                 <h6
-                  className={`${!!video.length && !videoError
-                    ? ""
-                    : "blinking-button text-success"
-                    }`}
+                  className={`${
+                    !!video.length && !videoError
+                      ? ""
+                      : "blinking-button text-success"
+                  }`}
                 >
                   Elective Tutor's introduction video
                 </h6>
@@ -1398,8 +1464,9 @@ const TutorSetup = () => {
                         <button
                           style={{ width: "100%", fontSize: "10px" }}
                           type="button"
-                          className={`action-btn btn small ${selectedVideoOption === "record" ? "active" : ""
-                            }`}
+                          className={`action-btn btn small ${
+                            selectedVideoOption === "record" ? "active" : ""
+                          }`}
                           disabled={!editMode}
                           onClick={() => {
                             set_video("");
@@ -1449,8 +1516,9 @@ const TutorSetup = () => {
                             fontSize: "10px",
                             border: " 1px solid #e1e1e1",
                           }}
-                          className={`action-btn btn ${selectedVideoOption === "upload" ? "active" : ""
-                            }`}
+                          className={`action-btn btn ${
+                            selectedVideoOption === "upload" ? "active" : ""
+                          }`}
                         >
                           <div className="button__content">
                             <div className="button__icon">
@@ -1489,47 +1557,7 @@ const TutorSetup = () => {
                 textAlign: "center",
                 width: "50%",
               }}
-            >
-              <div className="input w-100">
-                <div
-                  style={{
-                    fontWeight: "900",
-                    fontSize: "14px",
-                    float: "right",
-                  }}
-                >
-                  {headline?.length}/80
-                </div>
-                <input
-                  className="input__field m-0 shadow form-control"
-                  value={headline}
-                  maxLength={80}
-                  spellCheck="true"
-                  disabled={!editMode}
-                  placeholder="Write A Catchy Headline.. Example: 21 years experienced nuclear science professor."
-                  onChange={(e) => set_headline(e.target.value)}
-                  type="text"
-                  required={tutor.Status === "active"}
-                />
-                <span
-                  className=""
-                  style={{
-                    position: "absolute",
-                    top: "-5px",
-                    left: "10px",
-                    padding: "2px",
-                    fontSize: "12px",
-                  }}
-                >
-                  <MandatoryFieldLabel
-                    name="headline"
-                    mandatoryFields={mandatoryFields}
-                    text={"Profile Headline"}
-                    editMode={editMode}
-                  />
-                </span>
-              </div>
-            </div>
+            ></div>
           </div>
 
           <div style={{ width: "100%" }}>
@@ -1699,7 +1727,8 @@ export const MandatoryFieldLabel = ({
 
   return (
     <div className="d-flex">
-      <span className="d-flex gap-2"
+      <span
+        className="d-flex gap-2"
         style={{
           background: editMode ? "white" : "rgb(233 236 239)",
         }}
@@ -1739,7 +1768,8 @@ export const GeneralFieldLabel = ({
 }) => {
   return (
     <div className="">
-      <span className="d-flex gap-2"
+      <span
+        className="d-flex gap-2"
         style={{
           background: editMode ? "white" : "rgb(233 236 239)",
         }}

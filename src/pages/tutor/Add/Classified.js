@@ -102,7 +102,8 @@ const Classified = () => {
                       </div>
                     </div>
                     <div>
-                      <h5>{convertTutorIdToName(item.AcademyId)}</h5>
+                      {/* TODO: */}
+                      <h5>{"Fetch Name"}</h5>
                       {!!JSON.parse(item.TutorLanguages).length && (
                         <div className="d-flex">
                           <h6>Languages:</h6>
@@ -117,23 +118,28 @@ const Classified = () => {
                       </div>
                       <div>
                         <h6 className="text-start d-inline-block m-0">
-                          {" "}
                           Tutor Experience:
                         </h6>
-                        <p className="d-inline-block m-0"></p>{" "}
-                        {item.TutorExperience}
-                        <h6 className="text-start d-inline-block m-0">
+                        <p className="d-inline-block m-1">
+                          {item.TutorExperience}
+                        </p> | 
+                        <h6 className="text-start d-inline-block m-1">
                           Tutor Degree:
-                        </h6>{" "}
-                        {item.TutorEduLevel}
-                        <h6 className="text-start d-inline-block m-0">
+                        </h6>
+                        <p className="d-inline-block m-1">
+                          {item.TutorEduLevel}
+                        </p> |
+                        <h6 className="text-start d-inline-block m-1">
                           Tutor Certificate:
-                        </h6>{" "}
-                        {item.TutorCertificate}
-                        <h6 className="text-start d-inline-block m-0">
+                        </h6>
+                        <p className="d-inline-block m-1">
+                          {item.TutorCertificate}
+                        </p> | 
+                        <h6 className="text-start d-inline-block m-1">
                           Tutor TimeZone:
-                        </h6>{" "}
-                        {item.TutorGMT}
+                        </h6>
+                        <p className="d-inline-block m-1">{item.TutorGMT}</p>
+
                         <div
                           className="border text-bg-light p-2"
                           dangerouslySetInnerHTML={{ __html: item.AdText }}

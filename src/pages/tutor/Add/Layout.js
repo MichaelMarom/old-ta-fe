@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import TutorLayout from '../../../layouts/TutorLayout'
 import Tabs from '../../../components/common/Tabs'
 import Ads from '../../../components/student/Ads'
 import List from '../../../components/tutor/Ads/ListComponent'
-import Classified from '../../../components/tutor/Ads/Classified'
-import TabInfoVideoToast from '../../../components/common/TabInfoVideoToast'
+import Classified from './Classified'
 
 const Layout = ({ children }) => {
     let [activeTab, setActiveTab] = useState('')

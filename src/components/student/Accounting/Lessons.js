@@ -29,7 +29,7 @@ const Lessons = ({ paymentReportData }) => {
                     {paymentReportData.map((row, index) => (
                         <tr key={index}>
                             <td>{showDate(row.start, wholeDateFormat)}</td>
-                            <td>{convertTutorIdToName(row.tutorId)}</td>
+                            <td>{row.tutorScreenName}</td>
                             <td>{row.subject}</td>
                             <td>{row.rate}</td>
                             <td>{row.title}</td>

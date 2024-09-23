@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import {
   code_applied,
   get_my_data,
-  post_student_setup,
   upload_student_setup_by_fields,
 } from "../../axios/student";
 import { get_tutor_against_code } from "../../axios/tutor";
@@ -102,7 +101,6 @@ const StudentSetup = () => {
   const [unSavedChanges, setUnSavedChanges] = useState(false);
   const [toastShown, setToastShown] = useState(false);
   const isValid = isPhoneValid(cell);
-
 
   const nameValidations = (value) => {
     if (!/^[a-zA-Z]+$/.test(value)) {
@@ -429,7 +427,7 @@ const StudentSetup = () => {
   }, [student.Status]);
 
   let handleImage = async (e) => {
-    if (!student.AcademyId) return toast.warning("Please set you Name first!")
+    if (!student.AcademyId) return toast.warning("Please set you Name first!");
     if (e.target.files[0].type.split("/")?.[0] !== "image") {
       alert("Only Image Can Be Uploaded To This Field");
     } else {
@@ -452,7 +450,7 @@ const StudentSetup = () => {
             Photo: result.data.url,
           }).then(() => {
             dispatch(setStudent({ ...student, Photo: result.data.url }));
-            toast.success("Uploaded Successfully!")
+            toast.success("Uploaded Successfully!");
           });
 
         setPicUploading(false);
@@ -519,15 +517,29 @@ const StudentSetup = () => {
         background: editMode ? "inherit" : "rgb(233, 236, 239)",
       }}
     >
-      {!!student.StatusReason?.length && <div className="m-3 highlight text-danger w-auto"><FaExclamationCircle color="red" /> {student.StatusReason}</div>
-      }<div
+      {!!student.StatusReason?.length && (
+        <div className="m-3 highlight text-danger w-auto">
+          <FaExclamationCircle color="red" /> {student.StatusReason}
+        </div>
+      )}
+      <div
         className="d-flex justify-content-center container mt-4"
         style={{ height: "100%", gap: "3%" }}
       >
         <div className="text-center" style={{ width: "30%" }}>
           <div>
-            <h6 className="m-0"> <span className="text-primary">{student.FirstName} {student.MiddleName} {student.LastName}</span>
+            <h6 className="m-0">
+              {" "}
+              <span className="text-primary">
+                {student.FirstName} {student.MiddleName} {student.LastName}
+              </span>
             </h6>
+            <p className="text-center" style={{ fontSize: "12px" }}>
+              ({email})
+            </p>
+            <p className="text-center" style={{ fontSize: "12px" }}>
+              {dateTime}
+            </p>
           </div>
           <h6 style={{ whiteSpace: "nowrap" }} className="fw-bold">
             Profile Photo
@@ -566,7 +578,9 @@ const StudentSetup = () => {
                     required={false}
                     setValue={set_code}
                     value={code}
-                    label={<p className="bg-light p-1">Enter received Code here </p>}
+                    label={
+                      <p className="bg-light p-1">Enter received Code here </p>
+                    }
                   />
                 </div>
 
@@ -638,7 +652,7 @@ const StudentSetup = () => {
                 />
               </div> */}
 
-              <div className="input-group mb-2 ">
+              {/* <div className="input-group mb-2 ">
                 <Input
                   value={user.role === "student" ? user.email : email}
                   label={
@@ -646,7 +660,7 @@ const StudentSetup = () => {
                   }
                   editMode={false}
                 />
-              </div>
+              </div> */}
 
               <div className="input-group mb-2 ">
                 <div className="input w-100">
@@ -677,7 +691,6 @@ const StudentSetup = () => {
                       editMode={editMode}
                       text={"Phone"}
                     />
-
                   </span>
                 </div>
               </div>
@@ -926,13 +939,13 @@ const StudentSetup = () => {
                   editMode={editMode}
                 />
               </div>
-              <div className="input-group mb-2 ">
+              {/* <div className="input-group mb-2 ">
                 <Input
                   value={dateTime}
                   label={<MandatoryFieldLabel text="UTC" editMode={editMode} />}
                   editMode={false}
                 />
-              </div>
+              </div> */}
               <div className="form-check d-flex gap-2 align-items-center">
                 <input
                   style={{ width: "20px", height: "20px" }}
