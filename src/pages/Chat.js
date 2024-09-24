@@ -196,7 +196,7 @@ function Chat() {
       await Promise.all(filePromises);
     }
 
-    if (messagesToSend.length > 0) {
+    if (messagesToSend?.length > 0) {
     sendMessagesToEmail(messagesToSend, files)
 
       setMessages((prevMessages) => [...prevMessages, ...messagesToSend]);

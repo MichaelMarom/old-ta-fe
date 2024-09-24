@@ -66,7 +66,7 @@ export default function Chats({ isLoading, fetchingMessages, setSelectedChat, se
     return (
         <div className="ks-discussions w-25" >
             <SearchBar />
-            {(!!discussionData.length) ? <DiscussionList
+            {(!!discussionData?.length) ? <DiscussionList
                 setSelectedChat={setSelectedChat}
                 discussions={discussionData}
                 fetchingMessages={fetchingMessages}
