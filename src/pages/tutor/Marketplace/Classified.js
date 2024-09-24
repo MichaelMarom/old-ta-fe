@@ -102,8 +102,7 @@ const Classified = () => {
                       </div>
                     </div>
                     <div>
-                      {/* TODO: */}
-                      <h5>{"Fetch Name"}</h5>
+                      <h5>{item.ScreenName}</h5>
                       {!!JSON.parse(item.TutorLanguages).length && (
                         <div className="d-flex">
                           <h6>Languages:</h6>

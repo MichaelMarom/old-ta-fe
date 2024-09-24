@@ -197,17 +197,18 @@ const TutorTable = () => {
   };
 
   const handleClickOutside = (event) => {
+    console.log(dropdownRef.current , dropdownRef.current?.contains(event.target), event.target, dropdownOpen)
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setDropdownOpen(null);
     }
   };
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  // useEffect(() => {
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, []);
 
   return (
     <div
@@ -454,7 +455,7 @@ const TutorTable = () => {
                     "-"
                   )}
                 </td>
-                <td className="p-1 ">
+                <td className="p-1 " >
                   <div className="" ref={dropdownRef}>
                     <BsThreeDotsVertical
                       onClick={() => handleDropdownClick(index)}
@@ -464,36 +465,50 @@ const TutorTable = () => {
                       className=" list-group position-absolute shadow"
                       style={{
                         right: "0",
-                        transition: "height 0.3s ease",
-                        height: dropdownOpen === index ? "120px" : "0",
+                        transition: "all 0.3s ease",
+                        height: dropdownOpen === index ? "90px" : "0",
                         overflow: "hidden",
                       }}
                     >
-                       <div
+                      <div
+                        style={{ height: dropdownOpen === index ? "30px" : 0, padding:0 }}
                         className="list-group-item list-group-item-action text-start cursor-pointer"
                         onClick={() => {
-                          setDropdownOpen(null); 
-                          redirect_to_tutor_setup(item.AcademyId, item.TutorScreenname);
+                          console.log("Hello profile")
+                          setDropdownOpen(null);
+                          redirect_to_tutor_setup(
+                            item.AcademyId,
+                            item.TutorScreenname
+                          );
                         }}
                       >
                         View Profile
                       </div>
                       <div
+                        style={{ height: dropdownOpen === index ? "30px" : 0, padding:0  }}
                         className="list-group-item list-group-item-action text-start cursor-pointer"
                         onClick={() => {
+                          console.log("hello1", index);
                           setOpenDegModal(true);
-                          setDocUrl(item.Degree);
-                          setDropdownOpen(null); 
+                          getDoc("degree", item.AcademyId).then((res) =>
+                          setDocUrl(res?.[0]?.DegFileName)
+                        );
+                        setOpenDegModal(true);
+                          setDropdownOpen(null);
                         }}
                       >
                         View Degree
                       </div>
                       <div
+                        style={{ height: dropdownOpen === index ? "30px" : 0 , padding:0 }}
                         className="list-group-item list-group-item-action text-start cursor-pointer"
                         onClick={() => {
+                          console.log("hello", index);
                           setOpenCertModal(true);
-                          setDocUrl(item.Certificate);
-                          setDropdownOpen(null); 
+                          getDoc("certificate", item.AcademyId).then((res) =>
+                          setDocUrl(res?.[0]?.CertFileName)
+                        );
+                          setDropdownOpen(null);
                         }}
                       >
                         View Certificate

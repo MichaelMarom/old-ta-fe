@@ -404,9 +404,11 @@ const StudentTable = () => {
                     <td className="col-1">{item.email}</td>
                     <td>{item.Cell}</td>
                     <td className="col-2">{convertGMTOffsetToLocalString(item.GMT)}</td>
-                    <td>{item.ResponseHrs}</td>
-                    <td></td>
-                    <td>
+                    <td>-</td>
+                    <td>-</td>
+                   
+                    <td>-</td>
+                     <td>
                       {!!item.StatusReason ? (
                         <Tooltip width="200px" text={item.StatusReason}>
                           <IoChatbox size={25} />
@@ -415,7 +417,6 @@ const StudentTable = () => {
                         "-"
                       )}
                     </td>
-                    <td>{item.IdVerified}</td>
                   </tr>
                 ))}
               </tbody>

@@ -30,7 +30,7 @@ const Bids = () => {
             key={ad.Id}
             photo={ad.Photo}
             adText={ad.AdText}
-            name={convertTutorIdToName(ad.AcademyId)}
+            name={ad.TutorScreenname}
             id={ad.Id}
             setAdDeleted={setAdDeleted}
             subject={ad.Subject}

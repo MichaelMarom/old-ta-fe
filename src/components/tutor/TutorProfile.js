@@ -47,6 +47,22 @@ const TutorProfile = () => {
   const [rating, setRating] = useState(0);
   const [totalPastLessons, setTotalPastLessons] = useState(0);
 
+  const [duration, setDuration] = useState(0);
+  const handleLoadedMetadata = () => {
+    if (videoRef.current) {
+      setDuration(videoRef.current.duration);
+    }
+  };
+
+  const handleVideoClick = () => {
+    if (videoRef.current) {
+      if (videoRef.current.paused) {
+        videoRef.current.play();
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  };
   const toggleSize = () => {
     setIsEnlarged((prev) => !prev);
   };
@@ -147,7 +163,7 @@ const TutorProfile = () => {
     }
   }, [params.id, tutor.AcademyId, education.AcademyId, discount.AcademyId]);
 
-console.log(data)
+  console.log(data);
 
   if (!data.AcademyId)
     return (
@@ -236,7 +252,7 @@ console.log(data)
                 >
                   <PiChalkboardTeacherFill size={18} />
                   <ToolTip text={"Ratings"} className="d-flex">
-                    <StarRating rating={rating} /> 
+                    <StarRating rating={rating} />
                   </ToolTip>
                   <p>({totalPastLessons})</p>
                 </div>
@@ -399,19 +415,13 @@ console.log(data)
             <div className="h-100">
               <div className="" style={{ paddingRight: "20px" }}>
                 <video
+                  ref={videoRef}
                   loop
-                  controlsList="nodownload noremoteplayback" 
+                  controlsList="nodownload noremoteplayback"
                   src={data.Video}
-                  onClick={() => {
-                    if (videoRef.current) {
-                      if (videoRef.current.paused) {
-                        videoRef.current.play();
-                      } else {
-                        videoRef.current.pause();
-                      }
-                    }
-                  }}
-                  className={`rounded-4  shadow-lg`}
+                  onLoadedMetadata={handleLoadedMetadata}
+                  onClick={handleVideoClick}
+                  className="rounded-4 shadow-lg"
                   muted
                   style={{ width: "200px", height: "auto" }}
                   autoPlay
@@ -429,7 +439,7 @@ console.log(data)
                 <div className="d-flex justify-content-center align-items-center gap-1">
                   <CiClock2 color="lightgray" />{" "}
                   <p className="fw-bold" style={{ color: "lightgrey" }}>
-                    {"1min video"}
+                    {`${parseInt(duration)}sec(s) video`}
                   </p>
                 </div>
               </div>
@@ -484,12 +494,12 @@ console.log(data)
                     <p className="border rounded-3 p-2">{data.HeadLine}</p>
                   </div>
                 </div>
-                <div  className="m-0 mb-2">
+                <div className="m-0 mb-2">
                   <h5 className="">Motivate</h5>
                   <p className="border p-2 rounded-3">{data.Motivate}</p>
                 </div>
                 {data.WorkExperience && (
-                  <div  className="m-0 mb-2">
+                  <div className="m-0 mb-2">
                     <h5 className="">
                       Work Experience (Total Experience -{" "}
                       {data.EducationalLevelExperience})
@@ -1011,7 +1021,7 @@ console.log(data)
         <div className="h-100 m-auto">
           <div className="">
             <video
-             controlsList="nodownload noremoteplayback" 
+              controlsList="nodownload noremoteplayback"
               src={data.Video}
               ref={videoRef}
               className=" rounded-4  shadow-lg"

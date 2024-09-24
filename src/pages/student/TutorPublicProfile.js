@@ -9,9 +9,7 @@ import {
 } from "../../axios/tutor";
 import { create_chat } from "../../axios/chat";
 import { IoIosCheckmarkCircle, IoIosCloseCircle } from "react-icons/io";
-import {
-  FaRegTimesCircle,
-} from "react-icons/fa";
+import { FaRegTimesCircle } from "react-icons/fa";
 import { CiClock2 } from "react-icons/ci";
 
 import { convertGMTOffsetToLocalString, showDate } from "../../utils/moment";
@@ -32,6 +30,8 @@ import CenteredModal from "../../components/common/Modal";
 import StudentLayout from "../../layouts/StudentLayout";
 import { PiChalkboardTeacherFill } from "react-icons/pi";
 import StarRating from "../../components/common/StarRating";
+import _ from "lodash";
+import { RiVerifiedBadgeFill } from "react-icons/ri";
 
 const TutorPublicProfile = () => {
   const videoRef = useRef(null);
@@ -50,6 +50,25 @@ const TutorPublicProfile = () => {
   const { sessions } = useSelector((state) => state.tutorSessions);
   const [rating, setRating] = useState(0);
   const [totalPastLessons, setTotalPastLessons] = useState(0);
+
+  const [duration, setDuration] = useState(0);
+
+  const handleLoadedMetadata = () => {
+    console.log(videoRef.current.src, videoRef.current);
+    if (videoRef.current && !_.isNaN(videoRef.current.duration)) {
+      setDuration(videoRef.current.duration);
+    }
+  };
+
+  const handleVideoClick = () => {
+    if (videoRef.current) {
+      if (videoRef.current.paused) {
+        videoRef.current.play();
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  };
 
   //   const { education } = useSelector((state) => state.edu);
   //   const { discount } = useSelector((state) => state.discount);
@@ -221,13 +240,13 @@ const TutorPublicProfile = () => {
               <div className="d-flex align-items-start ">
                 <div
                   className="p-1 bg-white rounded-circle border shadow d-flex justify-content-center align-items-center m-1"
-                  style={{ width: "180px", height: "180px" }}
+                  style={{ width: "160px", height: "160px" }}
                 >
                   <Avatar
                     avatarSrc={tutor.Photo}
                     size="150px"
-                    indicSize="15px"
-                    positionInPixle={10}
+                    indicSize="18px"
+                    positionInPixle={16}
                   />
                 </div>
                 <div
@@ -239,9 +258,10 @@ const TutorPublicProfile = () => {
                       className="d-flex align-items-center"
                       style={{ gap: "10px" }}
                     >
-                      <h2 className="m-0">
+                      <h4 className="m-0  fw-bold">
                         {capitalizeFirstLetter(tutor.TutorScreenname)}
-                      </h2>
+                      </h4>
+                      <RiVerifiedBadgeFill color="green" size={20} />
                     </div>
                   </div>
 
@@ -273,19 +293,19 @@ const TutorPublicProfile = () => {
                     </h6>
                   </div>
                   <div
-                  className="d-flex align-items-center justify-content-start rounded-pill shadow p-1 "
-                  style={{
-                    gap: "10px",
-                    color: "lightgray",
-                    width: "fit-content",
-                  }}
-                >
-                  <PiChalkboardTeacherFill size={18} />
-                  <ToolTip text={"Ratings"} className="d-flex">
-                    <StarRating rating={rating} /> 
-                  </ToolTip>
-                  <p>({totalPastLessons})</p>
-                </div>
+                    className="d-flex align-items-center justify-content-start rounded-pill shadow p-1 "
+                    style={{
+                      gap: "10px",
+                      color: "lightgray",
+                      width: "fit-content",
+                    }}
+                  >
+                    <PiChalkboardTeacherFill size={18} />
+                    <ToolTip text={"Ratings"} className="d-flex">
+                      <StarRating rating={rating} />
+                    </ToolTip>
+                    <p>({totalPastLessons})</p>
+                  </div>
                   <div className="m-2 ">
                     <div className="d-flex ">
                       <TAButton
@@ -462,19 +482,13 @@ const TutorPublicProfile = () => {
               <div className=" h-100">
                 <div className="" style={{ paddingRight: "20px" }}>
                   <video
-                   controlsList="nodownload noremoteplayback" 
+                    ref={videoRef}
                     loop
+                    controlsList="nodownload noremoteplayback"
                     src={tutor.Video}
-                    onClick={() => {
-                      if (videoRef.current) {
-                        if (videoRef.current.paused) {
-                          videoRef.current.play();
-                        } else {
-                          videoRef.current.pause();
-                        }
-                      }
-                    }}
-                    className={`rounded-4  shadow-lg`}
+                    onLoadedMetadata={handleLoadedMetadata}
+                    onClick={handleVideoClick}
+                    className="rounded-4 shadow-lg"
                     muted
                     style={{ width: "200px", height: "auto" }}
                     autoPlay
@@ -492,7 +506,7 @@ const TutorPublicProfile = () => {
                   <div className="d-flex justify-content-center align-items-center gap-1">
                     <CiClock2 color="lightgray" />{" "}
                     <p className="fw-bold" style={{ color: "lightgrey" }}>
-                      {"1min video"}
+                      {`${parseInt(duration)}sec(s) video`}
                     </p>
                   </div>
                 </div>
@@ -517,19 +531,20 @@ const TutorPublicProfile = () => {
                         />
                         - Native
                       </div>
-                      {!!edu.NativeLangOtherLang && JSON.parse(edu.NativeLangOtherLang).map((lang) => (
-                        <div
-                          className="d-flex align-items-center"
-                          key={lang.value}
-                        >
-                          <GradePills
-                            grades={[]}
-                            grade={lang.value}
-                            editable={false}
-                            hasIcon={false}
-                          />
-                        </div>
-                      ))}
+                      {!!edu.NativeLangOtherLang &&
+                        JSON.parse(edu.NativeLangOtherLang).map((lang) => (
+                          <div
+                            className="d-flex align-items-center"
+                            key={lang.value}
+                          >
+                            <GradePills
+                              grades={[]}
+                              grade={lang.value}
+                              editable={false}
+                              hasIcon={false}
+                            />
+                          </div>
+                        ))}
                     </div>
                   ) : null}
                   <div>
@@ -544,17 +559,17 @@ const TutorPublicProfile = () => {
                     className=" "
                     style={{ margin: "10px 0", background: "white" }}
                   >
-                    <div  className="m-0 mb-2">
+                    <div className="m-0 mb-2">
                       <h5 className="">Headline</h5>
                       <p className="border p-2 rounded-3">{tutor.HeadLine}</p>
                     </div>
                   </div>
-                  <div  className="m-0 mb-2">
+                  <div className="m-0 mb-2">
                     <h5 className="">Motivate</h5>
                     <p className="border p-2 rounded-3">{tutor.Motivate}</p>
                   </div>
                   {edu.WorkExperience && (
-                    <div  className="m-0 mb-2">
+                    <div className="m-0 mb-2">
                       <h5 className="">
                         Work Experience (Total Experience -{" "}
                         {edu.EducationalLevelExperience})
@@ -1080,8 +1095,8 @@ const TutorPublicProfile = () => {
           <div className="h-100 m-auto">
             <div className="">
               <video
-               controlsList="nodownload noremoteplayback" 
-                src={tutor.video}
+                controlsList="nodownload noremoteplayback"
+                src={tutor.Video}
                 ref={videoRef}
                 className=" rounded-4  shadow-lg"
                 controls

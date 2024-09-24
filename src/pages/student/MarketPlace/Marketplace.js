@@ -102,21 +102,17 @@ const Marketplace = () => {
                       </div>
                     </div>
                     <div>
-                                            {/* TODO: */}
-
-                      <h5>{"Fetch Name"}</h5>
-                      {/* TODO: pill need short */}
-                      <div className="d-flex">
-                        <h6>Languages:</h6>{" "}
+                      <h5>{item.TutorScreenname}</h5>
+                      <div className="d-flex flex-wrap align-items-center">
+                        <h6 className="m-0">Languages:</h6>{" "}
                         <Pill
                           label={JSON.parse(item.Languages).value}
-                          width="150px"
                         />
                       </div>
-                      <div className="d-flex">
-                        <h6>Grades:</h6>
+                      <div className="d-flex flex-wrap  align-items-center">
+                        <h6 className="m-0">Grades:</h6>
                         {JSON.parse(item.Grades).map((grade) => (
-                          <Pill label={grade} width="150px" />
+                          <Pill label={grade} />
                         ))}
                       </div>
                       <div

@@ -76,7 +76,7 @@ const TutorSetup = () => {
   let [zipCode, set_zipCode] = useState("");
   let [country, set_country] = useState("");
   let [timeZone, set_timeZone] = useState("");
-  let [dateTime, setDateTime] = useState(moment());
+  let [dateTime, setDateTime] = useState(null);
   let [response_zone, set_response_zone] = useState("");
   let [intro, set_intro] = useState("");
   let [motivation, set_motivation] = useState("");
@@ -606,7 +606,7 @@ const TutorSetup = () => {
     { name: "intro", filled: !!intro?.length, value: intro },
     { name: "headline", filled: !!headline?.length, value: headline },
   ];
-
+  console.log(dateTime)
   if (tutorDataLoading) return <Loading height="calc(100vh - 150px" />;
   return (
     <form onSubmit={saveTutorSetup}>
