@@ -546,7 +546,7 @@ const TutorAccSetup = ({
                   editMode={editMode}
                   label={
                     <MandatoryFieldLabel
-                      text="SS# (Social Security Number)"
+                      text="SSN (Social Security Number)"
                       editMode={editMode}
                       toolTipText="It is mandatory for tutors who are American citizens to provide their Social Security Number (SSN) to receive the annual Form 1099. This requirement ensures compliance with tax regulations and enables accurate reporting of income to the Internal Revenue Service (IRS).."
                     />
