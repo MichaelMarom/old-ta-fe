@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { useEffect } from 'react';
-import RichTextEditor from '../common/RichTextEditor/RichTextEditor';
 
 import motivateTab from "../../assets/images/tabs/motivate-tab.jpg"; // Adjust the path as needed
 import EduTab from "../../assets/images/tabs/edu-tab.jpg"; // Adjust the path as needed
@@ -34,44 +32,9 @@ const Intro = () => {
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             const result = await get_adminConstants();
-    //             if (!!result?.data?.[0]?.IntroContent) {
-    //                 set_intro(result.data[0].IntroContent);
-    //                 set_db_intro(result.data[0].IntroContent);
-    //             }
-    //         } catch (error) {
-    //             console.error('Error fetching data:', error);
-    //         }
-    //         setFetching(false);
-    //     };
-
-    //     fetchData();
-    // }, []);
-
-    // useEffect(() => {
-    //     setUnsavedChanges(intro !== undefined && db_intro !== undefined &&
-    //         intro !== db_intro);
-    // }, [intro, db_intro]);
-
-    // const handleEditorChange = (value) => {
-    //     set_intro(value);
-    // };
-
     const handleEditClick = () => {
         setEditMode(true);
     };
-
-    // const handleSave = async (e) => {
-    //     e.preventDefault();
-    //     setLoading(true);
-    //     const response = await post_termsOfUse({ IntroContent: intro });
-    //     set_db_intro(response.data.IntroContent);
-    //     setEditMode(false);
-    //     setLoading(false);
-    // };
 
     return (
         <div>
@@ -95,7 +58,7 @@ const Intro = () => {
                             <h6><FaRegLightbulb className="me-2 text-primary" />Setting Up Your Account</h6>
                             <p>To set up your account, you need to fill in basic information, upload your photo, an introduction video, and certificates or diplomas (if earned). To proceed to the next tab, click on the "Next" button at the footer of each tab.</p>
                         </div>
-                        <div className="col-md-6 border shadow">
+                        <div className="col-md-6 ">
                             <img
                                 onClick={() => { setSelectedImage(SetupTab); setOpenImageModal(true); }}
                                 src={SetupTab}
@@ -117,7 +80,7 @@ const Intro = () => {
                             <h6>Setup Tab</h6>
                             <p>Fill in personal information, select the school grades you teach, and upload a 30-60 second introduction video.</p>
                         </div>
-                        <div className="col-md-6 border shadow">
+                        <div className="col-md-6 ">
                             <img
                                 onClick={() => { setSelectedImage(SetupTab); setOpenImageModal(true); }}
                                 src={SetupTab}
@@ -134,7 +97,7 @@ const Intro = () => {
                             <h6>Education Tab</h6>
                             <p>Provide information about your education, certificates, diplomas, and work experience.</p>
                         </div>
-                        <div className="col-md-6 border shadow">
+                        <div className="col-md-6 ">
                             <img
                                 onClick={() => { setSelectedImage(EduTab); setOpenImageModal(true); }}
                                 src={EduTab}
@@ -151,7 +114,7 @@ const Intro = () => {
                             <h6>Motivate Tab</h6>
                             <p>Indicate if you provide services to multiple students or classes, and generate codes for students.</p>
                         </div>
-                        <div className="col-md-6 border shadow">
+                        <div className="col-md-6 ">
                             <img
                                 onClick={() => { setSelectedImage(motivateTab); setOpenImageModal(true); }}
                                 src={motivateTab}
@@ -168,7 +131,7 @@ const Intro = () => {
                             <h6>Accounting Tab</h6>
                             <p>Set up payment preferences and view your lesson performance and bi-weekly accounting.</p>
                         </div>
-                        <div className="col-md-6 border shadow">
+                        <div className="col-md-6 ">
                             <img
                                 onClick={() => { setSelectedImage(AccTab); setOpenImageModal(true); }}
                                 src={AccTab}
@@ -185,7 +148,7 @@ const Intro = () => {
                             <h6>Subjects Tab</h6>
                             <p>Select the subjects and grades you teach, along with your hourly rate.</p>
                         </div>
-                        <div className="col-md-6 border shadow">
+                        <div className="col-md-6 ">
                             <img
                                 onClick={() => { setSelectedImage(FacultyTab); setOpenImageModal(true); }}
                                 src={FacultyTab}
@@ -202,7 +165,7 @@ const Intro = () => {
                             <h6>My Students Tab</h6>
                             <p>View all your students, their pictures, country, and school grade.</p>
                         </div>
-                        <div className="col-md-6 border shadow">
+                        <div className="col-md-6 ">
                             <img
                                 onClick={() => { setSelectedImage(MyStudents); setOpenImageModal(true); }}
                                 src={MyStudents}
@@ -219,7 +182,7 @@ const Intro = () => {
                             <h6>Scheduling Tab</h6>
                             <p>Set up your availability for the upcoming week and mark lessons that were completed.</p>
                         </div>
-                        <div className="col-md-6 border shadow">
+                        <div className="col-md-6 ">
                             <img
                                 onClick={() => { setSelectedImage(ScheduleTab); setOpenImageModal(true); }}
                                 src={ScheduleTab}
@@ -236,7 +199,7 @@ const Intro = () => {
                             <h6>Franchising Tab</h6>
                             <p>Develop your own tutoring franchise, hire tutors, and receive a markup on their earnings.</p>
                         </div>
-                        <div className="col-md-6 border shadow">
+                        <div className="col-md-6 ">
                             <img
                                 onClick={() => { setSelectedImage(AgencyTab); setOpenImageModal(true); }}
                                 src={AgencyTab}
@@ -253,12 +216,12 @@ const Intro = () => {
                             <h6>Profile Tab</h6>
                             <p>Access your public profile and view the tabs available to students when they visit your profile.</p>
                         </div>
-                        <div className="col-md-6 border shadow">
+                        <div className="col-md-6 ">
                             <img
                                 onClick={() => { setSelectedImage(ProfileTab); setOpenImageModal(true); }}
                                 src={ProfileTab}
                                 alt="Profile Tab"
-                                className="img-fluid rounded shadow-sm openable-img"
+                                className="img-fluid rounded shadow-md openable-img"
                                 style={{ width: '100%', height: '300px', objectFit: 'cover' }}
                             />
                         </div>

@@ -14,7 +14,7 @@ const Tooltip = ({
   customStyling = false,
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
-  const [tooltipStyle, setTooltipStye] = useState({
+  const [tooltipStyle, setTooltipStyle] = useState({
     width,
     whiteSpace: "normal",
   });
@@ -29,7 +29,7 @@ const Tooltip = ({
 
   useEffect(() => {
     if (customStyling) {
-      if (style) setTooltipStye({ ...tooltipStyle, ...style });
+      if (style) setTooltipStyle({ ...tooltipStyle, ...style });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customStyling, style]);

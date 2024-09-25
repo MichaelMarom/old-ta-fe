@@ -255,28 +255,28 @@ th {
     top: 0;
     color: #fff;
     position: sticky;
-    background: #2471A3;
+    background: #2471A3 
 }
 
 tr:nth-child(even) {
-    background-color: hsl(0, 0%, 90%);
+    background-color: hsl(0, 0%, 100%);
 }
 
-table tr:first-child  th:first-child {
+table thead tr:first-child  th:first-child {
     border-top-left-radius: 12px;
 }
 
-table tr:first-child  th:last-child {
+table thead tr:first-child  th:last-child {
     border-top-right-radius: 12px;
 }
 
-table tbody tr:first-child td:first-child {
+/* table tbody tr:first-child td:first-child {
     border-top-left-radius: 12px;
 }
 
 table tbody tr:first-child td:last-child {
     border-top-right-radius: 12px;
-}
+} */
 
 table tbody tr:last-child td:first-child {
     border-bottom-left-radius: 12px;

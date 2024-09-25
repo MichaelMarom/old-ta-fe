@@ -21,6 +21,7 @@ import {
   updateAccounting,
   updateAccountingState,
 } from "../../../redux/tutor/accounting";
+import { FaExclamationCircle } from "react-icons/fa";
 
 const TutorAccSetup = ({
   sessions,
@@ -237,9 +238,9 @@ const TutorAccSetup = ({
               <p className="  px-4  py-2 rounded m-2 col-4">
                 {!!sessions.length
                   ? showDate(
-                    sessions?.[sessions.length - 1]?.start,
-                    monthFormatWithYYYY
-                  )
+                      sessions?.[sessions.length - 1]?.start,
+                      monthFormatWithYYYY
+                    )
                   : "N/A"}
               </p>
             </div>
@@ -381,12 +382,16 @@ const TutorAccSetup = ({
             {!!payment_option && (
               <div className="m-5">
                 {emailRequiredPaymentMethods.includes(payment_option) && (
-                  <div className="d-flex align-items-center gap-3"
+                  <div
+                    className="d-flex align-items-center gap-3"
                     style={{
                       fontWeight: "bold",
                     }}
                   >
-                    <p>    3% service charge imposed by the services listed above.</p>
+                    <p>
+                      {" "}
+                      3% service charge imposed by the services listed above.
+                    </p>
                     <Tooltip
                       iconSize={20}
                       width="200px"
@@ -531,7 +536,7 @@ const TutorAccSetup = ({
           <div
             className="p-3"
             style={{
-              height: "calc(100vh - 380px)",
+              // height: "calc(100vh - 380px)",
               background: editMode ? "white" : "rgb(233, 236, 239",
             }}
           >
@@ -553,7 +558,7 @@ const TutorAccSetup = ({
               </div>
             )}
 
-            <div className="d-flex align-items-center mb-2 justify-content-between">
+            {/* <div className="d-flex align-items-center mb-2 justify-content-between">
               <Input
                 editMode={false}
                 label={
@@ -633,13 +638,123 @@ const TutorAccSetup = ({
                   maximumFractionDigits: 2,
                 })}
               />
-              {/* <label htmlFor="total-earning">Total Earning Previous Year.
-                             <Tooltip text="Calculate your total earning for the previous year. 
-                            This earnings will be shopwn on your 1099 form." /></label>
-                            <input className='form-control m-0' type="text"
-                                value={(previousYearEarning || 0).toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                id="total-earning"
-                                style={{ float: 'right', width: '50%' }} disabled /> */}
+            </div> */}
+          </div>
+          <div className="card shadow-sm rounded">
+            <div className="card-header text-center">
+              <h6 className="m-0">Accounting Overview</h6>
+            </div>
+            <div className="card-body">
+              <div className="rounded" style={{ border: "1px solid #ccc" }}>
+                {/* Row 1 */}
+                <div
+                  className="d-flex justify-content-between align-items-center p-2 bg-light"
+                  style={{ borderBottom: "1px solid #e0e0e0" }}
+                >
+                  <div className="d-flex align-items-center">
+                    <div className="mx-1">
+                      {" "}
+                      <Tooltip iconSize={15}
+                        width="200px"
+                        text={
+                          "This statement represents the total number of hours accrued annually from the commencement date of your employment."
+                        }
+                      />{" "}
+                    </div>
+                    <span className=" me-2" style={{ fontSize: "13px" }}>
+                      Accumulated Hours
+                    </span>
+                  </div>
+                  <p style={{ fontWeight: "500", fontSize: "12px" }}>
+                    {currentYearAccHours}:00
+                  </p>
+                </div>
+                {/* Row 2 */}
+                <div
+                  className="d-flex justify-content-between align-items-center p-2 bg-white"
+                  style={{ borderBottom: "1px solid #e0e0e0" }}
+                >
+                  <div className="d-flex align-items-center">
+                    <div className="mx-1">
+                      {" "}
+                      <Tooltip iconSize={15}
+                        width="200px"
+                        text={
+                          "The service charge is calculated based on the table to the left. As you increase the number of hours spent tutoring, the    academy offers a reduction in your service charge. This incentivizes tutors to commit more time, as they benefit from lower rates, making it a mutually beneficial arrangement."
+                        }
+                      />
+                    </div>
+                    <span className=" me-2" style={{ fontSize: "13px" }}>
+                      Service Charge
+                    </span>
+                  </div>
+                  <p style={{ fontWeight: "500", fontSize: "12px" }}>
+                    {commissionAccordingtoNumOfSession(currentYearAccHours)} %
+                  </p>
+                </div>
+                {/* Row 3 */}
+                <div
+                  className="d-flex justify-content-between align-items-center p-2 bg-light"
+                  style={{ borderBottom: "1px solid #e0e0e0" }}
+                >
+                  <div className="d-flex align-items-center">
+                    <div className="mx-1">
+                      {" "}
+                      <Tooltip iconSize={15}
+                        width="200px"
+                        text={`The field automatically computes your total earnings annually, starting from January 1st. 
+                                    This feature ensures that you have an accurate account of your income from the beginning of each year,
+                                    providing a clear and comprehensive financial overview. It's a valuable tool for financial planning and tracking your 
+                                    earnings progress over time`}
+                      />
+                    </div>
+                    <span className=" me-2" style={{ fontSize: "13px" }}>
+                      Total Earning {new Date().getFullYear()}
+                    </span>
+                  </div>
+                  <p style={{ fontWeight: "500", fontSize: "12px" }}>
+                    {(currentYearEarning || 0).toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </p>
+                </div>
+                {/* Row 4 */}
+                <div
+                  className="d-flex justify-content-between align-items-center p-2 bg-white"
+                  style={{ borderBottom: "1px solid #e0e0e0" }}
+                >
+                  <div className="d-flex align-items-center">
+                    <div className="mx-1">
+                      {" "}
+                      <Tooltip iconSize={15}
+                        width="200px"
+                        text={`To accurately calculate your total earnings for the previous year, you can refer to your 1099 form, which reports all non-employment
+                                 income. WE sum up the amounts you earned last year to determine your total earnings.`}
+                      />
+                    </div>
+                    <span className=" me-2" style={{ fontSize: "13px" }}>
+                      Total Earnings Previous Year
+                    </span>
+                  </div>
+                  <p style={{ fontWeight: "500", fontSize: "12px" }}>
+                    {(previousYearEarning || 0).toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div
+              style={{ fontSize: "12px", color: "gray" }}
+              className="card-footer text-muted text-center"
+            >
+              Updated Recently
             </div>
           </div>
         </div>
