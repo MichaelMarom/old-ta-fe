@@ -27,6 +27,7 @@ import StarRating from "../common/StarRating";
 import { PiChalkboardTeacherFill } from "react-icons/pi";
 
 import ScreenRecording from "../common/ScreenRecording";
+import EducationCards from "./EducationCards";
 
 const TutorProfile = () => {
   const videoRef = useRef(null);
@@ -510,462 +511,111 @@ const TutorProfile = () => {
                     />
                   </div>
                 )}
-                <div className="mt-4">
-                  <h5 className="">Education</h5>
-                  <div className="border p-2 d-flex rounded-3 ">
-                    <ul
-                      className="vertical-tabs flex-column p-0 align-items-start shadow-lg"
-                      style={{
-                        width: "20%",
-                        borderRight: "1px solid lightblue",
-                      }}
-                    >
-                      <li className="nav-item w-100 p-0">
-                        <p
-                          className={`nav-link m-0 ${
-                            activeTab === "bach" ? "text-bg-primary" : ""
-                          } w-100`}
-                          aria-current="page"
-                          onClick={() => setActiveTab("bach")}
-                        >
-                          Bachelor
-                        </p>
-                      </li>
-                      <li className="nav-item w-100 p-0">
-                        <p
-                          className={`nav-link m-0 ${
-                            activeTab === "mast" ? "text-bg-primary" : ""
-                          } w-100`}
-                          aria-current="page"
-                          onClick={() => setActiveTab("mast")}
-                        >
-                          Master
-                        </p>
-                      </li>
-                      <li className="nav-item w-100 p-0">
-                        <p
-                          className={`nav-link m-0 ${
-                            activeTab === "doc" ? "text-bg-primary" : ""
-                          } w-100`}
-                          aria-current="page"
-                          onClick={() => setActiveTab("doc")}
-                        >
-                          Doctorate
-                        </p>
-                      </li>
-                      <li className="nav-item w-100 p-0">
-                        <p
-                          className={`nav-link m-0 ${
-                            activeTab === "cert" ? "text-bg-primary" : ""
-                          } w-100`}
-                          aria-current="page"
-                          onClick={() => setActiveTab("cert")}
-                        >
-                          Certificate
-                        </p>
-                      </li>
-                      <li className="nav-item w-100 p-0">
-                        <p
-                          className={`nav-link m-0 m-0 ${
-                            activeTab === "deg" ? "text-bg-primary" : ""
-                          } w-100`}
-                          aria-current="page"
-                          onClick={() => setActiveTab("deg")}
-                        >
-                          Degree
-                        </p>
-                      </li>
-                    </ul>
-
-                    <div className="px-2 w-75 d-flex justify-content-end">
-                      {activeTab === "bach" && (
-                        <div className="d-flex  shadow flex-column w-75  p-4 justify-content-between">
-                          <h5 className=" text-center">Bachelor Info</h5>
-
-                          {data.BachCountry ? (
-                            <>
-                              <div
-                                className="d-flex align-items-center"
-                                style={{ gap: "15px" }}
-                              >
-                                <div
-                                  className="text-primary"
-                                  style={{
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  Country -
-                                </div>
-                                <h6 className="m-0">{data.BachCountry}</h6>
-                              </div>
-                              <div
-                                className="d-flex align-items-center"
-                                style={{ gap: "15px" }}
-                              >
-                                <div
-                                  className="text-primary"
-                                  style={{
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  College -
-                                </div>
-                                <h6 className="m-0">{data.Bach_College}</h6>
-                              </div>
-                              <div
-                                className="d-flex align-items-center"
-                                style={{ gap: "15px" }}
-                              >
-                                <div
-                                  className="text-primary"
-                                  style={{
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  State -
-                                </div>
-                                <h6 className="m-0">
-                                  {data.Bach_College_State}
-                                </h6>
-                              </div>
-                              <div
-                                className="d-flex align-items-center"
-                                style={{ gap: "15px" }}
-                              >
-                                <div
-                                  className="text-primary"
-                                  style={{
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  Year of Graduation -
-                                </div>
-                                <h6 className="m-0">
-                                  {data.Bach_College_Year}
-                                </h6>
-                              </div>
-                            </>
-                          ) : (
-                            <h5 className="text-danger">
-                              {" "}
-                              No Bachlors record found!
-                            </h5>
-                          )}
-                        </div>
-                      )}
-                      {activeTab === "mast" && (
-                        <div className="d-flex  shadow flex-column w-75  p-4 justify-content-between">
-                          <h5 className=" text-center">Master Info</h5>
-                          {data.MastCountry ? (
-                            <>
-                              <div
-                                className="d-flex align-items-center"
-                                style={{ gap: "15px" }}
-                              >
-                                <div
-                                  className="text-primary"
-                                  style={{
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  Country -
-                                </div>
-                                <h6 className="m-0">{data.MastCountry}</h6>
-                              </div>
-                              <div
-                                className="d-flex align-items-center"
-                                style={{ gap: "15px" }}
-                              >
-                                <div
-                                  className="text-primary"
-                                  style={{
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  University -
-                                </div>
-                                <h6 className="m-0">{data.Mast_College}</h6>
-                              </div>
-                              <div
-                                className="d-flex align-items-center"
-                                style={{ gap: "15px" }}
-                              >
-                                <div
-                                  className="text-primary"
-                                  style={{
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  State -
-                                </div>
-                                <h6 className="m-0">
-                                  {data.Mast_College_State}
-                                </h6>
-                              </div>
-                              <div
-                                className="d-flex align-items-center"
-                                style={{ gap: "15px" }}
-                              >
-                                <div
-                                  className="text-primary"
-                                  style={{
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  Year of Graduation -
-                                </div>
-                                <h6 className="m-0">
-                                  {data.Mast_College_StateYear}
-                                </h6>
-                              </div>
-                            </>
-                          ) : (
-                            <h5 className="text-danger">
-                              {" "}
-                              No Master's record found!
-                            </h5>
-                          )}
-                        </div>
-                      )}
-                      {activeTab === "doc" && (
-                        <div className="d-flex  shadow flex-column w-75  p-4 justify-content-between">
-                          <h5 className=" text-center">Doctorate Info</h5>
-
-                          {data.DocCountry ? (
-                            <>
-                              <div
-                                className="d-flex align-items-center"
-                                style={{ gap: "15px" }}
-                              >
-                                <div
-                                  className="text-primary"
-                                  style={{
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  Country -
-                                </div>
-                                <h6 className="m-0">{data.DocCountry}</h6>
-                              </div>
-                              <div
-                                className="d-flex align-items-center"
-                                style={{ gap: "15px" }}
-                              >
-                                <div
-                                  className="text-primary"
-                                  style={{
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  University -
-                                </div>
-                                <h6 className="m-0">{data.DoctorateCollege}</h6>
-                              </div>
-                              <div
-                                className="d-flex align-items-center"
-                                style={{ gap: "15px" }}
-                              >
-                                <div
-                                  className="text-primary"
-                                  style={{
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  State -
-                                </div>
-                                <h6 className="m-0">{data.DoctorateState}</h6>
-                              </div>
-                              <div
-                                className="d-flex align-items-center"
-                                style={{ gap: "15px" }}
-                              >
-                                <div
-                                  className="text-primary"
-                                  style={{
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  Year of Graduation -
-                                </div>
-                                <h6 className="m-0">{data.DoctorateGradYr}</h6>
-                              </div>
-                            </>
-                          ) : (
-                            <h5 className="text-danger">
-                              {" "}
-                              No Doctorate record found!
-                            </h5>
-                          )}
-                        </div>
-                      )}
-                      {activeTab === "cert" && (
-                        <div className="d-flex  shadow flex-column w-75  p-4 justify-content-between">
-                          <div className="d-flex justify-content-between  align-items-center">
-                            <h5 className=" text-center">Certificate Info</h5>
-                            {/* {data.CertFileName && <FaFilePdf size={32} color='red'
-                                style={{ cursor: "pointer" }}
-                                onClick={() => window.open(`${process.env.REACT_APP_FILES_BASE_PATH}/${data.CertFileName}`, '_blank')}
-                            />} */}
-                          </div>
-                          {data.CertCountry ? (
-                            <>
-                              {" "}
-                              <div
-                                className="d-flex align-items-center"
-                                style={{ gap: "15px" }}
-                              >
-                                <div
-                                  className="text-primary"
-                                  style={{
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  Country -
-                                </div>
-                                <h6 className="m-0">{data.CertCountry}</h6>
-                              </div>
-                              <div
-                                className="d-flex align-items-center"
-                                style={{ gap: "15px" }}
-                              >
-                                <div
-                                  className="text-primary"
-                                  style={{
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  Name -
-                                </div>
-                                <h6 className="m-0">{data.Certificate}</h6>
-                              </div>
-                              <div
-                                className="d-flex align-items-center"
-                                style={{ gap: "15px" }}
-                              >
-                                <div
-                                  className="text-primary"
-                                  style={{
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  Expiration Date -
-                                </div>
-                                <h6 className="m-0">
-                                  {showDate(
-                                    data.CertificateExpiration,
-                                    monthFormatWithYYYY
-                                  )}
-                                </h6>
-                              </div>
-                            </>
-                          ) : (
-                            <h5 className="text-danger">
-                              {" "}
-                              Certificate is on record, was verified but not
-                              shown to public!
-                            </h5>
-                          )}
-                        </div>
-                      )}
-                      {activeTab === "deg" && (
-                        <div className="d-flex  shadow flex-column w-75  p-4 justify-content-between">
-                          <div className="d-flex justify-content-between align-items-center">
-                            <h5 className="text-center">Degree Info</h5>
-                            {/* {data.DegFileName && < FaFilePdf size={32} color='red' style={{ cursor: "pointer" }}
-                                onClick={() => window.open(`${process.env.REACT_APP_FILES_BASE_PATH}/${data.DegFileName}`, '_blank')}
-                            />} */}
-                          </div>
-
-                          {data.DegCountry ? (
-                            <>
-                              <div
-                                className="d-flex align-items-center"
-                                style={{ gap: "15px" }}
-                              >
-                                <div
-                                  className="text-primary"
-                                  style={{
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  Country -
-                                </div>
-                                <h6 className="m-0">{data.DegCountry}</h6>
-                              </div>
-                              <div
-                                className="d-flex align-items-center"
-                                style={{ gap: "15px" }}
-                              >
-                                <div
-                                  className="text-primary"
-                                  style={{
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  Name -
-                                </div>
-                                <h6 className="m-0">{data.EducationalLevel}</h6>
-                              </div>
-                              <div
-                                className="d-flex align-items-center"
-                                style={{ gap: "15px" }}
-                              >
-                                <div
-                                  className="text-primary"
-                                  style={{
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  State -
-                                </div>
-                                <h6 className="m-0">{data.DegreeState}</h6>
-                              </div>
-                              <div
-                                className="d-flex align-items-center"
-                                style={{ gap: "15px" }}
-                              >
-                                <div
-                                  className="text-primary"
-                                  style={{
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  Year -
-                                </div>
-                                <h6 className="m-0">{data.DegreeYear}</h6>
-                              </div>
-                            </>
-                          ) : (
-                            <h5 className="text-danger">
-                              {" "}
-                              Diploma is on record, was verified but not shown
-                              to public!
-                            </h5>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                <div>
+                  <h5 className="">Educational Record</h5>
                 </div>
+                <div className="d-flex flex-wrap gap-3">
+                  {/* Conditionally render Bachelor's card for Undergraduate, Associate, or Bachelor Degree */}
+                  {[
+                    "Undergraduate Student",
+                    "Associate Degree",
+                    "Bachelor Degree",
+                  ].includes(data.EducationalLevel) && (
+                    <div style={{ width: "49%", maxWidth: "600px" }}>
+                      <EducationCards
+                        name={"Bachelor's"}
+                        country={data.BachCountry}
+                        state={data.Bach_College_State}
+                        college={data.Bach_College}
+                        year={data.Bach_College_Year}
+                      />
+                    </div>
+                  )}
+
+                  {/* Conditionally render Master's card for Master Degree */}
+                  {data.EducationalLevel === "Master Degree" && (
+                    <>
+                      <div style={{ width: "49%", maxWidth: "600px" }}>
+                        <EducationCards
+                          name={"Master's"}
+                          country={data.MastCountry}
+                          state={data.Mast_College_State}
+                          college={data.Mast_College}
+                          year={data.Mast_College_StateYear}
+                        />
+                      </div>
+                      {/* Also render Bachelor's card if not already rendered */}
+                      {![
+                        "Undergraduate Student",
+                        "Associate Degree",
+                        "Bachelor Degree",
+                      ].includes(data.EducationalLevel) && (
+                        <div style={{ width: "49%", maxWidth: "600px" }}>
+                          <EducationCards
+                            name={"Bachelor's"}
+                            country={data.BachCountry}
+                            state={data.Bach_College_State}
+                            college={data.Bach_College}
+                            year={data.Bach_College_Year}
+                          />
+                        </div>
+                      )}
+                    </>
+                  )}
+
+                  {/* Conditionally render Doctorate card for Doctorate, Post Doctorate, or Professor */}
+                  {[
+                    "Doctorate Degree",
+                    "Post Doctorate Degree",
+                    "Professor",
+                  ].includes(data.EducationalLevel) && (
+                    <>
+                      {/* Render Bachelor's card if not already rendered */}
+                      {![
+                        "Undergraduate Student",
+                        "Associate Degree",
+                        "Bachelor Degree",
+                        "Master Degree",
+                      ].includes(data.EducationalLevel) && (
+                        <div style={{ width: "49%", maxWidth: "600px" }}>
+                          <EducationCards
+                            name={"Bachelor's"}
+                            country={data.BachCountry}
+                            state={data.Bach_College_State}
+                            college={data.Bach_College}
+                            year={data.Bach_College_Year}
+                          />
+                        </div>
+                      )}
+
+                      {/* Render Master's card if not already rendered */}
+                      {data.EducationalLevel !== "Master Degree" && (
+                        <div style={{ width: "49%", maxWidth: "600px" }}>
+                          <EducationCards
+                            name={"Master's"}
+                            country={data.MastCountry}
+                            state={data.Mast_College_State}
+                            college={data.Mast_College}
+                            year={data.Mast_College_StateYear}
+                          />
+                        </div>
+                      )}
+
+                      <div style={{ width: "49%", maxWidth: "600px" }}>
+                        <EducationCards
+                          name={"Doctorate"}
+                          country={data.DocCountry}
+                          state={data.DoctorateState}
+                          college={data.DoctorateCollege}
+                          year={data.DoctorateGradYr}
+                        />
+                      </div>
+                    </>
+                  )}
+                </div>
+
+               
+
                 {subjectsWithRates.length ? (
                   <div className="mt-4">
                     <h5 className="">Subjects I Teach</h5>
@@ -1037,6 +687,7 @@ const TutorProfile = () => {
       </CenteredModal>
 
       <TutorScheduleModal
+        name={tutor.TutorScreenname}
         id={params.id}
         isOpen={scheduleModalOpen}
         onClose={() => setScheduleModalOpen(false)}

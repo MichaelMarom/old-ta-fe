@@ -7,7 +7,7 @@ import { formatted_tutor_sessions } from '../../axios/tutor'
 import { convertToDate } from '../common/Calendar/Calendar'
 import CustomEvent from '../common/Calendar/Event'
 
-const TutorScheduleModal = ({ isOpen, onClose, id = "" }) => {
+const TutorScheduleModal = ({ isOpen, onClose, id = "", name="" }) => {
     const [sessions, setSessions] = useState([])
     const { student } = useSelector((state) => state.student)
     useEffect(() => {
@@ -51,7 +51,8 @@ const TutorScheduleModal = ({ isOpen, onClose, id = "" }) => {
 
     const localizer = momentLocalizer(moment);
     return (
-        <CenteredModal show={isOpen} handleClose={onClose} title={`Schedule Of ${"Asiya"}`} style={{ maxWidth: "50%" }} >
+        // Todo:
+        <CenteredModal show={isOpen} handleClose={onClose} title={`Schedule Of ${name}`} style={{ maxWidth: "50%" }} >
             <div>
                 <div className='m-3 student-calender' style={{ height: "65vh", widh: "65vw" }}>
                     <Calendar

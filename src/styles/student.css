@@ -378,3 +378,9 @@
 .ad:hover {
   background: lightblue;
 }
+.subjectTutorCard,.edu-card{
+  transition: all 0.3s ease;
+}
+.subjectTutorCard:hover,.edu-card:hover{
+  transform: scale(1.02);
+}

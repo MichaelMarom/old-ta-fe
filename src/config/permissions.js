@@ -48,6 +48,8 @@ const EmailList = lazy(() => import('../pages/admin/EmailTemplates/List'));
 const EmailTempCreate = lazy(() => import('../pages/admin/EmailTemplates/Create'));
 const EmailTempEdit = lazy(() => import('../pages/admin/EmailTemplates/Edit'));
 const Send = lazy(() => import('../pages/admin/Marketing/Send'));
+const Dummy = lazy(() => import('../pages/Dummy'));
+
 
 // common components
 const Login = lazy(() => import('../pages/Login'));
@@ -124,6 +126,8 @@ const rolePermissions = {
     { path: "/admin/marketing/add-sms", component: <AddSMSMessages /> },
 
     { path: "/admin/accounting", component: <AdminAccounting /> },
+    { path: "/admin/dummy", component: <Dummy /> },
+
   ],
   common: [
     { path: "/login", component: <Login /> },

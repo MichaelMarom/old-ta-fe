@@ -265,7 +265,7 @@ const StudentFaculties = () => {
                 </ul>
               </div>
             </div>
-            <div style={{ width: "75%" }}>
+            <div style={{ width: "80%" }}>
 
               {!selectedSubject.SubjectName ?
                 <div
@@ -358,9 +358,9 @@ const StudentFaculties = () => {
                         >
                           <div className="row gap-2 m-1">
                             {tutorsWithRates.map((item, index) => (
-                              <div className=" col-12 mb-4 " style={{
+                              <div className=" col-12 mb-4 subjectTutorCard" style={{
                                 borderRadius: "20px",
-                                width: "30%",
+                                width: "32%",
                                 boxShadow: "1px 2px 12px 2px #bbbbbb"
                               }} key={index}>
                                 <TutorCard handleNavigateToFeedback={handleNavigateToFeedback} handleNavigateToSchedule={handleNavigateToSchedule} redirect_to_tutor_profile={redirect_to_tutor_profile} key={index} tutor={item} />

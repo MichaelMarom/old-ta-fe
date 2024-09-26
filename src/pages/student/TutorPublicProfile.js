@@ -32,6 +32,7 @@ import { PiChalkboardTeacherFill } from "react-icons/pi";
 import StarRating from "../../components/common/StarRating";
 import _ from "lodash";
 import { RiVerifiedBadgeFill } from "react-icons/ri";
+import EducationCards from "../../components/tutor/EducationCards";
 
 const TutorPublicProfile = () => {
   const videoRef = useRef(null);
@@ -580,7 +581,112 @@ const TutorPublicProfile = () => {
                       />
                     </div>
                   )}
-                  <div className="mt-4">
+                  {
+                    <div>
+                      <h5 className="">Educational Record</h5>
+                    </div>
+                  }
+                  <div className="d-flex flex-wrap gap-3">
+                    {/* Conditionally render Bachelor's card for Undergraduate, Associate, or Bachelor Degree */}
+                    {[
+                      "Undergraduate Student",
+                      "Associate Degree",
+                      "Bachelor Degree",
+                    ].includes(edu.EducationalLevel) && (
+                      <div style={{ width: "49%", maxWidth: "600px" }}>
+                        <EducationCards
+                          name={"Bachelor's"}
+                          country={edu.BachCountry}
+                          state={edu.Bach_College_State}
+                          college={edu.Bach_College}
+                          year={edu.Bach_College_Year}
+                        />
+                      </div>
+                    )}
+
+                    {/* Conditionally render Master's card for Master Degree */}
+                    {edu.EducationalLevel === "Master Degree" && (
+                      <>
+                        <div style={{ width: "49%", maxWidth: "600px" }}>
+                          <EducationCards
+                            name={"Master's"}
+                            country={edu.MastCountry}
+                            state={edu.Mast_College_State}
+                            college={edu.Mast_College}
+                            year={edu.Mast_College_StateYear}
+                          />
+                        </div>
+                        {/* Also render Bachelor's card if not already rendered */}
+                        {![
+                          "Undergraduate Student",
+                          "Associate Degree",
+                          "Bachelor Degree",
+                        ].includes(edu.EducationalLevel) && (
+                          <div style={{ width: "49%", maxWidth: "600px" }}>
+                            <EducationCards
+                              name={"Bachelor's"}
+                              country={edu.BachCountry}
+                              state={edu.Bach_College_State}
+                              college={edu.Bach_College}
+                              year={edu.Bach_College_Year}
+                            />
+                          </div>
+                        )}
+                      </>
+                    )}
+
+                    {/* Conditionally render Doctorate card for Doctorate, Post Doctorate, or Professor */}
+                    {[
+                      "Doctorate Degree",
+                      "Post Doctorate Degree",
+                      "Professor",
+                    ].includes(edu.EducationalLevel) && (
+                      <>
+                        {/* Render Bachelor's card if not already rendered */}
+                        {![
+                          "Undergraduate Student",
+                          "Associate Degree",
+                          "Bachelor Degree",
+                          "Master Degree",
+                        ].includes(edu.EducationalLevel) && (
+                          <div style={{ width: "49%", maxWidth: "600px" }}>
+                            <EducationCards
+                              name={"Bachelor's"}
+                              country={edu.BachCountry}
+                              state={edu.Bach_College_State}
+                              college={edu.Bach_College}
+                              year={edu.Bach_College_Year}
+                            />
+                          </div>
+                        )}
+
+                        {/* Render Master's card if not already rendered */}
+                        {edu.EducationalLevel !== "Master Degree" && (
+                          <div style={{ width: "49%", maxWidth: "600px" }}>
+                            <EducationCards
+                              name={"Master's"}
+                              country={edu.MastCountry}
+                              state={edu.Mast_College_State}
+                              college={edu.Mast_College}
+                              year={edu.Mast_College_StateYear}
+                            />
+                          </div>
+                        )}
+
+                        <div style={{ width: "49%", maxWidth: "600px" }}>
+                          <EducationCards
+                            name={"Doctorate"}
+                            country={edu.DocCountry}
+                            state={edu.DoctorateState}
+                            college={edu.DoctorateCollege}
+                            year={edu.DoctorateGradYr}
+                          />
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  {/* <div className="mt-4">
                     <h5 className="">Education</h5>
                     <div className="border p-2 d-flex rounded-3">
                       <ul
@@ -886,10 +992,7 @@ const TutorPublicProfile = () => {
                           <div className="d-flex border shadow flex-column w-75  p-4 justify-content-between">
                             <div className="d-flex justify-content-between  align-items-center">
                               <h5 className=" text-center">Certificate Info</h5>
-                              {/* {edu.CertFileName && <FaFilePdf size={32} color='red'
-                                style={{ cursor: "pointer" }}
-                                onClick={() => window.open(`${process.env.REACT_APP_FILES_BASE_PATH}/${edu.CertFileName}`, '_blank')}
-                            />} */}
+                            
                             </div>
                             {edu.CertCountry ? (
                               <>
@@ -958,9 +1061,7 @@ const TutorPublicProfile = () => {
                           <div className="d-flex border shadow flex-column w-75  p-4 justify-content-between">
                             <div className="d-flex justify-content-between align-items-center">
                               <h5 className="text-center">Degree Info</h5>
-                              {/* {edu.DegFileName && < FaFilePdf size={32} color='red' style={{ cursor: "pointer" }}
-                                onClick={() => window.open(`${process.env.REACT_APP_FILES_BASE_PATH}/${edu.DegFileName}`, '_blank')}
-                            />} */}
+                            
                             </div>
 
                             {edu.DegCountry ? (
@@ -1039,7 +1140,8 @@ const TutorPublicProfile = () => {
                         )}
                       </div>
                     </div>
-                  </div>
+                  </div> */}
+
                   {subjectsWithRates.length ? (
                     <div className="mt-4">
                       <h5 className="">Subjects I Teach</h5>
@@ -1111,6 +1213,7 @@ const TutorPublicProfile = () => {
         </CenteredModal>
 
         <TutorScheduleModal
+          name={tutor.TutorScreenname}
           id={params.id}
           isOpen={scheduleModalOpen}
           onClose={() => setScheduleModalOpen(false)}
