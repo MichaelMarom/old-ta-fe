@@ -593,7 +593,7 @@ const TutorPublicProfile = () => {
                       "Associate Degree",
                       "Bachelor Degree",
                     ].includes(edu.EducationalLevel) && (
-                      <div style={{ width: "49%", maxWidth: "600px" }}>
+                      <div style={{ width: "48%", maxWidth: "600px" }}>
                         <EducationCards
                           name={"Bachelor's"}
                           country={edu.BachCountry}
@@ -607,7 +607,7 @@ const TutorPublicProfile = () => {
                     {/* Conditionally render Master's card for Master Degree */}
                     {edu.EducationalLevel === "Master Degree" && (
                       <>
-                        <div style={{ width: "49%", maxWidth: "600px" }}>
+                        <div style={{ width: "48%", maxWidth: "600px" }}>
                           <EducationCards
                             name={"Master's"}
                             country={edu.MastCountry}
@@ -622,7 +622,7 @@ const TutorPublicProfile = () => {
                           "Associate Degree",
                           "Bachelor Degree",
                         ].includes(edu.EducationalLevel) && (
-                          <div style={{ width: "49%", maxWidth: "600px" }}>
+                          <div style={{ width: "48%", maxWidth: "600px" }}>
                             <EducationCards
                               name={"Bachelor's"}
                               country={edu.BachCountry}
@@ -649,7 +649,7 @@ const TutorPublicProfile = () => {
                           "Bachelor Degree",
                           "Master Degree",
                         ].includes(edu.EducationalLevel) && (
-                          <div style={{ width: "49%", maxWidth: "600px" }}>
+                          <div style={{ width: "48%", maxWidth: "600px" }}>
                             <EducationCards
                               name={"Bachelor's"}
                               country={edu.BachCountry}
@@ -662,7 +662,7 @@ const TutorPublicProfile = () => {
 
                         {/* Render Master's card if not already rendered */}
                         {edu.EducationalLevel !== "Master Degree" && (
-                          <div style={{ width: "49%", maxWidth: "600px" }}>
+                          <div style={{ width: "48%", maxWidth: "600px" }}>
                             <EducationCards
                               name={"Master's"}
                               country={edu.MastCountry}
@@ -673,7 +673,7 @@ const TutorPublicProfile = () => {
                           </div>
                         )}
 
-                        <div style={{ width: "49%", maxWidth: "600px" }}>
+                        <div style={{ width: "48%", maxWidth: "600px" }}>
                           <EducationCards
                             name={"Doctorate"}
                             country={edu.DocCountry}

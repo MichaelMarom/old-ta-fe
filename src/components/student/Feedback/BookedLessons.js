@@ -11,6 +11,7 @@ import Avatar from "../../common/Avatar";
 import { moment } from "../../../config/moment";
 import Tooltip from "../../common/ToolTip";
 import { FaComment } from "react-icons/fa";
+import TableHeader from "../../common/TableHeader";
 
 function BookedLessons({ events, handleRowSelect }) {
   const [sortedEvents, setSortedEvents] = useState([]);
@@ -76,7 +77,8 @@ function BookedLessons({ events, handleRowSelect }) {
 
   return (
     <>
-      <div
+    <TableHeader headers={Header} />
+      {/* <div
         className="d-flex rounded justify-content-between align-items-center  p-2"
         style={{ color: "white", background: "#2471A3" }}
       >
@@ -94,7 +96,7 @@ function BookedLessons({ events, handleRowSelect }) {
             </div>
           );
         })}
-      </div>
+      </div> */}
       <div style={{ height: "calc(100vh - 270px)", overflowY: "auto" }}>
         <table>
           {/* <thead className="thead-light d-none">

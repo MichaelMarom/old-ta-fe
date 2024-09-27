@@ -16,37 +16,40 @@ const AccountingTable = ({
     <div className="container">
       <div className="row">
         <div
-          className="col-md-8"
-          style={{
-            overflowY: "auto",
-            height: "calc(100vh - 150px)",
-          }}
+          className="col-md-8 p-0"
+
         >
           <h2>Payment Report</h2>
           {paymentReportData.filter((data) => data.type !== "reserved")
             .length ? (
-            <table>
-              <thead className="thead-light">
-                <tr>
-                  <th className=" col-3">Date</th>
-                  <th className="">Tutor</th>
-                  <th className="">Subject</th>
-                  <th className="">Rate</th>
-                  <th className="">Type</th>
-                </tr>
-              </thead>
-              <tbody>
-                {paymentReportData.filter((data) => data.type !== "reserved").map((row, index) => (
-                  <tr key={index}>
-                    <td>{showDate(row.start, wholeDateFormat)}</td>
-                    <td>{row.tutorScreenName}</td>
-                    <td>{row.subject}</td>
-                    <td>${row.rate}</td>
-                    <td>{row.title}</td>
+            <div className="p-3" style={{
+              overflowY: "auto",
+              height: "calc(100vh - 240px)",
+            }}>
+              <table   >
+                <thead className="thead-light">
+                  <tr>
+                    <th className=" col-3">Date</th>
+                    <th className="">Tutor</th>
+                    <th className="">Subject</th>
+                    <th className="">Rate</th>
+                    <th className="">Type</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {paymentReportData.filter((data) => data.type !== "reserved").map((row, index) => (
+                    <tr key={index}>
+                      <td>{showDate(row.start, wholeDateFormat)}</td>
+                      <td>{row.tutorScreenName}</td>
+                      <td>{row.subject}</td>
+                      <td>${row.rate}</td>
+                      <td>{row.title}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+            </div>
           ) : (
             <div className="text-danger">No Record Found</div>
           )}

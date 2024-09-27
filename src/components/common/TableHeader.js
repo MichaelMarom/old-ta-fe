@@ -2,9 +2,9 @@ import React from "react";
 
 const TableHeader = ({ headers }) => {
   return (
-    <div
-      className="d-flex rounded justify-content-between align-items-center  p-2"
-      style={{ color: "white", background: "#2471A3" }}
+    <div 
+      className="d-flex justify-content-between align-items-center fw-bold p-2"
+      style={{ color: "white", background: "#2471A3" , borderRadius:"20px 20px 0 0 " }}
     >
       {headers.map((header) => {
         return (

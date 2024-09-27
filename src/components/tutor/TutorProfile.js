@@ -521,7 +521,7 @@ const TutorProfile = () => {
                     "Associate Degree",
                     "Bachelor Degree",
                   ].includes(data.EducationalLevel) && (
-                    <div style={{ width: "49%", maxWidth: "600px" }}>
+                    <div style={{ width: "48%", maxWidth: "600px" }}>
                       <EducationCards
                         name={"Bachelor's"}
                         country={data.BachCountry}
@@ -535,7 +535,7 @@ const TutorProfile = () => {
                   {/* Conditionally render Master's card for Master Degree */}
                   {data.EducationalLevel === "Master Degree" && (
                     <>
-                      <div style={{ width: "49%", maxWidth: "600px" }}>
+                      <div style={{ width: "48%", maxWidth: "600px" }}>
                         <EducationCards
                           name={"Master's"}
                           country={data.MastCountry}
@@ -550,7 +550,7 @@ const TutorProfile = () => {
                         "Associate Degree",
                         "Bachelor Degree",
                       ].includes(data.EducationalLevel) && (
-                        <div style={{ width: "49%", maxWidth: "600px" }}>
+                        <div style={{ width: "48%", maxWidth: "600px" }}>
                           <EducationCards
                             name={"Bachelor's"}
                             country={data.BachCountry}
@@ -577,7 +577,7 @@ const TutorProfile = () => {
                         "Bachelor Degree",
                         "Master Degree",
                       ].includes(data.EducationalLevel) && (
-                        <div style={{ width: "49%", maxWidth: "600px" }}>
+                        <div style={{ width: "48%", maxWidth: "600px" }}>
                           <EducationCards
                             name={"Bachelor's"}
                             country={data.BachCountry}
@@ -590,7 +590,7 @@ const TutorProfile = () => {
 
                       {/* Render Master's card if not already rendered */}
                       {data.EducationalLevel !== "Master Degree" && (
-                        <div style={{ width: "49%", maxWidth: "600px" }}>
+                        <div style={{ width: "48%", maxWidth: "600px" }}>
                           <EducationCards
                             name={"Master's"}
                             country={data.MastCountry}
@@ -601,7 +601,7 @@ const TutorProfile = () => {
                         </div>
                       )}
 
-                      <div style={{ width: "49%", maxWidth: "600px" }}>
+                      <div style={{ width: "48%", maxWidth: "600px" }}>
                         <EducationCards
                           name={"Doctorate"}
                           country={data.DocCountry}

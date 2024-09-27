@@ -1095,6 +1095,26 @@ const Education = () => {
                     <h6 className="border-bottom">Doctorate Degree</h6>
                     <div className="d-flex justify-content-between mt-3">
                       <div className="col-md-4" style={{ fontSize: "14px" }}>
+                      {/* <DebounceInput
+                          label={
+                            <MandatoryFieldLabel
+                              editMode={editMode}
+                              text="Institute Name"
+                              name="mcollege"
+                              mandatoryFields={mandatoryFields}
+                            />
+                          }
+                          element="app-input"
+                          required={tutor.Status === "active"}
+                          editMode={editMode}
+                          delay={2000}
+                          value={uni_mast}
+                          setInputValue={set_mast_uni}
+                          debounceCallback={() =>
+                            dynamicSave("Mast_College", uni_mast)
+                          }
+                          onChange={(e) => set_mast_uni(e.target.value)}
+                        /> */}
                         <DebounceInput
                           label={
                             <MandatoryFieldLabel
@@ -1105,7 +1125,7 @@ const Education = () => {
                             />
                           }
                           element="app-input"
-                          type="text"
+                          delay={2000}
                           required={tutor.Status === "active"}
                           value={doc_uni}
                           setInputValue={set_doc_uni}

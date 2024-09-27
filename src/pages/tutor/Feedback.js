@@ -83,6 +83,10 @@ const Feedback = () => {
     getAllFeedbackQuestion();
   }, []);
 
+  useEffect(() => {
+    console.log( rawQuestions,  'questoon');
+  }, [rawQuestions])
+
   const handleEmojiClick = async (id, star) => {
     setQuestionLoading(true);
     const updatedQuestions = [...questions];
@@ -91,52 +95,13 @@ const Feedback = () => {
     );
 
     if (questionIndex !== -1) {
-      // await post_feedback_to_question(
-      //   selectedEvent.id,
-      //   tutor.AcademyId,
-      //   selectedEvent.studentId,
-      //   id,
-      //   star,
-      //   0
-      // );
-
       updatedQuestions[questionIndex].star = star;
       setQuestions([...updatedQuestions]);
-
-      // setFeedbackData([
-      //   ...sessions.filter((ses) => ses.id !== selectedEvent.id),
-      //   {
-      //     ...selectedEvent,
-      //     ratingByTutor:
-      //       questions.reduce((sum, question) => {
-      //         sum = question.star + sum;
-      //         return sum;
-      //       }, 0) / questions.length,
-      //   },
-      // ]);
-
-      // const lessonToUpdate = { ...selectedEvent };
-      // delete lessonToUpdate.photo;
-      // dispatch(updateStudentLesson(lessonToUpdate.id, lessonToUpdate));
 
       setQuestionLoading(false);
     }
   };
-
-  // const handleDynamicSave = async (updatedSlot) => {
-  //   const updatedSessionsData = [...feedbackData].map((slot) => {
-  //     if (slot.id === updatedSlot.id) {
-  //       return updatedSlot;
-  //     }
-  //     return slot;
-  //   });
-  //   // dispatch(setOnlySessions(updatedSessionsData));
-
-  //   const lessonToUpdate = { ...updatedSlot };
-  //   delete lessonToUpdate.photo;
-  //   // dispatch(updateStudentLesson(lessonToUpdate.id, lessonToUpdate));
-  // };
-
+  
   useEffect(() => {
     if (selectedEvent.id) {
       setQuestionLoading(true);
@@ -148,24 +113,6 @@ const Feedback = () => {
           0
         );
         if (!!data?.length) {
-          console.log(data);
-          // const combinedArray = _.mergeWith(
-          //   [],
-          //   data,
-          //   rawQuestions,
-          //   (objValue, srcValue) => {
-          //     if (
-          //       objValue &&
-          //       objValue.star === null &&
-          //       srcValue &&
-          //       srcValue.star !== null
-          //     ) {
-          //       return srcValue;
-          //     }
-          //   }
-          // );
-          // console.log(combinedArray)
-
           setQuestions(data);
         }
         setQuestionLoading(false);
@@ -275,86 +222,6 @@ const Feedback = () => {
                 questions={questions}
                 questionLoading={questionLoading}
               />
-              {/* <CenteredModal
-                isTitleReactNode
-                title={
-                  <div className="d-flex align-items-center">
-                    <Avatar avatarSrc={selectedEvent.photo} />
-                    <div>
-                      <h6 className="m-0 text-start">
-                        {selectedEvent.studentName}
-                      </h6>
-                      <p className="fw-bold" style={{ fontSize: "12px" }}>
-                        {selectedEvent.subject}
-                        {`(${selectedEvent.type})`}
-                      </p>
-                      <p
-                        className="fw-bold text-secondary"
-                        style={{ fontSize: "12px" }}
-                      >
-                        <CiClock2 size={17} />{" "}
-                        {showDate(selectedEvent.start, wholeDateFormat)}
-                      </p>
-                    </div>
-                  </div>
-                }
-                show={selectedEvent.id}
-                handleClose={() => setSelectedEvent({})}
-              >
-                <div
-                  className=" "
-                  style={{ height: "calc(100vh - 165px)", overflowY: "auto" }}
-                >
-                  <div className="questions">
-                    <QuestionFeedback
-                      loading={questionLoading}
-                      questions={questions}
-                      handleEmojiClick={handleEmojiClick}
-                    />
-                    <div className="form-group m-3">
-                      <label
-                        style={{ fontSize: "10px" }}
-                        htmlFor="exampleTextarea"
-                      >
-                        Please write a short description of your impression
-                        about this lesson
-                        <Tooltip
-                          text={"Instructions how to grade freehand notes."}
-                        />
-                      </label>
-                      <DebounceInput
-                        placeholder=""
-                        required
-                        element="textarea"
-                        className="form-control m-0"
-                        delay={1000}
-                        value={comment}
-                        style={{ height: "150px" }}
-                        setInputValue={setComment}
-                        debounceCallback={(val) => {
-                          // setSelectedEvent({
-                          //   ...selectedEvent,
-                          //   commentByTutor: comment,
-                          // });
-                          // comment.length &&
-                          //   handleDynamicSave({
-                          //     ...selectedEvent,
-                          //     commentByTutor: comment,
-                          //   });
-                        }}
-                        onChange={(e) => setComment(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  <div className="w-100 d-flex justify-content-between">
-                    <TAButton buttonText={"cancel"} />
-                    <TAButton
-                      buttonText={"save"}
-                      handleClick={handleSaveFeedback}
-                    />
-                  </div>
-                </div>
-              </CenteredModal> */}
             </div>
           </div>
         )}

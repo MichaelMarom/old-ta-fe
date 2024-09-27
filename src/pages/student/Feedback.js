@@ -213,6 +213,10 @@ const Feedback = () => {
     rawQuestions,
   ]);
 
+  useEffect(() => {
+    console.log( rawQuestions,  'questoon');
+  }, [rawQuestions])
+
   const handleSaveFeedback = () => {
     const ifAnyQuestionisNull = questions.filter(
       (question) => !question.star
@@ -256,19 +260,20 @@ const Feedback = () => {
       })
     );
 
-    toast.success("Saved Successfully")
+    toast.success("Saved Successfull123y");
+    console.log(rawQuestions)
     setQuestions(rawQuestions);
     setSelectedEvent({});
     setComment("");
   };
-
-  console.log(saving)
 
   if (loading) return <Loading />;
   return (
     <div>
       <div className="container mt-1">
         <div className="py-2 row">
+{/* {rawQuestions.map(q=><div className="">{q.star}-</div>)} */}
+
           <div className={` ${selectedEvent.id ? "col-md-12" : "col-md-12"}`}>
             <h2>Booked Lessons</h2>
             {feedbackData.length ? (
@@ -289,49 +294,6 @@ const Feedback = () => {
               <div className="text-danger">No Record Found</div>
             )}
           </div>
-          {/* {selectedEvent.id && (
-            <div
-              className="col-md-4 "
-              style={{ height: "70vh", overflowY: "auto" }}
-            >
-              <h4>
-                Feedback on {showDate(selectedEvent.start, wholeDateFormat)}
-                Session
-              </h4>
-              <div className="questions">
-                <QuestionFeedback
-                  loading={questionLoading}
-                  questions={questions}
-                  handleEmojiClick={handleEmojiClick}
-                />
-                <div className="form-group">
-                  <label htmlFor="exampleTextarea">
-                    Please write a short description of your impression about
-                    this lesson
-                  </label>
-                  <DebounceInput
-                    placeholder=""
-                    required
-                    element="textarea"
-                    className="form-control m-0"
-                    delay={1000}
-                    value={comment}
-                    style={{ height: "150px" }}
-                    setInputValue={setComment}
-                    debounceCallback={(val) => {
-                      console.log(selectedEvent);
-                      handleDynamicSave({
-                        ...selectedEvent,
-                        commentByStudent: comment,
-                      });
-                    }}
-                    onChange={(e) => setComment(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-          )} */}
-
           <FeedbackModal
             handleClose={() => {
               setQuestions(rawQuestions);
@@ -349,7 +311,7 @@ const Feedback = () => {
           />
         </div>
       </div>
-
+ 
       <Actions saveDisabled={true} />
     </div>
   );
