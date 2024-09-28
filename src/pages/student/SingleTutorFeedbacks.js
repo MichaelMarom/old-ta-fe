@@ -96,11 +96,8 @@ const SingleTutorFeedbacks = () => {
 
     return (
         <div  >
-            <div style={{
-                // width: clickedSlot.id ? "75%" : "100%",
-                // float: clickedSlot.id ? "right" : "left"
-            }}>
-                <h4 className='text-center m-3'>Tutor "{convertTutorIdToName(params.AcademyId)}" feedback from students</h4>
+            <div>
+                <h4 className='text-center m-3'>Tutor "{params.AcademyId}" feedback from students</h4>
                 <div className='m-3 student-calender' style={{ height: "80vh" }}>
                     <Calendar
                         localizer={localizer}

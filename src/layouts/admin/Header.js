@@ -28,7 +28,6 @@ const Header = () => {
     { id: "new-subject", name: "New Subject" },
     { id: "accounting", name: "Accounting" },
     { id: "chat", name: "Communications" },
-    { id: "dummy", name: "Dummy" },
 
     // { id: 'tos', label: 'TOS' },
     // { id: 'intro', label: 'Plateform Intro' },

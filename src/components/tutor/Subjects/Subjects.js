@@ -155,22 +155,31 @@ const Subjects = () => {
               className=" d-flex flex-column align-items-center m-0"
             >
               <div className="p-3 rounded-3" style={{ width: '100%', height: "calc(100vh - 170px)", overflowY: "auto", backgroundColor: 'rgb(33 47 61)', color: 'white' }}>
-                <h4 className="text-light text-center">{faculty.length} Faculties</h4>
+                <h4 className="text-light text-center"> Faculties</h4>
+                <p className="text-center small">Total Subjects {faculty.length}</p>
                 <TAButton handleClick={() => setShowAddNewSubjModal(true)} style={{ width: "100%", marginLeft: "0", marginRight: "0" }} type="button" buttonText={"Search/Add New Subject"} />
 
                 <ul className="list-group">
-                  {faculty.map(({ Id, Faculty }) => (
+                  {faculty.map(({ Id, Faculty, subjectCount }) => (
                     <li
                       key={Id}
                       id={Id === selectedFaculty ? "tutor-tab-header-list-active1"
                         : ""}
-                      className="list-group-item list-group-item-action navitem-li navitem "
-                      style={{ backgroundColor: 'rgb(33 47 61)', color:  Id === selectedFaculty ? "lightgreen" :'white',
-                        padding:"10px" }}
+                      className=" d-flex justify-content-between list-group-item list-group-item-action navitem-li navitem "
+                      style={{
+                        backgroundColor: 'rgb(33 47 61)', color: Id === selectedFaculty ? "lightgreen" : 'white',
+                        padding: "10px"
+                      }}
                       onClick={() => setSelectedFaculty(Id)}
                     >
-                      <FaBook className="me-2" /> {Faculty}
-                      <FaChevronRight className="float-end" style={{marginTop:"5px"}} />
+                      <div className="d-flex align-items-center">
+                      <p style={{width:"30px"}}>{subjectCount}</p>
+                      <FaBook className="me-2" /> <p>
+                        {Faculty}
+                      </p>
+
+                      </div>
+                      <FaChevronRight className="float-end" style={{ marginTop: "5px" }} />
                     </li>
                   ))}
                 </ul>

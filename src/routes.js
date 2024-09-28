@@ -273,7 +273,7 @@ const App = () => {
     <Suspense fallback={<Loading />}>
       <Routes>
         {/* Public Routes */}
-        <Route path="/collab" element={(user.role === "student" || user.role === "tutor") ? <Collaboration /> : <Navigate to="/login" />} />
+        <Route path="/collab" element={(user.role === "student" || user.role === "tutor") ? <Collaboration /> : <div className="text-danger">Access Denied!</div>} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 

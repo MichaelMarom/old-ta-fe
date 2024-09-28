@@ -9,7 +9,7 @@ import {
 } from "../../axios/tutor";
 import { create_chat } from "../../axios/chat";
 import { IoIosCheckmarkCircle, IoIosCloseCircle } from "react-icons/io";
-import { FaRegTimesCircle } from "react-icons/fa";
+import { FaQuoteLeft, FaRegTimesCircle, FaStar } from "react-icons/fa";
 import { CiClock2 } from "react-icons/ci";
 
 import { convertGMTOffsetToLocalString, showDate } from "../../utils/moment";
@@ -33,6 +33,8 @@ import StarRating from "../../components/common/StarRating";
 import _ from "lodash";
 import { RiVerifiedBadgeFill } from "react-icons/ri";
 import EducationCards from "../../components/tutor/EducationCards";
+import Divider from "../../components/common/Divider";
+import Pill from "../../components/common/Pill";
 
 const TutorPublicProfile = () => {
   const videoRef = useRef(null);
@@ -41,7 +43,6 @@ const TutorPublicProfile = () => {
   const location = useLocation();
   const studentId = localStorage.getItem("student_user_id");
   const [fetching, setFetching] = useState(true);
-  const [activeTab, setActiveTab] = useState("bach");
   const isStudentLoggedIn = location.pathname.split("/")[1] === "student";
   const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
   const [subjectsWithRates, setSubjectsWithRates] = useState([]);
@@ -52,6 +53,21 @@ const TutorPublicProfile = () => {
   const [rating, setRating] = useState(0);
   const [totalPastLessons, setTotalPastLessons] = useState(0);
 
+  const [activeTab, setActiveTab] = useState('education');
+
+  const tabStyle = {
+    padding: '10px 20px',
+    cursor: 'pointer',
+    borderBottom: '2px solid transparent',
+    fontWeight: 'bold',
+    color: '#007bff'
+  };
+
+  const activeTabStyle = {
+    ...tabStyle,
+    borderBottom: '2px solid #007bff',
+    color: '#007bff'
+  };
   const [duration, setDuration] = useState(0);
 
   const handleLoadedMetadata = () => {
@@ -235,7 +251,7 @@ const TutorPublicProfile = () => {
         }}
       >
         {/* <ScreenRecording /> */}
-        <div className="">
+        {/* <div className="">
           <div className="">
             <div className="d-flex flex-wrap align-items-center justify-content-center w-100 mt-4 rounded  bg-white ">
               <div className="d-flex align-items-start ">
@@ -302,7 +318,7 @@ const TutorPublicProfile = () => {
                     }}
                   >
                     <PiChalkboardTeacherFill size={18} />
-                    <ToolTip text={"Ratings"} className="d-flex">
+                    <ToolTip text={rating.toFixed( 2)} className="d-flex">
                       <StarRating rating={rating} />
                     </ToolTip>
                     <p>({totalPastLessons})</p>
@@ -400,39 +416,9 @@ const TutorPublicProfile = () => {
                     ) : (
                       <IoIosCloseCircle size={20} color="red" />
                     )}
-                    {/* <div
-                    className="form-check form-switch"
-                    style={{ marginBottom: "-10px" }}
-                  >
-                    <input
-                      className="form-check-input border border-dark"
-                      type="checkbox"
-                      role="switch"
-                      disabled={true}
-                      defaultChecked={data.IntroSessionDiscount === "1"}
-                    />
-                  </div> */}
                   </div>
                 </div>
-                {/* <div
-                  className="d-flex align-items-center"
-                  style={{ gap: "5px" }}
-                >
-                  <ToolTip
-                    width="300px"
-                    text={
-                      "The Tutor Identity is verified by the academy in various ways."
-                    }
-                  />
-
-                  <div
-                    className="text-primary"
-                    style={{ fontSize: "14px", fontWeight: "bold" }}
-                  >
-                    Verified Tutor
-                  </div>
-                  <IoIosCheckmarkCircle size={20} color="green" />
-                </div> */}
+             
                 <div
                   className="d-flex align-items-center"
                   style={{ gap: "5px" }}
@@ -587,7 +573,6 @@ const TutorPublicProfile = () => {
                     </div>
                   }
                   <div className="d-flex flex-wrap gap-3">
-                    {/* Conditionally render Bachelor's card for Undergraduate, Associate, or Bachelor Degree */}
                     {[
                       "Undergraduate Student",
                       "Associate Degree",
@@ -604,7 +589,6 @@ const TutorPublicProfile = () => {
                       </div>
                     )}
 
-                    {/* Conditionally render Master's card for Master Degree */}
                     {edu.EducationalLevel === "Master Degree" && (
                       <>
                         <div style={{ width: "48%", maxWidth: "600px" }}>
@@ -616,7 +600,6 @@ const TutorPublicProfile = () => {
                             year={edu.Mast_College_StateYear}
                           />
                         </div>
-                        {/* Also render Bachelor's card if not already rendered */}
                         {![
                           "Undergraduate Student",
                           "Associate Degree",
@@ -635,14 +618,12 @@ const TutorPublicProfile = () => {
                       </>
                     )}
 
-                    {/* Conditionally render Doctorate card for Doctorate, Post Doctorate, or Professor */}
                     {[
                       "Doctorate Degree",
                       "Post Doctorate Degree",
                       "Professor",
                     ].includes(edu.EducationalLevel) && (
                       <>
-                        {/* Render Bachelor's card if not already rendered */}
                         {![
                           "Undergraduate Student",
                           "Associate Degree",
@@ -660,7 +641,6 @@ const TutorPublicProfile = () => {
                           </div>
                         )}
 
-                        {/* Render Master's card if not already rendered */}
                         {edu.EducationalLevel !== "Master Degree" && (
                           <div style={{ width: "48%", maxWidth: "600px" }}>
                             <EducationCards
@@ -685,462 +665,6 @@ const TutorPublicProfile = () => {
                       </>
                     )}
                   </div>
-
-                  {/* <div className="mt-4">
-                    <h5 className="">Education</h5>
-                    <div className="border p-2 d-flex rounded-3">
-                      <ul
-                        className="vertical-tabs flex-column p-0 align-items-start"
-                        style={{
-                          width: "20%",
-                          borderRight: "1px solid lightblue",
-                        }}
-                      >
-                        <li className="nav-item w-100 p-0">
-                          <p
-                            className={`nav-link m-0 ${
-                              activeTab === "bach" ? "text-bg-primary" : ""
-                            } w-100`}
-                            aria-current="page"
-                            onClick={() => setActiveTab("bach")}
-                          >
-                            Bachelor
-                          </p>
-                        </li>
-                        <li className="nav-item w-100 p-0">
-                          <p
-                            className={`nav-link m-0 ${
-                              activeTab === "mast" ? "text-bg-primary" : ""
-                            } w-100`}
-                            aria-current="page"
-                            onClick={() => setActiveTab("mast")}
-                          >
-                            Master
-                          </p>
-                        </li>
-                        <li className="nav-item w-100 p-0">
-                          <p
-                            className={`nav-link m-0 ${
-                              activeTab === "doc" ? "text-bg-primary" : ""
-                            } w-100`}
-                            aria-current="page"
-                            onClick={() => setActiveTab("doc")}
-                          >
-                            Doctorate
-                          </p>
-                        </li>
-                        <li className="nav-item w-100 p-0">
-                          <p
-                            className={`nav-link m-0 ${
-                              activeTab === "cert" ? "text-bg-primary" : ""
-                            } w-100`}
-                            aria-current="page"
-                            onClick={() => setActiveTab("cert")}
-                          >
-                            Certificate
-                          </p>
-                        </li>
-                        <li className="nav-item w-100 p-0">
-                          <p
-                            className={`nav-link m-0 m-0 ${
-                              activeTab === "deg" ? "text-bg-primary" : ""
-                            } w-100`}
-                            aria-current="page"
-                            onClick={() => setActiveTab("deg")}
-                          >
-                            Degree
-                          </p>
-                        </li>
-                      </ul>
-
-                      <div className="px-2 w-75 d-flex justify-content-end">
-                        {activeTab === "bach" && (
-                          <div className="d-flex border shadow flex-column w-75  p-4 justify-content-between">
-                            <h5 className=" text-center">Bachelor Info</h5>
-
-                            {edu.BachCountry ? (
-                              <>
-                                <div
-                                  className="d-flex align-items-center"
-                                  style={{ gap: "15px" }}
-                                >
-                                  <div
-                                    className="text-primary"
-                                    style={{
-                                      fontSize: "16px",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    Country -
-                                  </div>
-                                  <h6 className="m-0">{edu.BachCountry}</h6>
-                                </div>
-                                <div
-                                  className="d-flex align-items-center"
-                                  style={{ gap: "15px" }}
-                                >
-                                  <div
-                                    className="text-primary"
-                                    style={{
-                                      fontSize: "16px",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    College -
-                                  </div>
-                                  <h6 className="m-0">{edu.Bach_College}</h6>
-                                </div>
-                                <div
-                                  className="d-flex align-items-center"
-                                  style={{ gap: "15px" }}
-                                >
-                                  <div
-                                    className="text-primary"
-                                    style={{
-                                      fontSize: "16px",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    State -
-                                  </div>
-                                  <h6 className="m-0">
-                                    {edu.Bach_College_State}
-                                  </h6>
-                                </div>
-                                <div
-                                  className="d-flex align-items-center"
-                                  style={{ gap: "15px" }}
-                                >
-                                  <div
-                                    className="text-primary"
-                                    style={{
-                                      fontSize: "16px",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    Year of Graduation -
-                                  </div>
-                                  <h6 className="m-0">
-                                    {edu.Bach_College_Year}
-                                  </h6>
-                                </div>
-                              </>
-                            ) : (
-                              <h5 className="text-danger">
-                                {" "}
-                                No Bachlors record found!
-                              </h5>
-                            )}
-                          </div>
-                        )}
-                        {activeTab === "mast" && (
-                          <div className="d-flex border shadow flex-column w-75  p-4 justify-content-between">
-                            <h5 className=" text-center">Master Info</h5>
-                            {edu.MastCountry ? (
-                              <>
-                                <div
-                                  className="d-flex align-items-center"
-                                  style={{ gap: "15px" }}
-                                >
-                                  <div
-                                    className="text-primary"
-                                    style={{
-                                      fontSize: "16px",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    Country -
-                                  </div>
-                                  <h6 className="m-0">{edu.MastCountry}</h6>
-                                </div>
-                                <div
-                                  className="d-flex align-items-center"
-                                  style={{ gap: "15px" }}
-                                >
-                                  <div
-                                    className="text-primary"
-                                    style={{
-                                      fontSize: "16px",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    University -
-                                  </div>
-                                  <h6 className="m-0">{edu.Mast_College}</h6>
-                                </div>
-                                <div
-                                  className="d-flex align-items-center"
-                                  style={{ gap: "15px" }}
-                                >
-                                  <div
-                                    className="text-primary"
-                                    style={{
-                                      fontSize: "16px",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    State -
-                                  </div>
-                                  <h6 className="m-0">
-                                    {edu.Mast_College_State}
-                                  </h6>
-                                </div>
-                                <div
-                                  className="d-flex align-items-center"
-                                  style={{ gap: "15px" }}
-                                >
-                                  <div
-                                    className="text-primary"
-                                    style={{
-                                      fontSize: "16px",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    Year of Graduation -
-                                  </div>
-                                  <h6 className="m-0">
-                                    {edu.Mast_College_StateYear}
-                                  </h6>
-                                </div>
-                              </>
-                            ) : (
-                              <h5 className="text-danger">
-                                {" "}
-                                No Master's record found!
-                              </h5>
-                            )}
-                          </div>
-                        )}
-                        {activeTab === "doc" && (
-                          <div className="d-flex border shadow flex-column w-75  p-4 justify-content-between">
-                            <h5 className=" text-center">Doctorate Info</h5>
-
-                            {edu.DocCountry ? (
-                              <>
-                                <div
-                                  className="d-flex align-items-center"
-                                  style={{ gap: "15px" }}
-                                >
-                                  <div
-                                    className="text-primary"
-                                    style={{
-                                      fontSize: "16px",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    Country -
-                                  </div>
-                                  <h6 className="m-0">{edu.DocCountry}</h6>
-                                </div>
-                                <div
-                                  className="d-flex align-items-center"
-                                  style={{ gap: "15px" }}
-                                >
-                                  <div
-                                    className="text-primary"
-                                    style={{
-                                      fontSize: "16px",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    University -
-                                  </div>
-                                  <h6 className="m-0">
-                                    {edu.DoctorateCollege}
-                                  </h6>
-                                </div>
-                                <div
-                                  className="d-flex align-items-center"
-                                  style={{ gap: "15px" }}
-                                >
-                                  <div
-                                    className="text-primary"
-                                    style={{
-                                      fontSize: "16px",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    State -
-                                  </div>
-                                  <h6 className="m-0">{edu.DoctorateState}</h6>
-                                </div>
-                                <div
-                                  className="d-flex align-items-center"
-                                  style={{ gap: "15px" }}
-                                >
-                                  <div
-                                    className="text-primary"
-                                    style={{
-                                      fontSize: "16px",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    Year of Graduation -
-                                  </div>
-                                  <h6 className="m-0">{edu.DoctorateGradYr}</h6>
-                                </div>
-                              </>
-                            ) : (
-                              <h5 className="text-danger">
-                                {" "}
-                                No Doctorate record found!
-                              </h5>
-                            )}
-                          </div>
-                        )}
-                        {activeTab === "cert" && (
-                          <div className="d-flex border shadow flex-column w-75  p-4 justify-content-between">
-                            <div className="d-flex justify-content-between  align-items-center">
-                              <h5 className=" text-center">Certificate Info</h5>
-                            
-                            </div>
-                            {edu.CertCountry ? (
-                              <>
-                                {" "}
-                                <div
-                                  className="d-flex align-items-center"
-                                  style={{ gap: "15px" }}
-                                >
-                                  <div
-                                    className="text-primary"
-                                    style={{
-                                      fontSize: "16px",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    Country -
-                                  </div>
-                                  <h6 className="m-0">{edu.CertCountry}</h6>
-                                </div>
-                                <div
-                                  className="d-flex align-items-center"
-                                  style={{ gap: "15px" }}
-                                >
-                                  <div
-                                    className="text-primary"
-                                    style={{
-                                      fontSize: "16px",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    Name -
-                                  </div>
-                                  <h6 className="m-0">{edu.Certificate}</h6>
-                                </div>
-                                <div
-                                  className="d-flex align-items-center"
-                                  style={{ gap: "15px" }}
-                                >
-                                  <div
-                                    className="text-primary"
-                                    style={{
-                                      fontSize: "16px",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    Expiration Date -
-                                  </div>
-                                  <h6 className="m-0">
-                                    {showDate(
-                                      edu.CertificateExpiration,
-                                      monthFormatWithYYYY
-                                    )}
-                                  </h6>
-                                </div>
-                              </>
-                            ) : (
-                              <h5 className="text-danger">
-                                {" "}
-                                Certificate is on record, was verified but not
-                                shown to public!
-                              </h5>
-                            )}
-                          </div>
-                        )}
-                        {activeTab === "deg" && (
-                          <div className="d-flex border shadow flex-column w-75  p-4 justify-content-between">
-                            <div className="d-flex justify-content-between align-items-center">
-                              <h5 className="text-center">Degree Info</h5>
-                            
-                            </div>
-
-                            {edu.DegCountry ? (
-                              <>
-                                <div
-                                  className="d-flex align-items-center"
-                                  style={{ gap: "15px" }}
-                                >
-                                  <div
-                                    className="text-primary"
-                                    style={{
-                                      fontSize: "16px",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    Country -
-                                  </div>
-                                  <h6 className="m-0">{edu.DegCountry}</h6>
-                                </div>
-                                <div
-                                  className="d-flex align-items-center"
-                                  style={{ gap: "15px" }}
-                                >
-                                  <div
-                                    className="text-primary"
-                                    style={{
-                                      fontSize: "16px",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    Name -
-                                  </div>
-                                  <h6 className="m-0">
-                                    {edu.EducationalLevel}
-                                  </h6>
-                                </div>
-                                <div
-                                  className="d-flex align-items-center"
-                                  style={{ gap: "15px" }}
-                                >
-                                  <div
-                                    className="text-primary"
-                                    style={{
-                                      fontSize: "16px",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    State -
-                                  </div>
-                                  <h6 className="m-0">{edu.DegreeState}</h6>
-                                </div>
-                                <div
-                                  className="d-flex align-items-center"
-                                  style={{ gap: "15px" }}
-                                >
-                                  <div
-                                    className="text-primary"
-                                    style={{
-                                      fontSize: "16px",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    Year -
-                                  </div>
-                                  <h6 className="m-0">{edu.DegreeYear}</h6>
-                                </div>
-                              </>
-                            ) : (
-                              <h5 className="text-danger">
-                                {" "}
-                                Diploma is on record, was verified but not shown
-                                to public!
-                              </h5>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div> */}
 
                   {subjectsWithRates.length ? (
                     <div className="mt-4">
@@ -1186,7 +710,462 @@ const TutorPublicProfile = () => {
               </div>
             </div>
           </div>
+        </div> */}
+
+<div className="container-fluid" style={{ padding: '20px', backgroundColor: "rgb(245 245 245)" }}>
+        <div className="row">
+          {/* Left side - Avatar, Ratings, Languages, Location, Time, Introduction, Call to Action */}
+          <div className="col-md-4" style={{ backgroundColor: '#ffffff', padding: '20px', borderRadius: '8px' }}>
+            <div className="d-flex flex-column align-items-center ">
+              <div
+                className="p-1 rounded-circle border shadow d-flex justify-content-center align-items-center m-1"
+                style={{ width: "160px", height: "160px", backgroundColor: "rgb(245 245 245)" }}
+              >
+                <Avatar
+                  avatarSrc={tutor.Photo}
+                  size="150px"
+                  indicSize="18px"
+                  positionInPixle={16}
+                />
+              </div>
+              <div
+                className="d-flex align-items-center"
+                style={{ gap: "10px" }}
+              >
+                <h4 className="m-0 fw-bold text-secondary">
+                  {capitalizeFirstLetter(tutor.TutorScreenname)}
+                </h4>
+                <RiVerifiedBadgeFill color="green" size={20} />
+              </div>
+              <p><FaStar className="text-warning" />{rating.toFixed(1)}({totalPastLessons} reviews)</p>
+              <Divider />
+              <div className="d-flex">      
+                 <div className="d-flex align-items-center">
+                <Pill
+                  label={JSON.parse(edu.NativeLang).value}
+                  hasIcon={false}
+                />
+              </div>
+                {edu.NativeLangOtherLang &&
+                  JSON.parse(edu.NativeLangOtherLang).map((lang) => (
+                    <div
+                      className="d-flex align-items-center"
+                      key={lang.value}
+                    >
+                      <GradePills
+                        grades={[]}
+                        grade={lang.value}
+                        editable={false}
+                        hasIcon={false}
+                      />
+                    </div>
+                  ))}
+              </div>
+              <Divider />
+
+              <div
+                className="d-flex align-items-end"
+                style={{ gap: "10px", color: "lightgray" }}
+              >
+                <FaLocationDot size={15} />
+                <h6 className="m-0"> {tutor.Country}</h6>
+                <h6 className="m-0">GMT: {tutor.GMT}</h6>
+              </div>
+              <Divider />
+
+              <div
+                className="d-flex align-items-end"
+                style={{ gap: "10px", color: "lightgray" }}
+              >
+                <IoTime size={15} />
+                <h6 className="m-0">
+                  {convertGMTOffsetToLocalString(tutor.GMT)}
+                </h6>
+              </div>
+              <Divider />
+
+              <div
+                className=" d-flex flex-column p-4 justfy-content-between h-100"
+                style={{
+                  width: "300px",
+                  gap: "5px",
+                }}
+              >
+                <div className="d-flex align-items-center" style={{ gap: "5px" }}>
+                  <ToolTip
+                    width="300px"
+                    text={
+                      "The number of hours the tutor will respond to a student (within tutor UTC business time)."
+                    }
+                  />
+
+                  <div
+                    className="text-primary"
+                    style={{ fontSize: "14px", fontWeight: "bold" }}
+                  >
+                    Response Time -
+                  </div>
+                  <h6 className="m-0">{tutor.ResponseHrs}</h6>
+                </div>
+
+                <div className="d-flex align-items-center" style={{ gap: "5px" }}>
+                  <ToolTip
+                    width="300px"
+                    text={
+                      "The number of hours before the lesson starts where student can cancel the lesson with no penalty."
+                    }
+                  />
+
+                  <div
+                    className="text-primary"
+                    style={{ fontSize: "14px", fontWeight: "bold" }}
+                  >
+                    Cancellation Policy -
+                  </div>
+                  <h6 className="m-0">
+                    {disc.CancellationPolicy ? (
+                      `${disc.CancellationPolicy} Hour`
+                    ) : (
+                      <span className="text-danger">not set</span>
+                    )}
+                  </h6>
+                </div>
+                <div className="d-flex align-items-center" style={{ gap: "5px" }}>
+                  <ToolTip
+                    width="300px"
+                    text={
+                      "When the tutor provide a discount of 50% for the student booking the INTRODUCTION lesson, the on/off switch is showing green color. "
+                    }
+                  />
+                  <div
+                    className="text-primary d-flex align-items-center"
+                    style={{ gap: "10px", fontWeight: "bold" }}
+                  >
+                    <h6
+                      className="m-0"
+                      style={{ fontSize: "14px", fontWeight: "bold" }}
+                    >
+                      50% Off on Intro Lesson
+                    </h6>
+                    {disc.IntroSessionDiscount === "1" ? (
+                      <IoIosCheckmarkCircle size={20} color="green" />
+                    ) : (
+                      <IoIosCloseCircle size={20} color="red" />
+                    )}
+
+                  </div>
+                </div>
+
+                <div className="d-flex align-items-center" style={{ gap: "5px" }}>
+                  <ToolTip
+                    width="300px"
+                    text={
+                      "Tutor Diploma is uploaded to the academy servers. The student can view the Diploma by clicking on the PDF symbol below."
+                    }
+                  />
+
+                  <div
+                    className="text-primary"
+                    style={{ fontSize: "14px", fontWeight: "bold" }}
+                  >
+                    Verified Diploma
+                  </div>
+                  {edu.DegFileName ? (
+                    <IoIosCheckmarkCircle size={20} color="green" />
+                  ) : (
+                    <FaRegTimesCircle size={20} color="red" />
+                  )}
+                </div>
+                <div className="d-flex align-items-center" style={{ gap: "5px" }}>
+                  <ToolTip
+                    width="300px"
+                    text={`Tutor Certificate was uploaded to the academy 
+                                servers for verification. Due to privecy concern, the certificate is not published to the public. `}
+                  />
+
+                  <div
+                    className="text-primary"
+                    style={{ fontSize: "14px", fontWeight: "bold" }}
+                  >
+                    Verified Certificate
+                  </div>
+                  {edu.CertFileName ? (
+                    <IoIosCheckmarkCircle size={20} color="green" />
+                  ) : (
+                    <FaRegTimesCircle size={20} color="red" />
+                  )}
+                </div>
+              </div>
+              <Divider />
+
+              <p className="text-start w-100">{tutor.Introduction}</p>
+              <Divider />
+
+              <div className="m-2 ">
+                <div className="d-flex ">
+                  <TAButton
+                    buttonText={"Chat"}
+                    onClick={handleChatClick}
+                    disabled={!isStudentLoggedIn}
+                  />
+                  <TAButton
+                    buttonText={"See Schedule"}
+                    style={{ width: "100px" }}
+                    handleClick={handleScheduleClick}
+                    disabled={!isStudentLoggedIn}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right side - Video, Motivation Text, Profile Headline, Tabs */}
+          <div className="col-md-8">
+            {/* Top row - Video and Motivation Text */}
+            <div className="row mb-4">
+              <div className="col-md-5 mx-2  rounded-2 d-flex" style={{ background:"white" }}>
+              <FaQuoteLeft size={25} /> 
+                <p className="p-2" style={{ fontSize: '1rem', color: '#343a40'}}>
+                  {tutor.Motivate} - <span className="" style={{fontSize: "12px"}}>Message from {tutor.TutorScreenname}</span>
+                </p>
+              </div>
+                <div className="col-md-6">
+                <div>
+                  <div className="" >
+                    <video
+                      ref={videoRef}
+                      loop
+                      controlsList="nodownload noremoteplayback"
+                      src={tutor.Video}
+                      onLoadedMetadata={handleLoadedMetadata}
+                      onClick={handleVideoClick}
+                      className="rounded-2 shadow-lg"
+                      muted
+                      style={{ minWidth: "200px", width: "100%", height: "200px" }}
+                      autoPlay
+                    />
+                  </div>
+                  <div
+                    className="d-flex justify-content-between align-items-center mt-2"
+                    style={{ width: "200px" }}
+                  >
+                    <FaRegCirclePlay
+                      size={35}
+                      color="lightgray"
+                      onClick={toggleSize}
+                    />
+                    <div className="d-flex justify-content-center align-items-center gap-1">
+                      <CiClock2 color="lightgray" />{" "}
+                      <p className="fw-bold" style={{ color: "lightgrey" }}>
+                        {`${parseInt(duration)}sec(s) video`}
+                      </p>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            
+            </div>
+
+            {/* Second row - Profile Headline */}
+            <div className="row mb-4">
+              <div className="col">
+                <h5 className="text-center  rounded-2 p-2" style={{  background:"white"  }}>{tutor.HeadLine}</h5>
+              </div>
+            </div>
+            <div className="row mb-4">
+
+              <div className="col">
+                <p className="  rounded-2 p-2" style={{ background:"white"  }} dangerouslySetInnerHTML={{ __html: edu.WorkExperience }} />
+              </div>
+            </div>
+
+            {/* Third row - Tabs with Education, Subjects, Availability Calendar */}
+            <div className="row">
+              <div className="col">
+                <div style={{ backgroundColor: '#ffffff', padding: '20px', borderRadius: '8px' }}>
+                  {/* Tabs */}
+                  <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '20px' }}>
+                    <div
+                      style={activeTab === 'education' ? activeTabStyle : tabStyle}
+                      onClick={() => setActiveTab('education')}
+                    >
+                      Education
+                    </div>
+                    <div
+                      style={activeTab === 'subjects' ? activeTabStyle : tabStyle}
+                      onClick={() => setActiveTab('subjects')}
+                    >
+                      Subjects
+                    </div>
+                    <div
+                      style={activeTab === 'availability' ? activeTabStyle : tabStyle}
+                      onClick={() => setActiveTab('availability')}
+                    >
+                      Availability
+                    </div>
+                  </div>
+
+                  {/* Tab Content */}
+                  {activeTab === 'education' && (
+                    <div>
+                      <div className="d-flex flex-wrap gap-3">
+                        {[
+                          "Undergraduate Student",
+                          "Associate Degree",
+                          "Bachelor Degree",
+                        ].includes(edu.EducationalLevel) && (
+                            <div style={{ width: "48%", maxWidth: "600px" }}>
+                              <EducationCards
+                                name={"Bachelor's"}
+                                country={edu.BachCountry}
+                                state={edu.Bach_College_State}
+                                college={edu.Bach_College}
+                                year={edu.Bach_College_Year}
+                              />
+                            </div>
+                          )}
+
+                        {edu.EducationalLevel === "Master Degree" && (
+                          <>
+                            <div style={{ width: "48%", maxWidth: "600px" }}>
+                              <EducationCards
+                                name={"Master's"}
+                                country={edu.MastCountry}
+                                state={edu.Mast_College_State}
+                                college={edu.Mast_College}
+                                year={edu.Mast_College_StateYear}
+                              />
+                            </div>
+                            {![
+                              "Undergraduate Student",
+                              "Associate Degree",
+                              "Bachelor Degree",
+                            ].includes(edu.EducationalLevel) && (
+                                <div style={{ width: "48%", maxWidth: "600px" }}>
+                                  <EducationCards
+                                    name={"Bachelor's"}
+                                    country={edu.BachCountry}
+                                    state={edu.Bach_College_State}
+                                    college={edu.Bach_College}
+                                    year={edu.Bach_College_Year}
+                                  />
+                                </div>
+                              )}
+                          </>
+                        )}
+
+                        {[
+                          "Doctorate Degree",
+                          "Post Doctorate Degree",
+                          "Professor",
+                        ].includes(edu.EducationalLevel) && (
+                            <>
+                              {![
+                                "Undergraduate Student",
+                                "Associate Degree",
+                                "Bachelor Degree",
+                                "Master Degree",
+                              ].includes(edu.EducationalLevel) && (
+                                  <div style={{ width: "48%", maxWidth: "600px" }}>
+                                    <EducationCards
+                                      name={"Bachelor's"}
+                                      country={edu.BachCountry}
+                                      state={edu.Bach_College_State}
+                                      college={edu.Bach_College}
+                                      year={edu.Bach_College_Year}
+                                    />
+                                  </div>
+                                )}
+
+                              {edu.EducationalLevel !== "Master Degree" && (
+                                <div style={{ width: "48%", maxWidth: "600px" }}>
+                                  <EducationCards
+                                    name={"Master's"}
+                                    country={edu.MastCountry}
+                                    state={edu.Mast_College_State}
+                                    college={edu.Mast_College}
+                                    year={edu.Mast_College_StateYear}
+                                  />
+                                </div>
+                              )}
+
+                              <div style={{ width: "48%", maxWidth: "600px" }}>
+                                <EducationCards
+                                  name={"Doctorate"}
+                                  country={edu.DocCountry}
+                                  state={edu.DoctorateState}
+                                  college={edu.DoctorateCollege}
+                                  year={edu.DoctorateGradYr}
+                                />
+                              </div>
+                            </>
+                          )}
+                      </div>
+
+
+                    </div>
+                  )}
+
+                  {activeTab === 'subjects' && (
+                    <div>
+                      {subjectsWithRates.length ? (
+                        <div className="mt-4">
+                          <h5 className="">Subjects I Teach</h5>
+                          <div className="">
+                            {subjectsWithRates.map((item, index) => {
+                              const subjectGrades = JSON.parse(
+                                !item.grades ? "[]" : item.grades
+                              ).sort(customSortForSubjectsGrades);
+                              return (
+                                <div
+                                  className={`border p-2 rounded d-flex justify-content-between align-items-center `}
+                                  key={index}
+                                  style={{ background: "#d8d8d8" }}
+                                >
+                                  <h5
+                                    className="m-0 text-start col-2"
+                                    style={{ fontSize: "14px" }}
+                                  >
+                                    {item.subject}
+                                  </h5>
+                                  <div className="d-flex col-9 flex-wrap">
+                                    {subjectGrades.map((option) => (
+                                      <GradePills
+                                        key={option}
+                                        editable={false}
+                                        grade={option}
+                                        grades={subjectGrades}
+                                        hasIcon={false}
+                                      />
+                                    ))}
+                                  </div>
+                                  <h6 className="m-0 text-start col-1">
+                                    {item.rate}
+                                  </h6>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ) : null}
+
+                    </div>
+                  )}
+
+                  {activeTab === 'availability' && (
+                    <div>
+                      <p>Monday - Friday: 8am - 5pm</p>
+                      <p>Saturday: 9am - 1pm</p>
+                      <p>Sunday: Unavailable</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
 
         <CenteredModal
           showHeader={false}

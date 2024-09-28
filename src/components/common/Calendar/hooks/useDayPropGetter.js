@@ -19,6 +19,19 @@ const useDayPropGetter = ({
         (arrayDate) => convertToDate(arrayDate).getTime() === date.getTime()
       );
 
+
+  //     // Define the start and end dates using moment
+  // const startDate = moment(vacationStartDate);
+  // const endDate = moment(vacationEndDate);
+  
+  // // Convert the selected date to a moment object
+  // const selected = moment(date);
+  
+  // // Check if the selected date is between startDate and endDate (inclusive)
+  //  const vacataionalDate =  selected.isBetween(startDate, endDate, null, '[]');
+
+  //  console.log(vacataionalDate, date)
+
       const existsInEnabledInWeek = enabledDays?.some((arrayDate) => {
         const slotDateMoment = moment(date);
         const arrayMomentDate = moment(arrayDate);

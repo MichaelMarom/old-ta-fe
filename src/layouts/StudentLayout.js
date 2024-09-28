@@ -45,9 +45,9 @@ const StudentLayout = ({ children }) => {
       extractRemainingtimeInInteger < 4 &&
       !_.isNaN(extractRemainingtimeInInteger)
     ) {
-      navigate(`/collab?sessionId=${upcomingSession.id}`);
+      // navigate(`/collab?sessionId=${upcomingSession.id}`);
     } else if (currentSession?.id && remainingTime > 10 * 60) {
-      navigate(`/collab?sessionId=${currentSession.id}`);
+      // navigate(`/collab?sessionId=${currentSession.id}`);
     }
   }, [
     currentSession.id,
