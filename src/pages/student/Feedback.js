@@ -183,7 +183,7 @@ const Feedback = () => {
       })
     );
 
-    toast.success("Saved Successfull123y");
+    toast.success("Saved Successfully");
     console.log(rawQuestions);
     setQuestions(rawQuestions);
     setSelectedEvent({});
