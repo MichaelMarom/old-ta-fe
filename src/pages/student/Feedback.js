@@ -95,8 +95,6 @@ const Feedback = () => {
   }, []);
 
   const handleEmojiClick = async (id, star) => {
-    // Create a shallow copy of questions to avoid mutating the rawQuestions array
-    // const updatedQuestions = questions.map((question) => ({ ...question }));
     const updatedQuestions = [...questions];
     const questionIndex = updatedQuestions.findIndex(
       (question) => question.SID === id
@@ -140,7 +138,6 @@ const Feedback = () => {
     selectedEvent.id,
     selectedEvent.tutorId,
     student.AcademyId,
-    // rawQuestions,
   ]);
 
   const handleSaveFeedback = () => {
@@ -198,7 +195,6 @@ const Feedback = () => {
     <div>
       <div className="container mt-1">
         <div className="py-2 row">
-          {/* {rawQuestions.map(q=><div className="">{q.star}-</div>)} */}
 
           <div className={` ${selectedEvent.id ? "col-md-12" : "col-md-12"}`}>
             <h2>Booked Lessons</h2>
