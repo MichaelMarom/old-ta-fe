@@ -55,7 +55,6 @@ const Feedback = () => {
     }
   }, [student.AcademyId]);
 
-  console.log(feedbackData);
   useEffect(() => {
     if (sessionsFetched) {
       setFetching(true);
@@ -79,92 +78,39 @@ const Feedback = () => {
         });
     }
   }, [sessionsFetched]);
-  console.log(sessions);
 
-  // useEffect(() => {
-  //   let fetchSession = async () =>
-  //     student.AcademyId && dispatch(await setStudentSessions(student));
-  //   fetchSession();
-  //   //eslint-disable-next-line
-  // }, [student.AcademyId]);
-
+  console.log(rawQuestions, "rawQ");
   useEffect(() => {
     const getAllFeedbackQuestion = async () => {
       const data = await get_all_feedback_questions();
       if (!!data.length) {
-        setQuestions(data);
-        setRawQuestions(data);
+        // If at any point, you set questions to the same array as rawQuestions without making a copy, changes in questions will still affect rawQuestions due to reference sharing. For example, this might happen during initialization in your useEffect or when resetting the state.
+        // setQuestions([...data]);
+        // setRawQuestions([...data]);
+        setQuestions([...data.map((q) => ({ ...q }))]); // Deep copy
+        setRawQuestions([...data.map((q) => ({ ...q }))]); // Deep copy
       }
     };
     getAllFeedbackQuestion();
   }, []);
 
   const handleEmojiClick = async (id, star) => {
+    // Create a shallow copy of questions to avoid mutating the rawQuestions array
+    // const updatedQuestions = questions.map((question) => ({ ...question }));
     const updatedQuestions = [...questions];
     const questionIndex = updatedQuestions.findIndex(
       (question) => question.SID === id
     );
 
     if (questionIndex !== -1) {
-      // await post_feedback_to_question(
-      //   selectedEvent.id,
-      //   selectedEvent.tutorId,
-      //   student.AcademyId,
-      //   id,
-      //   star
-      // );
       updatedQuestions[questionIndex].star = star;
-      setQuestions([...updatedQuestions]);
-
-      // const rating =
-      //   questions.reduce((sum, question) => {
-      //     return question.star ? sum + question.star : sum;
-      //   }, 0) / questions.length;
-
-      // const withoutPhotoSession = { ...selectedEvent };
-      // delete withoutPhotoSession.photo;
-      // console.log(questions, rating);
-      // dispatch(
-      //   updateStudentLesson(withoutPhotoSession.id, {
-      //     ...withoutPhotoSession,
-      //     ratingByStudent: rating,
-      //   })
-      // );
-
-      // dispatch(
-      //   await setOnlySessions(
-      //     [...feedbackData].map((slot) => {
-      //       if (slot.id === selectedEvent.id) {
-      //         return {
-      //           ...slot,
-      //           ratingByStudent: rating,
-      //         };
-      //       }
-      //       return slot;
-      //     })
-      //   )
-      // );
+      setQuestions(updatedQuestions); // Now this only updates questions, not rawQuestions
     }
   };
 
   const handleRowSelect = (event) => {
     setSelectedEvent(event);
   };
-
-  // const handleDynamicSave = async (updatedSlot) => {
-  //   const withoutPhotoSession = { ...updatedSlot };
-  //   delete withoutPhotoSession.photo;
-  //   console.log(withoutPhotoSession);
-
-  //   const updatedSessionsData = [...feedbackData].map((slot) => {
-  //     if (slot.id === withoutPhotoSession.id) {
-  //       return withoutPhotoSession;
-  //     }
-  //     return slot;
-  //   });
-  //   dispatch(setOnlySessions(updatedSessionsData));
-  //   dispatch(updateStudentLesson(withoutPhotoSession.id, withoutPhotoSession));
-  // };
 
   useEffect(() => {
     if (!!selectedEvent?.commentByStudent?.length) {
@@ -184,22 +130,6 @@ const Feedback = () => {
           student.AcademyId
         );
         if (!!data.length) {
-          // const combinedArray = _.mergeWith(
-          //   [],
-          //   data,
-          //   rawQuestions,
-          //   (objValue, srcValue) => {
-          //     if (
-          //       objValue &&
-          //       objValue.star === null &&
-          //       srcValue &&
-          //       srcValue.star !== null
-          //     ) {
-          //       return srcValue;
-          //     }
-          //   }
-          // );
-
           setQuestions(data);
         }
         setQuestionLoading(false);
@@ -210,12 +140,8 @@ const Feedback = () => {
     selectedEvent.id,
     selectedEvent.tutorId,
     student.AcademyId,
-    rawQuestions,
+    // rawQuestions,
   ]);
-
-  useEffect(() => {
-    console.log( rawQuestions,  'questoon');
-  }, [rawQuestions])
 
   const handleSaveFeedback = () => {
     const ifAnyQuestionisNull = questions.filter(
@@ -261,7 +187,7 @@ const Feedback = () => {
     );
 
     toast.success("Saved Successfull123y");
-    console.log(rawQuestions)
+    console.log(rawQuestions);
     setQuestions(rawQuestions);
     setSelectedEvent({});
     setComment("");
@@ -272,7 +198,7 @@ const Feedback = () => {
     <div>
       <div className="container mt-1">
         <div className="py-2 row">
-{/* {rawQuestions.map(q=><div className="">{q.star}-</div>)} */}
+          {/* {rawQuestions.map(q=><div className="">{q.star}-</div>)} */}
 
           <div className={` ${selectedEvent.id ? "col-md-12" : "col-md-12"}`}>
             <h2>Booked Lessons</h2>
@@ -311,7 +237,7 @@ const Feedback = () => {
           />
         </div>
       </div>
- 
+
       <Actions saveDisabled={true} />
     </div>
   );

@@ -228,6 +228,7 @@ useEffect(()=>{
       <div className="mt-4" style={{ height: "53vh", overflowY: "auto" }}>
         {selectedWeekSession.length ? (
           <table>
+            <thead>
             <tr>
               <th>Sr.</th>
               <th>Subject</th>
@@ -241,6 +242,7 @@ useEffect(()=>{
               <th>Invoice #</th>
               <th>Lesson Video</th>
             </tr>
+            </thead>
             <tbody>
               {selectedWeekSession.map((session) => (
                 <tr

@@ -5,10 +5,12 @@ const AcadCommissionTable = () => {
     <>
       <div className="rate-table">
         <table>
+          <thead>
           <tr>
             <th>Time range</th>
             <th>Percentage</th>
           </tr>
+          </thead>
           <tbody>
             {COMMISSION_DATA.map((data) => (
               <tr key={data.percent}>
