@@ -61,6 +61,7 @@ const StudentFaculties = () => {
   const handleNavigateToFeedback = (id) =>
     navigate(`/student/tutor/feedback/${id}`);
 
+  const formatSubjectCount = (count) => (count > 99 ? '99+' : count);
 
 
   useEffect(() => {
@@ -246,19 +247,37 @@ const StudentFaculties = () => {
                 <h4 className="text-light text-center">{faculties.length} Faculties</h4>
 
                 <ul className="list-group">
-                  {faculties.map(({ Id, Faculty }) => (
+                  {faculties.map(({ Id, Faculty,subjectCount }) => (
                     <li
                       key={Id}
                       id={Id === selectedFaculty ? "tutor-tab-header-list-active1"
                         : ""}
-                      className="list-group-item list-group-item-action navitem-li navitem "
+                      className="list-group-item list-group-item-action navitem-li navitem d-flex justify-content-between "
                       style={{
                         backgroundColor: 'rgb(33 47 61)', color: Id === selectedFaculty ? "lightgreen" : 'white',
                         padding: "10px"
                       }}
                       onClick={() => setSelectedFaculty(Id)}
                     >
-                      <FaBook className="me-2" /> {Faculty}
+                     <div className="d-flex align-items-center">
+                        {/* <p style={{ width: "30px" }}>{subjectCount}</p> */}
+                        <span
+                          className="badge bg-transparent border d-flex justify-content-center align-items-center"
+                          style={{
+                            width:"25px",
+                            height: "25px",
+                            fontSize: '0.7rem',  // Smaller font size for notification style
+                            padding: '0.3em 0.6em',
+                            borderRadius: '50%',
+                          }}
+                        >
+                          {formatSubjectCount(subjectCount)}
+                        </span>
+                        <FaBook className="me-2" /> <p>
+                          {Faculty}
+                        </p>
+
+                      </div>
                       <FaChevronRight className="float-end" style={{ marginTop: "5px" }} />
                     </li>
                   ))}
