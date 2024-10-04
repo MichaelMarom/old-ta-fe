@@ -117,16 +117,6 @@ const TutorSetup = () => {
   const toastId = "pending-status-toast";
   let toastRef = useRef();
 
-  const nameValidations = (value, field) => {
-    if (!/^[a-zA-Z]+$/.test(value)) {
-      return `"Can only contain letters"`;
-    }
-    if (value.length < 2) {
-      return `"Must be at least 2 characters long"`;
-    }
-    return false;
-  };
-
   useEffect(() => {
     if (user.role && tutor.AcademyId && tutor.Status === "pending") {
       if (!toast.isActive(toastId)) {
@@ -496,38 +486,58 @@ const TutorSetup = () => {
   let handleImage = async (e) => {
     if (!tutor.AcademyId)
       return toast.error(
-        `Please setup Firstname, Lastname and MiddleName(optional) first!`
+        `Please setup First Name, Last Name and Middle Name(optional) first!`
       );
+    if (e.target.files[0]) {
+      setUploadPhotoClicked(true);
 
-    setUploadPhotoClicked(true);
+      if (e.target?.files?.[0]?.type.split("/")?.[0] !== "image") {
+        alert("Only Image Can Be Uploaded To This Field");
+      } else {
+        try {
+          setPicUploading(true);
+          let reader = new FileReader();
 
-    if (e.target.files[0].type.split("/")?.[0] !== "image") {
-      alert("Only Image Can Be Uploaded To This Field");
-    } else {
-      try {
-        setPicUploading(true);
-        let reader = new FileReader();
+          reader.onload = (result) => {
+            // set_photo(reader.result);
+          };
+          reader.readAsDataURL(e.target.files[0]);
 
-        reader.onload = (result) => {
-          set_photo(reader.result);
-        };
-        reader.readAsDataURL(e.target.files[0]);
+          const result = await uploadTutorImage(
+            tutor.AcademyId,
+            e.target.files[0]
+          );
 
-        const result = await uploadTutorImage(
-          tutor.AcademyId,
-          e.target.files[0]
-        );
+          if (result.data?.url) {
+            await updateTutorSetup(tutor.AcademyId, {
+              Photo: result.data.url,
+            });
+            set_photo(result.data.url)
+            // dispatch(setTutor({ ...tutor, Photo: result.data.url,
+            //   CellPhone: cell,
+            //   Address1: add1,
+            //   Address2: add2,
+            //   CityTown: city,
+            //   StateProvince: state,
+            //   ZipCode: zipCode,
+            //   Country: country,
+            //   GMT: timeZone,
+            //   ResponseHrs: response_zone,
+            //   Introduction: intro,
+            //   Motivate: motivation,
+            //   HeadLine: headline,
+            //   StartVacation: vacation_mode ? start : moment().toDate(),
+            //   EndVacation: vacation_mode ? end : moment().endOf().toDate(),
+            //   VacationMode: vacation_mode,
+            //   Step: 2,
+            //   Video: video,
+            //  }));
+          }
 
-        if (result.data?.url) {
-          await updateTutorSetup(tutor.AcademyId, {
-            Photo: result.data.url,
-          });
-          dispatch(setTutor({ ...tutor, Photo: result.data.url }));
+          setPicUploading(false);
+        } catch (err) {
+          toast.error(err.message);
         }
-
-        setPicUploading(false);
-      } catch (err) {
-        toast.error(err.message);
       }
     }
   };
@@ -557,7 +567,7 @@ const TutorSetup = () => {
           // toast.warning(`Size is ${file.size / 1024} KB and duration ${videoElement.duration}`)
 
           if (videoElement.duration <= 59.59) {
-            set_video(reader.result);
+            // set_video(reader.result);
             const { data } = await uploadVideoToAzure(
               file,
               tutor.AcademyId,
@@ -565,7 +575,26 @@ const TutorSetup = () => {
             );
             updateTutorSetup(tutor.AcademyId, { Video: data.url });
             toast.success("Video Succesfully Uploaded!");
-            dispatch(setTutor({ ...tutor, Video: data.url }));
+            set_video(data.url)
+            // dispatch(setTutor({ ...tutor, Video: data.url,
+            //   CellPhone: cell,
+            //   Address1: add1,
+            //   Address2: add2,
+            //   CityTown: city,
+            //   StateProvince: state,
+            //   ZipCode: zipCode,
+            //   Country: country,
+            //   GMT: timeZone,
+            //   ResponseHrs: response_zone,
+            //   Introduction: intro,
+            //   Motivate: motivation,
+            //   HeadLine: headline,
+            //   StartVacation: vacation_mode ? start : moment().toDate(),
+            //   EndVacation: vacation_mode ? end : moment().endOf().toDate(),
+            //   VacationMode: vacation_mode,
+            //   Step: 2,
+            //   Photo:photo
+            //  }));
             console.log(data.url);
             setVideoUploading(false);
           } else {
@@ -606,7 +635,7 @@ const TutorSetup = () => {
     { name: "intro", filled: !!intro?.length, value: intro },
     { name: "headline", filled: !!headline?.length, value: headline },
   ];
-  console.log(dateTime)
+
   if (tutorDataLoading) return <Loading height="calc(100vh - 150px" />;
   return (
     <form onSubmit={saveTutorSetup}>
@@ -624,6 +653,7 @@ const TutorSetup = () => {
             marginLeft: "20px",
             marginRight: "20px",
             marginTop: "0",
+            margin: "auto"
           }}
         >
           {!!tutor.StatusReason?.length && (
@@ -667,11 +697,10 @@ const TutorSetup = () => {
                   </p>
                 </div>
                 <h6
-                  className={`text-start m-0 ${
-                    mandatoryFields.find((item) => item.name === "photo").filled
-                      ? ""
-                      : "blink_me"
-                  }`}
+                  className={`text-start m-0 ${mandatoryFields.find((item) => item.name === "photo").filled
+                    ? ""
+                    : "blink_me"
+                    }`}
                   style={{ whiteSpace: "nowrap" }}
                 >
                   Profile Photo
@@ -756,7 +785,7 @@ const TutorSetup = () => {
                         whiteSpace: "nowrap",
                       }}
                     >
-                      Upload{" "}
+                      Upload
                     </p>
                   </div>
                 </label>
@@ -1342,11 +1371,10 @@ const TutorSetup = () => {
                 }}
               >
                 <h6
-                  className={`${
-                    !!video.length && !videoError
-                      ? ""
-                      : "blinking-button text-success"
-                  }`}
+                  className={`${!!video.length && !videoError
+                    ? ""
+                    : "blinking-button text-success"
+                    }`}
                 >
                   Elective Tutor's introduction video
                 </h6>
@@ -1464,9 +1492,8 @@ const TutorSetup = () => {
                         <button
                           style={{ width: "100%", fontSize: "10px" }}
                           type="button"
-                          className={`action-btn btn small ${
-                            selectedVideoOption === "record" ? "active" : ""
-                          }`}
+                          className={`action-btn btn small ${selectedVideoOption === "record" ? "active" : ""
+                            }`}
                           disabled={!editMode}
                           onClick={() => {
                             set_video("");
@@ -1516,9 +1543,8 @@ const TutorSetup = () => {
                             fontSize: "10px",
                             border: " 1px solid #e1e1e1",
                           }}
-                          className={`action-btn btn ${
-                            selectedVideoOption === "upload" ? "active" : ""
-                          }`}
+                          className={`action-btn btn ${selectedVideoOption === "upload" ? "active" : ""
+                            }`}
                         >
                           <div className="button__content">
                             <div className="button__icon">
@@ -1697,11 +1723,10 @@ const TutorSetup = () => {
         editMode={editMode}
         handleClose={() => setIsOpen(false)}
       />
-
       <Actions
         nextDisabled={!tutor.AcademyId}
         onEdit={handleEditClick}
-        saveDisabled={!editMode}
+        saveDisabled={!editMode || (picUploading || videoUploading)}
         editDisabled={editMode}
         unSavedChanges={unSavedChanges}
         loading={savingRecord}

@@ -423,7 +423,8 @@ span {
   height: 100%;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr;
-  box-shadow: inset 0px -3px 0px #dddddd, 0px 0px 0px #f4f5f6;
+  background:white;
+  box-shadow: inset 0px -5px 0px #dddddd, 0px 0px 0px #f4f5f6;
   border-radius: 40px;
   transition: 0.13s ease-in-out;
   z-index: 1;
@@ -471,7 +472,7 @@ span {
   height: 50px; */
   border: 2px solid green;
   /* outline: none; */
-  background-color: lightgreen;
+  background-color: lightgreen !important;
   /* border-radius: 40px; */
   /* box-shadow: -6px -12px 10px #fff, -6px -10px 15px #fff, -21px 0px 6px #fff, 6px 6px 11px rgba(1, 164, 44, 0.2); */
   transition: 0.13s ease-in-out;
@@ -480,6 +481,10 @@ span {
 
 .action-btn.saving-btn:active {
   box-shadow: none;
+}
+
+.button__content:hover{
+  background-color: #ececec;
 }
 
 .action-btn.saving-btn:active .button__content {
@@ -499,7 +504,8 @@ span {
   height: 100%;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr;
-  box-shadow: inset 0px -3px 0px #92be7e, 0px -8px 0px #fff;
+  background:rgb(162, 238, 162);
+  box-shadow: inset 0px -5px 0px #92be7e, 0px -8px 0px #fff;
   border-radius: 40px;
   transition: 0.13s ease-in-out;
   z-index: 1;
@@ -527,7 +533,7 @@ span {
   text-align: center;
   font-size: 12px;
   font-weight: bold;
-  background-color: green;
+  background-color: green !important;
   color: rgb(17, 52, 17);
   text-shadow: 2px 2px 3px rgb(34, 73, 34);
   -webkit-background-clip: text;

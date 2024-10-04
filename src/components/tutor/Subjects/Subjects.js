@@ -157,29 +157,29 @@ const Subjects = () => {
               className=" d-flex flex-column align-items-center m-0"
             >
               <div className="p-3 rounded-3" style={{ width: '100%', height: "calc(100vh - 170px)", overflowY: "auto", backgroundColor: 'rgb(33 47 61)', color: 'white' }}>
-                <h4 className="text-light text-center"> Faculties</h4>
-                <p className="text-center small">Total Subjects {faculty.length}</p>
+                <h4 className="text-light text-center">{faculty.length} Faculties</h4>
+                <p className="text-center small">Total Subjects {faculty.reduce((sum, fac) => { sum = sum + fac.subjectCount; return sum }, 0)}</p>
                 <TAButton handleClick={() => setShowAddNewSubjModal(true)} style={{ width: "100%", marginLeft: "0", marginRight: "0" }} type="button" buttonText={"Search/Add New Subject"} />
 
                 <ul className="list-group">
                   {faculty.map(({ Id, Faculty, subjectCount }) => (
                     <li
-                    key={Id}
-                    id={Id === selectedFaculty ? "tutor-tab-header-list-active1"
-                      : ""}
-                    className="list-group-item list-group-item-action navitem-li navitem d-flex justify-content-between"
-                    style={{
-                      backgroundColor: 'rgb(33 47 61)', color: Id === selectedFaculty ? "lightgreen" : 'white',
-                      padding: "10px"
-                    }}
-                    onClick={() => setSelectedFaculty(Id)}
+                      key={Id}
+                      id={Id === selectedFaculty ? "tutor-tab-header-list-active1"
+                        : ""}
+                      className="list-group-item list-group-item-action navitem-li navitem d-flex justify-content-between"
+                      style={{
+                        backgroundColor: 'rgb(33 47 61)', color: Id === selectedFaculty ? "lightgreen" : 'white',
+                        padding: "10px"
+                      }}
+                      onClick={() => setSelectedFaculty(Id)}
                     >
                       <div className="d-flex align-items-center">
                         {/* <p style={{ width: "30px" }}>{subjectCount}</p> */}
                         <span
                           className="badge bg-transparent border d-flex justify-content-center align-items-center"
                           style={{
-                            width:"25px",
+                            width: "25px",
                             height: "25px",
                             fontSize: '0.7rem',  // Smaller font size for notification style
                             padding: '0.3em 0.6em',

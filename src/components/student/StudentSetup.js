@@ -226,7 +226,6 @@ const StudentSetup = () => {
     Cell: cell,
     City: city,
     Country: country,
-    // FirstName: fname,
     GMT: timeZone,
     Grade: grade,
     Language: lang,
@@ -251,11 +250,8 @@ const StudentSetup = () => {
       if (user.role === "student" || user.role === "admin") {
         if (Object.keys(student)) {
           let data = student;
-          // set_fname(data.FirstName);
-          // set_sname(data.LastName);
-          // set_mname(data.MiddleName);
           set_photo(data.Photo);
-          set_email(data.Email);
+          set_email(data.email);
           set_cell(data.Cell);
           set_state(data.State);
           set_parentConsent(data.ParentConsent);
@@ -592,75 +588,6 @@ const StudentSetup = () => {
         <div className="d-flex flex-column" style={{ width: "66%" }}>
           <div className="d-flex" style={{ width: "100%", gap: "3%" }}>
             <div className="profile-details-cnt" style={{ width: "48%" }}>
-              {/* <div className="input-group mb-2 ">
-                <Input
-                  validationFn={nameValidations}
-                  setValue={set_fname}
-                  setErrors={setErrors}
-                  errors={errors}
-                  fieldName="First Name"
-                  value={fname}
-                  required={true}
-                  label={
-                    <MandatoryFieldLabel
-                      text="First Name"
-                      editMode={editMode}
-                      name={"fname"}
-                      mandatoryFields={mandatoryFields}
-                    />
-                  }
-                  editMode={!nameFieldsDisabled}
-                />
-              </div> */}
-
-              {/* <div className="input-group mb-2 ">
-                <Input
-                  setErrors={setErrors}
-                  errors={errors}
-                  fieldName="Middle Name"
-                  validationFn={nameValidations}
-                  setValue={set_mname}
-                  value={mname}
-                  required={false}
-                  label={
-                    <OptionalFieldLabel
-                      label={"Middle Name"}
-                      editMode={editMode}
-                    />
-                  }
-                  editMode={!nameFieldsDisabled}
-                />
-              </div> */}
-
-              {/* <div className="input-group mb-2 ">
-                <Input
-                  setErrors={setErrors}
-                  errors={errors}
-                  fieldName="Last Name"
-                  validationFn={nameValidations}
-                  setValue={set_sname}
-                  value={sname}
-                  label={
-                    <MandatoryFieldLabel
-                      text="Last Name"
-                      editMode={editMode}
-                      name="lname"
-                      mandatoryFields={mandatoryFields}
-                    />
-                  }
-                  editMode={!nameFieldsDisabled}
-                />
-              </div> */}
-
-              {/* <div className="input-group mb-2 ">
-                <Input
-                  value={user.role === "student" ? user.email : email}
-                  label={
-                    <MandatoryFieldLabel text="Email" editMode={editMode} />
-                  }
-                  editMode={false}
-                />
-              </div> */}
 
               <div className="input-group mb-2 ">
                 <div className="input w-100">
@@ -939,13 +866,7 @@ const StudentSetup = () => {
                   editMode={editMode}
                 />
               </div>
-              {/* <div className="input-group mb-2 ">
-                <Input
-                  value={dateTime}
-                  label={<MandatoryFieldLabel text="UTC" editMode={editMode} />}
-                  editMode={false}
-                />
-              </div> */}
+             
               <div className="form-check d-flex gap-2 align-items-center">
                 <input
                   style={{ width: "20px", height: "20px" }}

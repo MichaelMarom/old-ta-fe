@@ -102,7 +102,7 @@ const SubjectCard = ({ subject, rateVal, gradesVal, faculty, id }) => {
 
     return (
         <div className={`border p-2 rounded  mx-2 d-flex justify-content-between align-items-center `}
-            style={{ background: !editable ? '#d8d8d8' : "" }}>
+            style={{ background: !editable ? 'rgb(246 246 246)' : "" }}>
             <h6 className='m-0 text-start col-2'>{subject}</h6>
             <form onSubmit={handleSave}
                 className=' d-flex justify-content-between align-items-center'>
