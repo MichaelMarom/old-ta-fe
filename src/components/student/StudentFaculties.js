@@ -245,6 +245,7 @@ const StudentFaculties = () => {
 
               <div className="p-3 rounded-3" style={{ width: '100%', height: "calc(100vh - 250px)", overflowY: "auto", backgroundColor: 'rgb(33 47 61)', color: 'white' }}>
                 <h4 className="text-light text-center">{faculties.length} Faculties</h4>
+                <p className="text-center small">Total Subjects {faculties.reduce((sum, fac) => { sum = sum + fac.subjectCount; return sum }, 0)}</p>
 
                 <ul className="list-group">
                   {faculties.map(({ Id, Faculty,subjectCount }) => (
@@ -375,7 +376,7 @@ const StudentFaculties = () => {
                             overflowY: "auto",
                           }}
                         >
-                          <div className="row gap-2 m-1">
+                          <div className="row gap-3 m-2">
                             {tutorsWithRates.map((item, index) => (
                               <div className=" col-12 mb-4 subjectTutorCard" style={{
                                 borderRadius: "20px",

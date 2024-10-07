@@ -59,7 +59,8 @@ const Header = () => {
     const checkOverflow = () => {
       const el = scrollRef.current;
       if (el) {
-        const hasOverflow = el.scrollWidth > el.clientWidth || el.scrollHeight > el.clientHeight;
+        const hasOverflow =
+          el.scrollWidth > el.clientWidth || el.scrollHeight > el.clientHeight;
         setIsOverflowing(hasOverflow);
       }
     };
@@ -67,8 +68,8 @@ const Header = () => {
     checkOverflow(); // Check on mount
 
     // Optional: Check on window resize
-    window.addEventListener('resize', checkOverflow);
-    return () => window.removeEventListener('resize', checkOverflow);
+    window.addEventListener("resize", checkOverflow);
+    return () => window.removeEventListener("resize", checkOverflow);
   }, []);
 
   const handleScrollLeft = () => {
@@ -84,7 +85,7 @@ const Header = () => {
     localStorage.removeItem("user");
     dispatch(setUser({}));
     dispatch(setTutor({}));
-    dispatch(setLessons([]))
+    dispatch(setLessons([]));
     dispatch(setStudent({}));
     nav("/login");
   };
@@ -177,7 +178,11 @@ const Header = () => {
     const filteredSessions = sessions.filter((session) => {
       const sessionEndDate = moment(session.end);
       const diffMinutes = sessionEndDate.diff(currentTime, "minutes");
-      return diffMinutes <= 10 && !session.ratingByTutor;
+      return (
+        diffMinutes <= 10 &&
+        !session.ratingByTutor &&
+        session.type !== "reserved"
+      );
     });
     setFilteredSessions(filteredSessions);
   }, [sessions]);
@@ -206,9 +211,7 @@ const Header = () => {
           >
             <div
               className="d-flex align-items-center cursor-pointer"
-              onClick={() =>
-                setProfileDropdownOpened(!profileDropdownOpened)
-              }
+              onClick={() => setProfileDropdownOpened(!profileDropdownOpened)}
             >
               <div>
                 <div
@@ -260,9 +263,7 @@ const Header = () => {
         ) : (
           <div
             className="d-flex align-items-center cursor-pointer"
-            onClick={() =>
-              setProfileDropdownOpened(!profileDropdownOpened)
-            }
+            onClick={() => setProfileDropdownOpened(!profileDropdownOpened)}
           >
             <div>
               <Avatar
@@ -273,9 +274,7 @@ const Header = () => {
               />
             </div>
             <div className="">
-              <div style={{ fontWeight: "bold" }}>
-                {tutor.TutorScreenname}
-              </div>
+              <div style={{ fontWeight: "bold" }}>{tutor.TutorScreenname}</div>
               <div style={{ fontSize: "12px", fontWeight: "700" }}>
                 {StatusValues[tutor.Status]}
               </div>
@@ -294,7 +293,6 @@ const Header = () => {
           </div>
         )}
         <div
-
           className={`position-absolute text-bg-light shadow w-100`}
           style={{
             marginTop: "50px",
@@ -333,13 +331,15 @@ const Header = () => {
         </div>
       </div>
 
-      {isOverflowing && <div
-        onClick={handleScrollLeft}
-        style={{ marginLeft: "30px" }}
-        className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
-      >
-        <IoChevronBackOutline color="#47c176" size={30} />
-      </div>}
+      {isOverflowing && (
+        <div
+          onClick={handleScrollLeft}
+          style={{ marginLeft: "30px" }}
+          className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
+        >
+          <IoChevronBackOutline color="#47c176" size={30} />
+        </div>
+      )}
       <ul
         ref={scrollRef}
         className={`header`}
@@ -382,13 +382,13 @@ const Header = () => {
                     color:
                       tutor.Status ===
                         (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
-                        user.role !== "admin"
+                      user.role !== "admin"
                         ? "#b5b5b5"
                         : "white",
                     cursor:
                       tutor.Status ===
                         (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
-                        user.role !== "admin"
+                      user.role !== "admin"
                         ? "not-allowed"
                         : "pointer",
                     // pointerEvents:
@@ -399,21 +399,24 @@ const Header = () => {
                     //     : "auto",
                   }}
                 >
-                  <h5 className="m-0 d-flex gap-2 align-items-center" style={{ fontSize: "14px" }}>
+                  <h5
+                    className="m-0 d-flex gap-2 align-items-center"
+                    style={{ fontSize: "14px" }}
+                  >
                     {!!missingFields.find(
                       (field) => field.tab === tab.name
                     ) && (
-                        <span
-                          className="rounded-circle m-1 bg-light d-flex justify-content-center align-items-center"
-                          style={{ width: "15px", height: "15px" }}
-                        >
-                          <FaExclamation
-                            className="blinking-button"
-                            color="rgb(255, 78, 78)"
-                            size={10}
-                          />
-                        </span>
-                      )}
+                      <span
+                        className="rounded-circle m-1 bg-light d-flex justify-content-center align-items-center"
+                        style={{ width: "15px", height: "15px" }}
+                      >
+                        <FaExclamation
+                          className="blinking-button"
+                          color="rgb(255, 78, 78)"
+                          size={10}
+                        />
+                      </span>
+                    )}
                     {tab.name}
                     {!!filteredSessions.length &&
                       tab.url === "/tutor/feedback" && (
@@ -438,9 +441,7 @@ const Header = () => {
                   <div
                     className="cursor-pointer mx-2 video-nav-icon"
                     style={{ transform: "skew(0)" }}
-                    onClick={() =>
-                      setIsOpen(tab.url)
-                    }
+                    onClick={() => setIsOpen(tab.url)}
                   >
                     <PiVideoBold
                       color={
@@ -459,13 +460,14 @@ const Header = () => {
         })}
       </ul>
 
-      {isOverflowing && <div
-        onClick={handleScrollRight}
-        className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
-      >
-        <IoChevronForwardOutline color="#47c176" size={30} />
-      </div>
-      }
+      {isOverflowing && (
+        <div
+          onClick={handleScrollRight}
+          className="rounded-circle border d-flex justify-content-center align-items-center nav-circle"
+        >
+          <IoChevronForwardOutline color="#47c176" size={30} />
+        </div>
+      )}
       <TabInfoVideoToast
         video={tabs.find((tab) => tab.url === isOpen)?.video}
         isOpen={isOpen}

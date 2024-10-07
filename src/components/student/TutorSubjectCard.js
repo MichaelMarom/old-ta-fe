@@ -1,5 +1,14 @@
-import React from "react";
-import { FaDollarSign, FaGlobe, FaClock, FaCheckCircle } from "react-icons/fa";
+import React, { useRef } from "react";
+import {
+  FaDollarSign,
+  FaGlobe,
+  FaClock,
+  FaCheckCircle,
+  FaChevronCircleLeft,
+  FaChevronCircleRight,
+  FaChevronLeft,
+  FaChevronRight,
+} from "react-icons/fa";
 import Avatar from "../common/Avatar";
 import BTN_ICON from "../../assets/images/button__icon.png";
 import Pill from "../common/Pill";
@@ -27,6 +36,7 @@ const TutorCard = ({
     IntroSessionDiscount,
   } = tutor;
   const { student } = useSelector((state) => state.student);
+  const scrollContainerRef = useRef(null);
 
   function convertGMTToLocalTime(gmtOffset) {
     if (gmtOffset) {
@@ -56,6 +66,20 @@ const TutorCard = ({
       } else return "-";
     } catch (error) {
       console.log("Invalid GMT offset format");
+    }
+  };
+
+  // Scroll the container to the left
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollLeft -= 100; // adjust the scroll value as needed
+    }
+  };
+
+  // Scroll the container to the right
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollLeft += 100; // adjust the scroll value as needed
     }
   };
 
@@ -120,19 +144,41 @@ const TutorCard = ({
           )}
         </div>
         <div>
-          <div className="mb-2">
-            {JSON.parse(grades).map((grade, index) => (
-              <span key={index} className="badge bg-success me-1">
-                {grade}
-              </span>
-            ))}
+          <div className="grade-scroller mb-2 d-flex align-items-center position-relative">
+            <FaChevronLeft
+              className="h-100 text-start flex-shrink-0 chevron"
+              style={{ cursor: "pointer", position: "absolute", left: 0,  boxShadow:" rgb(0 0 0 / 71%) -19px 0px 10px -5px inset" }}
+              size={15}
+              color="white"
+              onClick={scrollLeft}
+            />
+            <div
+              ref={scrollContainerRef}
+              style={{ scrollBehavior: "smooth" }}
+              className="grades-container d-flex overflow-hidden flex-grow-1"
+            >
+              {JSON.parse(grades).map((grade, index) => (
+                <span key={index} className="badge bg-success me-1 ">
+                  {grade}
+                </span>
+              ))}
+            </div>
+
+            <FaChevronRight
+              style={{ cursor: "pointer", position: "absolute", right: 0,boxShadow:"rgb(0 0 0 / 77%) 20px 0px 10px -5px inset" }}
+              className="h-100 text-end flex-shrink-0 chevron"
+              size={15}
+              color="white"
+
+              onClick={scrollRight}
+            />
           </div>
 
           {/* Rows for each detail */}
           <div className="">
             {/* Row for Response Time */}
             <div
-              className="row py-2 w-100"
+              className="row py-2 w-auto"
               style={{ backgroundColor: "#e9ecef" }}
             >
               <div className="col-6 text-start">
@@ -143,6 +189,7 @@ const TutorCard = ({
                     textOverflow: "ellipsis",
                     display: "block",
                     overflow: "hidden",
+                    fontSize:"13px"
                   }}
                 >
                   Response Time:
@@ -153,7 +200,7 @@ const TutorCard = ({
 
             {/* Row for Cancellation Policy */}
             <div
-              className="row py-2 w-100"
+              className="row py-2 w-auto"
               style={{ backgroundColor: "#f8f9fa" }}
             >
               <div className="col-6 text-start">
@@ -164,6 +211,8 @@ const TutorCard = ({
                     textOverflow: "ellipsis",
                     display: "block",
                     overflow: "hidden",
+                    fontSize:"13px"
+
                   }}
                 >
                   Cancellation Policy:
@@ -176,7 +225,7 @@ const TutorCard = ({
 
             {/* Row for Discount */}
             <div
-              className="row py-2 w-100"
+              className="row py-2 w-auto"
               style={{ backgroundColor: "#e9ecef" }}
             >
               <div className="col-6 text-start">
@@ -187,6 +236,8 @@ const TutorCard = ({
                     textOverflow: "ellipsis",
                     display: "block",
                     overflow: "hidden",
+                    fontSize:"13px"
+
                   }}
                 >
                   Intro Discount:
@@ -201,7 +252,7 @@ const TutorCard = ({
               </div>
             </div>
             <div
-              className="row py-2 w-100"
+              className="row py-2 w-auto"
               style={{ backgroundColor: "#f8f9fa" }}
             >
               <div className="col-6 text-start">
@@ -211,6 +262,8 @@ const TutorCard = ({
                     textOverflow: "ellipsis",
                     display: "block",
                     overflow: "hidden",
+                    fontSize:"13px"
+
                   }}
                 >
                   Time Diff:

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { BsCameraVideo, BsCloudUpload, BsFillPersonFill } from "react-icons/bs";
+import { BsCameraVideo, BsCloudUpload } from "react-icons/bs";
 import { moment } from "../../config/moment";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
@@ -28,7 +28,6 @@ import {
 } from "../../constants/constants";
 import { setTutor } from "../../redux/tutor/tutorData";
 import {
-  capitalizeFirstLetter,
   unsavedChangesHelper,
 } from "../../utils/common";
 import { Link } from "react-router-dom";
@@ -42,10 +41,7 @@ import Select from "../common/Select";
 
 import VacationSettingModal from "./VacationSettingModal";
 import { uploadTutorImage } from "../../axios/file";
-import { setMissingFieldsAndTabs } from "../../redux/tutor/missingFieldsInTabs";
-import _ from "lodash";
 import { FaExclamationCircle } from "react-icons/fa";
-import { AiOutlineInfoCircle } from "react-icons/ai";
 
 const phoneUtil = PhoneNumberUtil.getInstance();
 const isPhoneValid = (phone) => {
@@ -65,9 +61,6 @@ export const options = {
 
 const TutorSetup = () => {
   const [editMode, setEditMode] = useState(false);
-  // let [fname, set_fname] = useState("");
-  // let [mname, set_mname] = useState("");
-  // let [lname, set_sname] = useState("");
   let [cell, set_cell] = useState("");
   let [add1, set_add1] = useState("");
   let [add2, set_add2] = useState("");
@@ -107,12 +100,10 @@ const TutorSetup = () => {
   const [end, setEnd] = useState(moment(new Date()).endOf("day").toDate());
 
   const [dbCountry, setDBCountry] = useState(null);
-  const [errors, setErrors] = useState({});
 
   const { tutor, isLoading: tutorDataLoading } = useSelector(
     (state) => state.tutor
   );
-  const [nameFieldsDisabled, setNameFieldsDisabled] = useState(false);
   let [isRecording, setIsRecording] = useState(false);
   const toastId = "pending-status-toast";
   let toastRef = useRef();
@@ -160,10 +151,8 @@ const TutorSetup = () => {
   useEffect(() => {
     if (tutor.AcademyId) {
       setEditMode(false);
-      setNameFieldsDisabled(true);
     } else {
       setEditMode(true);
-      setNameFieldsDisabled(false);
     }
   }, [tutor]);
 
@@ -302,8 +291,8 @@ const TutorSetup = () => {
 
   const saveTutorSetup = async (e) => {
     e.preventDefault();
-    if (_.some(errors, (value) => typeof value === "string"))
-      return toast.error("Please fix validation errors!");
+    // if (_.some(errors, (value) => typeof value === "string"))
+    //   return toast.error("Please fix validation errors!");
 
     if (!isValid) {
       return toast.warning("Please enter the correct phone number");

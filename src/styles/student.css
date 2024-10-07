@@ -381,6 +381,24 @@
 .subjectTutorCard,.edu-card{
   transition: all 0.3s ease;
 }
-.subjectTutorCard:hover,.edu-card:hover{
+/* .subjectTutorCard:hover,.edu-card:hover{
   transform: scale(1.02);
+} */
+
+.grade-scroller {
+  position: relative;
 }
+
+.grade-scroller .chevron {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.grade-scroller:hover .chevron {
+  opacity: 1;
+}
+
+.grade-scroller .d-flex {
+  overflow: hidden;
+}
+
