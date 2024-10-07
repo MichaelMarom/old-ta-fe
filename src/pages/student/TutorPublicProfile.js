@@ -39,7 +39,7 @@ import Pill from "../../components/common/Pill";
 const TutorPublicProfile = () => {
   const videoRef = useRef(null);
   const params = useParams();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
   const studentId = localStorage.getItem("student_user_id");
   const [fetching, setFetching] = useState(true);
@@ -52,8 +52,10 @@ const TutorPublicProfile = () => {
   const { sessions } = useSelector((state) => state.tutorSessions);
   const [rating, setRating] = useState(0);
   const [totalPastLessons, setTotalPastLessons] = useState(0);
+  const  {chats} =useSelector((state) => state.chat);
 
   const [activeTab, setActiveTab] = useState('education');
+  //TODO: call tutor calender api to get diables slots.
 
   const tabStyle = {
     padding: '10px 20px',
@@ -71,7 +73,6 @@ const TutorPublicProfile = () => {
   const [duration, setDuration] = useState(0);
 
   const handleLoadedMetadata = () => {
-    console.log(videoRef.current.src, videoRef.current);
     if (videoRef.current && !_.isNaN(videoRef.current.duration)) {
       setDuration(videoRef.current.duration);
     }
@@ -122,7 +123,6 @@ const TutorPublicProfile = () => {
   }, []);
 
   useEffect(() => {
-    console.log(!isEnlarged, videoRef.current);
     if (videoRef.current) {
       if (isEnlarged) {
         videoRef.current.play();
@@ -160,21 +160,22 @@ const TutorPublicProfile = () => {
     // navigate("/student/faculties");
   };
 
-  // TODO: fix data.CHATID to getting chatid from reduc chats
   const handleChatClick = async () => {
     if (!studentId)
       return toast.error("You need  to select 1 student from student list!");
 
-    // if (data.ChatID) {
-    //   navigate(`/student/chat/${data.ChatID}`);
-    // }
-    // else {
-    //   const result = await create_chat({
-    //     User1ID: studentId,
-    //     User2ID: data.AcademyId,
-    //   });
-    //   result?.[0]?.ChatID && navigate(`/student/chat/${result?.[0]?.ChatID}`);
-    // }
+    const getChatId = chats.filter(item=>item.AcademyId === params.id)
+    console.log(getChatId, chats, params.id, studentId)
+    if (!!getChatId?.[0]?.id) {
+      navigate(`/student/chat/${getChatId?.[0]?.id}`);
+    }
+    else {
+      const result = await create_chat({
+        User1ID: studentId,
+        User2ID: params.id,
+      });
+      result?.[0]?.ChatID && navigate(`/student/chat/${result?.[0]?.ChatID}`);
+    }
   };
 
   // useEffect(() => {

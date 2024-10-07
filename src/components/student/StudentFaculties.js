@@ -232,18 +232,18 @@ const StudentFaculties = () => {
             setSelectedFaculty={setSelectedFaculty}
           /> */}
 
-          <div className="highlight m-2" style={{ width: "100%" }}>
+          {/* <div className="highlight m-2" style={{ width: "100%" }}>
             There are 41 faculties containing 600+ subjects to select from. From
             the sub menu above, select the faculty of interest. Then from the
             table below select the subject of interest. Your selected subject
             generates a coparison table of all tutors for that subject allow you
             to compare from the list. Then click on the BOOK LESSON button to
             view your preferred tutor's calendar.
-          </div>
+          </div> */}
           <div className="d-flex gap-3 m-3">
             <div style={{ width: "20%" }}>
 
-              <div className="p-3 rounded-3" style={{ width: '100%', height: "calc(100vh - 250px)", overflowY: "auto", backgroundColor: 'rgb(33 47 61)', color: 'white' }}>
+              <div className="p-3 rounded-3" style={{ width: '100%', height: "calc(100vh - 150px)", overflowY: "auto", backgroundColor: 'rgb(33 47 61)', color: 'white' }}>
                 <h4 className="text-light text-center">{faculties.length} Faculties</h4>
                 <p className="text-center small">Total Subjects {faculties.reduce((sum, fac) => { sum = sum + fac.subjectCount; return sum }, 0)}</p>
 
@@ -318,7 +318,7 @@ const StudentFaculties = () => {
                 {!selectedSubject.SubjectName && (
                   <div
                     className="d-flex flex-wrap align-content-start"
-                    style={{ height: "55vh", overflowY: "auto" }}
+                    style={{ height: "calc(100vh - 200px)", overflowY: "auto" }}
                   >
                     {subjects.map((subj) => (
                       <div
@@ -371,7 +371,7 @@ const StudentFaculties = () => {
                         <div
                           className="tables"
                           style={{
-                            height: "calc(100vh - 300px)",
+                            height: "calc(100vh - 200px)",
                             width: "100%",
                             overflowY: "auto",
                           }}

@@ -154,7 +154,7 @@ const Header = () => {
   }, [sessions]);
 
   return (
-    <div className="tutor-tab-header shadow-sm">
+    <div className="tutor-tab-header shadow-sm" style={{background:"#074b90"}}>
       <div
         ref={profileDropdownRef}
         className={`screen-name position-relative flex-column px-1 gap-2`}

@@ -445,7 +445,7 @@ const StudentSetup = () => {
           upload_student_setup_by_fields(student.AcademyId, {
             Photo: result.data.url,
           }).then(() => {
-            dispatch(setStudent({ ...student, Photo: result.data.url }));
+            // dispatch(setStudent({ ...student, Photo: result.data.url }));
             toast.success("Uploaded Successfully!");
           });
 
