@@ -93,6 +93,10 @@ const Signup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
+    if(_.some(passConditions, { status: false })){
+      setShowPassConditions(true)
+      return toast.warning("Please fulfill all password conditions!")
+    }
     if (_.some(validError, (value) => typeof value === "string")) return toast.warning("Please fix validation errors!")
     if (!isLoaded) return;
     if (!passValid) return;
@@ -354,7 +358,7 @@ const Signup = () => {
                             value={signupFormValues.email}
                             onChange={handleInputChange}
                           />
-                          <Tooltip toggleOnHover={false} opened={(passOnFocus && _.some(passConditions, { status: false }))}
+                          <Tooltip toggleOnHover={false} opened={((passOnFocus || showPassConditions) && _.some(passConditions, { status: false }))}
                             text={true && (
                               <div className="d-flex flex-column">
                                 {passConditions.map((cond) => {

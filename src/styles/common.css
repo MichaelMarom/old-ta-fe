@@ -205,7 +205,7 @@ span {
   color: #fff !important;
 }
 
-.rbc-btn-group button:not(.rbc-active) {
+.rbc-btn-group button.rbc-active {
   padding: 8px;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5) !important;
 }

@@ -26,10 +26,34 @@ const TutorScheduleModal = ({
   timeDifference,
   timeZone,
   selectedTutor,
-  weekDaysTimeSlots,
+  // weekDaysTimeSlots,
   tutor,
   lessons
 }) => {
+  const [weekDaysTimeSlots, setWeekDaysTimeSlots] = useState([])
+  //TODO: why it is used in calender?
+  // useEffect(() => {
+  //   if (timeZone) {
+  //     const timeDifference = { value: 30, unit: "minutes" };
+  //     const currentTime = moment();
+
+  //     const timeSlots = [];
+
+  //     (disableWeekDays ?? []).forEach((weekday) => {
+  //       const nextWeekday = currentTime.clone().day(weekday).startOf("day");
+
+  //       const endOfDay = nextWeekday.clone().endOf("day");
+
+  //       let currentSlotTime = nextWeekday.clone();
+  //       while (currentSlotTime.isBefore(endOfDay)) {
+  //         timeSlots.push(currentSlotTime.utc().toDate());
+  //         currentSlotTime.add(timeDifference.value, timeDifference.unit);
+  //       }
+  //     });
+  //     setWeekDaysTimeSlots(timeSlots);
+  //   }
+  // }, [timeZone, disableWeekDays]);
+
   const [sessions, setSessions] = useState([]);
   const { student } = useSelector((state) => state.student);
   useEffect(() => {
@@ -95,6 +119,9 @@ const TutorScheduleModal = ({
     return updatedDate;
   };
 
+  console.log(
+    disabledHours)
+
   const localizer = momentLocalizer(moment);
   return (
     // Todo:
@@ -124,8 +151,8 @@ const TutorScheduleModal = ({
                     (event) => event.type === "reserved"
                   )}
                   isStudentLoggedIn={true}
-                  handleEventClick={() => {}}
-                  handleSetReservedSlots={() => {}}
+                  handleEventClick={() => { }}
+                  handleSetReservedSlots={() => { }}
                 />
               ),
             }}

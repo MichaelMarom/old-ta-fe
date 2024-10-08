@@ -89,6 +89,8 @@ const Education = () => {
   const { tutor } = useSelector((state) => state.tutor);
   const dispatch = useDispatch();
   const { education } = useSelector((state) => state.edu);
+  const [editClicked, setEditClicked] = useState(false);
+
 
   let [dbValues, setDbValues] = useState({});
 
@@ -124,12 +126,15 @@ const Education = () => {
   }, [recordFetched, dbValues, cert_file_name, deg_file_name]);
 
   useEffect(() => {
-    if (dbValues.AcademyId) {
+    if (education.AcademyId && !editClicked) {
       setEditMode(false);
-    } else {
-      setEditMode(true);
     }
-  }, [dbValues]);
+    // if (education.AcademyId) {
+    //   setEditMode(false);
+    // } else {
+    //   setEditMode(true);
+    // }
+  }, [education]);
 
   useEffect(() => {
     if (dataFetched && db_edu_level !== level) {
@@ -206,7 +211,6 @@ const Education = () => {
     set_d_list(d);
   }, []);
 
-  let AcademyId = window.localStorage.getItem("tutor_user_id");
   const jsonFields = ["NativeLang", "NativeLangOtherLang"];
   const dynamicSave = async (key, value) => {
     if (jsonFields.includes(key)) value = JSON.stringify(value);
@@ -355,6 +359,7 @@ const Education = () => {
 
   const handleEditClick = () => {
     setEditMode(!editMode);
+    setEditClicked(true);
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -651,6 +656,7 @@ const Education = () => {
     tutor.Status === "pending" && (await saver());
     setSaving(false);
     fetchEdu();
+    setEditClicked(false);
     setEditMode(false);
   };
 

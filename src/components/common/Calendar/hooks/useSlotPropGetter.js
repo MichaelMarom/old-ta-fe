@@ -107,7 +107,8 @@ const useSlotPropGetter = ({
           },
           className: "disable-slot",
         };
-      } else if (
+      } 
+      else if (
         isFutureDate(date) &&
         disabledHours &&
         disabledHours?.some((timeRange) => {
@@ -126,7 +127,8 @@ const useSlotPropGetter = ({
             window.alert("This slot is blocked, please select a white slot.");
           },
         };
-      } else if (existInEnableSlots) {
+      } 
+      else if (existInEnableSlots) {
         return {
           style: {
             backgroundColor: "orange",

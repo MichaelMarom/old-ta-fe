@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import TAButton from "../../components/common/TAButton";
 import {
@@ -10,7 +10,7 @@ import {
 } from "../../axios/tutor";
 import { create_chat } from "../../axios/chat";
 import { IoIosCheckmarkCircle, IoIosCloseCircle } from "react-icons/io";
-import { FaQuoteLeft, FaRegTimesCircle, FaStar } from "react-icons/fa";
+import {  FaQuoteLeft, FaRegTimesCircle, FaStar } from "react-icons/fa";
 import { CiClock2 } from "react-icons/ci";
 import { moment } from "../../config/moment";
 
@@ -52,22 +52,40 @@ const TutorPublicProfile = () => {
   const [disc, setDis] = useState({});
   const [tutor, setTutor] = useState({});
   const { sessions } = useSelector((state) => state.tutorSessions);
+  const { student } = useSelector((state) => state.student);
   const [rating, setRating] = useState(0);
   const [totalPastLessons, setTotalPastLessons] = useState(0);
   const { chats } = useSelector((state) => state.chat);
+  const [chatCreationLoading, setChatCreationLoading] = useState(false)
 
   const [enabledDays, setEnabledDays] = useState([]);
   const [disableDates, setDisableDates] = useState([]);
   const [enableHourSlots, setEnableHourSlots] = useState([]);
   const [disableHourSlots, setDisableHourSlots] = useState([]);
-  const [dataFetched, setDataFetched] = useState(false);
   const [disableWeekDays, setDisabledWeekDays] = useState([]);
   const [disableColor, setDisableColor] = useState("");
   const [disabledHours, setDisabledHours] = useState([]);
-  const timeDifference = +3;
 
+  const [duration, setDuration] = useState(0);
   const [activeTab, setActiveTab] = useState("education");
-  //TODO: call tutor calender api to get diables slots.
+
+  const timeDifference = useMemo(() => {
+    try {
+      console.log('render')
+      if (!!student.GMT && !!tutor.GMT) {
+        const studentOffset = parseInt(student.GMT, 10);
+        const tutorOffset = parseInt(tutor.GMT, 10);
+
+        const difference = studentOffset - tutorOffset;
+
+        return difference;
+      }
+      else return 0
+    } catch (error) {
+      console.log("Invalid GMT offset format");
+    }
+  }, [student.GMT, tutor.GMT])
+  console.log(timeDifference)
 
   const tabStyle = {
     padding: "10px 20px",
@@ -82,7 +100,7 @@ const TutorPublicProfile = () => {
     borderBottom: "2px solid #007bff",
     color: "#007bff",
   };
-  const [duration, setDuration] = useState(0);
+
 
   const handleLoadedMetadata = () => {
     if (videoRef.current && !_.isNaN(videoRef.current.duration)) {
@@ -174,13 +192,17 @@ const TutorPublicProfile = () => {
     if (!!getChatId?.[0]?.id) {
       navigate(`/student/chat/${getChatId?.[0]?.id}`);
     } else {
+      setChatCreationLoading(true)
       const result = await create_chat({
         User1ID: studentId,
         User2ID: params.id,
       });
+      setChatCreationLoading(false)
+
       result?.[0]?.ChatID && navigate(`/student/chat/${result?.[0]?.ChatID}`);
     }
   };
+
   const getTimeZonedDisableHoursRange = (initialArray) => {
     if (!isStudentLoggedIn) return initialArray;
 
@@ -244,13 +266,12 @@ const TutorPublicProfile = () => {
             setDisabledHours(updatedDisableHoursRange); //done
             setDisableColor(result.disableColor);
           }
-          setDataFetched(true);
         } else {
           console.error("Unexpected API response format or empty response");
         }
       });
     }
-  }, [params.id]);
+  }, [params.id, timeDifference]);
 
   // useEffect(() => {
   //   if (params.id) {
@@ -973,9 +994,10 @@ const TutorPublicProfile = () => {
                 <div className="m-2 ">
                   <div className="d-flex ">
                     <TAButton
+                      loading={chatCreationLoading}
                       buttonText={"Chat"}
                       onClick={handleChatClick}
-                      disabled={!isStudentLoggedIn}
+                      disabled={!isStudentLoggedIn || chatCreationLoading}
                     />
                     <TAButton
                       buttonText={"See Schedule"}
@@ -996,7 +1018,7 @@ const TutorPublicProfile = () => {
                   className="col-md-5 mx-2  rounded-2 d-flex"
                   style={{ background: "white" }}
                 >
-                  <FaQuoteLeft size={25} />
+                  <FaQuoteLeft size={25} style={{flexShrink:"0"}} />
                   <p
                     className="p-2"
                     style={{ fontSize: "1rem", color: "#343a40" }}
@@ -1123,16 +1145,16 @@ const TutorPublicProfile = () => {
                             "Associate Degree",
                             "Bachelor Degree",
                           ].includes(edu.EducationalLevel) && (
-                            <div style={{ width: "48%", maxWidth: "600px" }}>
-                              <EducationCards
-                                name={"Bachelor's"}
-                                country={edu.BachCountry}
-                                state={edu.Bach_College_State}
-                                college={edu.Bach_College}
-                                year={edu.Bach_College_Year}
-                              />
-                            </div>
-                          )}
+                              <div style={{ width: "48%", maxWidth: "600px" }}>
+                                <EducationCards
+                                  name={"Bachelor's"}
+                                  country={edu.BachCountry}
+                                  state={edu.Bach_College_State}
+                                  college={edu.Bach_College}
+                                  year={edu.Bach_College_Year}
+                                />
+                              </div>
+                            )}
 
                           {edu.EducationalLevel === "Master Degree" && (
                             <>
@@ -1150,18 +1172,18 @@ const TutorPublicProfile = () => {
                                 "Associate Degree",
                                 "Bachelor Degree",
                               ].includes(edu.EducationalLevel) && (
-                                <div
-                                  style={{ width: "48%", maxWidth: "600px" }}
-                                >
-                                  <EducationCards
-                                    name={"Bachelor's"}
-                                    country={edu.BachCountry}
-                                    state={edu.Bach_College_State}
-                                    college={edu.Bach_College}
-                                    year={edu.Bach_College_Year}
-                                  />
-                                </div>
-                              )}
+                                  <div
+                                    style={{ width: "48%", maxWidth: "600px" }}
+                                  >
+                                    <EducationCards
+                                      name={"Bachelor's"}
+                                      country={edu.BachCountry}
+                                      state={edu.Bach_College_State}
+                                      college={edu.Bach_College}
+                                      year={edu.Bach_College_Year}
+                                    />
+                                  </div>
+                                )}
                             </>
                           )}
 
@@ -1170,51 +1192,51 @@ const TutorPublicProfile = () => {
                             "Post Doctorate Degree",
                             "Professor",
                           ].includes(edu.EducationalLevel) && (
-                            <>
-                              {![
-                                "Undergraduate Student",
-                                "Associate Degree",
-                                "Bachelor Degree",
-                                "Master Degree",
-                              ].includes(edu.EducationalLevel) && (
-                                <div
-                                  style={{ width: "48%", maxWidth: "600px" }}
-                                >
+                              <>
+                                {![
+                                  "Undergraduate Student",
+                                  "Associate Degree",
+                                  "Bachelor Degree",
+                                  "Master Degree",
+                                ].includes(edu.EducationalLevel) && (
+                                    <div
+                                      style={{ width: "48%", maxWidth: "600px" }}
+                                    >
+                                      <EducationCards
+                                        name={"Bachelor's"}
+                                        country={edu.BachCountry}
+                                        state={edu.Bach_College_State}
+                                        college={edu.Bach_College}
+                                        year={edu.Bach_College_Year}
+                                      />
+                                    </div>
+                                  )}
+
+                                {edu.EducationalLevel !== "Master Degree" && (
+                                  <div
+                                    style={{ width: "48%", maxWidth: "600px" }}
+                                  >
+                                    <EducationCards
+                                      name={"Master's"}
+                                      country={edu.MastCountry}
+                                      state={edu.Mast_College_State}
+                                      college={edu.Mast_College}
+                                      year={edu.Mast_College_StateYear}
+                                    />
+                                  </div>
+                                )}
+
+                                <div style={{ width: "48%", maxWidth: "600px" }}>
                                   <EducationCards
-                                    name={"Bachelor's"}
-                                    country={edu.BachCountry}
-                                    state={edu.Bach_College_State}
-                                    college={edu.Bach_College}
-                                    year={edu.Bach_College_Year}
+                                    name={"Doctorate"}
+                                    country={edu.DocCountry}
+                                    state={edu.DoctorateState}
+                                    college={edu.DoctorateCollege}
+                                    year={edu.DoctorateGradYr}
                                   />
                                 </div>
-                              )}
-
-                              {edu.EducationalLevel !== "Master Degree" && (
-                                <div
-                                  style={{ width: "48%", maxWidth: "600px" }}
-                                >
-                                  <EducationCards
-                                    name={"Master's"}
-                                    country={edu.MastCountry}
-                                    state={edu.Mast_College_State}
-                                    college={edu.Mast_College}
-                                    year={edu.Mast_College_StateYear}
-                                  />
-                                </div>
-                              )}
-
-                              <div style={{ width: "48%", maxWidth: "600px" }}>
-                                <EducationCards
-                                  name={"Doctorate"}
-                                  country={edu.DocCountry}
-                                  state={edu.DoctorateState}
-                                  college={edu.DoctorateCollege}
-                                  year={edu.DoctorateGradYr}
-                                />
-                              </div>
-                            </>
-                          )}
+                              </>
+                            )}
                         </div>
                       </div>
                     )}
@@ -1307,15 +1329,15 @@ const TutorPublicProfile = () => {
           id={params.id}
           isOpen={scheduleModalOpen}
           onClose={() => setScheduleModalOpen(false)}
-          
+
           timeDifference={timeDifference}
-          timeZone={"asia/karachi"}
-          tutor={{}}
+          timeZone={student.timeZone}
+          tutor={{}} //empty if student loggedin(or in public tutor profile)
           lessons={sessions}
-          selectedSlots={[]}
-          selectedTutor={{}}
+          selectedSlots={[]} //empty if not in interactive calender
+          selectedTutor={tutor}
           isStudentLoggedIn={true}
-          weekDaysTimeSlots={[]}
+
           disableColor={disableColor}
           disableDates={disableDates}
           disableHourSlots={disableHourSlots}
