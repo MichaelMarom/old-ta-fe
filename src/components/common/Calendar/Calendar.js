@@ -366,8 +366,6 @@ const ShowCalendar = ({
   }
 
   const eventPropGetter = useEventPropGetter({
-    // reservedSlots,
-    // bookedSlots,
     isStudentLoggedIn,
     selectedTutor,
     student,
@@ -391,14 +389,12 @@ const ShowCalendar = ({
     isStudentLoggedIn,
     timeDifference,
     timeZone,
-    // reservedSlots,
     selectedSlots,
     selectedTutor,
     weekDaysTimeSlots,
     tutor,
     lessons,
   });
-console.log(isStudentLoggedIn)
 
   const localizer = momentLocalizer(moment);
   if (!dataFetched) return <Loading height="60vh" />;

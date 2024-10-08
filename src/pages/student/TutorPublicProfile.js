@@ -6,11 +6,13 @@ import {
   get_tutor_discount_form,
   get_tutor_setup,
   get_tutor_subjects,
+  fetch_calender_detals,
 } from "../../axios/tutor";
 import { create_chat } from "../../axios/chat";
 import { IoIosCheckmarkCircle, IoIosCloseCircle } from "react-icons/io";
 import { FaQuoteLeft, FaRegTimesCircle, FaStar } from "react-icons/fa";
 import { CiClock2 } from "react-icons/ci";
+import { moment } from "../../config/moment";
 
 import { convertGMTOffsetToLocalString, showDate } from "../../utils/moment";
 import { useParams } from "react-router";
@@ -52,23 +54,33 @@ const TutorPublicProfile = () => {
   const { sessions } = useSelector((state) => state.tutorSessions);
   const [rating, setRating] = useState(0);
   const [totalPastLessons, setTotalPastLessons] = useState(0);
-  const  {chats} =useSelector((state) => state.chat);
+  const { chats } = useSelector((state) => state.chat);
 
-  const [activeTab, setActiveTab] = useState('education');
+  const [enabledDays, setEnabledDays] = useState([]);
+  const [disableDates, setDisableDates] = useState([]);
+  const [enableHourSlots, setEnableHourSlots] = useState([]);
+  const [disableHourSlots, setDisableHourSlots] = useState([]);
+  const [dataFetched, setDataFetched] = useState(false);
+  const [disableWeekDays, setDisabledWeekDays] = useState([]);
+  const [disableColor, setDisableColor] = useState("");
+  const [disabledHours, setDisabledHours] = useState([]);
+  const timeDifference = +3;
+
+  const [activeTab, setActiveTab] = useState("education");
   //TODO: call tutor calender api to get diables slots.
 
   const tabStyle = {
-    padding: '10px 20px',
-    cursor: 'pointer',
-    borderBottom: '2px solid transparent',
-    fontWeight: 'bold',
-    color: '#007bff'
+    padding: "10px 20px",
+    cursor: "pointer",
+    borderBottom: "2px solid transparent",
+    fontWeight: "bold",
+    color: "#007bff",
   };
 
   const activeTabStyle = {
     ...tabStyle,
-    borderBottom: '2px solid #007bff',
-    color: '#007bff'
+    borderBottom: "2px solid #007bff",
+    color: "#007bff",
   };
   const [duration, setDuration] = useState(0);
 
@@ -88,9 +100,6 @@ const TutorPublicProfile = () => {
     }
   };
 
-  //   const { education } = useSelector((state) => state.edu);
-  //   const { discount } = useSelector((state) => state.discount);
-  //   const { tutor } = useSelector((state) => state.tutor);
   const [isEnlarged, setIsEnlarged] = useState(false);
 
   const toggleSize = () => {
@@ -155,21 +164,16 @@ const TutorPublicProfile = () => {
 
   const handleScheduleClick = () => {
     setScheduleModalOpen(true);
-    // if (!studentId)
-    //   return toast.error("You need to select 1 student from students-list!");
-    // navigate("/student/faculties");
   };
 
   const handleChatClick = async () => {
     if (!studentId)
       return toast.error("You need  to select 1 student from student list!");
 
-    const getChatId = chats.filter(item=>item.AcademyId === params.id)
-    console.log(getChatId, chats, params.id, studentId)
+    const getChatId = chats.filter((item) => item.AcademyId === params.id);
     if (!!getChatId?.[0]?.id) {
       navigate(`/student/chat/${getChatId?.[0]?.id}`);
-    }
-    else {
+    } else {
       const result = await create_chat({
         User1ID: studentId,
         User2ID: params.id,
@@ -177,20 +181,25 @@ const TutorPublicProfile = () => {
       result?.[0]?.ChatID && navigate(`/student/chat/${result?.[0]?.ChatID}`);
     }
   };
+  const getTimeZonedDisableHoursRange = (initialArray) => {
+    if (!isStudentLoggedIn) return initialArray;
 
-  // useEffect(() => {
-  //   if (params.id) {
-  //     const fetch_profile = async () => {
-  //       const res = await apiClient.get("/tutor/setup/intro", {
-  //         params: { user_id: params.id.replace(/[.\s]/g, "") },
-  //       });
+    function addHours(timeString, hours) {
+      let time = moment("2000-01-01 " + timeString, "YYYY-MM-DD h:mm a");
+      time.add(hours, "hours");
+      let formattedTime = time.format("h:mm a");
+      return formattedTime;
+    }
+    function addHoursToSubArray(subArray) {
+      let newArray = subArray.slice();
+      newArray[0] = addHours(newArray[0], timeDifference * 1);
+      newArray[1] = addHours(newArray[1], timeDifference * 1);
+      return newArray;
+    }
 
-  //       setVideo(res?.data?.url);
-  //     };
-
-  //     fetch_profile();
-  //   }
-  // }, [params.id]);
+    let updatedArray = initialArray?.map(addHoursToSubArray);
+    return updatedArray;
+  };
 
   useEffect(() => {
     if (params.id) {
@@ -202,35 +211,62 @@ const TutorPublicProfile = () => {
         .finally(() => {
           setFetching(false);
         });
-    }
-  }, [params.id]);
-  useEffect(() => {
-    if (params.id) {
+
       get_tutor_discount_form(params.id).then((res) => {
         !res?.response?.data && res && setDis(res[0]);
       });
-    }
-  }, [params.id]);
-  useEffect(() => {
-    if (params.id) {
+
       get_my_edu(params.id).then((res) => {
         !res?.response?.data && setEdu(res[0]);
+      });
+
+      fetch_calender_detals(params.id).then((res) => {
+        if (Array.isArray(res) && res.length > 0) {
+          const [result] = res;
+          if (Object.keys(result ? result : {}).length) {
+            const updatedEnableHours = JSON.parse(
+              result.enableHourSlots === "undefined"
+                ? "[]"
+                : result.enableHourSlots
+            );
+
+            setEnableHourSlots(updatedEnableHours); //done
+
+            setDisableDates(JSON.parse(result.disableDates)); //done
+            setEnabledDays(JSON.parse(result.enabledDays)); //done almost
+            setDisabledWeekDays(JSON.parse(result.disableWeekDays));
+
+            setDisableHourSlots(JSON.parse(result.disableHourSlots)); //done
+
+            let updatedDisableHoursRange = getTimeZonedDisableHoursRange(
+              JSON.parse(result.disableHoursRange)
+            );
+            setDisabledHours(updatedDisableHoursRange); //done
+            setDisableColor(result.disableColor);
+          }
+          setDataFetched(true);
+        } else {
+          console.error("Unexpected API response format or empty response");
+        }
       });
     }
   }, [params.id]);
 
   // useEffect(() => {
-  //   if (education.AcademyId) {
-  //     setProfileData({ ...data, ...education });
+  //   if (params.id) {
+  //     get_tutor_discount_form(params.id).then((res) => {
+  //       !res?.response?.data && res && setDis(res[0]);
+  //     });
   //   }
-  // }, [education.AcademyId]);
+  // }, [params.id]);
 
   // useEffect(() => {
-  //   if (discount.AcademyId) {
-  //     setProfileData({ ...data, ...discount });
+  //   if (params.id) {
+  //     get_my_edu(params.id).then((res) => {
+  //       !res?.response?.data && setEdu(res[0]);
+  //     });
   //   }
-  // }, [discount.AcademyId]);
-  console.log(edu);
+  // }, [params.id]);
 
   if (fetching) return <Loading />;
   else if (!tutor.AcademyId)
@@ -252,6 +288,7 @@ const TutorPublicProfile = () => {
         }}
       >
         {/* <ScreenRecording /> */}
+
         {/* <div className="">
           <div className="">
             <div className="d-flex flex-wrap align-items-center justify-content-center w-100 mt-4 rounded  bg-white ">
@@ -713,309 +750,379 @@ const TutorPublicProfile = () => {
           </div>
         </div> */}
 
-<div className="container-fluid" style={{ padding: '20px', backgroundColor: "rgb(245 245 245)" }}>
-        <div className="row">
-          {/* Left side - Avatar, Ratings, Languages, Location, Time, Introduction, Call to Action */}
-          <div className="col-md-4" style={{ backgroundColor: '#ffffff', padding: '20px', borderRadius: '8px' }}>
-            <div className="d-flex flex-column align-items-center ">
-              <div
-                className="p-1 rounded-circle border shadow d-flex justify-content-center align-items-center m-1"
-                style={{ width: "160px", height: "160px", backgroundColor: "rgb(245 245 245)" }}
-              >
-                <Avatar
-                  avatarSrc={tutor.Photo}
-                  size="150px"
-                  indicSize="18px"
-                  positionInPixle={16}
-                />
-              </div>
-              <div
-                className="d-flex align-items-center"
-                style={{ gap: "10px" }}
-              >
-                <h4 className="m-0 fw-bold text-secondary">
-                  {capitalizeFirstLetter(tutor.TutorScreenname)}
-                </h4>
-                <RiVerifiedBadgeFill color="green" size={20} />
-              </div>
-              <p><FaStar className="text-warning" />{rating.toFixed(1)}({totalPastLessons} reviews)</p>
-              <Divider />
-              <div className="d-flex">      
-                 <div className="d-flex align-items-center">
-                <Pill
-                  label={JSON.parse(edu.NativeLang).value}
-                  hasIcon={false}
-                />
-              </div>
-                {edu.NativeLangOtherLang &&
-                  JSON.parse(edu.NativeLangOtherLang).map((lang) => (
-                    <div
-                      className="d-flex align-items-center"
-                      key={lang.value}
-                    >
-                      <GradePills
-                        grades={[]}
-                        grade={lang.value}
-                        editable={false}
-                        hasIcon={false}
-                      />
-                    </div>
-                  ))}
-              </div>
-              <Divider />
-
-              <div
-                className="d-flex align-items-end"
-                style={{ gap: "10px", color: "lightgray" }}
-              >
-                <FaLocationDot size={15} />
-                <h6 className="m-0"> {tutor.Country}</h6>
-                <h6 className="m-0">GMT: {tutor.GMT}</h6>
-              </div>
-              <Divider />
-
-              <div
-                className="d-flex align-items-end"
-                style={{ gap: "10px", color: "lightgray" }}
-              >
-                <IoTime size={15} />
-                <h6 className="m-0">
-                  {convertGMTOffsetToLocalString(tutor.GMT)}
-                </h6>
-              </div>
-              <Divider />
-
-              <div
-                className=" d-flex flex-column p-4 justfy-content-between h-100"
-                style={{
-                  width: "300px",
-                  gap: "5px",
-                }}
-              >
-                <div className="d-flex align-items-center" style={{ gap: "5px" }}>
-                  <ToolTip
-                    width="300px"
-                    text={
-                      "The number of hours the tutor will respond to a student (within tutor UTC business time)."
-                    }
+        <div
+          className="container-fluid"
+          style={{ padding: "20px", backgroundColor: "rgb(245 245 245)" }}
+        >
+          <div className="row">
+            {/* Left side - Avatar, Ratings, Languages, Location, Time, Introduction, Call to Action */}
+            <div
+              className="col-md-4"
+              style={{
+                backgroundColor: "#ffffff",
+                padding: "20px",
+                borderRadius: "8px",
+              }}
+            >
+              <div className="d-flex flex-column align-items-center ">
+                <div
+                  className="p-1 rounded-circle border shadow d-flex justify-content-center align-items-center m-1"
+                  style={{
+                    width: "160px",
+                    height: "160px",
+                    backgroundColor: "rgb(245 245 245)",
+                  }}
+                >
+                  <Avatar
+                    avatarSrc={tutor.Photo}
+                    size="150px"
+                    indicSize="18px"
+                    positionInPixle={16}
                   />
-
-                  <div
-                    className="text-primary"
-                    style={{ fontSize: "14px", fontWeight: "bold" }}
-                  >
-                    Response Time -
-                  </div>
-                  <h6 className="m-0">{tutor.ResponseHrs}</h6>
                 </div>
-
-                <div className="d-flex align-items-center" style={{ gap: "5px" }}>
-                  <ToolTip
-                    width="300px"
-                    text={
-                      "The number of hours before the lesson starts where student can cancel the lesson with no penalty."
-                    }
-                  />
-
-                  <div
-                    className="text-primary"
-                    style={{ fontSize: "14px", fontWeight: "bold" }}
-                  >
-                    Cancellation Policy -
+                <div
+                  className="d-flex align-items-center"
+                  style={{ gap: "10px" }}
+                >
+                  <h4 className="m-0 fw-bold text-secondary">
+                    {capitalizeFirstLetter(tutor.TutorScreenname)}
+                  </h4>
+                  <RiVerifiedBadgeFill color="green" size={20} />
+                </div>
+                <p>
+                  <FaStar className="text-warning" />
+                  {rating.toFixed(1)}({totalPastLessons} reviews)
+                </p>
+                <Divider />
+                <div className="d-flex">
+                  <div className="d-flex align-items-center">
+                    <Pill
+                      label={JSON.parse(edu.NativeLang).value}
+                      hasIcon={false}
+                    />
                   </div>
+                  {edu.NativeLangOtherLang &&
+                    JSON.parse(edu.NativeLangOtherLang).map((lang) => (
+                      <div
+                        className="d-flex align-items-center"
+                        key={lang.value}
+                      >
+                        <GradePills
+                          grades={[]}
+                          grade={lang.value}
+                          editable={false}
+                          hasIcon={false}
+                        />
+                      </div>
+                    ))}
+                </div>
+                <Divider />
+
+                <div
+                  className="d-flex align-items-end"
+                  style={{ gap: "10px", color: "lightgray" }}
+                >
+                  <FaLocationDot size={15} />
+                  <h6 className="m-0"> {tutor.Country}</h6>
+                  <h6 className="m-0">GMT: {tutor.GMT}</h6>
+                </div>
+                <Divider />
+
+                <div
+                  className="d-flex align-items-end"
+                  style={{ gap: "10px", color: "lightgray" }}
+                >
+                  <IoTime size={15} />
                   <h6 className="m-0">
-                    {disc.CancellationPolicy ? (
-                      `${disc.CancellationPolicy} Hour`
-                    ) : (
-                      <span className="text-danger">not set</span>
-                    )}
+                    {convertGMTOffsetToLocalString(tutor.GMT)}
                   </h6>
                 </div>
-                <div className="d-flex align-items-center" style={{ gap: "5px" }}>
-                  <ToolTip
-                    width="300px"
-                    text={
-                      "When the tutor provide a discount of 50% for the student booking the INTRODUCTION lesson, the on/off switch is showing green color. "
-                    }
-                  />
+                <Divider />
+
+                <div
+                  className=" d-flex flex-column p-4 justfy-content-between h-100"
+                  style={{
+                    width: "300px",
+                    gap: "5px",
+                  }}
+                >
                   <div
-                    className="text-primary d-flex align-items-center"
-                    style={{ gap: "10px", fontWeight: "bold" }}
+                    className="d-flex align-items-center"
+                    style={{ gap: "5px" }}
                   >
-                    <h6
-                      className="m-0"
+                    <ToolTip
+                      width="300px"
+                      text={
+                        "The number of hours the tutor will respond to a student (within tutor UTC business time)."
+                      }
+                    />
+
+                    <div
+                      className="text-primary"
                       style={{ fontSize: "14px", fontWeight: "bold" }}
                     >
-                      50% Off on Intro Lesson
+                      Response Time -
+                    </div>
+                    <h6 className="m-0">{tutor.ResponseHrs}</h6>
+                  </div>
+
+                  <div
+                    className="d-flex align-items-center"
+                    style={{ gap: "5px" }}
+                  >
+                    <ToolTip
+                      width="300px"
+                      text={
+                        "The number of hours before the lesson starts where student can cancel the lesson with no penalty."
+                      }
+                    />
+
+                    <div
+                      className="text-primary"
+                      style={{ fontSize: "14px", fontWeight: "bold" }}
+                    >
+                      Cancellation Policy -
+                    </div>
+                    <h6 className="m-0">
+                      {disc.CancellationPolicy ? (
+                        `${disc.CancellationPolicy} Hour`
+                      ) : (
+                        <span className="text-danger">not set</span>
+                      )}
                     </h6>
-                    {disc.IntroSessionDiscount === "1" ? (
+                  </div>
+                  <div
+                    className="d-flex align-items-center"
+                    style={{ gap: "5px" }}
+                  >
+                    <ToolTip
+                      width="300px"
+                      text={
+                        "When the tutor provide a discount of 50% for the student booking the INTRODUCTION lesson, the on/off switch is showing green color. "
+                      }
+                    />
+                    <div
+                      className="text-primary d-flex align-items-center"
+                      style={{ gap: "10px", fontWeight: "bold" }}
+                    >
+                      <h6
+                        className="m-0"
+                        style={{ fontSize: "14px", fontWeight: "bold" }}
+                      >
+                        50% Off on Intro Lesson
+                      </h6>
+                      {disc.IntroSessionDiscount === "1" ? (
+                        <IoIosCheckmarkCircle size={20} color="green" />
+                      ) : (
+                        <IoIosCloseCircle size={20} color="red" />
+                      )}
+                    </div>
+                  </div>
+
+                  <div
+                    className="d-flex align-items-center"
+                    style={{ gap: "5px" }}
+                  >
+                    <ToolTip
+                      width="300px"
+                      text={
+                        "Tutor Diploma is uploaded to the academy servers. The student can view the Diploma by clicking on the PDF symbol below."
+                      }
+                    />
+
+                    <div
+                      className="text-primary"
+                      style={{ fontSize: "14px", fontWeight: "bold" }}
+                    >
+                      Verified Diploma
+                    </div>
+                    {edu.DegFileName ? (
                       <IoIosCheckmarkCircle size={20} color="green" />
                     ) : (
-                      <IoIosCloseCircle size={20} color="red" />
+                      <FaRegTimesCircle size={20} color="red" />
                     )}
-
                   </div>
-                </div>
-
-                <div className="d-flex align-items-center" style={{ gap: "5px" }}>
-                  <ToolTip
-                    width="300px"
-                    text={
-                      "Tutor Diploma is uploaded to the academy servers. The student can view the Diploma by clicking on the PDF symbol below."
-                    }
-                  />
-
                   <div
-                    className="text-primary"
-                    style={{ fontSize: "14px", fontWeight: "bold" }}
+                    className="d-flex align-items-center"
+                    style={{ gap: "5px" }}
                   >
-                    Verified Diploma
-                  </div>
-                  {edu.DegFileName ? (
-                    <IoIosCheckmarkCircle size={20} color="green" />
-                  ) : (
-                    <FaRegTimesCircle size={20} color="red" />
-                  )}
-                </div>
-                <div className="d-flex align-items-center" style={{ gap: "5px" }}>
-                  <ToolTip
-                    width="300px"
-                    text={`Tutor Certificate was uploaded to the academy 
+                    <ToolTip
+                      width="300px"
+                      text={`Tutor Certificate was uploaded to the academy 
                                 servers for verification. Due to privecy concern, the certificate is not published to the public. `}
-                  />
+                    />
 
-                  <div
-                    className="text-primary"
-                    style={{ fontSize: "14px", fontWeight: "bold" }}
-                  >
-                    Verified Certificate
+                    <div
+                      className="text-primary"
+                      style={{ fontSize: "14px", fontWeight: "bold" }}
+                    >
+                      Verified Certificate
+                    </div>
+                    {edu.CertFileName ? (
+                      <IoIosCheckmarkCircle size={20} color="green" />
+                    ) : (
+                      <FaRegTimesCircle size={20} color="red" />
+                    )}
                   </div>
-                  {edu.CertFileName ? (
-                    <IoIosCheckmarkCircle size={20} color="green" />
-                  ) : (
-                    <FaRegTimesCircle size={20} color="red" />
-                  )}
                 </div>
-              </div>
-              <Divider />
+                <Divider />
 
-              <p className="text-start w-100">{tutor.Introduction}</p>
-              <Divider />
+                <p className="text-start w-100">{tutor.Introduction}</p>
+                <Divider />
 
-              <div className="m-2 ">
-                <div className="d-flex ">
-                  <TAButton
-                    buttonText={"Chat"}
-                    onClick={handleChatClick}
-                    disabled={!isStudentLoggedIn}
-                  />
-                  <TAButton
-                    buttonText={"See Schedule"}
-                    style={{ width: "100px" }}
-                    handleClick={handleScheduleClick}
-                    disabled={!isStudentLoggedIn}
-                  />
+                <div className="m-2 ">
+                  <div className="d-flex ">
+                    <TAButton
+                      buttonText={"Chat"}
+                      onClick={handleChatClick}
+                      disabled={!isStudentLoggedIn}
+                    />
+                    <TAButton
+                      buttonText={"See Schedule"}
+                      style={{ width: "100px" }}
+                      handleClick={handleScheduleClick}
+                      disabled={!isStudentLoggedIn}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Right side - Video, Motivation Text, Profile Headline, Tabs */}
-          <div className="col-md-8">
-            {/* Top row - Video and Motivation Text */}
-            <div className="row mb-4">
-              <div className="col-md-5 mx-2  rounded-2 d-flex" style={{ background:"white" }}>
-              <FaQuoteLeft size={25} /> 
-                <p className="p-2" style={{ fontSize: '1rem', color: '#343a40'}}>
-                  {tutor.Motivate} - <span className="" style={{fontSize: "12px"}}>Message from {tutor.TutorScreenname}</span>
-                </p>
-              </div>
+            {/* Right side - Video, Motivation Text, Profile Headline, Tabs */}
+            <div className="col-md-8">
+              {/* Top row - Video and Motivation Text */}
+              <div className="row mb-4">
+                <div
+                  className="col-md-5 mx-2  rounded-2 d-flex"
+                  style={{ background: "white" }}
+                >
+                  <FaQuoteLeft size={25} />
+                  <p
+                    className="p-2"
+                    style={{ fontSize: "1rem", color: "#343a40" }}
+                  >
+                    {tutor.Motivate} -{" "}
+                    <span className="" style={{ fontSize: "12px" }}>
+                      Message from {tutor.TutorScreenname}
+                    </span>
+                  </p>
+                </div>
                 <div className="col-md-6">
-                <div>
-                  <div className="" >
-                    <video
-                      ref={videoRef}
-                      loop
-                      controlsList="nodownload noremoteplayback"
-                      src={tutor.Video}
-                      onLoadedMetadata={handleLoadedMetadata}
-                      onClick={handleVideoClick}
-                      className="rounded-2 shadow-lg"
-                      muted
-                      style={{ minWidth: "200px", width: "100%", height: "200px" }}
-                      autoPlay
-                    />
-                  </div>
-                  <div
-                    className="d-flex justify-content-between align-items-center mt-2"
-                    style={{ width: "200px" }}
-                  >
-                    <FaRegCirclePlay
-                      size={35}
-                      color="lightgray"
-                      onClick={toggleSize}
-                    />
-                    <div className="d-flex justify-content-center align-items-center gap-1">
-                      <CiClock2 color="lightgray" />{" "}
-                      <p className="fw-bold" style={{ color: "lightgrey" }}>
-                        {`${parseInt(duration)}sec(s) video`}
-                      </p>
+                  <div>
+                    <div className="">
+                      <video
+                        ref={videoRef}
+                        loop
+                        controlsList="nodownload noremoteplayback"
+                        src={tutor.Video}
+                        onLoadedMetadata={handleLoadedMetadata}
+                        onClick={handleVideoClick}
+                        className="rounded-2 shadow-lg"
+                        muted
+                        style={{
+                          minWidth: "200px",
+                          width: "100%",
+                          height: "200px",
+                        }}
+                        autoPlay
+                      />
+                    </div>
+                    <div
+                      className="d-flex justify-content-between align-items-center mt-2"
+                      style={{ width: "200px" }}
+                    >
+                      <FaRegCirclePlay
+                        size={35}
+                        color="lightgray"
+                        onClick={toggleSize}
+                      />
+                      <div className="d-flex justify-content-center align-items-center gap-1">
+                        <CiClock2 color="lightgray" />{" "}
+                        <p className="fw-bold" style={{ color: "lightgrey" }}>
+                          {`${parseInt(duration)}sec(s) video`}
+                        </p>
+                      </div>
                     </div>
                   </div>
-
                 </div>
               </div>
-            
-            </div>
 
-            {/* Second row - Profile Headline */}
-            <div className="row mb-4">
-              <div className="col">
-                <h5 className="text-center  rounded-2 p-2" style={{  background:"white"  }}>{tutor.HeadLine}</h5>
+              {/* Second row - Profile Headline */}
+              <div className="row mb-4">
+                <div className="col">
+                  <h5
+                    className="text-center  rounded-2 p-2"
+                    style={{ background: "white" }}
+                  >
+                    {tutor.HeadLine}
+                  </h5>
+                </div>
               </div>
-            </div>
-            <div className="row mb-4">
-
-              <div className="col">
-                <p className="  rounded-2 p-2" style={{ background:"white"  }} dangerouslySetInnerHTML={{ __html: edu.WorkExperience }} />
+              <div className="row mb-4">
+                <div className="col">
+                  <p
+                    className="  rounded-2 p-2"
+                    style={{ background: "white" }}
+                    dangerouslySetInnerHTML={{ __html: edu.WorkExperience }}
+                  />
+                </div>
               </div>
-            </div>
 
-            {/* Third row - Tabs with Education, Subjects, Availability Calendar */}
-            <div className="row">
-              <div className="col">
-                <div style={{ backgroundColor: '#ffffff', padding: '20px', borderRadius: '8px' }}>
-                  {/* Tabs */}
-                  <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '20px' }}>
+              {/* Third row - Tabs with Education, Subjects, Availability Calendar */}
+              <div className="row">
+                <div className="col">
+                  <div
+                    style={{
+                      backgroundColor: "#ffffff",
+                      padding: "20px",
+                      borderRadius: "8px",
+                    }}
+                  >
+                    {/* Tabs */}
                     <div
-                      style={activeTab === 'education' ? activeTabStyle : tabStyle}
-                      onClick={() => setActiveTab('education')}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-around",
+                        marginBottom: "20px",
+                      }}
                     >
-                      Education
+                      <div
+                        style={
+                          activeTab === "education" ? activeTabStyle : tabStyle
+                        }
+                        onClick={() => setActiveTab("education")}
+                      >
+                        Education
+                      </div>
+                      <div
+                        style={
+                          activeTab === "subjects" ? activeTabStyle : tabStyle
+                        }
+                        onClick={() => setActiveTab("subjects")}
+                      >
+                        Subjects
+                      </div>
+                      <div
+                        style={
+                          activeTab === "availability"
+                            ? activeTabStyle
+                            : tabStyle
+                        }
+                        onClick={() => setActiveTab("availability")}
+                      >
+                        Availability
+                      </div>
                     </div>
-                    <div
-                      style={activeTab === 'subjects' ? activeTabStyle : tabStyle}
-                      onClick={() => setActiveTab('subjects')}
-                    >
-                      Subjects
-                    </div>
-                    <div
-                      style={activeTab === 'availability' ? activeTabStyle : tabStyle}
-                      onClick={() => setActiveTab('availability')}
-                    >
-                      Availability
-                    </div>
-                  </div>
 
-                  {/* Tab Content */}
-                  {activeTab === 'education' && (
-                    <div>
-                      <div className="d-flex flex-wrap gap-3">
-                        {[
-                          "Undergraduate Student",
-                          "Associate Degree",
-                          "Bachelor Degree",
-                        ].includes(edu.EducationalLevel) && (
+                    {/* Tab Content */}
+                    {activeTab === "education" && (
+                      <div>
+                        <div className="d-flex flex-wrap gap-3">
+                          {[
+                            "Undergraduate Student",
+                            "Associate Degree",
+                            "Bachelor Degree",
+                          ].includes(edu.EducationalLevel) && (
                             <div style={{ width: "48%", maxWidth: "600px" }}>
                               <EducationCards
                                 name={"Bachelor's"}
@@ -1027,23 +1134,25 @@ const TutorPublicProfile = () => {
                             </div>
                           )}
 
-                        {edu.EducationalLevel === "Master Degree" && (
-                          <>
-                            <div style={{ width: "48%", maxWidth: "600px" }}>
-                              <EducationCards
-                                name={"Master's"}
-                                country={edu.MastCountry}
-                                state={edu.Mast_College_State}
-                                college={edu.Mast_College}
-                                year={edu.Mast_College_StateYear}
-                              />
-                            </div>
-                            {![
-                              "Undergraduate Student",
-                              "Associate Degree",
-                              "Bachelor Degree",
-                            ].includes(edu.EducationalLevel) && (
-                                <div style={{ width: "48%", maxWidth: "600px" }}>
+                          {edu.EducationalLevel === "Master Degree" && (
+                            <>
+                              <div style={{ width: "48%", maxWidth: "600px" }}>
+                                <EducationCards
+                                  name={"Master's"}
+                                  country={edu.MastCountry}
+                                  state={edu.Mast_College_State}
+                                  college={edu.Mast_College}
+                                  year={edu.Mast_College_StateYear}
+                                />
+                              </div>
+                              {![
+                                "Undergraduate Student",
+                                "Associate Degree",
+                                "Bachelor Degree",
+                              ].includes(edu.EducationalLevel) && (
+                                <div
+                                  style={{ width: "48%", maxWidth: "600px" }}
+                                >
                                   <EducationCards
                                     name={"Bachelor's"}
                                     country={edu.BachCountry}
@@ -1053,14 +1162,14 @@ const TutorPublicProfile = () => {
                                   />
                                 </div>
                               )}
-                          </>
-                        )}
+                            </>
+                          )}
 
-                        {[
-                          "Doctorate Degree",
-                          "Post Doctorate Degree",
-                          "Professor",
-                        ].includes(edu.EducationalLevel) && (
+                          {[
+                            "Doctorate Degree",
+                            "Post Doctorate Degree",
+                            "Professor",
+                          ].includes(edu.EducationalLevel) && (
                             <>
                               {![
                                 "Undergraduate Student",
@@ -1068,19 +1177,23 @@ const TutorPublicProfile = () => {
                                 "Bachelor Degree",
                                 "Master Degree",
                               ].includes(edu.EducationalLevel) && (
-                                  <div style={{ width: "48%", maxWidth: "600px" }}>
-                                    <EducationCards
-                                      name={"Bachelor's"}
-                                      country={edu.BachCountry}
-                                      state={edu.Bach_College_State}
-                                      college={edu.Bach_College}
-                                      year={edu.Bach_College_Year}
-                                    />
-                                  </div>
-                                )}
+                                <div
+                                  style={{ width: "48%", maxWidth: "600px" }}
+                                >
+                                  <EducationCards
+                                    name={"Bachelor's"}
+                                    country={edu.BachCountry}
+                                    state={edu.Bach_College_State}
+                                    college={edu.Bach_College}
+                                    year={edu.Bach_College_Year}
+                                  />
+                                </div>
+                              )}
 
                               {edu.EducationalLevel !== "Master Degree" && (
-                                <div style={{ width: "48%", maxWidth: "600px" }}>
+                                <div
+                                  style={{ width: "48%", maxWidth: "600px" }}
+                                >
                                   <EducationCards
                                     name={"Master's"}
                                     country={edu.MastCountry}
@@ -1102,71 +1215,68 @@ const TutorPublicProfile = () => {
                               </div>
                             </>
                           )}
-                      </div>
-
-
-                    </div>
-                  )}
-
-                  {activeTab === 'subjects' && (
-                    <div>
-                      {subjectsWithRates.length ? (
-                        <div className="mt-4">
-                          <h5 className="">Subjects I Teach</h5>
-                          <div className="">
-                            {subjectsWithRates.map((item, index) => {
-                              const subjectGrades = JSON.parse(
-                                !item.grades ? "[]" : item.grades
-                              ).sort(customSortForSubjectsGrades);
-                              return (
-                                <div
-                                  className={`border p-2 rounded d-flex justify-content-between align-items-center `}
-                                  key={index}
-                                  style={{ background: "#d8d8d8" }}
-                                >
-                                  <h5
-                                    className="m-0 text-start col-2"
-                                    style={{ fontSize: "14px" }}
-                                  >
-                                    {item.subject}
-                                  </h5>
-                                  <div className="d-flex col-9 flex-wrap">
-                                    {subjectGrades.map((option) => (
-                                      <GradePills
-                                        key={option}
-                                        editable={false}
-                                        grade={option}
-                                        grades={subjectGrades}
-                                        hasIcon={false}
-                                      />
-                                    ))}
-                                  </div>
-                                  <h6 className="m-0 text-start col-1">
-                                    {item.rate}
-                                  </h6>
-                                </div>
-                              );
-                            })}
-                          </div>
                         </div>
-                      ) : null}
+                      </div>
+                    )}
 
-                    </div>
-                  )}
+                    {activeTab === "subjects" && (
+                      <div>
+                        {subjectsWithRates.length ? (
+                          <div className="mt-4">
+                            <h5 className="">Subjects I Teach</h5>
+                            <div className="">
+                              {subjectsWithRates.map((item, index) => {
+                                const subjectGrades = JSON.parse(
+                                  !item.grades ? "[]" : item.grades
+                                ).sort(customSortForSubjectsGrades);
+                                return (
+                                  <div
+                                    className={`border p-2 rounded d-flex justify-content-between align-items-center `}
+                                    key={index}
+                                    style={{ background: "#d8d8d8" }}
+                                  >
+                                    <h5
+                                      className="m-0 text-start col-2"
+                                      style={{ fontSize: "14px" }}
+                                    >
+                                      {item.subject}
+                                    </h5>
+                                    <div className="d-flex col-9 flex-wrap">
+                                      {subjectGrades.map((option) => (
+                                        <GradePills
+                                          key={option}
+                                          editable={false}
+                                          grade={option}
+                                          grades={subjectGrades}
+                                          hasIcon={false}
+                                        />
+                                      ))}
+                                    </div>
+                                    <h6 className="m-0 text-start col-1">
+                                      {item.rate}
+                                    </h6>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        ) : null}
+                      </div>
+                    )}
 
-                  {activeTab === 'availability' && (
-                    <div>
-                      <p>Monday - Friday: 8am - 5pm</p>
-                      <p>Saturday: 9am - 1pm</p>
-                      <p>Sunday: Unavailable</p>
-                    </div>
-                  )}
+                    {activeTab === "availability" && (
+                      <div>
+                        <p>Monday - Friday: 8am - 5pm</p>
+                        <p>Saturday: 9am - 1pm</p>
+                        <p>Sunday: Unavailable</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
         <CenteredModal
           showHeader={false}
@@ -1197,6 +1307,22 @@ const TutorPublicProfile = () => {
           id={params.id}
           isOpen={scheduleModalOpen}
           onClose={() => setScheduleModalOpen(false)}
+          
+          timeDifference={timeDifference}
+          timeZone={"asia/karachi"}
+          tutor={{}}
+          lessons={sessions}
+          selectedSlots={[]}
+          selectedTutor={{}}
+          isStudentLoggedIn={true}
+          weekDaysTimeSlots={[]}
+          disableColor={disableColor}
+          disableDates={disableDates}
+          disableHourSlots={disableHourSlots}
+          disableWeekDays={disableWeekDays}
+          disabledHours={disabledHours}
+          enableHourSlots={enableHourSlots}
+          enabledDays={enabledDays}
         />
 
         {!isStudentLoggedIn && (

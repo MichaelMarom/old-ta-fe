@@ -26,7 +26,6 @@ const useSlotPropGetter = ({
   disableDates,
   disabledHours,
   disableColor,
-  // convertToDate,
   lessons
 }) => {
   return useCallback(
