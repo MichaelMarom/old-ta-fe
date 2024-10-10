@@ -29,7 +29,6 @@ export function setStudentAccounting() {
         dispatch(slice.actions.isLoading())
         const student = getState().student.student
         const res = await studentApis.get_bank_details(student.AcademyId);
-        console.log(res[0])
         res[0] && dispatch(slice.actions.setAccounting(res[0]))
         return res[0]
     };

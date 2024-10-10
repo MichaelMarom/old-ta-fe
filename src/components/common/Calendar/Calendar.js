@@ -280,6 +280,7 @@ const ShowCalendar = ({
       dataFetched,
       disableColor,
       disabledHours,
+      enabledDays
     ]
   );
 
@@ -453,6 +454,7 @@ const ShowCalendar = ({
             disableHourSlots,
             disableDates,
             disabledHours,
+
             selectedSlots,
             setSelectedSlots,
             setIsModalOpen,

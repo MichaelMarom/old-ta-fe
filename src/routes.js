@@ -55,7 +55,6 @@ const App = () => {
 
 
   const { studentBank } = useSelector(state => state.studentBank)
-  console.log(studentBank)
 
   const [activeRoutes, setActiveRoutes] = useState([]);
   const tutorUserId = localStorage.getItem("tutor_user_id");
@@ -153,7 +152,6 @@ const App = () => {
 
          intervalTutorRef.current = setInterval(async () => {
           const tutorSessions = await dispatch(await setTutorSessions(tutor));
-          console.log(tutorSessions, 'tutor session', tutor.AcademyId)
           if (handleExpiredToken(tutorSessions)) clearInterval(intervalTutorRef.current);
         }, 60000);
 
@@ -183,7 +181,6 @@ const App = () => {
           const studentSessions = await dispatch(
             await setStudentSessions(student)
           );
-          console.log(studentSessions, "studentSessions")
 
           if (handleExpiredToken(studentSessions)) clearInterval(intervalStudentRef.current);
         }, 60000);
@@ -268,7 +265,6 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log(user.role, 'role')
   return (
     <Suspense fallback={<Loading />}>
       <Routes>

@@ -59,7 +59,6 @@ const slice = createSlice({
 
     setLessons: (state, action) => {
       state.isLoading = false;
-      console.log(action.payload);
       const slotsWithDateObj = action.payload.map((slot) => ({
         ...slot,
         start: convertToDate(slot.start),

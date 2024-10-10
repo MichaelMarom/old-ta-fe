@@ -8,7 +8,8 @@ const SubjectCardInput = ({ label, placeholder, vertical = true, inputGroup = fa
                 {inputGroupText}</label>}
             <input
                 style={{ height: "fit-content", fontSize: "12px" }}
-                onChange={e => onChange(e.target.value)} className='form-control m-0' value={rest.value} type="text" placeholder={placeholder} {...rest} />
+                onChange={e => onChange(e.target.value)} className='form-control m-0' 
+                value={rest.value || ""} type="text" placeholder={placeholder} {...rest} />
             {inputGroup && <span className="input-group-text p-1" style={{ height: "fit-content", fontSize: "12px" }}>.00</span>}
         </div>
     )

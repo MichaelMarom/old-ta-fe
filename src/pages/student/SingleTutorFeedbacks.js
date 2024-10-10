@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import StudentLayout from '../../layouts/StudentLayout';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment-timezone';
 import { useSelector } from 'react-redux';
 import CustomEvent from '../../components/common/Calendar/Event';
 import { convertToDate } from '../../components/common/Calendar/Calendar';
-import { convertTutorIdToName } from '../../utils/common'
 import { get_tutor_bookings } from '../../axios/calender';
 import { TutorEventModal } from '../../components/common/EventModal/TutorEventModal/TutorEventModal';
 
@@ -47,7 +45,7 @@ const SingleTutorFeedbacks = () => {
         const inFuture = convertToDate(event.end).getTime() > (new Date()).getTime()
         if (!inFuture) {
             setClickedSlot(event)
-            setFeedbackModalOpen(true)
+            setFeedbackModalOpen(true) 
         }
     }
 
@@ -95,7 +93,7 @@ const SingleTutorFeedbacks = () => {
     const localizer = momentLocalizer(moment);
 
     return (
-        <div  >
+        <div>
             <div>
                 <h4 className='text-center m-3'>Tutor "{params.AcademyId}" feedback from students</h4>
                 <div className='m-3 student-calender' style={{ height: "80vh" }}>
@@ -130,7 +128,7 @@ const SingleTutorFeedbacks = () => {
                 isOpen={feedbackModalOpen}
                 onClose={() => handleModalClose()}
                 clickedSlot={clickedSlot}
-                showTutorFeedback
+                showTutorFeedback={false}
             />
         </div>
     )

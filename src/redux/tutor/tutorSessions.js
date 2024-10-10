@@ -27,7 +27,6 @@ const slice = createSlice({
             state.upcomingSessionFromNow = action.payload.upcomingSessionFromNow || '';
         },
         setOnlySessions: (state, action) => {
-            console.log(state, action)
             state.isLoading = false;
             state.sessions = action.payload || [];
                     },

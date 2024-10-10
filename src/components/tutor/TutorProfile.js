@@ -785,7 +785,7 @@ const TutorProfile = () => {
                     >
                       50% Off on Intro Lesson
                     </h6>
-                    {data.IntroSessionDiscount === "1" ? (
+                    {data.IntroSessionDiscount ? (
                       <IoIosCheckmarkCircle size={20} color="green" />
                     ) : (
                       <IoIosCloseCircle size={20} color="red" />
@@ -811,7 +811,7 @@ const TutorProfile = () => {
                   {data.DegFileName ? (
                     <IoIosCheckmarkCircle size={20} color="green" />
                   ) : (
-                    <FaRegTimesCircle size={20} color="red" />
+                    <IoIosCloseCircle size={20} color="red" />
                   )}
                 </div>
                 <div className="d-flex align-items-center" style={{ gap: "5px" }}>
@@ -830,39 +830,20 @@ const TutorProfile = () => {
                   {data.CertFileName ? (
                     <IoIosCheckmarkCircle size={20} color="green" />
                   ) : (
-                    <FaRegTimesCircle size={20} color="red" />
+                    <IoIosCloseCircle size={20} color="red" />
                   )}
                 </div>
               </div>
               <Divider />
 
               <p className="text-start w-100">{data.Introduction}</p>
-              <Divider />
-
-              <div className="m-2 ">
-                <div className="d-flex ">
-                  <TAButton
-                    buttonText={"Chat"}
-                    onClick={handleChatClick}
-                    disabled={!isStudentLoggedIn}
-                  />
-                  <TAButton
-                    buttonText={"See Schedule"}
-                    style={{ width: "100px" }}
-                    handleClick={handleScheduleClick}
-                    disabled={!isStudentLoggedIn}
-                  />
-                </div>
-              </div>
             </div>
           </div>
 
-          {/* Right side - Video, Motivation Text, Profile Headline, Tabs */}
           <div className="col-md-8">
-            {/* Top row - Video and Motivation Text */}
             <div className="row mb-4">
-              <div className="col-md-5 mx-2  rounded-2 d-flex" style={{ background:"white" }}>
-              <FaQuoteLeft size={25} /> 
+              <div className="col-md-5 mx-2  rounded-2 d-flex shadow" style={{ background:"white" }}>
+              <FaQuoteLeft size={25} className="flex-shrink-0" /> 
                 <p className="p-2" style={{ fontSize: '1rem', color: '#343a40'}}>
                   {data.Motivate} - <span className="" style={{fontSize: "12px"}}>Message from {data.TutorScreenname}</span>
                 </p>
@@ -905,23 +886,21 @@ const TutorProfile = () => {
             
             </div>
 
-            {/* Second row - Profile Headline */}
             <div className="row mb-4">
               <div className="col">
-                <h5 className="text-center  rounded-2 p-2" style={{  background:"white"  }}>{data.HeadLine}</h5>
+                <h5 className="text-center  rounded-2 p-2 shadow text-secondary" style={{  background:"white"  }}>{data.HeadLine}</h5>
               </div>
             </div>
             <div className="row mb-4">
 
               <div className="col">
-                <p className="  rounded-2 p-2" style={{ background:"white"  }} dangerouslySetInnerHTML={{ __html: data.WorkExperience }} />
+                <p className="  rounded-2 p-2 shadow" style={{ background:"white"  }} dangerouslySetInnerHTML={{ __html: data.WorkExperience }} />
               </div>
             </div>
 
-            {/* Third row - Tabs with Education, Subjects, Availability Calendar */}
             <div className="row">
               <div className="col">
-                <div style={{ backgroundColor: '#ffffff', padding: '20px', borderRadius: '8px' }}>
+                <div className="shadow" style={{ backgroundColor: '#ffffff', padding: '20px', borderRadius: '8px' }}>
                   {/* Tabs */}
                   <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '20px' }}>
                     <div

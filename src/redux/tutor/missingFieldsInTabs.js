@@ -31,7 +31,6 @@ export const setMissingFieldsAndTabs = () => {
     const tutor = getState().tutor.tutor;
     const bank = getState().bank.bank;
     const discount = getState().discount.discount;
-    console.log(bank)
 
     const missingFields = [];
     const tabs = { bank, discount, edu };
@@ -103,7 +102,6 @@ export const setMissingFieldsAndTabs = () => {
         });
       }
     });
-    console.log(missingFields);
 
     if (!tutor.AgreementDate)
       missingFields.push({

@@ -35,6 +35,7 @@ import FormSelect from "../../common/Select";
 import _ from "lodash";
 import { setMissingFieldsAndTabs } from "../../../redux/tutor/missingFieldsInTabs";
 import { postEducation } from "../../../redux/tutor/education";
+import ThreeDotsLoader from "../../ThreeDotsLoader";
 
 const languageOptions = LANGUAGES.map((language) => ({
   value: language,
@@ -80,8 +81,13 @@ const Education = () => {
   let [db_edu_level, set_db_edu_level] = useState("");
   let [db_edu_cert, set_db_edu_cert] = useState("");
   const [fetchingEdu, setFetchingEdu] = useState(false);
+
   const [deg_file_name, set_deg_file_name] = useState("");
   const [cert_file_name, set_cert_file_name] = useState("");
+  const [degUploading, setDegUploading] = useState(false)
+  const [certUploading, setCertUploading] = useState(false)
+
+
   const [addReference, setAddReference] = useState(false);
   const [references, setReferences] = useState("");
   const [saving, setSaving] = useState(false);
@@ -551,7 +557,6 @@ const Education = () => {
   };
 
   useEffect(() => {
-    console.log(degreeFile, level);
     if (degreeFile && level) {
       handleUploadDegreeToServer();
     }
@@ -576,12 +581,16 @@ const Education = () => {
             deg_file_name.length
           )
           : "";
+
+        setDegUploading(true)
         const { data } = await uploadTutorDocs(
           tutor.AcademyId,
           degreeFile,
           "degree",
           existingFile
         );
+        setDegUploading(false)
+
         set_deg_file_name(data.url);
         dynamicSave("DegFileName", data.url);
       } catch (error) {
@@ -599,13 +608,15 @@ const Education = () => {
             cert_file_name.length
           )
           : "";
+        setCertUploading(true)
         const { data } = await uploadTutorDocs(
           tutor.AcademyId,
           certificateFile,
           "certificate",
           existingFile
         );
-        console.log(data);
+        setCertUploading(false)
+
         set_cert_file_name(data.url);
         dynamicSave("CertFileName", data.url);
       } catch (error) {
@@ -704,6 +715,7 @@ const Education = () => {
     },
   ];
 
+  console.log(degUploading, certUploading)
   if (fetchingEdu) return <Loading loadingText="Fetching Tutor Eduction..." />;
   return (
     <div
@@ -1101,7 +1113,7 @@ const Education = () => {
                     <h6 className="border-bottom">Doctorate Degree</h6>
                     <div className="d-flex justify-content-between mt-3">
                       <div className="col-md-4" style={{ fontSize: "14px" }}>
-                      {/* <DebounceInput
+                        {/* <DebounceInput
                           label={
                             <MandatoryFieldLabel
                               editMode={editMode}
@@ -1296,12 +1308,15 @@ const Education = () => {
                                 disabled={!editMode}
                               />
                             </div>
-                            <div className="d-flex justify-content-between align-items-center  border rounded p-2 gap-2" style={{ height: "50px" }}>
-
-                              <div>Degree uploaded</div>
-                              <div className="tick-icon d-flex align-items-center">
-                                <IoIosCheckmarkCircle size={20} color="green" />
-                              </div>
+                            <div className="d-flex justify-content-between align-items-center  border rounded p-2 gap-2 w-100" style={{ height: "50px" }}>
+                              {degUploading ? <ThreeDotsLoader /> :
+                                <>
+                                  <div>Degree uploaded</div>
+                                  <div className="tick-icon d-flex align-items-center">
+                                    <IoIosCheckmarkCircle size={20} color="green" />
+                                  </div>
+                                </>
+                              }
                             </div>
                           </>
                         ) : (
@@ -1523,10 +1538,11 @@ const Education = () => {
                               </div>
 
                               <div className="d-flex w-100 justify-content-between border rounded p-2">
-                                <div>Certificate Uploaded</div>
-                                <div className="tick-icon d-flex align-items-center">
-                                  <IoIosCheckmarkCircle size={20} color="green" />
-                                </div>
+                                {certUploading ? <ThreeDotsLoader /> : <> <div>Certificate Uploaded</div>
+                                  <div className="tick-icon d-flex align-items-center">
+                                    <IoIosCheckmarkCircle size={20} color="green" />
+                                  </div>
+                                </>}
                               </div>
                             </>
                           ) : (

@@ -7,10 +7,11 @@ import {
   get_tutor_setup,
   get_tutor_subjects,
   fetch_calender_detals,
+  formatted_tutor_sessions,
 } from "../../axios/tutor";
 import { create_chat } from "../../axios/chat";
 import { IoIosCheckmarkCircle, IoIosCloseCircle } from "react-icons/io";
-import {  FaQuoteLeft, FaRegTimesCircle, FaStar } from "react-icons/fa";
+import { FaQuoteLeft, FaRegTimesCircle, FaStar } from "react-icons/fa";
 import { CiClock2 } from "react-icons/ci";
 import { moment } from "../../config/moment";
 
@@ -51,7 +52,8 @@ const TutorPublicProfile = () => {
   const [edu, setEdu] = useState({});
   const [disc, setDis] = useState({});
   const [tutor, setTutor] = useState({});
-  const { sessions } = useSelector((state) => state.tutorSessions);
+  // const { sessions } = useSelector((state) => state.tutorSessions);
+  const [sessions, setSessions] = useState([])
   const { student } = useSelector((state) => state.student);
   const [rating, setRating] = useState(0);
   const [totalPastLessons, setTotalPastLessons] = useState(0);
@@ -85,7 +87,6 @@ const TutorPublicProfile = () => {
       console.log("Invalid GMT offset format");
     }
   }, [student.GMT, tutor.GMT])
-  console.log(timeDifference)
 
   const tabStyle = {
     padding: "10px 20px",
@@ -128,18 +129,23 @@ const TutorPublicProfile = () => {
     calculateStats();
   }, [sessions]);
 
+  useEffect(() => {
+    params.id && formatted_tutor_sessions(params.id).then((res) => {
+      setSessions(res.sessions)
+    })
+  }, [params.id])
+
   const calculateStats = useCallback(() => {
     const now = new Date();
 
     let totalRating = 0;
     let pastLessonsCount = 0;
-
     for (const lesson of sessions) {
       const endTime = new Date(lesson.end);
 
-      if (endTime < now) {
+      if (endTime < now && lesson.ratingByStudent) {
         pastLessonsCount++;
-        totalRating += lesson.ratingByTutor;
+        totalRating += lesson.ratingByStudent;
       }
     }
 
@@ -147,7 +153,7 @@ const TutorPublicProfile = () => {
       pastLessonsCount > 0 ? totalRating / pastLessonsCount : 0;
     setRating(overallRating);
     setTotalPastLessons(pastLessonsCount);
-  }, []);
+  }, [sessions]);
 
   useEffect(() => {
     if (videoRef.current) {
@@ -932,7 +938,7 @@ const TutorPublicProfile = () => {
                       >
                         50% Off on Intro Lesson
                       </h6>
-                      {disc.IntroSessionDiscount === "1" ? (
+                      {disc.IntroSessionDiscount ? (
                         <IoIosCheckmarkCircle size={20} color="green" />
                       ) : (
                         <IoIosCloseCircle size={20} color="red" />
@@ -1018,7 +1024,7 @@ const TutorPublicProfile = () => {
                   className="col-md-5 mx-2  rounded-2 d-flex"
                   style={{ background: "white" }}
                 >
-                  <FaQuoteLeft size={25} style={{flexShrink:"0"}} />
+                  <FaQuoteLeft size={25} style={{ flexShrink: "0" }} />
                   <p
                     className="p-2"
                     style={{ fontSize: "1rem", color: "#343a40" }}

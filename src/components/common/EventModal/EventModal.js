@@ -45,23 +45,23 @@ function EventModal({
   );
   const [invoiceNum, setInvoiceNum] = useState(null);
 
-  const formatUTC = (dateInt, addOffset = false) => {
-    let date = !dateInt || dateInt.length < 1 ? new Date() : new Date(dateInt);
-    const currentDate = new Date();
-    if (date < currentDate) {
-      return null; // You can also throw an error here if you prefer
-    }
-    if (typeof dateInt === "string") {
-      return date;
-    } else {
-      const offset = addOffset
-        ? date.getTimezoneOffset()
-        : -date.getTimezoneOffset();
-      const offsetDate = new Date();
-      offsetDate.setTime(date.getTime() + offset * 60000);
-      return offsetDate;
-    }
-  };
+  // const formatUTC = (dateInt, addOffset = false) => {
+  //   let date = !dateInt || dateInt.length < 1 ? new Date() : new Date(dateInt);
+  //   const currentDate = new Date();
+  //   if (date < currentDate) {
+  //     return null; // You can also throw an error here if you prefer
+  //   }
+  //   if (typeof dateInt === "string") {
+  //     return date;
+  //   } else {
+  //     const offset = addOffset
+  //       ? date.getTimezoneOffset()
+  //       : -date.getTimezoneOffset();
+  //     const offsetDate = new Date();
+  //     offsetDate.setTime(date.getTime() + offset * 60000);
+  //     return offsetDate;
+  //   }
+  // };
 
   useEffect(() => {
     if (clickedSlot.id) {
@@ -112,8 +112,16 @@ function EventModal({
     );
   };
 
+  const convertReservedToBooked = () => {
+    dispatch(updateStudentLesson(clickedSlot.id, { ...clickedSlot, type: "booked", title:"Booked" })
+    )
+  }
+
   const handleAccept = () => {
-    if (canPostEvents) {
+    if (canPostEvents && clickedSlot.id) {
+      convertReservedToBooked()
+    }
+    if (canPostEvents && !clickedSlot.id) {
       handleBulkEventCreate(
         selectedType,
         dispatch,
@@ -123,9 +131,10 @@ function EventModal({
         navigate,
         lessons
       );
-      onRequestClose();
-      setSelectedType(null);
     }
+    onRequestClose();
+    setClickedSlot({})
+    setSelectedType(null);
   };
 
   const generateNumberWithDate = () => {
@@ -207,7 +216,6 @@ function EventModal({
     return { introExist, feedbackedIntro };
   };
 
-  console.log(selectedSlots, clickedSlot, lessons, student, selectedTutor)
   return (
     <LeftSideBar
       isOpen={isOpen}
@@ -262,8 +270,8 @@ function EventModal({
               //   conductedAndReviewedIntroLesson().feedbackedIntro) ||
               //   clickedSlot.start) && (
               <>
-                {((clickedSlot.start && clickedSlot.type === "reserved" ) || (!clickedSlot.start && conductedAndReviewedIntroLesson().introExist &&
-                  conductedAndReviewedIntroLesson().feedbackedIntro) ) && (
+                {((clickedSlot.start && clickedSlot.type === "reserved") || (!clickedSlot.start && conductedAndReviewedIntroLesson().introExist &&
+                  conductedAndReviewedIntroLesson().feedbackedIntro)) && (
                     <button
                       type="button"
                       className=" btn btn-sm btn-success"

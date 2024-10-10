@@ -29,7 +29,6 @@ export const setStudentMissingFeildsAndTabs = () => {
     dispatch(slice.actions.isLoading());
     const student = getState().student.student;
     const bank = getState().studentBank.studentBank;
-    console.log(bank, student)
 
     const missingFields = [];
     const tabs = { bank, setup:student };
@@ -69,8 +68,6 @@ export const setStudentMissingFeildsAndTabs = () => {
         });
       }
     });
-
-    console.log(missingFields);
 
     if (!student.AgreementDate)
       missingFields.push({

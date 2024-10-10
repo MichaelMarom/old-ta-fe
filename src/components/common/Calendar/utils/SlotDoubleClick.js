@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment from "moment-timezone";
 import { convertToDate, views } from "../Calendar";
 import {
   getSecond30MinsSlotWhenDoubleClick,
@@ -79,7 +79,8 @@ export const handleSlotDoubleClick = (
       enabledDays,
       disableDates,
       setDisableHourSlots,
-      disableHourSlots
+      disableHourSlots,
+      disabledHours
       // reservedSlots
     );
   } else {
@@ -119,11 +120,14 @@ export const handleSlotDoubleClickForTutor = (
 
   disableDates,
   setDisableHourSlots,
-  disableHourSlots
+  disableHourSlots,
+  disabledHours
   // reservedSlots
 ) => {
   const dayName = moment(slotInfo.start).format("dddd");
-  if (disableWeekDays && disableWeekDays.includes(dayName)) {
+  //TODO: fix 
+  if ((disableWeekDays && disableWeekDays.includes(dayName)) ||
+    (checkIfClickedSlotExistInDisabledHoursRange(slotInfo.start, disabledHours, "Australia/Eucla") && activeView !== views.MONTH)) {
     handleEnableHoursAndDays(
       slotInfo,
       endTime,
@@ -156,12 +160,6 @@ export const handleSlotDoubleClickForTutor = (
         endTime,
       ]);
     }
-    // handleDisableHourSlots(
-    //   slotInfo,
-    //   setDisableHourSlots,
-    //   disableHourSlots,
-    //   reservedSlots
-    // );
   }
 };
 
@@ -218,6 +216,38 @@ export const handleSlotDoubleClickForStudent = (
   // }
 };
 
+const checkIfClickedSlotExistInDisabledHoursRange = (date, blockedHours, timeZone) => {
+  // Convert the given UTC date to the tutor's timezone and extract the time part
+  const tutorTime = moment.utc(date).tz(timeZone).format('h:mm a');
+
+  for (let i = 0; i < blockedHours.length; i++) {
+    const [startTime, endTime] = blockedHours[i];
+
+    // Handle 'midnight' as a special case
+    const formattedStartTime = startTime.includes('midnight') ? '12:00 am' : startTime;
+    const formattedEndTime = endTime.includes('midnight') ? '12:00 am' : endTime;
+
+    const start = moment(formattedStartTime, 'h:mm a');
+    const end = moment(formattedEndTime, 'h:mm a');
+    const currentTime = moment(tutorTime, 'h:mm a'); // Convert tutor time to moment object
+
+    // If the end time is midnight or early morning, handle the next day range
+    if (end.isBefore(start)) {
+      if (currentTime.isBetween(start, moment('11:59 pm', 'h:mm a')) || currentTime.isBetween(moment('12:00 am', 'h:mm a'), end)) {
+        return true;
+      }
+    } else {
+      // Check if the currentTime falls within the start and end times
+      if (currentTime.isBetween(start, end, null, '[)')) {
+        return true;
+      }
+    }
+  }
+
+  return false; // The date's hour is not blocked
+}
+
+
 // Handling slot actions for tutor
 const handleEnableHoursAndDays = (
   slotInfo,
@@ -232,14 +262,14 @@ const handleEnableHoursAndDays = (
 ) => {
   if (activeView !== views.MONTH) {
     const slotStart = convertToDate(slotInfo.start);
-    const existingSlotIndex = enableHourSlots.findIndex(
+    const existingSlotIndex = (enableHourSlots || []).findIndex(
       (date) => convertToDate(date).getTime() === slotStart.getTime()
     );
 
     if (existingSlotIndex === -1) {
-      setEnableHourSlots([...enableHourSlots, slotStart, endTime]);
+      setEnableHourSlots([...(enableHourSlots || []), slotStart, endTime]);
     } else {
-      const updatedEnableHourSlots = enableHourSlots.filter(
+      const updatedEnableHourSlots = (enableHourSlots || []).filter(
         (date) =>
           convertToDate(date).getTime() !== slotStart.getTime() &&
           convertToDate(date).getTime() !== endTime.getTime()
@@ -253,14 +283,14 @@ const handleEnableHoursAndDays = (
 
 const handleEnableDate = (slotInfo, setEnabledDays, enabledDays) => {
   const slotStart = convertToDate(slotInfo.start);
-  const existingEnabledDayIndex = enabledDays.findIndex(
+  const existingEnabledDayIndex = (enabledDays || []).findIndex(
     (date) => convertToDate(date).getTime() === slotStart.getTime()
   );
 
   if (existingEnabledDayIndex === -1) {
-    setEnabledDays([...enabledDays, slotStart]);
+    setEnabledDays([...(enabledDays || []), slotStart]);
   } else {
-    const updatedEnabledDays = enabledDays.filter(
+    const updatedEnabledDays = (enabledDays || []).filter(
       (date) => convertToDate(date).getTime() !== slotStart.getTime()
     );
     setEnabledDays(updatedEnabledDays);
@@ -275,14 +305,15 @@ const handleMonthViewDisable = (
   activeView
 ) => {
   if (activeView !== views.WEEK) {
-    const existingDisableDateIndex = disableDates.findIndex(
+    console.log(disableDates, typeof (disableDates))
+    const existingDisableDateIndex = (disableDates || []).findIndex(
       (date) => convertToDate(date).getTime() === slotInfo.start.getTime()
     );
 
     if (existingDisableDateIndex === -1) {
-      setDisableDates([...disableDates, slotInfo.start]);
+      setDisableDates([...(disableDates || []), slotInfo.start]);
     } else {
-      const updatedDisableDates = disableDates.filter(
+      const updatedDisableDates = (disableDates || []).filter(
         (date) => convertToDate(date).getTime() !== slotInfo.start.getTime()
       );
       setDisableDates(updatedDisableDates);
@@ -427,8 +458,7 @@ const haveErrorsWhenDoubleClick = (
   }
   if (isPastDate(slotInfo.start)) {
     return toast.warning(
-      `Cannot ${
-        !isStudentLoggedIn ? "Disable/Enable " : "Book/Reserve"
+      `Cannot ${!isStudentLoggedIn ? "Disable/Enable " : "Book/Reserve"
       } older slots.`
     );
   }
