@@ -109,7 +109,7 @@ const SingleTutorFeedbacks = () => {
                                 <CustomEvent
                                     {...event}
                                     reservedSlots={events}
-                                    isStudentLoggedIn={true}
+                                    isStudentLoggedIn={false} //exception becuase student need to see other students feedback, thats why isStudentLoggedin is false
                                     handleSetReservedSlots={() => { }}
                                 />
                             )

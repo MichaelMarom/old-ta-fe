@@ -109,8 +109,8 @@ h4, h5, h6 {
 
 
 span {
-  color: rgb(85 85 85);
-  font-weight: 700 !important;
+  color: rgb(129, 129, 129);
+  font-weight: 400 !important;
   font-family: "Work Sans", sans-serif !important;
 }
 
@@ -688,7 +688,7 @@ fieldset:disabled .btn,
   transform-origin: 0 0;
   background: var(--color-background);
   transition: transform 120ms ease-in;
-  font-weight: 400;
+  /* font-weight: 300; */
   font-size: 12px;
   line-height: 1.2;
 }
@@ -698,7 +698,7 @@ fieldset:disabled .btn,
   box-sizing: border-box;
   display: block;
   width: 100%;
-  border: 1px solid currentColor;
+  border: 2px solid rgb(179, 179, 179);
   padding: calc(var(--size-bezel) * 1.5) var(--size-bezel);
   color: currentColor;
   background: transparent;
