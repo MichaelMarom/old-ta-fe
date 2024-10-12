@@ -7,6 +7,7 @@ import CustomEvent from '../../components/common/Calendar/Event';
 import { convertToDate } from '../../components/common/Calendar/Calendar';
 import { get_tutor_bookings } from '../../axios/calender';
 import { TutorEventModal } from '../../components/common/EventModal/TutorEventModal/TutorEventModal';
+import { getNameUsingIdColumn } from '../../axios/common';
 
 
 const SingleTutorFeedbacks = () => {
@@ -17,6 +18,7 @@ const SingleTutorFeedbacks = () => {
     const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
     const [clickedSlot, setClickedSlot] = useState({})
     const [currentDate, setCurrentDate] = useState(new Date());
+    const [tutorName, setTutorName] = useState("")
 
     useEffect(() => {
         moment.tz.setDefault(timeZone);
@@ -45,7 +47,7 @@ const SingleTutorFeedbacks = () => {
         const inFuture = convertToDate(event.end).getTime() > (new Date()).getTime()
         if (!inFuture) {
             setClickedSlot(event)
-            setFeedbackModalOpen(true) 
+            setFeedbackModalOpen(true)
         }
     }
 
@@ -90,12 +92,17 @@ const SingleTutorFeedbacks = () => {
         setCurrentDate(date);
     }
 
+    useEffect(() => {
+        getNameUsingIdColumn(params.AcademyId, "TutorSetup", "TutorScreenname").
+        then(res => !res?.response?.data && setTutorName(res[0].TutorScreenname))
+    }, [params.AcademyId])
+
     const localizer = momentLocalizer(moment);
 
     return (
         <div>
             <div>
-                <h4 className='text-center m-3'>Tutor "{params.AcademyId}" feedback from students</h4>
+                <h4 className='text-center m-3'>Tutor "{tutorName}" feedback from students</h4>
                 <div className='m-3 student-calender' style={{ height: "80vh" }}>
                     <Calendar
                         localizer={localizer}

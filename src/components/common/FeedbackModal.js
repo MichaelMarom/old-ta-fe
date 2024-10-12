@@ -12,6 +12,7 @@ import Avatar from "./Avatar";
 
 const FeedbackModal = ({
   handleClose,
+  studentSide = false,
   selectedEvent,
   setSelectedEvent,
   questions,
@@ -28,7 +29,8 @@ const FeedbackModal = ({
         <div className="d-flex align-items-center">
           <Avatar avatarSrc={selectedEvent.photo} />
           <div>
-            <h6 className="m-0 text-start">{selectedEvent.studentName}</h6>
+            {/* TODO: fix name */}
+            <h6 className="m-0 text-start">{studentSide ? selectedEvent.tutorScreenName : selectedEvent.studentName}</h6>
             <p className="fw-bold" style={{ fontSize: "12px" }}>
               {selectedEvent.subject}
               {`(${selectedEvent.type})`}

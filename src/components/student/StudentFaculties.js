@@ -226,29 +226,16 @@ const StudentFaculties = () => {
         style={{ overflow: "hidden", height: "calc(100vh - 50px)" }}
       >
         <div id="form-subject-data-collection-table">
-          {/* <SubMenu
-            faculty={faculties}
-            selectedFaculty={selectedFaculty}
-            setSelectedFaculty={setSelectedFaculty}
-          /> */}
-
-          {/* <div className="highlight m-2" style={{ width: "100%" }}>
-            There are 41 faculties containing 600+ subjects to select from. From
-            the sub menu above, select the faculty of interest. Then from the
-            table below select the subject of interest. Your selected subject
-            generates a coparison table of all tutors for that subject allow you
-            to compare from the list. Then click on the BOOK LESSON button to
-            view your preferred tutor's calendar.
-          </div> */}
           <div className="d-flex gap-3 m-3">
             <div style={{ width: "20%" }}>
 
-              <div className="p-3 rounded-3" style={{ width: '100%', height: "calc(100vh - 150px)", overflowY: "auto", backgroundColor: 'rgb(33 47 61)', color: 'white' }}>
+              <div className="p-3 rounded-3"
+                style={{ width: '100%', height: "calc(100vh - 150px)", overflowY: "auto", backgroundColor: 'rgb(33 47 61)', color: 'white' }}>
                 <h4 className="text-light text-center">{faculties.length} Faculties</h4>
                 <p className="text-center small">Total Subjects {faculties.reduce((sum, fac) => { sum = sum + fac.subjectCount; return sum }, 0)}</p>
 
                 <ul className="list-group">
-                  {faculties.map(({ Id, Faculty,subjectCount }) => (
+                  {faculties.map(({ Id, Faculty, subjectCount }) => (
                     <li
                       key={Id}
                       id={Id === selectedFaculty ? "tutor-tab-header-list-active1"
@@ -260,12 +247,12 @@ const StudentFaculties = () => {
                       }}
                       onClick={() => setSelectedFaculty(Id)}
                     >
-                     <div className="d-flex align-items-center">
+                      <div className="d-flex align-items-center">
                         {/* <p style={{ width: "30px" }}>{subjectCount}</p> */}
                         <span
                           className="badge bg-transparent border d-flex justify-content-center align-items-center"
                           style={{
-                            width:"25px",
+                            width: "25px",
                             height: "25px",
                             fontSize: '0.7rem',  // Smaller font size for notification style
                             padding: '0.3em 0.6em',
@@ -327,7 +314,8 @@ const StudentFaculties = () => {
                         style={{ height: "45px" }}
                       >
                         <input
-                          className="form-check-input border border-dark"
+                         style={{border:subj.tutor_count ?"2px solid limegreen":""}} 
+                          className="form-check-input"
                           type="radio"
                           disabled={!subj.tutor_count}
                           name="options"
@@ -337,7 +325,7 @@ const StudentFaculties = () => {
                             subj.tutor_count && setSelectedSubject(subj)
                           }
                         />
-                        <label className="form-check-label cursor-pointer" htmlFor={subj.Id}>
+                        <label className="form-check-label cursor-pointer" style={{color:subj.tutor_count ?"limegreen":""}} htmlFor={subj.Id}>
                           {subj.SubjectName}
                         </label>
                       </div>
@@ -349,276 +337,28 @@ const StudentFaculties = () => {
                 {selectedSubject.SubjectName && !fetchingTutorsRate ? (
                   <>
                     {tutorsWithRates.length ? (
-                      <>
-                        {/* <div
-                          className="d-flex rounded justify-content-between  align-items-center "
-                          style={{ color: "white", background: "#2471A3" }}
-                        >
-                          {multi_student_cols.map((item) => (
-                            <div
-                              key={item.Header}
-                              className="text-center d-flex flex-column"
-                              style={{ width: item.width }}
-                            >
-                              <p className="m-0" style={{ fontSize: "12px" }} key={item.Header}>
-                                {item.Header}
-                              </p>
-                              <div style={{ float: "right" }}>{item.tooltip}</div>
+                      <div
+                        className="tables"
+                        style={{
+                          height: "calc(100vh - 200px)",
+                          width: "100%",
+                          overflowY: "auto",
+                        }}
+                      >
+                        <div className="row gap-3 m-2">
+                          {tutorsWithRates.map((item, index) => (
+                            <div className=" col-12 mb-4 subjectTutorCard" style={{
+                              borderRadius: "20px",
+                              width: "32%",
+                              boxShadow: "1px 2px 12px 2px #bbbbbb"
+                            }} key={index}>
+                              <TutorCard handleNavigateToFeedback={handleNavigateToFeedback} handleNavigateToSchedule={handleNavigateToSchedule} redirect_to_tutor_profile={redirect_to_tutor_profile} key={index} tutor={item} />
                             </div>
                           ))}
-                        </div> */}
-
-                        <div
-                          className="tables"
-                          style={{
-                            height: "calc(100vh - 200px)",
-                            width: "100%",
-                            overflowY: "auto",
-                          }}
-                        >
-                          <div className="row gap-3 m-2">
-                            {tutorsWithRates.map((item, index) => (
-                              <div className=" col-12 mb-4 subjectTutorCard" style={{
-                                borderRadius: "20px",
-                                width: "32%",
-                                boxShadow: "1px 2px 12px 2px #bbbbbb"
-                              }} key={index}>
-                                <TutorCard handleNavigateToFeedback={handleNavigateToFeedback} handleNavigateToSchedule={handleNavigateToSchedule} redirect_to_tutor_profile={redirect_to_tutor_profile} key={index} tutor={item} />
-                              </div>
-                            ))}
-                          </div>
-
-                          {/* <table>
-                            <thead className="d-none"></thead>
-
-                            <tbody>
-                              {tutorsWithRates.map((item, index) => {
-                                const rate = item.rate;
-                                return (
-                                  <tr key={index}>
-                                    <td
-                                      style={{
-                                        width: multi_student_cols[0].width,
-                                        border: "1px solid lightgray",
-                                      }}
-                                    >
-                                      <div className="d-flex flex-column">
-                                        <Avatar
-                                          size="50"
-                                          avatarSrc={item?.Photo}
-                                          online={item.Online}
-                                          showOnlineStatus={false}
-                                        />
-                                        {item.CodeApplied && (
-                                          <div
-                                            className="blinking-button"
-                                            style={{ color: "black" }}
-                                          >
-                                            <Pill
-                                              fontColor="black"
-                                              label={"connected"}
-                                              customColor
-                                              color="limegreen"
-                                              editable={false}
-                                              hasIcon={false}
-                                            />
-                                          </div>
-                                        )}
-                                      </div>
-                                    </td>
-                                    <td
-                                      style={{
-                                        width: multi_student_cols[9].width,
-                                        border: "1px solid lightgray",
-                                      }}
-                                    >
-                                      {rate}
-                                    </td>
-                                    <td
-                                      style={{
-                                        width: multi_student_cols[11].width,
-                                        border: "1px solid lightgray",
-                                      }}
-                                    >
-                                      <div className="d-flex flex-wrap"
-                                        style={{
-                                          overflowY: "auto",
-                                          height: "100%",
-                                        }}
-                                      >
-                                        {JSON.parse(item.grades).map((grade) => (
-                                          <Pill label={grade} key={grade} width="fit-content" />
-                                        ))}
-                                      </div>
-                                    </td>
-                                    <td
-                                      style={{
-                                        width: multi_student_cols[0].width,
-                                        border: "1px solid lightgray",
-                                      }}
-                                    >
-                                      {item?.IntroSessionDiscount ? (
-                                        <FaCheckCircle
-                                          color="limegreen"
-                                          size={20}
-                                        />
-                                      ) : (
-                                        <MdCancel size={20} color="red" />
-                                      )}
-
-                                    </td>
-                                    <td
-                                      style={{
-                                        width: multi_student_cols[2].width,
-                                        border: "1px solid lightgray",
-                                      }}
-                                      className=""
-                                    >
-                                      {item?.TutorScreenname}
-                                    </td>
-                                    <td
-                                      style={{
-                                        width: multi_student_cols[3].width,
-                                        border: "1px solid lightgray",
-                                      }}
-                                    >
-                                      {item?.Country}
-                                    </td>
-                                    <td
-                                      style={{
-                                        width: multi_student_cols[4].width,
-                                        border: "1px solid lightgray",
-                                      }}
-                                      className="text-center"
-                                    >
-                                      {showDate(
-                                        convertGMTToLocalTime(item?.GMT),
-                                        wholeDateFormat
-                                      )}{" "}
-                                      <br />
-                                    </td>
-                                    <td
-                                      style={{
-                                        width: multi_student_cols[5].width,
-                                        border: "1px solid lightgray",
-                                      }}
-                                      className=""
-                                    >
-                                      <div
-                                        className={`d-inline rounded px-1 m-auto ${classByDifference(
-                                          calculateTimeDifference(item?.GMT)
-                                        )}`}
-                                        style={{ fontSize: "18px" }}
-                                      > {calculateTimeDifference(item?.GMT) > 0
-                                        ? `+${calculateTimeDifference(item?.GMT)}`
-                                        : calculateTimeDifference(item?.GMT)}
-                                      </div>
-                                    </td>
-                                    <td
-                                      style={{
-                                        width: multi_student_cols[6].width,
-                                        border: "1px solid lightgray",
-                                      }}
-                                    >
-                                      <button
-                                        className="action-btn-square"
-                                        onClick={() =>
-                                          handleNavigateToSchedule(item)
-                                        }
-                                      >
-                                        <div className="button__content">
-                                          <div className="button__icon">
-                                            <img
-                                              src={BTN_ICON}
-                                              alt={"btn__icon"}
-                                              width={20}
-                                              height={20}
-                                            />
-                                          </div>
-                                          <div className="button__text  text-sm">
-                                            Book Lesson
-                                          </div>
-                                        </div>
-                                      </button>
-                                    </td>
-                                    <td
-                                      style={{
-                                        width: multi_student_cols[7].width,
-                                        border: "1px solid lightgray",
-                                      }}
-                                    >
-                                      <button
-                                        className="action-btn-square"
-                                        onClick={() =>
-                                          handleNavigateToFeedback(item.AcademyId)
-                                        }
-                                      >
-                                        <div className="button__content">
-                                          <div className="button__icon">
-                                            <img
-                                              src={BTN_ICON}
-                                              alt={"btn__icon"}
-                                              width={20}
-                                              height={20}
-                                            />
-                                          </div>
-                                          <div className="button__text">
-                                            {" "}
-                                            Feedbacks
-                                          </div>
-                                        </div>
-                                      </button>
-                                    </td>
-                                    <td
-                                      style={{
-                                        width: multi_student_cols[8].width,
-                                        border: "1px solid lightgray",
-                                      }}
-                                    >
-                                      <button
-                                        className="action-btn-square"
-                                        onClick={() =>
-                                          redirect_to_tutor_profile(item?.AcademyId)
-                                        }
-                                      >
-                                        <div className="button__content">
-                                          <div className="button__icon">
-                                            <img
-                                              src={BTN_ICON}
-                                              alt={"btn__icon"}
-                                              width={20}
-                                              height={20}
-                                            />
-                                          </div>
-                                          <div className="button__text">
-                                            View Profile
-                                          </div>
-                                        </div>
-                                      </button>
-                                    </td>
-                                    <td
-                                      style={{
-                                        width: multi_student_cols[10].width,
-                                        border: "1px solid lightgray",
-                                      }}
-                                    >
-                                      {item.CancellationPolicy} Hrs
-                                    </td>
-                                    <td
-                                      style={{
-                                        width: multi_student_cols[11].width,
-                                        border: "1px solid lightgray",
-                                      }}
-                                    >
-                                      {item.ResponseHrs.replace("Hours", "Hrs")}
-                                    </td>
-                                  </tr>
-                                );
-                              })}
-                            </tbody>
-                          </table> */}
                         </div>
-                      </>
+
+
+                      </div>
                     ) : (
                       <p className="text-danger p-4 m-2">
                         No tutors found that is offering that Subject

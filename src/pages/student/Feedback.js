@@ -217,6 +217,7 @@ const Feedback = () => {
             )}
           </div>
           <FeedbackModal
+            studentSide={true}
             handleClose={() => {
               setQuestions(rawQuestions);
               setSelectedEvent({});

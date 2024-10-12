@@ -1,4 +1,4 @@
-import { showErrorToast } from "./config";
+import { apiClient, showErrorToast } from "./config";
 
 export const getNameUsingIdColumn = async (id, tableName, fieldName) => {
   try {
