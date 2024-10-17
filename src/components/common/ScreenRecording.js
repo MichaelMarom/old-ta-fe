@@ -1,60 +1,69 @@
-import React, { useEffect, useRef } from 'react';
-import { toast } from 'react-toastify';
+import React, { useEffect, useRef, useState } from "react";
+import { toast } from "react-toastify";
 
 const ScreenRecording = ({ excalidrawWrapperRef }) => {
-    const videoRef = useRef(null);
-    const recorderRef = useRef(null);
+  const videoRef = useRef(null);
+  const [recorder, setRecorder] = useState(null);
+  const [recording, setRecording] = useState(false);
+  const frames = useRef([]);
 
-    useEffect(() => {
-        const startRecording = async () => {
-         try{   if (excalidrawWrapperRef.current) {
-                const canvas = excalidrawWrapperRef.current.querySelector('canvas.excalidraw__canvas.interactive');
-                if (canvas) {
-                    // Capture the canvas stream
-                    const canvasStream = canvas.captureStream();
-                    
-                    // Get audio stream from user's microphone
-                    const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    
-                    // Combine the canvas and audio streams
-                    const combinedStream = new MediaStream([
-                        ...canvasStream.getTracks(),
-                        ...audioStream.getTracks()
-                    ]);
+  useEffect(() => {
+    if (recorder) {
+      recorder.ondataavailable = (event) => {
+        frames.current.push(event.data);
+      };
 
-                    const recorder = new MediaRecorder(combinedStream, { mimeType: 'video/webm' });
-                    recorderRef.current = recorder;
+      recorder.onstop = () => {
+        const stream = recorder.stream; // Reference to the stream
+        stream.getTracks().forEach((track) => track.stop());
+        const blob = new Blob(frames.current, { type: recorder.mimeType });
+        const url = URL.createObjectURL(blob);
+        if (videoRef.current) {
+          videoRef.current.src = url;
+        }
+      };
+    }
+  }, [recorder]);
 
-                    // Start recording
-                    recorder.start();
+  const startRecording = async () => {
+    if (excalidrawWrapperRef.current) {
+      const canvas = excalidrawWrapperRef.current.querySelector(
+        ".excalidraw__canvas"
+      );
+      console.log("start recording", canvas);
+      if (canvas) {
+        const stream = canvas.captureStream(30); // Capture at 30 FPS
+        const newRecorder = new MediaRecorder(stream);
+        setRecorder(newRecorder); // Set the recorder
 
-                    // Stop the recording after 10 seconds
-                    setTimeout(() => {
-                        recorder.stop();
-                    }, 10000);
+        frames.current = []; // Clear frames for new recording
 
-                    // Set video source when data is available
-                    recorder.addEventListener('dataavailable', (evt) => {
-                        const url = URL.createObjectURL(evt.data);
-                        if (videoRef.current) {
-                            videoRef.current.src = url;
-                        }
-                    });
-                }
-            }}
-            catch(err){
-                toast.error(err.message)
-            }
-        };
+        newRecorder.start();
+        setRecording(true); // Update recording state
 
-        startRecording();
-    }, [excalidrawWrapperRef.current]);
+        // Stop recording after 5 seconds
+        setTimeout(() => {
+          newRecorder.stop();
+          setRecording(false); // Update recording state
+        }, 20000);
+      } else {
+        toast.error("Canvas not found");
+      }
+    }
+  };
 
-    return (
-        <div style={{ position: "absolute", zIndex: "999" }}>
-            <video ref={videoRef} controls style={{ marginTop: '20px', height: "300px" }}></video>
-        </div>
-    );
+  return (
+    <div style={{ position: "absolute", zIndex: "999", top: "150px" }}>
+      <button onClick={startRecording} disabled={recording}>
+        {recording ? "Recording..." : "Start Recording"}
+      </button>
+      {!recording && <video
+        ref={videoRef}
+        controls
+        style={{ marginTop: "20px", height: "300px", width: "100%" }}
+      />}
+    </div>
+  );
 };
 
 export default ScreenRecording;
