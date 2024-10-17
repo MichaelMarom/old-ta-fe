@@ -314,7 +314,7 @@ const StudentFaculties = () => {
                         style={{ height: "45px" }}
                       >
                         <input
-                         style={{border:subj.tutor_count ?"2px solid limegreen":""}} 
+                          style={{ border: subj.tutor_count ? "2px solid green" : "" }}
                           className="form-check-input"
                           type="radio"
                           disabled={!subj.tutor_count}
@@ -325,7 +325,7 @@ const StudentFaculties = () => {
                             subj.tutor_count && setSelectedSubject(subj)
                           }
                         />
-                        <label className="form-check-label cursor-pointer" style={{color:subj.tutor_count ?"limegreen":""}} htmlFor={subj.Id}>
+                        <label className="form-check-label cursor-pointer" style={{ color: subj.tutor_count ? "green" : "" }} htmlFor={subj.Id}>
                           {subj.SubjectName}
                         </label>
                       </div>

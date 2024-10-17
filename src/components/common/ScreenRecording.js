@@ -1,83 +1,58 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { toast } from 'react-toastify';
 
-const ScreenRecording = ({ onSessionEnd }) => {
-    const [mediaRecorder, setMediaRecorder] = useState(null);
-    const [mediaBlobUrl, setMediaBlobUrl] = useState(null);
-    const [status, setStatus] = useState('idle');
+const ScreenRecording = ({ excalidrawWrapperRef }) => {
+    const videoRef = useRef(null);
+    const recorderRef = useRef(null);
 
-    const getSelectedOption = (mediaStream) => {
-        const isFirefox = typeof InstallTrigger !== 'undefined';
-        const isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
-        const videoTrack = mediaStream.getVideoTracks()[0];
-        if (isFirefox) {
-            if (videoTrack.label === "Primary Monitor") {
-                return true;
-            } else {
-                return false;
-            }
-        } else if (isChrome) {
-            const videoSetting = videoTrack.getSettings();
-
-            if (videoSetting && videoSetting.displaySurface !== "monitor") {
-                return false;
-            } else {
-                return true;
-            }
-        }
-        else return true
-    }
     useEffect(() => {
         const startRecording = async () => {
-            try {
-                const stream = await navigator.mediaDevices.getDisplayMedia({
-                    video: { cursor: 'always' },
-                    audio: false,
-                });
+         try{   if (excalidrawWrapperRef.current) {
+                const canvas = excalidrawWrapperRef.current.querySelector('canvas.excalidraw__canvas.interactive');
+                if (canvas) {
+                    // Capture the canvas stream
+                    const canvasStream = canvas.captureStream();
+                    
+                    // Get audio stream from user's microphone
+                    const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    
+                    // Combine the canvas and audio streams
+                    const combinedStream = new MediaStream([
+                        ...canvasStream.getTracks(),
+                        ...audioStream.getTracks()
+                    ]);
 
-                const recorder = new MediaRecorder(stream);
-                setMediaRecorder(recorder);
+                    const recorder = new MediaRecorder(combinedStream, { mimeType: 'video/webm' });
+                    recorderRef.current = recorder;
 
-                const chunks = [];
-                recorder.ondataavailable = (event) => {
-                    if (event.data.size > 0) {
-                        chunks.push(event.data);
-                    }
-                };
+                    // Start recording
+                    recorder.start();
 
-                recorder.onstop = () => {
-                    const blob = new Blob(chunks, { type: 'video/webm' });
-                    const url = URL.createObjectURL(blob);
-                    setMediaBlobUrl(url);
-                    if (onSessionEnd) {
-                        onSessionEnd(blob); // pass the blob to the onSessionEnd handler for saving
-                    }
-                };
+                    // Stop the recording after 10 seconds
+                    setTimeout(() => {
+                        recorder.stop();
+                    }, 10000);
 
-                recorder.start();
-                setStatus('recording');
-            } catch (err) {
-                console.error('Error: ', err);
-            }
-        };
-
-        const stopRecording = () => {
-            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-                mediaRecorder.stop();
-                setStatus('stopped');
+                    // Set video source when data is available
+                    recorder.addEventListener('dataavailable', (evt) => {
+                        const url = URL.createObjectURL(evt.data);
+                        if (videoRef.current) {
+                            videoRef.current.src = url;
+                        }
+                    });
+                }
+            }}
+            catch(err){
+                toast.error(err.message)
             }
         };
 
         startRecording();
-
-        return () => {
-            stopRecording();
-        };
-    }, [onSessionEnd, mediaRecorder]);
+    }, [excalidrawWrapperRef.current]);
 
     return (
-        <div>
-            <p>{status}</p>
-            {mediaBlobUrl && <video  controlsList="nodownload noremoteplayback"  style={{ width: "200px", height: "200px" }} src={mediaBlobUrl} controls autoPlay loop />}
+        <div style={{ position: "absolute", zIndex: "999" }}>
+            <video ref={videoRef} controls style={{ marginTop: '20px', height: "300px" }}></video>
         </div>
     );
 };

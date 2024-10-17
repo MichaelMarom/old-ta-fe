@@ -7,7 +7,7 @@ import { socket } from "../../config/socket";
 import "../../styles/tutor.css";
 import CommonLayout from "../../layouts/CommonLayout";
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import CollabSidebar from "../../components/tutor/Collab/CollabSidebar";
 import _ from "lodash";
@@ -18,6 +18,7 @@ import { get_my_data } from "../../axios/student";
 import logo from "../../assets/images/tutoring Logo.png";
 import Loading from "../../components/common/Loading";
 import Actions from "../../components/common/Actions";
+import ScreenRecording from '../../components/common/ScreenRecording'
 
 const Collaboration = () => {
   const { user } = useSelector((state) => state.user);
@@ -30,6 +31,7 @@ const Collaboration = () => {
 
   const [excalidrawAPI, setExcalidrawAPI] = useState(null);
   const [elements, setElements] = useState([]);
+  const excalidrawWrapperRef = useRef(null);
   // const [collaborators, setCollaborators] = useState(new Map());
   const [files, setFiles] = useState([]);
   const navigate = useNavigate();
@@ -386,14 +388,14 @@ const Collaboration = () => {
           !result?.response?.data &&
             setTutorVideoConsent(
               result?.[0]?.ConsentRecordingLesson &&
-                result?.[0]?.ConsentRecordingLesson === "true"
+              result?.[0]?.ConsentRecordingLesson === "true"
             );
         });
         get_my_data(openedSession.studentId).then((result) => {
           setStudentVideoConsent(
             !result?.response?.data &&
-              result.ParentConsent &&
-              result?.ParentConsent === "true"
+            result.ParentConsent &&
+            result?.ParentConsent === "true"
           );
         });
       }
@@ -418,16 +420,15 @@ const Collaboration = () => {
     return <Loading loadingText={"Fetching Session!"} />;
   return (
     <CommonLayout role={user.role}>
-      {/* <TabInfoVideoToast video={VIDEO} /> */}
 
+      <ScreenRecording excalidrawWrapperRef={excalidrawWrapperRef} />
       {openedSession.subject && (
         <div
           style={{ width: "70%" }}
-          className={`d-flex ${
-            openedSession.subject
+          className={`d-flex ${openedSession.subject
               ? "justify-content-between"
               : "justify-content-center"
-          }`}
+            }`}
         >
           <div>
             {sessionTime === "past" && (
@@ -439,6 +440,7 @@ const Collaboration = () => {
 
       <div className="d-flex" style={{ gap: "2%" }}>
         <div
+          ref={excalidrawWrapperRef}
           style={{
             position: "fixed",
             inset: 0,
@@ -450,6 +452,7 @@ const Collaboration = () => {
           className="rounded"
         >
           <Excalidraw
+          
             excalidrawAPI={(api) => setExcalidrawAPI(api)}
             isCollaborating={user.role === "tutor"}
             onPointerDown={handlePointerDown}
