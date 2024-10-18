@@ -112,67 +112,6 @@ export let get_tutor_status = (faculty, subject, reason, AcademyId) => {
   });
 };
 
-// export let upload_setup_form = (
-//   fname,
-//   uname,
-//   mname,
-//   lname,
-//   email,
-//   cell,
-//   acadId,
-//   add1,
-//   add2,
-//   city,
-//   state,
-//   zipCode,
-//   country,
-//   timeZone,
-//   response_zone,
-//   intro,
-//   motivation,
-//   headline,
-//   photo,
-//   video,
-//   grades,
-//   userId
-// ) => {
-//   return new Promise((resolve, reject) => {
-//     apiClient
-//       .post("/tutor/form-one", {
-//         fname,
-//         uname,
-//         mname,
-//         lname,
-//         email,
-//         cell,
-//         acadId,
-//         add1,
-//         add2,
-//         city,
-//         state,
-//         zipCode,
-//         country,
-//         timeZone,
-//         response_zone,
-//         intro,
-//         motivation,
-//         headline,
-//         photo,
-//         video,
-//         grades,
-//         userId,
-//       })
-//       .then((result) => {
-//         resolve(result.data);
-//       })
-//       .catch((err) => {
-//         showErrorToast(err);
-
-//         // reject(err)
-//       });
-//   });
-// };
-
 export const post_edu = async (body) => {
   try {
     const data = await apiClient.post("/tutor/edu", body);
@@ -207,75 +146,6 @@ export const formatted_tutor_sessions = async (tutorId) => {
   return data;
 };
 
-// export const feedback_records = async (tutorId, timeZone) => {
-//   try {
-//     const { data } = await apiClient.get(`/tutor/feedbacks/${tutorId}`, {
-//       params: { timeZone },
-//     });
-//     return data;
-//   } catch (err) {
-//     showErrorToast(err);
-//   }
-// };
-
-// export let get_degree = () => {
-//   return new Promise((resolve, reject) => {
-//     apiClient
-//       .get("/tutor/degree", {})
-//       .then((result) => {
-//         resolve(result.data);
-//       })
-//       .catch((err) => {
-//         showErrorToast(err);
-
-//         // reject(err)
-//       });
-//   });
-// };
-
-// export let get_level = () => {
-//   return new Promise((resolve, reject) => {
-//     apiClient
-//       .get("/tutor/level", {})
-//       .then((result) => {
-//         resolve(result.data);
-//       })
-//       .catch((err) => {
-//         showErrorToast(err);
-
-//         // reject(err)
-//       });
-//   });
-// };
-
-// export let get_certificates = () => {
-//   return new Promise((resolve, reject) => {
-//     apiClient
-//       .get("/tutor/certificates", {})
-//       .then((result) => {
-//         resolve(result.data);
-//       })
-//       .catch((err) => {
-//         showErrorToast(err);
-
-//         // reject(err)
-//       });
-//   });
-// };
-
-// export let get_user_data = async (user_id) => {
-//   try {
-//     const { data } = await apiClient.get("/tutor/education", {
-//       params: {
-//         user_id,
-//       },
-//     });
-//     return data;
-//   } catch (err) {
-//     showErrorToast(err);
-//   }
-// };
-
 export const student_public_profile = async (studentId, tutorId = null) => {
   try {
     const { data } = await apiClient.get(
@@ -308,22 +178,6 @@ export const remove_subject_rates = async (id) => {
     return data;
   } catch (err) {}
 };
-
-// export let get_my_data = (AcademyId) => {
-//   return new Promise((resolve, reject) => {
-//     apiClient
-//       .get("/tutor/my-data", {
-//         params: {},
-//       })
-//       .then((result) => {
-//         resolve(result.data);
-//       })
-//       .catch((err) => {
-//         showErrorToast(err);
-//         // reject(err)
-//       });
-//   });
-// };
 
 export let get_my_edu = async (AcademyId) => {
   try {
@@ -473,17 +327,6 @@ export const fetch_calender_detals = async (id) => {
     showErrorToast(err);
   }
 };
-
-// export const fetchStudentsBookings = async (tutorId) => {
-//   try {
-//     const response = await apiClient.get(`api/bookings/${tutorId}`);
-//     return response.data;
-//   } catch (err) {
-//     showErrorToast(err);
-
-//     console.error("Error:", error);
-//   }
-// };
 
 export const getAllTutorLessons = async (tutorId) => {
   try {

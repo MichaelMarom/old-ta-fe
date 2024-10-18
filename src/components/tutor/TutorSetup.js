@@ -27,9 +27,7 @@ import {
   US_STATES,
 } from "../../constants/constants";
 import { setTutor } from "../../redux/tutor/tutorData";
-import {
-  unsavedChangesHelper,
-} from "../../utils/common";
+import { unsavedChangesHelper } from "../../utils/common";
 import { Link } from "react-router-dom";
 import Button from "../common/Button";
 import { IoPersonCircle } from "react-icons/io5";
@@ -501,7 +499,7 @@ const TutorSetup = () => {
             await updateTutorSetup(tutor.AcademyId, {
               Photo: result.data.url,
             });
-            set_photo(result.data.url)
+            set_photo(result.data.url);
             // dispatch(setTutor({ ...tutor, Photo: result.data.url,
             //   CellPhone: cell,
             //   Address1: add1,
@@ -560,11 +558,12 @@ const TutorSetup = () => {
             const { data } = await uploadVideoToAzure(
               file,
               tutor.AcademyId,
+              "tutor-intro-video",
               selectedVideoOption
             );
             updateTutorSetup(tutor.AcademyId, { Video: data.url });
             toast.success("Video Succesfully Uploaded!");
-            set_video(data.url)
+            set_video(data.url);
             // dispatch(setTutor({ ...tutor, Video: data.url,
             //   CellPhone: cell,
             //   Address1: add1,
@@ -642,7 +641,7 @@ const TutorSetup = () => {
             marginLeft: "20px",
             marginRight: "20px",
             marginTop: "0",
-            margin: "auto"
+            margin: "auto",
           }}
         >
           {!!tutor.StatusReason?.length && (
@@ -686,10 +685,11 @@ const TutorSetup = () => {
                   </p>
                 </div>
                 <h6
-                  className={`text-start m-0 ${mandatoryFields.find((item) => item.name === "photo").filled
-                    ? ""
-                    : "blink_me"
-                    }`}
+                  className={`text-start m-0 ${
+                    mandatoryFields.find((item) => item.name === "photo").filled
+                      ? ""
+                      : "blink_me"
+                  }`}
                   style={{ whiteSpace: "nowrap" }}
                 >
                   Profile Photo
@@ -1360,10 +1360,11 @@ const TutorSetup = () => {
                 }}
               >
                 <h6
-                  className={`${!!video.length && !videoError
-                    ? ""
-                    : "blinking-button text-success"
-                    }`}
+                  className={`${
+                    !!video.length && !videoError
+                      ? ""
+                      : "blinking-button text-success"
+                  }`}
                 >
                   Elective Tutor's introduction video
                 </h6>
@@ -1481,8 +1482,9 @@ const TutorSetup = () => {
                         <button
                           style={{ width: "100%", fontSize: "10px" }}
                           type="button"
-                          className={`action-btn btn small ${selectedVideoOption === "record" ? "active" : ""
-                            }`}
+                          className={`action-btn btn small ${
+                            selectedVideoOption === "record" ? "active" : ""
+                          }`}
                           disabled={!editMode}
                           onClick={() => {
                             set_video("");
@@ -1532,8 +1534,9 @@ const TutorSetup = () => {
                             fontSize: "10px",
                             border: " 1px solid #e1e1e1",
                           }}
-                          className={`action-btn btn ${selectedVideoOption === "upload" ? "active" : ""
-                            }`}
+                          className={`action-btn btn ${
+                            selectedVideoOption === "upload" ? "active" : ""
+                          }`}
                         >
                           <div className="button__content">
                             <div className="button__icon">
@@ -1715,7 +1718,7 @@ const TutorSetup = () => {
       <Actions
         nextDisabled={!tutor.AcademyId}
         onEdit={handleEditClick}
-        saveDisabled={!editMode || (picUploading || videoUploading)}
+        saveDisabled={!editMode || picUploading || videoUploading}
         editDisabled={editMode}
         unSavedChanges={unSavedChanges}
         loading={savingRecord}

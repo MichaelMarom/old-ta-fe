@@ -229,7 +229,7 @@ const WebcamCapture = ({ user_id, record_duration }) => {
         const video = new File([blob], "video.webm", {
           type: "video/webm",
         });
-        const {data} = await uploadVideoToAzure(video, user_id);
+        const {data} = await uploadVideoToAzure(video, user_id,  "tutor-intro-video",);
 
         updateTutorSetup(tutor.AcademyId, { Video: data.url });
         toast.success("Video Succesfully Uploaded!");

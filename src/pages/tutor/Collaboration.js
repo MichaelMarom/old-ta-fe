@@ -297,20 +297,20 @@ const Collaboration = () => {
   }, [files, excalidrawAPI]);
 
   const handleExcalidrawChange = (newElements, appState, files) => {
-    console.log(
-      newElements.filter((elem) => elem.id == "XTElsEXYqiuyC_pq2Y4H9")?.[0]
-        ?.isDeleted,
-      newElements.filter((elem) => elem.id == "XTElsEXYqiuyC_pq2Y4H9")?.[0]
-        ?.version
-    );
+    // console.log(
+    //   newElements.filter((elem) => elem.id == "XTElsEXYqiuyC_pq2Y4H9")?.[0]
+    //     ?.isDeleted,
+    //   newElements.filter((elem) => elem.id == "XTElsEXYqiuyC_pq2Y4H9")?.[0]
+    //     ?.version
+    // );
 
-    console.log(
-      excalidrawAPI
-        .getSceneElements()
-        .filter((elem) => elem.id === "XTElsEXYqiuyC_pq2Y4H9")[0]?.version,
-      newElements.filter((elem) => elem.id == "XTElsEXYqiuyC_pq2Y4H9")[0]
-        ?.version
-    );
+    // console.log(
+    //   excalidrawAPI
+    //     .getSceneElements()
+    //     .filter((elem) => elem.id === "XTElsEXYqiuyC_pq2Y4H9")[0]?.version,
+    //   newElements.filter((elem) => elem.id == "XTElsEXYqiuyC_pq2Y4H9")[0]
+    //     ?.version
+    // );
 
     //  console.log(getUniqueIdsWithHigherVersion(
     //   excalidrawAPI.getSceneElements().concat(newElements),
@@ -421,7 +421,7 @@ const Collaboration = () => {
   return (
     <CommonLayout role={user.role}>
 
-      <ScreenRecording excalidrawWrapperRef={excalidrawWrapperRef} />
+      <ScreenRecording tutorId={tutor.AcademyId} excalidrawWrapperRef={excalidrawWrapperRef} />
       {openedSession.subject && (
         <div
           style={{ width: "70%" }}

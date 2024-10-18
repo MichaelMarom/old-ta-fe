@@ -1,70 +1,5 @@
 import { apiClient, showErrorToast } from "./config";
 
-// export let upload_setup_form = (
-//   fname,
-//   mname,
-//   sname,
-//   email,
-//   lang,
-//   secLan,
-//   parentAEmail,
-//   parentBEmail,
-//   parentAName,
-//   parentBName,
-//   is_18,
-//   pwd,
-//   cell,
-//   grade,
-//   add1,
-//   add2,
-//   city,
-//   state,
-//   zipCode,
-//   country,
-//   timeZone,
-//   photo,
-//   acadId,
-//   parentConsent,
-//   userId
-// ) => {
-//   return new Promise((resolve, reject) => {
-//     apiClient
-//       .post("/student/setup", {
-//         fname,
-//         mname,
-//         sname,
-//         email,
-//         lang,
-//         secLan,
-//         parentAEmail,
-//         parentBEmail,
-//         parentAName,
-//         parentBName,
-//         is_18,
-//         pwd,
-//         cell,
-//         grade,
-//         add1,
-//         add2,
-//         city,
-//         state,
-//         zipCode,
-//         country,
-//         timeZone,
-//         photo,
-//         acadId,
-//         parentConsent,
-//         userId,
-//       })
-//       .then((result) => {
-//         resolve(result.data);
-//       })
-//       .catch((err) => {
-//         // reject(err)
-//       });
-//   });
-// };
-
 export const post_student_setup = async (body) => {
   try {
     const { data } = await apiClient.post("/student/setup", body);
@@ -82,15 +17,6 @@ export const post_student_setup_at_signup = async (body) => {
     throw new Error(err)
   }
 };
-
-// export const update_student_setup = async (id, body) => {
-//   try {
-//     const { data } = await apiClient.put(`/student/setup/${id}`, body);
-//     return data;
-//   } catch (err) {
-//     showErrorToast(err);
-//   }
-// };
 
 export const post_student_agreement = async (userId, body) => {
   try {
@@ -285,25 +211,6 @@ export const getTutorsAccordingToSubjectandFaculty = async (
   }
 };
 
-// export let upload_student_short_list = async (body) => {
-//   try {
-//     const result = await apiClient.post("/student/short-list", body);
-//     return result.data;
-//   } catch (err) {
-//     showErrorToast(err);
-//     return err;
-//   }
-// };
-
-// export let get_student_short_list = async (student) => {
-//   try {
-//     const { data } = await apiClient.get(`/student/short-list/${student}`);
-//     return data;
-//   } catch (err) {
-//     showErrorToast(err);
-//   }
-// };
-
 export let get_my_data = async (AcademyId) => {
   try {
     const { data } = await apiClient.get("/student/my-data", {
@@ -316,26 +223,6 @@ export let get_my_data = async (AcademyId) => {
     showErrorToast(err);
   }
 };
-
-// export let get_student_short_list_data = async (id) => {
-//   try {
-//     const { data } = await apiClient.get("/student/short-list-data", {
-//       params: { id },
-//     });
-//     return data;
-//   } catch (err) {
-//     showErrorToast(err);
-//   }
-// };
-
-// export const get_student_events = async (studentId) => {
-//   try {
-//     const { data } = await apiClient.get(`/student/booking/${studentId}`);
-//     return data;
-//   } catch (err) {
-//     showErrorToast(err);
-//   }
-// };
 
 export const post_bank_details = async (payload) => {
   try {
@@ -363,37 +250,6 @@ export const update_bank_details = async (id, body) => {
     showErrorToast(err);
   }
 };
-
-// export const update_student_shortlist = async (
-//   AcademyId,
-//   studentId,
-//   subject,
-//   body
-// ) => {
-//   try {
-//     const { data } = await apiClient.put(
-//       `/student/short-list/${AcademyId}/${studentId}/${subject}`,
-//       body
-//     );
-//     return data;
-//   } catch (err) {
-//     showErrorToast(err);
-//     return err;
-//   }
-// };
-
-// export const getBookedSlot = async (AcademyId) => {
-//   try {
-//     let result = await apiClient.get("/student/booked-slot", {
-//       params: { AcademyId },
-//     });
-
-//     return result;
-//   } catch (err) {
-//     showErrorToast(err);
-//     return err;
-//   }
-// };
 
 export const code_applied = async (studentId, tutorId) => {
   try {
