@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { uploadVideoToAzure } from "../../utils/uploadVideo";
 
-const ScreenRecording = ({ excalidrawWrapperRef , tutorId}) => {
+const ScreenRecording = ({ excalidrawWrapperRef, tutorId }) => {
   const videoRef = useRef(null);
   const [recorder, setRecorder] = useState(null);
   const [recording, setRecording] = useState(false);
@@ -10,8 +10,8 @@ const ScreenRecording = ({ excalidrawWrapperRef , tutorId}) => {
   const [downloadUrl, setDownloadUrl] = useState(null);
 
   useEffect(() => {
-    startRecording(); // Automatically start recording on mount
-  }, [excalidrawWrapperRef.current]);
+    tutorId && excalidrawWrapperRef.current && startRecording(); // Automatically start recording on mount
+  }, [excalidrawWrapperRef.current, tutorId]);
 
   useEffect(() => {
     if (recorder) {
@@ -22,7 +22,7 @@ const ScreenRecording = ({ excalidrawWrapperRef , tutorId}) => {
       recorder.onstop = () => {
         const stream = recorder.stream;
         stream.getTracks().forEach((track) => track.stop());
-        const blob = new Blob(frames.current, {type: "video/webm" });
+        const blob = new Blob(frames.current, { type: "video/webm" });
         const url = URL.createObjectURL(blob);
 
         setDownloadUrl(url); // Set the download URL
@@ -39,35 +39,35 @@ const ScreenRecording = ({ excalidrawWrapperRef , tutorId}) => {
 
   const startRecording = async () => {
     try {
-      if (excalidrawWrapperRef.current) {
-        const canvas = excalidrawWrapperRef.current.querySelector(
-          ".excalidraw__canvas"
-        );
-        if (canvas) {
-          const videoStream = canvas.captureStream(30); // Capture video from the canvas
+      const canvas = excalidrawWrapperRef.current.querySelector(
+        ".excalidraw__canvas"
+      );
+      if (canvas) {
+        const videoStream = canvas.captureStream(30); // Capture video from the canvas
 
-          // Capture audio from the microphone
-          const audioStream = await navigator.mediaDevices.getUserMedia({
-            audio: true,
-          });
+        // Capture audio from the microphone
+        const audioStream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+        });
 
-          // Add audio track to the video stream
-          audioStream.getAudioTracks().forEach((track) => {
-            videoStream.addTrack(track);
-          });
+        // Add audio track to the video stream
+        audioStream.getAudioTracks().forEach((track) => {
+          videoStream.addTrack(track);
+        });
 
-          const newRecorder = new MediaRecorder(videoStream);
-          setRecorder(newRecorder);
-          frames.current = [];
+        const newRecorder = new MediaRecorder(videoStream, {
+          type: "video/webm",
+        });
+        setRecorder(newRecorder);
+        frames.current = [];
 
-          newRecorder.start();
-          setRecording(true);
+        newRecorder.start();
+        setRecording(true);
 
-          setTimeout(() => {
-            newRecorder.stop();
-            setRecording(false);
-          }, 20000); // Stop recording after 20 seconds
-        } 
+        setTimeout(() => {
+          newRecorder.stop();
+          setRecording(false);
+        }, 20000); // Stop recording after 20 seconds
       }
     } catch (error) {
       toast.error("Failed to access microphone or start recording.");
@@ -76,11 +76,14 @@ const ScreenRecording = ({ excalidrawWrapperRef , tutorId}) => {
 
   const uploadToAzure = async (blob) => {
     try {
-      console.log(tutorId)
-      const response = await uploadVideoToAzure(blob, tutorId, "tutoring-academy-lesson-videos");
+      const response = await uploadVideoToAzure(
+        blob,
+        tutorId,
+        "tutoring-academy-lesson-videos"
+      );
 
       const result = await response.json();
-      if (response.ok) {
+      if (response.url) {
         toast.success("Video uploaded to Azure successfully!");
       } else {
         toast.error(result.error);
@@ -93,9 +96,7 @@ const ScreenRecording = ({ excalidrawWrapperRef , tutorId}) => {
   return (
     <div style={{ zIndex: "999", top: "50px" }}>
       {recording && (
-        <div
-          className="d-flex border justify-content-center align-items-center"
-        >
+        <div className="d-flex border justify-content-center align-items-center">
           <div
             style={{
               width: "20px",
@@ -106,9 +107,7 @@ const ScreenRecording = ({ excalidrawWrapperRef , tutorId}) => {
               animation: "blinking 1s infinite",
             }}
           />
-          <div>
-            Recording
-            </div>
+          <div>Recording</div>
         </div>
       )}
 
