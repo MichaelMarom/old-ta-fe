@@ -18,7 +18,7 @@ import { get_my_data } from "../../axios/student";
 import logo from "../../assets/images/tutoring Logo.png";
 import Loading from "../../components/common/Loading";
 import Actions from "../../components/common/Actions";
-import ScreenRecording from '../../components/common/ScreenRecording'
+import ScreenRecording from "../../components/common/ScreenRecording";
 
 const Collaboration = () => {
   const { user } = useSelector((state) => state.user);
@@ -59,7 +59,6 @@ const Collaboration = () => {
     const collaborators = new Map();
 
     if (user.role === "student") {
-
       collaborators.set(studentId, {
         username: student.ScreenName,
         isCurrentUser: true,
@@ -388,14 +387,14 @@ const Collaboration = () => {
           !result?.response?.data &&
             setTutorVideoConsent(
               result?.[0]?.ConsentRecordingLesson &&
-              result?.[0]?.ConsentRecordingLesson === "true"
+                result?.[0]?.ConsentRecordingLesson === "true"
             );
         });
         get_my_data(openedSession.studentId).then((result) => {
           setStudentVideoConsent(
             !result?.response?.data &&
-            result.ParentConsent &&
-            result?.ParentConsent === "true"
+              result.ParentConsent &&
+              result?.ParentConsent === "true"
           );
         });
       }
@@ -420,15 +419,20 @@ const Collaboration = () => {
     return <Loading loadingText={"Fetching Session!"} />;
   return (
     <CommonLayout role={user.role}>
-
-      <ScreenRecording tutorId={tutor.AcademyId} excalidrawWrapperRef={excalidrawWrapperRef} />
+      {sessionId && excalidrawWrapperRef.current && user.role === "tutor" && (
+        <ScreenRecording
+          tutorId={sessionId}
+          excalidrawWrapperRef={excalidrawWrapperRef}
+        />
+      )}
       {openedSession.subject && (
         <div
           style={{ width: "70%" }}
-          className={`d-flex ${openedSession.subject
+          className={`d-flex ${
+            openedSession.subject
               ? "justify-content-between"
               : "justify-content-center"
-            }`}
+          }`}
         >
           <div>
             {sessionTime === "past" && (
@@ -452,7 +456,6 @@ const Collaboration = () => {
           className="rounded"
         >
           <Excalidraw
-          
             excalidrawAPI={(api) => setExcalidrawAPI(api)}
             isCollaborating={user.role === "tutor"}
             onPointerDown={handlePointerDown}

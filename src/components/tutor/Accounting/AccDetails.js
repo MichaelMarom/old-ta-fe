@@ -278,6 +278,7 @@ useEffect(()=>{
                   <td>{session.invoiceNum}</td>
                   <td>
                     <Button
+                      disabled={session.request === "delete" || !session.Recording}
                       className={`btn-sm ${session.request === "delete"
                         ? "btn-danger"
                         : "btn-primary"

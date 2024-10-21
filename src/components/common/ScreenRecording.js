@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { uploadVideoToAzure } from "../../utils/uploadVideo";
+import { updateFieldUsingIdColumn } from "../../axios/common";
 
 const ScreenRecording = ({ excalidrawWrapperRef, tutorId }) => {
   const videoRef = useRef(null);
@@ -67,7 +68,7 @@ const ScreenRecording = ({ excalidrawWrapperRef, tutorId }) => {
         setTimeout(() => {
           newRecorder.stop();
           setRecording(false);
-        }, 20000); // Stop recording after 20 seconds
+        }, 10000); 
       }
     } catch (error) {
       toast.error("Failed to access microphone or start recording.");
@@ -82,14 +83,18 @@ const ScreenRecording = ({ excalidrawWrapperRef, tutorId }) => {
         "tutoring-academy-lesson-videos"
       );
 
-      const result = await response.json();
-      if (response.url) {
+      console.log(response)
+      if (response?.data) {
+        //TODO: save url in lessons table ;
+        await updateFieldUsingIdColumn({ id: tutorId }, "Lessons", {
+          Recording: response.data.url,
+        });
         toast.success("Video uploaded to Azure successfully!");
       } else {
-        toast.error(result.error);
+        toast.error("Failed to upload video");
       }
     } catch (error) {
-      toast.error("Failed to upload video.");
+      toast.error(error.messgae);
     }
   };
 
