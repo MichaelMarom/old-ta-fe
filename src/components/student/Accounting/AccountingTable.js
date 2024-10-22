@@ -1,12 +1,8 @@
 import React from "react";
 import { showDate } from "../../../utils/moment";
 import { wholeDateFormat } from "../../../constants/constants";
-import { convertTutorIdToName } from "../../../utils/common";
 import AmountCalc from "./AmountCalc";
 import Actions from "../../common/Actions";
-import Button from "../../common/Button";
-import CenteredModal from "../../common/Modal";
-import { useState } from "react";
 
 const AccountingTable = ({
   paymentReportData,
@@ -15,8 +11,6 @@ const AccountingTable = ({
   setStartDate,
   setEndDate,
 }) => {
-  const [showVideoModal, setVideoModal] = useState(false);
-  const [videoUrl, setVideoUrl] = useState("");
 
   return (
     <div className="container">
@@ -39,7 +33,7 @@ const AccountingTable = ({
                     <th className="">Tutor</th>
                     <th className="">Subject</th>
                     <th className="">Rate</th>
-                    <th className="">Video</th>
+                   
                   </tr>
                 </thead>
                 <tbody>
@@ -54,26 +48,7 @@ const AccountingTable = ({
                           {row.title}
                         </td>
                         <td>${row.rate}</td>
-                        <td>
-                          <Button
-                            onClick={() => {
-                              setVideoUrl(row.Recording);
-                              setVideoModal(true);
-                            }}
-                            disabled={
-                              row.request === "delete" || !row.Recording
-                            }
-                            className={`btn-sm ${
-                              row.request === "delete"
-                                ? "btn-danger"
-                                : "btn-primary"
-                            }`}
-                          >
-                            {row.request === "delete"
-                              ? "Cancelled"
-                              : "View Video"}
-                          </Button>
-                        </td>
+                     
                       </tr>
                     ))}
                 </tbody>
@@ -92,17 +67,7 @@ const AccountingTable = ({
           setStartDate={setStartDate}
           setEndDate={setEndDate}
         />
-        <CenteredModal
-          show={showVideoModal}
-          handleClose={() => {
-            setVideoModal(false);
-          }}
-          title={"Lecture Video"}
-        >
-          <div>
-            <video src={videoUrl} controls={true} width="100%" />
-          </div>
-        </CenteredModal>
+    
       </div>
       <Actions saveDisabled />
     </div>

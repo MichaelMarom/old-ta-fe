@@ -419,12 +419,15 @@ const Collaboration = () => {
     return <Loading loadingText={"Fetching Session!"} />;
   return (
     <CommonLayout role={user.role}>
-      {sessionId && excalidrawWrapperRef.current && user.role === "tutor" && (
-        <ScreenRecording
-          tutorId={sessionId}
-          excalidrawWrapperRef={excalidrawWrapperRef}
-        />
-      )}
+      {sessionId &&
+        excalidrawWrapperRef.current &&
+        user.role === "tutor" &&
+        sessionTime === "current" && (
+          <ScreenRecording
+            tutorId={sessionId}
+            excalidrawWrapperRef={excalidrawWrapperRef}
+          />
+        )}
       {openedSession.subject && (
         <div
           style={{ width: "70%" }}

@@ -3,7 +3,10 @@ import { toast } from "react-toastify";
 import { uploadVideoToAzure } from "../../utils/uploadVideo";
 import { updateFieldUsingIdColumn } from "../../axios/common";
 
-const ScreenRecording = ({ excalidrawWrapperRef, tutorId }) => {
+const ScreenRecording = ({
+  excalidrawWrapperRef,
+  tutorId,
+}) => {
   const videoRef = useRef(null);
   const [recorder, setRecorder] = useState(null);
   const [recording, setRecording] = useState(false);
@@ -68,7 +71,7 @@ const ScreenRecording = ({ excalidrawWrapperRef, tutorId }) => {
         setTimeout(() => {
           newRecorder.stop();
           setRecording(false);
-        }, 10000); 
+        }, 44 * 60 * 1000); //total 50: last 6 min will be used to capture video or indicating end of lecture
       }
     } catch (error) {
       toast.error("Failed to access microphone or start recording.");
@@ -83,9 +86,7 @@ const ScreenRecording = ({ excalidrawWrapperRef, tutorId }) => {
         "tutoring-academy-lesson-videos"
       );
 
-      console.log(response)
       if (response?.data) {
-        //TODO: save url in lessons table ;
         await updateFieldUsingIdColumn({ id: tutorId }, "Lessons", {
           Recording: response.data.url,
         });

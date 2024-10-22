@@ -139,9 +139,10 @@ const TutorSetup = () => {
       tutor.VacationMode
     ) {
       updateTutorSetup(tutor.AcademyId, {
-        vacation_mode: false,
+        VacationMode: false,
       });
-      dispatch(setTutor({ ...tutor, vacation_mode: false }));
+      // TODO:
+      // dispatch(setTutor({ ...tutor, vacation_mode: false }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tutor, userId]);
