@@ -87,13 +87,13 @@ label {
 }
 
 .react-international-phone-input-container .react-international-phone-country-selector-button {
-    border: 1px solid #686868;
+    border: 2px solid rgb(179, 179, 179);
     border-right: none;
     height: 50px !important
 }
 
 .react-international-phone-input-container .react-international-phone-input {
-    border: 1px solid #686868 !important;
+    border: 2px solid rgb(179, 179, 179) !important;
     border-left: none !important;
     height: 50px !important
 }

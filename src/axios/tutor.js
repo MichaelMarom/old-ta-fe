@@ -2,28 +2,15 @@ import { v4 as uuidv4 } from "uuid";
 import { apiClient, showErrorToast } from "./config";
 import { capitalizeFirstLetter } from "../utils/common";
 
-export let upload_new_subject = (
-  faculty,
-  subject,
-  reason,
-  AcademyId,
-  facultyId
-) => {
+export let upload_new_subject = (body) => {
   return new Promise((resolve, reject) => {
     apiClient
-      .post("/tutor/new-subject", {
-        faculty,
-        subject,
-        reason,
-        AcademyId,
-        facultyId,
-      })
+      .post("/tutor/new-subject", body)
       .then((result) => {
         resolve(result.data);
       })
       .catch((err) => {
         showErrorToast(err);
-        // reject(err)
       });
   });
 };
@@ -393,19 +380,21 @@ export const post_tutor_setup_at_signup = async (data) => {
     return await apiClient.post("/tutor/setup/signup", data);
   } catch (err) {
     showErrorToast(err);
-    throw new Error(err)
+    throw new Error(err);
   }
 };
 
 export const getDoc = async (docType, id) => {
   try {
-    const response = await apiClient.get(`/tutor/my-edu/doc/${id}`, {params:{docType}});
+    const response = await apiClient.get(`/tutor/my-edu/doc/${id}`, {
+      params: { docType },
+    });
     return response.data;
   } catch (err) {
     showErrorToast(err);
     return err;
   }
-} 
+};
 
 export const updateTutorSetup = async (tutorAcademyId, body) => {
   try {

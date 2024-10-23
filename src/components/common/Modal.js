@@ -29,7 +29,7 @@ const CenteredModal = ({
         >
           <div
             className="modal-content"
-            style={{ minHeight, minWidth }}
+            style={{ minHeight, minWidth, borderRadius:"20px" }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className={`modal-header ${showHeader ? "" : "d-none"}`}>

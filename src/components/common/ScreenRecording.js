@@ -3,10 +3,7 @@ import { toast } from "react-toastify";
 import { uploadVideoToAzure } from "../../utils/uploadVideo";
 import { updateFieldUsingIdColumn } from "../../axios/common";
 
-const ScreenRecording = ({
-  excalidrawWrapperRef,
-  tutorId,
-}) => {
+const ScreenRecording = ({ excalidrawWrapperRef, sessionId }) => {
   const videoRef = useRef(null);
   const [recorder, setRecorder] = useState(null);
   const [recording, setRecording] = useState(false);
@@ -14,8 +11,9 @@ const ScreenRecording = ({
   const [downloadUrl, setDownloadUrl] = useState(null);
 
   useEffect(() => {
-    tutorId && excalidrawWrapperRef.current && startRecording(); // Automatically start recording on mount
-  }, [excalidrawWrapperRef.current, tutorId]);
+    console.log(sessionId, excalidrawWrapperRef.current);
+    sessionId && excalidrawWrapperRef.current && startRecording(); // Automatically start recording on mount
+  }, [excalidrawWrapperRef.current, sessionId]);
 
   useEffect(() => {
     if (recorder) {
@@ -31,12 +29,10 @@ const ScreenRecording = ({
 
         setDownloadUrl(url); // Set the download URL
 
-        if (videoRef.current) {
-          videoRef.current.src = url;
-        }
+        // uploadToAzure(blob)
 
-        // After the recording stops, upload the video to Azure
-        uploadToAzure(blob);
+        // Show toast notification
+        toast.success("Recording stopped. You can now download the video.");
       };
     }
   }, [recorder]);
@@ -46,6 +42,7 @@ const ScreenRecording = ({
       const canvas = excalidrawWrapperRef.current.querySelector(
         ".excalidraw__canvas"
       );
+      console.log(canvas, "43");
       if (canvas) {
         const videoStream = canvas.captureStream(30); // Capture video from the canvas
 
@@ -78,29 +75,29 @@ const ScreenRecording = ({
     }
   };
 
-  const uploadToAzure = async (blob) => {
-    try {
-      const response = await uploadVideoToAzure(
-        blob,
-        tutorId,
-        "tutoring-academy-lesson-videos"
-      );
+  // const uploadToAzure = async (blob) => {
+  //   try {
+  //     const response = await uploadVideoToAzure(
+  //       blob,
+  //       sessionId,
+  //       "tutoring-academy-lesson-videos"
+  //     );
 
-      if (response?.data) {
-        await updateFieldUsingIdColumn({ id: tutorId }, "Lessons", {
-          Recording: response.data.url,
-        });
-        toast.success("Video uploaded to Azure successfully!");
-      } else {
-        toast.error("Failed to upload video");
-      }
-    } catch (error) {
-      toast.error(error.messgae);
-    }
-  };
+  //     if (response?.data) {
+  //       await updateFieldUsingIdColumn({ id: sessionId }, "Lessons", {
+  //         Recording: response.data.url,
+  //       });
+  //       toast.success("Video uploaded to Azure successfully!");
+  //     } else {
+  //       toast.error("Failed to upload video");
+  //     }
+  //   } catch (error) {
+  //     toast.error(error.messgae);
+  //   }
+  // };
 
   return (
-    <div style={{ zIndex: "999", top: "50px" }}>
+    <div>
       {recording && (
         <div className="d-flex border justify-content-center align-items-center">
           <div
@@ -117,6 +114,17 @@ const ScreenRecording = ({
         </div>
       )}
 
+      {downloadUrl && (
+        <div style={{position:"absolute", zIndex:"999"}}>
+          <a
+            href={downloadUrl}
+            download={`lecture_${sessionId}.webm`}
+            className="btn  btn-sm btn-danger"
+          >
+            Download Recorded Video
+          </a>
+        </div>
+      )}
       <video
         ref={videoRef}
         controls

@@ -18,8 +18,7 @@ import { FaBook, FaChevronRight, FaPlus, FaSearch } from "react-icons/fa";
 import DebounceInput from "../../common/DebounceInput";
 import Pill from "../../common/Pill";
 
-import _ from "lodash"
-import SubMenu from "../../common/SubMenu";
+import _ from "lodash";
 
 const Subjects = () => {
   let [newSubjectFaculty, setNewSubjectFaculty] = useState([]);
@@ -57,7 +56,7 @@ const Subjects = () => {
     }
   };
 
-  const formatSubjectCount = (count) => (count > 99 ? '99+' : count);
+  const formatSubjectCount = (count) => (count > 99 ? "99+" : count);
 
   useEffect(() => {
     let user_id = window.localStorage.getItem("tutor_user_id");
@@ -65,8 +64,8 @@ const Subjects = () => {
     get_rates(user_id, selectedFaculty)
       .then((result) => {
         if (!result?.response?.data) {
-          console.log(result)
-          setSubjectsWithRates(_.sortBy(result, 'subject'));
+          console.log(result);
+          setSubjectsWithRates(_.sortBy(result, "subject"));
         }
         setLoadingSubs(false);
       })
@@ -88,7 +87,7 @@ const Subjects = () => {
           </option>
         );
       });
-      set_faculty(_.sortBy(list, 'Faculty'));
+      set_faculty(_.sortBy(list, "Faculty"));
       setNewSubjectFaculty(selectOptions);
     }
   };
@@ -116,13 +115,13 @@ const Subjects = () => {
 
   let uploadNewSubject = () => {
     let user_id = window.localStorage.getItem("tutor_user_id");
-    upload_new_subject(
-      newSubjectFacultyData.split("-")[0],
-      newSubjectData,
-      newSubjectReasonData,
-      user_id,
-      newSubjectFacultyData.split("-")[1]
-    )
+    upload_new_subject({
+      faculty: newSubjectFacultyData.split("-")[0],
+      subject: newSubjectData,
+      reason: newSubjectReasonData,
+      AcademyId: user_id,
+      facultyId: newSubjectFacultyData.split("-")[1],
+    })
       .then((result) => {
         if (result) {
           setNewSubjectData("");
@@ -151,26 +150,49 @@ const Subjects = () => {
             setSelectedFaculty={setSelectedFaculty}
           /> */}
 
-
           <div className="d-flex justify-content-around">
-            <div
-              className=" d-flex flex-column align-items-center m-0"
-            >
-              <div className="p-3 rounded-3" style={{ width: '100%', height: "calc(100vh - 170px)", overflowY: "auto", backgroundColor: 'rgb(33 47 61)', color: 'white' }}>
-                <h4 className="text-light text-center">{faculty.length} Faculties</h4>
-                <p className="text-center small">Total Subjects {faculty.reduce((sum, fac) => { sum = sum + fac.subjectCount; return sum }, 0)}</p>
-                <TAButton handleClick={() => setShowAddNewSubjModal(true)} style={{ width: "100%", marginLeft: "0", marginRight: "0" }} type="button" buttonText={"Search/Add New Subject"} />
+            <div className=" d-flex flex-column align-items-center m-0">
+              <div
+                className="p-3 rounded-3"
+                style={{
+                  width: "100%",
+                  height: "calc(100vh - 170px)",
+                  overflowY: "auto",
+                  backgroundColor: "rgb(33 47 61)",
+                  color: "white",
+                }}
+              >
+                <h4 className="text-light text-center">
+                  {faculty.length} Faculties
+                </h4>
+                <p className="text-center small">
+                  Total Subjects{" "}
+                  {faculty.reduce((sum, fac) => {
+                    sum = sum + fac.subjectCount;
+                    return sum;
+                  }, 0)}
+                </p>
+                <TAButton
+                  handleClick={() => setShowAddNewSubjModal(true)}
+                  style={{ width: "100%", marginLeft: "0", marginRight: "0" }}
+                  type="button"
+                  buttonText={"Search/Add New Subject"}
+                />
 
                 <ul className="list-group">
                   {faculty.map(({ Id, Faculty, subjectCount }) => (
                     <li
                       key={Id}
-                      id={Id === selectedFaculty ? "tutor-tab-header-list-active1"
-                        : ""}
+                      id={
+                        Id === selectedFaculty
+                          ? "tutor-tab-header-list-active1"
+                          : ""
+                      }
                       className="list-group-item list-group-item-action navitem-li navitem d-flex justify-content-between"
                       style={{
-                        backgroundColor: 'rgb(33 47 61)', color: Id === selectedFaculty ? "lightgreen" : 'white',
-                        padding: "10px"
+                        backgroundColor: "rgb(33 47 61)",
+                        color: Id === selectedFaculty ? "lightgreen" : "white",
+                        padding: "10px",
                       }}
                       onClick={() => setSelectedFaculty(Id)}
                     >
@@ -181,19 +203,19 @@ const Subjects = () => {
                           style={{
                             width: "25px",
                             height: "25px",
-                            fontSize: '0.7rem',  // Smaller font size for notification style
-                            padding: '0.3em 0.6em',
-                            borderRadius: '50%',
+                            fontSize: "0.7rem", // Smaller font size for notification style
+                            padding: "0.3em 0.6em",
+                            borderRadius: "50%",
                           }}
                         >
                           {formatSubjectCount(subjectCount)}
                         </span>
-                        <FaBook className="me-2" /> <p>
-                          {Faculty}
-                        </p>
-
+                        <FaBook className="me-2" /> <p>{Faculty}</p>
                       </div>
-                      <FaChevronRight className="float-end" style={{ marginTop: "5px" }} />
+                      <FaChevronRight
+                        className="float-end"
+                        style={{ marginTop: "5px" }}
+                      />
                     </li>
                   ))}
                 </ul>
@@ -265,8 +287,8 @@ const Subjects = () => {
         handleClose={handleModalClose}
         title={
           !subjectExistInFaculties.length &&
-            phase !== "search" &&
-            !!newSubjectData.length
+          phase !== "search" &&
+          !!newSubjectData.length
             ? "Add New Suggested Subject"
             : "To Search If your subject exist , please type it in below field"
         }
@@ -338,7 +360,8 @@ const Subjects = () => {
             <div>
               {newSubjRequestChecking ? (
                 <Loading
-                  loadingText="searching subject..."
+                smallerIcon
+                                  loadingText="searching subject..."
                   iconSize="20px"
                   height="20px"
                 />

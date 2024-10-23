@@ -548,51 +548,55 @@ const TutorSetup = () => {
       let reader = new FileReader({});
 
       reader.onload = (result) => {
-        const videoElement = document.createElement("video");
-        videoElement.src = reader.result;
+        try {
+          const videoElement = document.createElement("video");
+          videoElement.src = reader.result;
 
-        videoElement.onloadedmetadata = async () => {
-          // toast.warning(`Size is ${file.size / 1024} KB and duration ${videoElement.duration}`)
+          videoElement.onloadedmetadata = async () => {
+            // toast.warning(`Size is ${file.size / 1024} KB and duration ${videoElement.duration}`)
 
-          if (videoElement.duration <= 59.59) {
-            // set_video(reader.result);
-            const { data } = await uploadVideoToAzure(
-              file,
-              tutor.AcademyId,
-              "tutor-intro-video",
-              selectedVideoOption
-            );
-            updateTutorSetup(tutor.AcademyId, { Video: data.url });
-            toast.success("Video Succesfully Uploaded!");
-            set_video(data.url);
-            // dispatch(setTutor({ ...tutor, Video: data.url,
-            //   CellPhone: cell,
-            //   Address1: add1,
-            //   Address2: add2,
-            //   CityTown: city,
-            //   StateProvince: state,
-            //   ZipCode: zipCode,
-            //   Country: country,
-            //   GMT: timeZone,
-            //   ResponseHrs: response_zone,
-            //   Introduction: intro,
-            //   Motivate: motivation,
-            //   HeadLine: headline,
-            //   StartVacation: vacation_mode ? start : moment().toDate(),
-            //   EndVacation: vacation_mode ? end : moment().endOf().toDate(),
-            //   VacationMode: vacation_mode,
-            //   Step: 2,
-            //   Photo:photo
-            //  }));
-            console.log(data.url);
+            if (videoElement.duration <= 59.59) {
+              // set_video(reader.result);
+              const { data } = await uploadVideoToAzure(
+                file,
+                tutor.AcademyId,
+                "tutor-intro-video",
+                selectedVideoOption
+              );
+              updateTutorSetup(tutor.AcademyId, { Video: data.url });
+              toast.success("Video Succesfully Uploaded!");
+              set_video(data.url);
+              // dispatch(setTutor({ ...tutor, Video: data.url,
+              //   CellPhone: cell,
+              //   Address1: add1,
+              //   Address2: add2,
+              //   CityTown: city,
+              //   StateProvince: state,
+              //   ZipCode: zipCode,
+              //   Country: country,
+              //   GMT: timeZone,
+              //   ResponseHrs: response_zone,
+              //   Introduction: intro,
+              //   Motivate: motivation,
+              //   HeadLine: headline,
+              //   StartVacation: vacation_mode ? start : moment().toDate(),
+              //   EndVacation: vacation_mode ? end : moment().endOf().toDate(),
+              //   VacationMode: vacation_mode,
+              //   Step: 2,
+              //   Photo:photo
+              //  }));
+              console.log(data.url);
+              setVideoUploading(false);
+            } else {
+              videoElement.src = null;
+              set_video(tutor.Video);
+              toast.error("Video duration should be less than 1 minute");
+            }
             setVideoUploading(false);
-          } else {
-            videoElement.src = null;
-            set_video(tutor.Video);
-            toast.error("Video duration should be less than 1 minute");
-          }
+          };
+        } catch (err) {
           setVideoUploading(false);
-        };
+        }
       };
       reader.readAsDataURL(file);
     }

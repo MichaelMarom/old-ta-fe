@@ -35,7 +35,7 @@ import FormSelect from "../../common/Select";
 import _ from "lodash";
 import { setMissingFieldsAndTabs } from "../../../redux/tutor/missingFieldsInTabs";
 import { postEducation } from "../../../redux/tutor/education";
-import ThreeDotsLoader from "../../ThreeDotsLoader";
+import ThreeDotsLoader from "../../common/ThreeDotsLoader";
 
 const languageOptions = LANGUAGES.map((language) => ({
   value: language,

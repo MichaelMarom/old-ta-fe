@@ -421,10 +421,10 @@ const Collaboration = () => {
     <CommonLayout role={user.role}>
       {sessionId &&
         excalidrawWrapperRef.current &&
-        user.role === "tutor" &&
+        user.role === "student" &&
         sessionTime === "current" && (
           <ScreenRecording
-            tutorId={sessionId}
+            sessionId={sessionId}
             excalidrawWrapperRef={excalidrawWrapperRef}
           />
         )}

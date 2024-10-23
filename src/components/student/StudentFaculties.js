@@ -5,21 +5,12 @@ import { get_faculties, get_faculty_subject } from "../../axios/tutor";
 import Actions from "../common/Actions";
 import { useDispatch, useSelector } from "react-redux";
 import Tooltip from "../common/ToolTip";
-import Pill from "../common/Pill";
-import { wholeDateFormat } from "../../constants/constants";
-import SubMenu from "../common/SubMenu";
 import Loading from "../common/Loading";
-import { capitalizeFirstLetter, convertTutorIdToName } from "../../utils/common";
-import Avatar from "../common/Avatar";
-import { showDate } from "../../utils/moment";
 import { useNavigate } from "react-router-dom";
 import { setSelectedTutor, setTutor } from "../../redux/student/selectedTutor";
-import BTN_ICON from "../../assets/images/button__icon.png";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { FaBook, FaCheckCircle, FaChevronRight } from "react-icons/fa";
-import { MdCancel } from "react-icons/md";
 import _ from 'lodash'
-import moment from 'moment';
 import TutorCard from "./TutorSubjectCard";
 
 const StudentFaculties = () => {
