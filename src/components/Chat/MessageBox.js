@@ -12,7 +12,7 @@ const MessageBox = ({ message }) => {
     const loggedInUserDetail = studentLoggedIn ? student : tutor;
 
     return (
-        <li key={message.id} className={`ks-item ${message.senderId === loggedInUserDetail.AcademyId ?
+        <li  key={message.id} className={`ks-item ${message.senderId === loggedInUserDetail.AcademyId ?
             'ks-from w-100' : 'ks-self w-100'}`}>
             <span className={`ks-avatar ${message.senderId === 'User A' ? 'ks-offline' : 'ks-online'}`}>
                 <img src={message.photo} width="36" height="36"

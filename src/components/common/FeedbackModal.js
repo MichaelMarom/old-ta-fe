@@ -47,7 +47,7 @@ const FeedbackModal = ({
     >
       <div
         className=" "
-        style={{ height: "calc(100vh - 165px)", overflowY: "auto" }}
+        style={{ overflowY: "auto" }}
       >
         <div className="questions">
           <QuestionFeedback

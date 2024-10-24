@@ -43,9 +43,10 @@ const CenteredModal = ({
               )}
               <button
                 type="button"
-                className="close"
+                className="close d-flex justify-content-center align-items-center  rounded-circle border"
                 onClick={handleClose}
                 aria-label="Close"
+                style={{width:"25px", height:"25px"}}
               >
                 <AiOutlineClose />
               </button>

@@ -56,6 +56,12 @@
     border-bottom: 1px solid #dee0e1
 }
 
+.ks-messenger .ks-discussions>.ks-body .ks-items>.ks-item:hover {
+    border-bottom: 1px solid #dee0e1;
+    background-color: rgb(230, 230, 230);
+}
+
+
 .ks-messenger .ks-discussions>.ks-body .ks-items>.ks-item>a {
     display: -webkit-box;
     display: -webkit-flex;
