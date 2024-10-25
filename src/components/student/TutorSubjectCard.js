@@ -1,22 +1,17 @@
 import React, { useRef } from "react";
 import {
-  FaDollarSign,
-  FaGlobe,
   FaClock,
   FaCheckCircle,
-  FaChevronCircleLeft,
-  FaChevronCircleRight,
   FaChevronLeft,
   FaChevronRight,
 } from "react-icons/fa";
 import Avatar from "../common/Avatar";
-import BTN_ICON from "../../assets/images/button__icon.png";
-import Pill from "../common/Pill";
 import { showDate } from "../../utils/moment";
 import moment from "moment";
 import { wholeDateFormat } from "../../constants/constants";
 import { MdCancel } from "react-icons/md";
 import { useSelector } from "react-redux";
+import { HiDotsVertical } from "react-icons/hi";
 
 const TutorCard = ({
   tutor,
@@ -103,8 +98,9 @@ const TutorCard = ({
         </div>
 
         <div className="text-end">
-          <div className="d-flex align-items-center justify-content-start">
+          <div className="d-flex align-items-center justify-content-between">
             <span>{rate}/hr</span>
+            <div><HiDotsVertical  /></div>
           </div>
           <div className="d-flex align-items-center justify-content-start mt-1">
             <p className=" " style={{ color: "#7d7d7d", fontWeight: "500" }}>
@@ -127,6 +123,7 @@ const TutorCard = ({
             </p>
           </div>
         </div>
+       
       </div>
 
       <div className="flex-grow-1 d-flex flex-column justify-content-between">
@@ -135,7 +132,7 @@ const TutorCard = ({
             {TutorScreenname}
           </h5>
 
-          {tutor.CodeApplied && (
+          {!tutor.CodeApplied && (
             <div className="blinking-button" style={{ color: "black" }}>
               <span className="badge" style={{ background: "limegreen" }}>
                 connected

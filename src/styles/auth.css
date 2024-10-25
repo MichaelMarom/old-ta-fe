@@ -5,5 +5,5 @@ justify-content: center;
 }
 .modal-content{
     min-width: 430px;
-    min-height: 400px;
+    /* min-height: 400px; */
 }

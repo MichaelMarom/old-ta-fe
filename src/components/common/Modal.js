@@ -8,7 +8,7 @@ const CenteredModal = ({
   title,
   isTitleReactNode = false,
   children,
-  minHeight = "400px",
+  minHeight = "",//400px
   minWidth = "430px",
   ...rest
 }) => {
@@ -29,7 +29,11 @@ const CenteredModal = ({
         >
           <div
             className="modal-content"
-            style={{ minHeight, minWidth, borderRadius:"20px" }}
+            style={{
+              // minHeight,
+              minWidth,
+              borderRadius: "20px"
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className={`modal-header ${showHeader ? "" : "d-none"}`}>
@@ -46,7 +50,7 @@ const CenteredModal = ({
                 className="close d-flex justify-content-center align-items-center  rounded-circle border"
                 onClick={handleClose}
                 aria-label="Close"
-                style={{width:"25px", height:"25px"}}
+                style={{ width: "25px", height: "25px" }}
               >
                 <AiOutlineClose />
               </button>

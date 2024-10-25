@@ -25,12 +25,6 @@ function SessionsTable({ events = [], setSelectedEvent, selectedEvent }) {
       const sessionEndInTimeZone = moment(convertToDate(session.end)).tz(
         tutor.timeZone
       );
-      console.log(
-        session.end,
-        convertToDate(session.end),
-        sessionEndInTimeZone,
-        tutor.timeZone
-      );
       const minutesDifference = sessionEndInTimeZone?.diff(
         currentTimeInTimeZone,
         "minutes"

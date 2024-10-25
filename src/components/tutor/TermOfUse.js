@@ -164,140 +164,142 @@ const TermOfUse = () => {
           )}
         </div>
         <div className="px-4 tutor-tos">
-          <div className="container my-5 border shadow rounded"
+          <div className="container mb-5 border shadow rounded-5"
             style={{ maxHeight: "calc(100vh - 380px)", overflow: "auto", height: "auto" }}>
-            <div className='w-100 text-center p-1'>
-              <img className='' src={`${process.env.REACT_APP_BASE_URL}/logo1.png`} width={350} height={100} alt="logo" />
+            <div className="p-3">
+              <div className='w-100 text-center p-1'>
+                <img className='' src={`${process.env.REACT_APP_BASE_URL}/logo1.png`} width={350} height={100} alt="logo" />
+              </div>
+              <h4 className="text-center mb-4">Terms of Use</h4>
+
+              <h5>Chapter 1: Introduction</h5>
+              <p>
+                This chapter explains the purpose and scope of the terms of use and
+                defines some key terms and concepts, such as the tutoring academy, the
+                platform, the services, the tutors, and the users.
+              </p>
+
+              <h5>Chapter 2: Platform and Services</h5>
+              <p>
+                This chapter describes the features and functions of the platform and
+                the services.
+              </p>
+
+              <ol>
+                <li>
+                  <FaCheckCircle className="text-success" /> Accessing the platform
+                  through a web browser or a mobile app
+                </li>
+                <li>
+                  <FaCheckCircle className="text-success" /> Registering as a tutor and
+                  creating a profile that showcases your qualifications, experience, and
+                  availability
+                </li>
+                <li>
+                  <FaCheckCircle className="text-success" /> Selecting the subjects that
+                  you are proficient in and setting your hourly rates
+                </li>
+                <li>
+                  <FaCheckCircle className="text-success" /> Scheduling sessions with
+                  students who request your services or browse through open requests
+                </li>
+                <li>
+                  <FaCheckCircle className="text-success" /> Communicating with students
+                  via chat, voice, or video before, during, and after the sessions
+                </li>
+                <li>
+                  <FaCheckCircle className="text-success" /> Receiving payments securely
+                  and conveniently through the platform's payment system
+                </li>
+              </ol>
+
+              <h6>As a tutor, you are expected to:</h6>
+              <ol>
+                <li>Provide high-quality tutoring that meets the student's needs</li>
+                <li>Follow the platform's policies on professionalism and ethics</li>
+                <li>Respect the privacy and confidentiality of the students</li>
+                <li>Give feedback and ratings to the students after each session</li>
+                <li>
+                  Resolve any issues or disputes with students or the platform
+                  courteously
+                </li>
+              </ol>
+
+              <h5>Chapter 3: Verification and Background Checks</h5>
+              <p>
+                This chapter outlines the requirements for verifying tutors’
+                credentials and conducting background checks.
+              </p>
+
+              <ol>
+                <li>
+                  <FaTimesCircle className="text-danger" /> Providing false or inaccurate
+                  information may result in contract termination or legal action.
+                </li>
+                <li>
+                  <FaCheckCircle className="text-success" /> Background checks screen
+                  tutors for criminal records or other issues.
+                </li>
+                <li>
+                  <FaCheckCircle className="text-success" /> The process may take up to
+                  two weeks depending on document availability.
+                </li>
+              </ol>
+
+              <h5>Chapter 4: Privacy and Data Protection</h5>
+              <p>
+                This chapter covers privacy policies on the collection, use, storage,
+                and sharing of personal information of tutors and users.
+              </p>
+
+              <h5>Chapter 5: Intellectual Property Rights</h5>
+              <p>
+                This chapter clarifies the ownership and usage of intellectual property
+                rights, such as trademarks, logos, images, videos, and other materials.
+              </p>
+
+              <h5>Chapter 6: User Conduct and Content</h5>
+              <p>
+                This chapter defines rules for user and tutor behavior and content
+                during tutoring sessions and interactions on the platform.
+              </p>
+
+              <ol>
+                <li>Prohibited behaviors include abusive, harassing, or fraudulent actions.</li>
+                <li>
+                  Acceptable content includes feedback, ratings, and personal
+                  information in compliance with platform standards.
+                </li>
+                <li>
+                  Violators may face consequences such as warnings, suspensions, or
+                  legal actions.
+                </li>
+              </ol>
+
+              <h5>Chapter 7: Fees and Payments</h5>
+              <p>
+                This chapter covers fees and payment procedures, including billing,
+                taxes, deductions, and disputes.
+              </p>
+
+              <h5>Chapter 8: Cancellation and Termination</h5>
+              <p>
+                This chapter outlines how users or tutors can cancel their accounts or
+                sessions and the consequences of such actions.
+              </p>
+
+              <h5>Chapter 9: Warranty and Liability</h5>
+              <p>
+                This chapter provides warranty and liability statements, disclaimers,
+                and limitations of liability for platform and services use.
+              </p>
+
+              <h5>Chapter 10: Dispute Resolution and Governing Law</h5>
+              <p>
+                This chapter discusses methods for resolving disputes, such as
+                arbitration and mediation, and the applicable governing laws.
+              </p>
             </div>
-            <h4 className="text-center mb-4">Terms of Use</h4>
-
-            <h5>Chapter 1: Introduction</h5>
-            <p>
-              This chapter explains the purpose and scope of the terms of use and
-              defines some key terms and concepts, such as the tutoring academy, the
-              platform, the services, the tutors, and the users.
-            </p>
-
-            <h5>Chapter 2: Platform and Services</h5>
-            <p>
-              This chapter describes the features and functions of the platform and
-              the services.
-            </p>
-
-            <ol>
-              <li>
-                <FaCheckCircle className="text-success" /> Accessing the platform
-                through a web browser or a mobile app
-              </li>
-              <li>
-                <FaCheckCircle className="text-success" /> Registering as a tutor and
-                creating a profile that showcases your qualifications, experience, and
-                availability
-              </li>
-              <li>
-                <FaCheckCircle className="text-success" /> Selecting the subjects that
-                you are proficient in and setting your hourly rates
-              </li>
-              <li>
-                <FaCheckCircle className="text-success" /> Scheduling sessions with
-                students who request your services or browse through open requests
-              </li>
-              <li>
-                <FaCheckCircle className="text-success" /> Communicating with students
-                via chat, voice, or video before, during, and after the sessions
-              </li>
-              <li>
-                <FaCheckCircle className="text-success" /> Receiving payments securely
-                and conveniently through the platform's payment system
-              </li>
-            </ol>
-
-            <h6>As a tutor, you are expected to:</h6>
-            <ol>
-              <li>Provide high-quality tutoring that meets the student's needs</li>
-              <li>Follow the platform's policies on professionalism and ethics</li>
-              <li>Respect the privacy and confidentiality of the students</li>
-              <li>Give feedback and ratings to the students after each session</li>
-              <li>
-                Resolve any issues or disputes with students or the platform
-                courteously
-              </li>
-            </ol>
-
-            <h5>Chapter 3: Verification and Background Checks</h5>
-            <p>
-              This chapter outlines the requirements for verifying tutors’
-              credentials and conducting background checks.
-            </p>
-
-            <ol>
-              <li>
-                <FaTimesCircle className="text-danger" /> Providing false or inaccurate
-                information may result in contract termination or legal action.
-              </li>
-              <li>
-                <FaCheckCircle className="text-success" /> Background checks screen
-                tutors for criminal records or other issues.
-              </li>
-              <li>
-                <FaCheckCircle className="text-success" /> The process may take up to
-                two weeks depending on document availability.
-              </li>
-            </ol>
-
-            <h5>Chapter 4: Privacy and Data Protection</h5>
-            <p>
-              This chapter covers privacy policies on the collection, use, storage,
-              and sharing of personal information of tutors and users.
-            </p>
-
-            <h5>Chapter 5: Intellectual Property Rights</h5>
-            <p>
-              This chapter clarifies the ownership and usage of intellectual property
-              rights, such as trademarks, logos, images, videos, and other materials.
-            </p>
-
-            <h5>Chapter 6: User Conduct and Content</h5>
-            <p>
-              This chapter defines rules for user and tutor behavior and content
-              during tutoring sessions and interactions on the platform.
-            </p>
-
-            <ol>
-              <li>Prohibited behaviors include abusive, harassing, or fraudulent actions.</li>
-              <li>
-                Acceptable content includes feedback, ratings, and personal
-                information in compliance with platform standards.
-              </li>
-              <li>
-                Violators may face consequences such as warnings, suspensions, or
-                legal actions.
-              </li>
-            </ol>
-
-            <h5>Chapter 7: Fees and Payments</h5>
-            <p>
-              This chapter covers fees and payment procedures, including billing,
-              taxes, deductions, and disputes.
-            </p>
-
-            <h5>Chapter 8: Cancellation and Termination</h5>
-            <p>
-              This chapter outlines how users or tutors can cancel their accounts or
-              sessions and the consequences of such actions.
-            </p>
-
-            <h5>Chapter 9: Warranty and Liability</h5>
-            <p>
-              This chapter provides warranty and liability statements, disclaimers,
-              and limitations of liability for platform and services use.
-            </p>
-
-            <h5>Chapter 10: Dispute Resolution and Governing Law</h5>
-            <p>
-              This chapter discusses methods for resolving disputes, such as
-              arbitration and mediation, and the applicable governing laws.
-            </p>
           </div>
           {/* <RichTextEditor
             value={terms}

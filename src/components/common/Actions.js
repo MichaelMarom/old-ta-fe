@@ -119,8 +119,7 @@ const Actions = ({
       withCurrentRolePrefix: true,
       withNextRolePrefix: true,
       withBackRolePrefix: true,
-    },
-    {
+    },   {
       next: "market-place",
       current: "chat",
       back: "term-of-use",
@@ -129,9 +128,18 @@ const Actions = ({
       withBackRolePrefix: true,
     },
     {
-      next: "collab",
+      next: "agency",
       current: "market-place",
       back: "chat",
+      withCurrentRolePrefix: true,
+      withNextRolePrefix: true,
+      withBackRolePrefix: true,
+    },
+ 
+    {
+      next: "collab",
+      current: "agency",
+      back: "market-place",
       withCurrentRolePrefix: true,
       withNextRolePrefix: false,
       withBackRolePrefix: true,
@@ -139,7 +147,7 @@ const Actions = ({
     {
       next: `tutor-profile/${tutor.AcademyId}`,
       current: "collab",
-      back: "market-place",
+      back: "agency",
       withCurrentRolePrefix: false,
       withNextRolePrefix: true,
       withBackRolePrefix: true,

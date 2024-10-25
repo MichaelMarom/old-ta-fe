@@ -6,6 +6,7 @@ import UserRichTextEditor from '../common/RichTextEditor/UserRichTextEditor';
 import { useSelector } from 'react-redux';
 import { send_email } from '../../axios/admin';
 import { toast } from 'react-toastify';
+import { GeneralFieldLabel, MandatoryFieldLabel, OptionalFieldLabel } from './TutorSetup';
 
 const SendCodeModal = ({ isOpen, onClose, code, subject }) => {
     const [name, setName] = useState('')
@@ -57,18 +58,18 @@ const SendCodeModal = ({ isOpen, onClose, code, subject }) => {
                 <form onSubmit={handleSubmit}>
                     <div className='d-flex w-100'>
                         <div className='m-1 w-50'>
-                            <Input label="Email Of Student" type="email " setValue={setEmail} value={email} />
+                            <Input label={<MandatoryFieldLabel text={"Email of Student"} />} type="email " setValue={setEmail} value={email} />
                         </div>
                         <div className='m-1 w-50'>
-                            <Input label="Code" editMode={false} value={code} />
+                            <Input  label={<GeneralFieldLabel label={"Code"} />} editMode={false} value={code} />
                         </div>
                     </div>
                     <div className='d-flex w-100'>
                         <div className='m-1 w-50'>
-                            <Input label="Name of Student" setValue={setName} value={name} />
+                            <Input label={<MandatoryFieldLabel text={"Name of the Student"} />} setValue={setName} value={name} />
                         </div>
                         <div className='m-1 w-50'>
-                            <Input label="Your Name" value={tutor.TutorScreenname} 
+                            <Input  label={<GeneralFieldLabel label={"Your Name"} />}  value={tutor.TutorScreenname} 
                             editMode={false} />
                         </div>
                     </div>

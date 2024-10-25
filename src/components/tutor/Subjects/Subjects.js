@@ -30,6 +30,7 @@ const Subjects = () => {
   const [newSubjRequestChecking, setNewSubjReqChecking] = useState(false);
   const [selectedFaculty, setSelectedFaculty] = useState(36);
   const [subjectExistInFaculties, setSubjectInFaculties] = useState([]);
+  const [searchSubjectExistInSubjectsRequests, setSearchSubjectExistInSubjectsRequests] = useState(false);
   let [faculty, set_faculty] = useState([]);
   const [subjectsWithRates, setSubjectsWithRates] = useState([]);
   const [phase, setPhase] = useState("search");
@@ -42,6 +43,7 @@ const Subjects = () => {
     setNewSubjectFacultyData("");
     setNewSubjectReasonData("");
     setSubjectInFaculties([]);
+    setSearchSubjectExistInSubjectsRequests(false)
     setPhase("search");
   };
 
@@ -50,7 +52,10 @@ const Subjects = () => {
     else {
       setNewSubjReqChecking(true);
       const result = await new_subj_request_exist(newSubjectData);
-      if (result?.data) setSubjectInFaculties(result.data.faculties);
+      if (result?.data) {
+        setSubjectInFaculties(result.data.faculties);
+        setSearchSubjectExistInSubjectsRequests(result.data.newSubject)
+      }
       if (!result?.data?.faculties?.length) setPhase("add");
       setNewSubjReqChecking(false);
     }
@@ -287,8 +292,8 @@ const Subjects = () => {
         handleClose={handleModalClose}
         title={
           !subjectExistInFaculties.length &&
-          phase !== "search" &&
-          !!newSubjectData.length
+            phase !== "search" &&
+            !!newSubjectData.length
             ? "Add New Suggested Subject"
             : "To Search If your subject exist , please type it in below field"
         }
@@ -331,9 +336,6 @@ const Subjects = () => {
                   </select>
                 </div>
               )}
-            {/* {!subjectExistInFaculties.length && !!newSubjectData.length &&
-                            !!newSubjectReasonData.length &&
-                        } */}
 
             {!subjectExistInFaculties.length && phase === "add" && (
               <textarea
@@ -347,7 +349,9 @@ const Subjects = () => {
             )}
             {!!subjectExistInFaculties.length && (
               <div className="border p-2 shadow rounded">
-                <h6>The Subject found in the Faculty below.</h6>
+                {searchSubjectExistInSubjectsRequests ?
+                  <h6>This Subject Request Has Already been sent Under Faculty Below. Please wait for Admin approval.</h6> :
+                  <h6>The Subject found in the Faculty below.</h6>}
                 <div className="d-flex align-items-center flex-wrap">
                   {subjectExistInFaculties.map((faculty) => (
                     <Pill key={faculty} label={faculty} width="200px" />
@@ -360,8 +364,8 @@ const Subjects = () => {
             <div>
               {newSubjRequestChecking ? (
                 <Loading
-                smallerIcon
-                                  loadingText="searching subject..."
+                  smallerIcon
+                  loadingText="searching subject..."
                   iconSize="20px"
                   height="20px"
                 />

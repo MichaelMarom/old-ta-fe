@@ -26,11 +26,13 @@ const Bid = () => {
   return (
     <Layout>
       <div
-        className="d-flex m-1 flex-wrap"
-        style={{ height: "74vh", overflowY: "auto" }}
+        className="d-flex m-1 flex-wrap w-100"
+        style={{ height: "calc(100vh - 180px)", overflowY: "auto" }}
       >
         {fetching ? (
-          <Loading />
+       <div className="w-100 h-100">
+           <Loading height="calc(100vh - 180px)" />
+        </div>
         ) : !!ads.length ? (
           ads.map((ad) => (
             <ShortlistCard

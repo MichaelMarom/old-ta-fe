@@ -9,6 +9,7 @@ import DebounceInput from "./DebounceInput";
 import { showDate } from "../../utils/moment";
 import { wholeDateFormat } from "../../constants/constants";
 import Avatar from "./Avatar";
+import { MdReviews } from "react-icons/md";
 
 const FeedbackModal = ({
   handleClose,
@@ -49,6 +50,10 @@ const FeedbackModal = ({
         className=" "
         style={{ overflowY: "auto" }}
       >
+        <div className="d-flex" >
+          <h6>Average Score: </h6>
+          <p> {questions.reduce((sum, question )=>question.star+sum, 0) / 5}</p>
+        </div>
         <div className="questions">
           <QuestionFeedback
             loading={questionLoading}

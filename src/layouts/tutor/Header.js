@@ -46,7 +46,6 @@ const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [profileDropdownOpened, setProfileDropdownOpened] = useState(false);
   const [isOverflowing, setIsOverflowing] = useState(false);
-
   const dispatch = useDispatch();
 
   const { missingFields } = useSelector((state) => state.missingFields);
@@ -56,6 +55,8 @@ const Header = () => {
   const scrollStep = 500; // Adjust the scroll step as needed
 
   useEffect(() => {
+console.log("render")
+
     const checkOverflow = () => {
       const el = scrollRef.current;
       if (el) {
@@ -96,12 +97,12 @@ const Header = () => {
     }
   };
 
-  useEffect(() => {
-    const element = document.getElementById("tutor-tab-header-list-active1");
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-  }, [location.pathname, activeTab]);
+  // useEffect(() => {
+    // const element = document.getElementById("tutor-tab-header-list-active1");
+    // if (element) {
+    //   element.scrollIntoView({ behavior: "smooth", block: "center" });
+    // }
+  // }, [location.pathname, activeTab]);
 
   // Handle click outside the dropdown
   useEffect(() => {

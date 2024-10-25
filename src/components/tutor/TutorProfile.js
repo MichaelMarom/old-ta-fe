@@ -677,13 +677,18 @@ const TutorProfile = () => {
               </div>
               <p><FaStar className="text-warning" />{rating.toFixed(1)}({totalPastLessons} reviews)</p>
               <Divider />
-              <div className="d-flex">      
-                 <div className="d-flex align-items-center">
-                <Pill
-                  label={JSON.parse(data.NativeLang).value}
-                  hasIcon={false}
-                />
-              </div>
+              <div className="d-flex" style={{
+                width: " 100%",
+                flexWrap: "wrap",
+                justifyContent: "center"
+
+              }} >
+                <div className="d-flex align-items-center">
+                  <Pill
+                    label={JSON.parse(data.NativeLang).value}
+                    hasIcon={false}
+                  />
+                </div>
                 {data.NativeLangOtherLang &&
                   JSON.parse(data.NativeLangOtherLang).map((lang) => (
                     <div
@@ -842,13 +847,13 @@ const TutorProfile = () => {
 
           <div className="col-md-8">
             <div className="row mb-4">
-              <div className="col-md-5 mx-2  rounded-2 d-flex shadow" style={{ background:"white" }}>
-              <FaQuoteLeft size={25} className="flex-shrink-0" /> 
-                <p className="p-2" style={{ fontSize: '1rem', color: '#343a40'}}>
-                  {data.Motivate} - <span className="" style={{fontSize: "12px"}}>Message from {data.TutorScreenname}</span>
+              <div className="col-md-5 mx-2  rounded-2 d-flex shadow" style={{ background: "white" }}>
+                <FaQuoteLeft size={25} className="flex-shrink-0" />
+                <p className="p-2" style={{ fontSize: '1rem', color: '#343a40' }}>
+                  {data.Motivate} - <span className="fw-bold" style={{ fontSize: "12px" }}>Message from {data.TutorScreenname}</span>
                 </p>
               </div>
-                <div className="col-md-6">
+              <div className="col-md-6">
                 <div>
                   <div className="" >
                     <video
@@ -883,18 +888,18 @@ const TutorProfile = () => {
 
                 </div>
               </div>
-            
+
             </div>
 
             <div className="row mb-4">
               <div className="col">
-                <h5 className="text-center  rounded-2 p-2 shadow text-secondary" style={{  background:"white"  }}>{data.HeadLine}</h5>
+                <h5 className="text-center  rounded-2 p-2 shadow text-secondary" style={{ background: "white" }}>{data.HeadLine}</h5>
               </div>
             </div>
             <div className="row mb-4">
 
               <div className="col">
-                <p className="  rounded-2 p-2 shadow" style={{ background:"white"  }} dangerouslySetInnerHTML={{ __html: data.WorkExperience }} />
+                <p className="  rounded-2 p-2 shadow" style={{ background: "white" }} dangerouslySetInnerHTML={{ __html: data.WorkExperience }} />
               </div>
             </div>
 
@@ -915,12 +920,12 @@ const TutorProfile = () => {
                     >
                       Subjects
                     </div>
-                    <div
+                    {/* <div
                       style={activeTab === 'availability' ? activeTabStyle : tabStyle}
                       onClick={() => setActiveTab('availability')}
                     >
                       Availability
-                    </div>
+                    </div> */}
                   </div>
 
                   {/* Tab Content */}
@@ -1070,13 +1075,13 @@ const TutorProfile = () => {
                     </div>
                   )}
 
-                  {activeTab === 'availability' && (
+                  {/* {activeTab === 'availability' && (
                     <div>
                       <p>Monday - Friday: 8am - 5pm</p>
                       <p>Saturday: 9am - 1pm</p>
                       <p>Sunday: Unavailable</p>
                     </div>
-                  )}
+                  )} */}
                 </div>
               </div>
             </div>
@@ -1100,8 +1105,8 @@ const TutorProfile = () => {
               controls
               style={{
                 maxWidth: "470px",
-               maxHeight: "500px",
-               height:"auto"
+                maxHeight: "500px",
+                height: "auto"
               }}
               autoPlay
             />

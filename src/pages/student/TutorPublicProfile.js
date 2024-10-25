@@ -821,7 +821,12 @@ const TutorPublicProfile = () => {
                   {rating.toFixed(1)}({totalPastLessons} reviews)
                 </p>
                 <Divider />
-                <div className="d-flex">
+                <div className="d-flex" style={{
+                  width: " 100%",
+                  flexWrap: "wrap",
+                  justifyContent: "center"
+
+                }} >
                   <div className="d-flex align-items-center">
                     <Pill
                       label={JSON.parse(edu.NativeLang).value}
@@ -1030,7 +1035,7 @@ const TutorPublicProfile = () => {
                     style={{ fontSize: "1rem", color: "#343a40" }}
                   >
                     {tutor.Motivate} -{" "}
-                    <span className="" style={{ fontSize: "12px" }}>
+                    <span className="fw-bold" style={{ fontSize: "12px" }}>
                       Message from {tutor.TutorScreenname}
                     </span>
                   </p>
@@ -1130,7 +1135,7 @@ const TutorPublicProfile = () => {
                       >
                         Subjects
                       </div>
-                      <div
+                      {/* <div
                         style={
                           activeTab === "availability"
                             ? activeTabStyle
@@ -1139,7 +1144,7 @@ const TutorPublicProfile = () => {
                         onClick={() => setActiveTab("availability")}
                       >
                         Availability
-                      </div>
+                      </div> */}
                     </div>
 
                     {/* Tab Content */}
@@ -1292,13 +1297,13 @@ const TutorPublicProfile = () => {
                       </div>
                     )}
 
-                    {activeTab === "availability" && (
+                    {/* {activeTab === "availability" && (
                       <div>
                         <p>Monday - Friday: 8am - 5pm</p>
                         <p>Saturday: 9am - 1pm</p>
                         <p>Sunday: Unavailable</p>
                       </div>
-                    )}
+                    )} */}
                   </div>
                 </div>
               </div>

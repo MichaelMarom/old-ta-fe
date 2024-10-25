@@ -27,14 +27,11 @@ const Layout = ({ children }) => {
             label: 'Create your Ad', component: <Ads setActiveTab={setActiveTab} />,
             link: '/tutor/market-place'
         },
-        { label: `Short List`, component: null, link: '/tutor/market-place/bid' },
+        { label: `Shortlist`, component: null, link: '/tutor/market-place/bid' },
     ];
 
     return (
         <  >
-            {/* <TabInfoVideoToast
-                video={VIDEO} /> */}
-
             <Tabs links={tabs} setActiveTab={setActiveTab}
                 setActiveTabIndex={setActiveTabIndex}
                 activeTab={activeTab}

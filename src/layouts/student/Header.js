@@ -85,12 +85,12 @@ const Header = () => {
     closed: "Closed",
   };
 
-  useEffect(() => {
-    const element = document.getElementById("tutor-tab-header-list-active1");
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [location.pathname, activeTab]);
+  // useEffect(() => {
+  //   const element = document.getElementById("tutor-tab-header-list-active1");
+  //   if (element) {
+  //     element.scrollIntoView({ behavior: "smooth" });
+  //   }
+  // }, [location.pathname, activeTab]);
 
   // Handle click outside the dropdown
   useEffect(() => {

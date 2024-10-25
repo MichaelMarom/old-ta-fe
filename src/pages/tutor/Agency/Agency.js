@@ -5,6 +5,7 @@ import TAButton from "../../../components/common/TAButton";
 import TableHeader from "../../../components/common/TableHeader";
 import { get_subTutors } from "../../../axios/agency";
 import { useParams } from "react-router-dom";
+import Actions from "../../../components/common/Actions";
 
 const Agency = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -62,7 +63,7 @@ const Agency = () => {
   ];
   return (
     <div>
-      <div className="p-2">
+      <div className="p-2" style={{height:"calc(100vh - 150px)"}}>
         <div className=" mt-2 highlight">
           <p className="m-1">
             Tutoring Academy platform offers you with a unique 'Agency'
@@ -127,7 +128,8 @@ const Agency = () => {
         isOpen={isOpen}
         onClose={onClose}
       />
-    </div>
+      <Actions saveDisabled  />
+          </div>
   );
 };
 
