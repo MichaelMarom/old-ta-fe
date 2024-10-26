@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   FaClock,
   FaCheckCircle,
@@ -11,7 +11,9 @@ import moment from "moment";
 import { wholeDateFormat } from "../../constants/constants";
 import { MdCancel } from "react-icons/md";
 import { useSelector } from "react-redux";
-import { HiDotsVertical } from "react-icons/hi";
+import { BiDotsVerticalRounded } from "react-icons/bi";
+
+import { useNavigate } from "react-router-dom";
 
 const TutorCard = ({
   tutor,
@@ -32,6 +34,29 @@ const TutorCard = ({
   } = tutor;
   const { student } = useSelector((state) => state.student);
   const scrollContainerRef = useRef(null);
+  const navigate = useNavigate()
+
+
+  const [isOpen, setIsOpen] = useState(false); 
+  const dropdownRef = useRef(null); 
+
+  const handleToggle = () => {
+    setIsOpen(prevState => !prevState);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
 
   function convertGMTToLocalTime(gmtOffset) {
     if (gmtOffset) {
@@ -91,16 +116,43 @@ const TutorCard = ({
 
   return (
     <div className="d-flex flex-column h-100 ">
-      {/* Row with avatar on left and rate, country, GMT on right */}
       <div className="d-flex justify-content-start align-items-center mb-3 flex-wrap">
         <div>
           <Avatar avatarSrc={Photo} size="80" showOnlineStatus={false} />
         </div>
 
-        <div className="text-end">
+        <div className="text-end w-100" >
           <div className="d-flex align-items-center justify-content-between">
             <span>{rate}/hr</span>
-            <div><HiDotsVertical  /></div>
+            <div style={{ position: 'relative' }}>
+              <div onClick={handleToggle} style={{ cursor: 'pointer' }}>
+                <BiDotsVerticalRounded />
+              </div>
+
+              {isOpen && (
+                <div
+                  ref={dropdownRef}
+                  style={{
+                    position: 'absolute',
+                    right: '0',
+                    background: '#fff',
+                    border: '1px solid #ccc',
+                    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+                    borderRadius: '4px',
+                    width: '150px',
+                    overflow: 'hidden',
+                    zIndex: 1000,
+                  }}
+                >
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                    {/* TODO:  ad chat if no chatId is there.*/}
+                    <li style={{ padding: '8px 12px', cursor: 'pointer' }} onClick={() => {
+                     tutor.ChatID && navigate(`/student/chat/${tutor.ChatID}`)
+                    }} className="hoveringListItem w-100">Message</li>
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
           <div className="d-flex align-items-center justify-content-start mt-1">
             <p className=" " style={{ color: "#7d7d7d", fontWeight: "500" }}>
@@ -123,7 +175,7 @@ const TutorCard = ({
             </p>
           </div>
         </div>
-       
+
       </div>
 
       <div className="flex-grow-1 d-flex flex-column justify-content-between">
@@ -144,7 +196,7 @@ const TutorCard = ({
           <div className="grade-scroller mb-2 d-flex align-items-center position-relative">
             <FaChevronLeft
               className="h-100 text-start flex-shrink-0 chevron"
-              style={{ cursor: "pointer", position: "absolute", left: 0,  boxShadow:" rgb(0 0 0 / 71%) -19px 0px 10px -5px inset" }}
+              style={{ cursor: "pointer", position: "absolute", left: 0, boxShadow: " rgb(0 0 0 / 71%) -19px 0px 10px -5px inset" }}
               size={15}
               color="white"
               onClick={scrollLeft}
@@ -162,7 +214,7 @@ const TutorCard = ({
             </div>
 
             <FaChevronRight
-              style={{ cursor: "pointer", position: "absolute", right: 0,boxShadow:"rgb(0 0 0 / 77%) 20px 0px 10px -5px inset" }}
+              style={{ cursor: "pointer", position: "absolute", right: 0, boxShadow: "rgb(0 0 0 / 77%) 20px 0px 10px -5px inset" }}
               className="h-100 text-end flex-shrink-0 chevron"
               size={15}
               color="white"
@@ -186,7 +238,7 @@ const TutorCard = ({
                     textOverflow: "ellipsis",
                     display: "block",
                     overflow: "hidden",
-                    fontSize:"13px"
+                    fontSize: "13px"
                   }}
                 >
                   Response Time:
@@ -208,7 +260,7 @@ const TutorCard = ({
                     textOverflow: "ellipsis",
                     display: "block",
                     overflow: "hidden",
-                    fontSize:"13px"
+                    fontSize: "13px"
 
                   }}
                 >
@@ -233,7 +285,7 @@ const TutorCard = ({
                     textOverflow: "ellipsis",
                     display: "block",
                     overflow: "hidden",
-                    fontSize:"13px"
+                    fontSize: "13px"
 
                   }}
                 >
@@ -259,7 +311,7 @@ const TutorCard = ({
                     textOverflow: "ellipsis",
                     display: "block",
                     overflow: "hidden",
-                    fontSize:"13px"
+                    fontSize: "13px"
 
                   }}
                 >

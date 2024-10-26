@@ -1008,3 +1008,11 @@ input[type="checkbox"] {
   background-color: green;
   border-color: green;
 }
+
+
+
+
+.hoveringListItem:hover{
+  background-color: #dadada;
+  cursor: pointer;
+}

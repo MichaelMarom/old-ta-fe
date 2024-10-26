@@ -343,7 +343,12 @@ const StudentFaculties = () => {
                               width: "32%",
                               boxShadow: "1px 2px 12px 2px #bbbbbb"
                             }} key={index}>
-                              <TutorCard handleNavigateToFeedback={handleNavigateToFeedback} handleNavigateToSchedule={handleNavigateToSchedule} redirect_to_tutor_profile={redirect_to_tutor_profile} key={index} tutor={item} />
+                              <TutorCard
+                                handleNavigateToFeedback={handleNavigateToFeedback}
+                                handleNavigateToSchedule={handleNavigateToSchedule}
+                                redirect_to_tutor_profile={redirect_to_tutor_profile}
+                                key={index}
+                                tutor={item} />
                             </div>
                           ))}
                         </div>
