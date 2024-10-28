@@ -14,6 +14,8 @@ import { useSelector } from "react-redux";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 
 import { useNavigate } from "react-router-dom";
+import TAButton from '../common/TAButton'
+import { create_chat } from "../../axios/chat";
 
 const TutorCard = ({
   tutor,
@@ -34,11 +36,12 @@ const TutorCard = ({
   } = tutor;
   const { student } = useSelector((state) => state.student);
   const scrollContainerRef = useRef(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [loadingMessage, setLoadingMessage] = useState(false)
 
 
-  const [isOpen, setIsOpen] = useState(false); 
-  const dropdownRef = useRef(null); 
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   const handleToggle = () => {
     setIsOpen(prevState => !prevState);
@@ -57,6 +60,10 @@ const TutorCard = ({
     };
   }, []);
 
+  const createAndSendToChatPage = async (tutorId) => {
+    const res = await create_chat({ User1ID: student.AcademyId, User2ID: tutorId });
+    navigate(`/student/chat/${res?.[0]?.ChatID}`)
+  }
 
   function convertGMTToLocalTime(gmtOffset) {
     if (gmtOffset) {
@@ -117,14 +124,21 @@ const TutorCard = ({
   return (
     <div className="d-flex flex-column h-100 ">
       <div className="d-flex justify-content-start align-items-center mb-3 flex-wrap">
-        <div>
+        <div className="d-flex flex-column align-items-center">
           <Avatar avatarSrc={Photo} size="80" showOnlineStatus={false} />
+          {tutor.CodeApplied && (
+            <div className="blinking-button" style={{ color: "black" }}>
+              <span className="badge" style={{ background: "limegreen" }}>
+                connected
+              </span>
+            </div>
+          )}
         </div>
 
-        <div className="text-end w-100" >
+        <div className="text-end" >
           <div className="d-flex align-items-center justify-content-between">
             <span>{rate}/hr</span>
-            <div style={{ position: 'relative' }}>
+            {/* <div style={{ position: 'relative' }}>
               <div onClick={handleToggle} style={{ cursor: 'pointer' }}>
                 <BiDotsVerticalRounded />
               </div>
@@ -145,14 +159,14 @@ const TutorCard = ({
                   }}
                 >
                   <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                    {/* TODO:  ad chat if no chatId is there.*/}
+                   
                     <li style={{ padding: '8px 12px', cursor: 'pointer' }} onClick={() => {
-                     tutor.ChatID && navigate(`/student/chat/${tutor.ChatID}`)
+                      tutor.ChatID ? navigate(`/student/chat/${tutor.ChatID}`) : createAndSendToChatPage(tutor.AcademyId)
                     }} className="hoveringListItem w-100">Message</li>
                   </ul>
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
           <div className="d-flex align-items-center justify-content-start mt-1">
             <p className=" " style={{ color: "#7d7d7d", fontWeight: "500" }}>
@@ -183,14 +197,11 @@ const TutorCard = ({
           <h5 className="card-title text-start" style={{ fontSize: "1.2rem" }}>
             {TutorScreenname}
           </h5>
+          <TAButton loading={loadingMessage } buttonText={"Message"} className="m-0" handleClick={() => {
+            setLoadingMessage(true)
+            tutor.ChatID ? navigate(`/student/chat/${tutor.ChatID}`) : createAndSendToChatPage(tutor.AcademyId);
+          }} />
 
-          {!tutor.CodeApplied && (
-            <div className="blinking-button" style={{ color: "black" }}>
-              <span className="badge" style={{ background: "limegreen" }}>
-                connected
-              </span>
-            </div>
-          )}
         </div>
         <div>
           <div className="grade-scroller mb-2 d-flex align-items-center position-relative">

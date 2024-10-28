@@ -19,6 +19,7 @@ import Actions from "../components/common/Actions";
 import Loading from "../components/common/Loading";
 import Recomendation from "../components/Chat/Recomendation";
 import { send_email, send_temaplted_email } from "../axios/admin";
+import { throttle } from 'lodash';
 
 function Chat() {
   const [selectedChat, setSelectedChat] = useState({});
@@ -58,7 +59,7 @@ function Chat() {
             loggedInUserDetail.AcademyId,
             studentLoggedIn ? "student" : "tutor"
           );
-          socket.emit("offline", loggedInUserDetail.AcademyId);
+          socket.emit("offline", loggedInUserDetail.AcademyId, loggedInRole);
         }
       };
       setStatus();
@@ -214,22 +215,36 @@ function Chat() {
 
   useEffect(() => {
     if (socket) {
+      // Remove any previous listener for these events
+      socket.off("msg-recieve");
+      socket.off("online");
+      socket.off("offline");
+  
+      // Attach new event listeners
       socket.on("msg-recieve", (msgObj) => {
         setArrivalMsg(msgObj);
       });
+  
       socket.on("online", (id) => {
-        loggedInUserDetail.AcademyId &&
-          dispatch(setChats(loggedInUserDetail.AcademyId, loggedInRole));
+        console.log(id, loggedInUserDetail.AcademyId, "online");
+        dispatch(setChats(loggedInUserDetail.AcademyId, loggedInRole));
       });
+  
       socket.on("offline", (id, role, action) => {
-        // chats.map(chat => chat.AcademyId === id ? { ...chat, online: false } : chat)
-        id && action === "disconn" && set_online_status(0, id, role);
-        loggedInUserDetail.AcademyId &&
-          dispatch(setChats(loggedInUserDetail.AcademyId, loggedInRole));
+        console.log(id, loggedInUserDetail.AcademyId,role, "offline");
+        set_online_status(0, id, role);
+        dispatch(setChats(loggedInUserDetail.AcademyId, loggedInRole));
       });
+  
+      // Cleanup function to remove listeners when component unmounts
+      return () => {
+        socket.off("msg-recieve");
+        socket.off("online");
+        socket.off("offline");
+      };
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loggedInUserDetail, loggedInRole]);
+  }, [loggedInUserDetail, loggedInRole, socket]);
+  
 
   useEffect(() => {
     setFetchingMessages(true);
