@@ -43,7 +43,6 @@ const TutorTable = () => {
   const handleReasonStatus = (user, status) => {
     setModalOpen(true);
     setSelectedUser(user);
-    console.log(user, status);
     setSelectedStatus(status);
   };
 
@@ -61,12 +60,12 @@ const TutorTable = () => {
     setStatusReason("");
 
     !!selectedUser.CellPhone &&
-      !!selectedUser.CellPhone.startsWith("+92") &&
+      // !!selectedUser.CellPhone.startsWith("+92") &&
       (await send_sms({
         message: `Your account is currently in "${status}" state.`,
         numbers: [selectedUser.CellPhone.replace("+", "")],
         id: selectedUser.AcademyId,
-      }).then((result) => toast.success(`Status Code "${result.status}" `)));
+      }).then((result) => toast.success(`Status Code "${result?.status}" `)));
 
     setStatus(selectedStatus);
     const result = await get_tutor_data(status);
@@ -197,7 +196,6 @@ const TutorTable = () => {
   };
 
   const handleClickOutside = (event) => {
-    console.log(dropdownRef.current , dropdownRef.current?.contains(event.target), event.target, dropdownOpen)
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setDropdownOpen(null);
     }
