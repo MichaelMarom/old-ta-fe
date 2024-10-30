@@ -69,7 +69,7 @@ const TutorTable = () => {
 
     setStatus(selectedStatus);
     const result = await get_tutor_data(status);
-    get_role_count_by_status().then(
+    get_role_count_by_status("tutor").then(
       (data) => !data?.response?.data && setStatusCount(data)
     );
     if (!result?.response?.data) {
@@ -179,7 +179,7 @@ const TutorTable = () => {
 
     setStatus(status);
     const result = await get_tutor_data(status);
-    get_role_count_by_status().then(
+    get_role_count_by_status("tutor").then(
       (data) => !data?.response?.data && setStatusCount(data)
     );
     if (!result?.response?.data) {
