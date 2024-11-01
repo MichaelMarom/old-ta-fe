@@ -52,7 +52,7 @@ const FeedbackModal = ({
       >
         <div className="d-flex" >
           <h6>Average Score: </h6>
-          <p> {questions.reduce((sum, question )=>question.star+sum, 0) / 5}</p>
+          <p> {questions.reduce((sum, question) => (question.star || 0) + sum, 0) / 5}</p>
         </div>
         <div className="questions">
           <QuestionFeedback

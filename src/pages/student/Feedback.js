@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import StudentLayout from "../../layouts/StudentLayout";
 import BookedLessons from "../../components/student/Feedback/BookedLessons";
-import QuestionFeedback from "../../components/student/Feedback/QuestionFeedback";
 import {
   formatted_student_sessions,
   get_all_feedback_questions,
@@ -10,19 +8,13 @@ import {
 } from "../../axios/calender";
 import { fetch_tutors_photos } from "../../axios/tutor";
 
-import { showDate } from "../../utils/moment";
-import { wholeDateFormat } from "../../constants/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { updateStudentLesson } from "../../redux/student/studentBookings";
 import Actions from "../../components/common/Actions";
 import { toast } from "react-toastify";
 import Loading from "../../components/common/Loading";
 import _ from "lodash";
-import DebounceInput from "../../components/common/DebounceInput";
-import {
-  setOnlySessions,
-  setStudentSessions,
-} from "../../redux/student/studentSessions";
+
 import FeedbackModal from "../../components/common/FeedbackModal";
 
 const Feedback = () => {
@@ -80,31 +72,34 @@ const Feedback = () => {
   }, [sessionsFetched]);
 
   console.log(rawQuestions, "rawQ");
+  console.log(questions, "queston");
+
   useEffect(() => {
     const getAllFeedbackQuestion = async () => {
       const data = await get_all_feedback_questions();
       if (!!data.length) {
-        // If at any point, you set questions to the same array as rawQuestions without making a copy, changes in questions will still affect rawQuestions due to reference sharing. For example, this might happen during initialization in your useEffect or when resetting the state.
-        // setQuestions([...data]);
-        // setRawQuestions([...data]);
-        setQuestions([...data.map((q) => ({ ...q }))]); // Deep copy
-        setRawQuestions([...data.map((q) => ({ ...q }))]); // Deep copy
+        // Deep copy to avoid reference issues
+        setQuestions(_.cloneDeep(data.map((q) => ({ ...q }))));
+        setRawQuestions(_.cloneDeep(data.map((q) => ({ ...q }))));
       }
     };
     getAllFeedbackQuestion();
   }, []);
+  
 
   const handleEmojiClick = async (id, star) => {
-    const updatedQuestions = [...questions];
+    // Deep clone `questions` to avoid modifying `rawQuestions`
+    const updatedQuestions = _.cloneDeep(questions);
     const questionIndex = updatedQuestions.findIndex(
       (question) => question.SID === id
     );
-
+  
     if (questionIndex !== -1) {
       updatedQuestions[questionIndex].star = star;
-      setQuestions(updatedQuestions); // Now this only updates questions, not rawQuestions
+      setQuestions(updatedQuestions);
     }
   };
+  
 
   const handleRowSelect = (event) => {
     setSelectedEvent(event);
@@ -185,7 +180,7 @@ const Feedback = () => {
 
     toast.success("Saved Successfully");
     console.log(rawQuestions);
-    setQuestions(rawQuestions);
+    setQuestions([...rawQuestions]);
     setSelectedEvent({});
     setComment("");
   };
