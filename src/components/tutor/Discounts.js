@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import { get_tutor_subjects, updateTutorSetup } from "../../axios/tutor";
-import { IoMdCopy, IoMdRefresh } from "react-icons/io";
+import { IoMdAdd, IoMdCopy, IoMdRefresh } from "react-icons/io";
 import { FaInfoCircle } from "react-icons/fa";
 import Tooltip from "../common/ToolTip";
 import TAButton from "../common/TAButton";
@@ -58,8 +58,9 @@ const Discounts = () => {
   const [subject, setSubject] = useState("");
   const [codeUsed, setCodeUsed] = useState("new");
 
+  const [fields, setFields] = useState([{ id: 1, code: generateDiscountCode(), subject: '' }]);
+  
 
-  console.log("rendering")
   const fetchTutorRateRecord = () => {
     try {
       if (discount.AcademyId) {
@@ -74,40 +75,9 @@ const Discounts = () => {
         setClassTeaching(discount.MultiStudent);
         setDiscountEnabled(discount.CodeShareable);
         setIntroSessionDiscount(discount.IntroSessionDiscount);
-        // let subscriptionPlan = document.querySelector("#subscription-plan");
-        // ActivateSubscriptionOption === "true"
-        //   ? (subscriptionPlan.checked = true)
-        //   : (subscriptionPlan.checked = false);
-
-        // let multiStudent = [...document.querySelectorAll("#multi-student")];
-
-        // multiStudent.map((item) => {
-        //   if (
-        //     MultiStudentHourlyRate.split(" ").splice(-1)[0] ===
-        //     item.value.split(" ").splice(-1)[0]
-        //   ) {
-        //     item.checked = true;
-        //   }
-        //   return item;
-        // });
-
-        // let studentSubscription = [
-        //   ...document.querySelectorAll("#student-subscription"),
-        // ];
-
-        // studentSubscription.map((item) => {
-        //   if (
-        //     SubscriptionPlan.split(" ").splice(-1)[0] ===
-        //     item.value.split(" ").splice(-1)[0]
-        //   ) {
-        //     item.checked = true;
-        //   }
-        //   return item;
-        // });
-      }
+         }
     } catch (err) {
-      // })
-      console.log(err);
+     toast.error(err.message)
     }
   };
 
@@ -132,11 +102,6 @@ const Discounts = () => {
       setDiscountCode(generateDiscountCode());
       setSubject("");
       setCodeUsed("new");
-      // get_tutor_subjects(tutor.AcademyId)
-      //   .then((result) => {
-      //     result?.length && setSubjects(result);
-      //   })
-      //   .catch((err) => toast.error(err.message));
     }
   }, [discountEnabled, tutor]);
 
@@ -269,6 +234,11 @@ const Discounts = () => {
     { name: "cancPolicy", filled: !!selectedCancellationPolicy },
   ];
 
+
+  const addField = () => {
+    setFields([...fields, { id: fields.length + 1, code: generateDiscountCode(), subject: '' }]);
+  };
+
   return (
     <div className="tutor-tab-rates">
       <div
@@ -278,7 +248,7 @@ const Discounts = () => {
         <form
           onSubmit={handleSubmit}
           className="d-flex justify-content-center"
-          style={{ width: "100%", gap: "3%" }}
+          style={{ width: "100%" }}
         >
           <div className="d-flex flex-column" style={{ width: "30%" }}>
             <div className="rounded shadow border m-2 p-4">
@@ -506,81 +476,151 @@ const Discounts = () => {
               </div>
 
               {discountEnabled && (
-                <div>
-                  <div className="d-flex flex-column w-100 justify-content-end ">
+                // <div>
+                //   <div className="d-flex flex-column w-100 justify-content-end ">
+                //     <div className="d-flex align-items-end">
+                //       <h6 className="mt-4 d-inline text-center">Your Student's new code</h6>
+                //       <Tooltip text="Generate New Code">
+                //         <IoMdRefresh
+                //           size={20}
+                //           className="d-inline mb-2"
+                //           onClick={() =>
+                //             editMode && setDiscountCode(generateDiscountCode())
+                //           }
+                //         />
+                //       </Tooltip>
+                //     </div>
+                //     <div className="d-flex flex-column gap-3">
+                //       <div className="d-flex ">
+                //         <div className="input-group">
+                //           <input
+                //             disabled={!editMode}
+                //             type="text"
+                //             className="form-control m-0 h-100 p-2"
+                //             value={discountCode}
+                //             readOnly
+                //           />
+
+                //           <label
+                //             className="m-0 input-group-text"
+                //             type="button"
+                //             id="inputGroupFileAddon04"
+                //           >
+                //             <IoMdCopy
+                //               size={20}
+                //               color="#0096ff"
+                //               onClick={() => {
+                //                 copyToClipboard(discountCode);
+                //                 setCopied(true);
+                //               }}
+                //             />
+                //           </label>
+                //         </div>
+                //         {copied && (
+                //           <p className="text-success d-block">
+                //             Code copied to clipboard!
+                //           </p>
+                //         )}
+                //       </div>
+                //       <div className="input-group ">
+                //         <Select
+                //           editMode={editMode}
+                //           label={<GeneralFieldLabel label={"Subject"} />}
+                //           value={subject}
+                //           setValue={setSubject}
+                //         >
+                //           <option value="" disabled>
+                //             Select
+                //           </option>
+                //           {subjects.map((subject) => (
+                //             <option value={subject}>{subject}</option>
+                //           ))}
+                //         </Select>
+                //       </div>
+                //     </div>
+                //   </div>
+                //   <TAButton
+                //     className="w-auto"
+                //     buttonText={"Send Code"}
+                //     handleClick={() =>
+                //       !!subject.length
+                //         ? setSendCodeModalOpen(true)
+                //         : toast.warning(
+                //             "Please Seelct subject First before sending code to your students!"
+                //           )
+                //     }
+                //   />
+                // </div>
+
+
+
+                fields.map((field, index) => (
+                  <div key={field.id} className="d-flex flex-column gap-3 mb-3">
                     <div className="d-flex align-items-end">
-                      <h6 className="mt-4 d-inline text-center">Your Student's new code</h6>
-                      <Tooltip text="Generate New Code">
+                      {/* <h6 className="mt-4 d-inline text-center">Your Student's new code</h6> */}
+                      {/* <Tooltip text="Generate New Code">
                         <IoMdRefresh
                           size={20}
                           className="d-inline mb-2"
-                          onClick={() =>
-                            editMode && setDiscountCode(generateDiscountCode())
-                          }
-                        />
-                      </Tooltip>
-                    </div>
-                    <div className="d-flex flex-column gap-3">
-                      <div className="d-flex ">
-                        <div className="input-group">
-                          <input
-                            disabled={!editMode}
-                            type="text"
-                            className="form-control m-0 h-100 p-2"
-                            value={discountCode}
-                            readOnly
-                          />
-
-                          <label
-                            className="m-0 input-group-text"
-                            type="button"
-                            id="inputGroupFileAddon04"
-                          >
-                            <IoMdCopy
-                              size={20}
-                              color="#0096ff"
-                              onClick={() => {
-                                copyToClipboard(discountCode);
-                                setCopied(true);
-                              }}
-                            />
-                          </label>
-                        </div>
-                        {copied && (
-                          <p className="text-success d-block">
-                            Code copied to clipboard!
-                          </p>
-                        )}
-                      </div>
-                      <div className="input-group ">
-                        <Select
-                          editMode={editMode}
-                          label={<GeneralFieldLabel label={"Subject"} />}
-                          value={subject}
-                          setValue={setSubject}
-                        >
-                          <option value="" disabled>
-                            Select
-                          </option>
-                          {subjects.map((subject) => (
-                            <option value={subject}>{subject}</option>
+                          onClick={() => editMode && setFields(fields.map(f =>
+                            f.id === field.id ? { ...f, code: generateDiscountCode() } : f
                           ))}
-                        </Select>
-                      </div>
+                        />
+                      </Tooltip> */}
                     </div>
+                    <div className="d-flex">
+                      <div className="input-group">
+                        <input
+                          disabled={!editMode}
+                          type="text"
+                          className="form-control m-0 h-100 p-2"
+                          value={field.code}
+                          readOnly
+                        />
+                        <label
+                          className="m-0 input-group-text"
+                          type="button"
+                          id="inputGroupFileAddon04"
+                        >
+                          <IoMdCopy
+                            size={20}
+                            color="#0096ff"
+                            onClick={() => {
+                              copyToClipboard(field.code);
+                              setCopied(true);
+                            }}
+                          />
+                        </label>
+                      </div>
+                      {copied && (
+                        <p className="text-success d-block">
+                          Code copied to clipboard!
+                        </p>
+                      )}
+                    </div>
+                    <div className="input-group">
+                      <Select
+                        editMode={editMode}
+                        label={<GeneralFieldLabel label="Subject" />}
+                        value={field.subject}
+                        // setValue={(value) => handleSubjectChange(field.id, value)}
+                      >
+                        <option value="" disabled>
+                          Select
+                        </option>
+                        {subjects.map((subject, idx) => (
+                          <option key={idx} value={subject}>{subject}</option>
+                        ))}
+                      </Select>
+                    </div>
+                    {/* Only display the plus button on the last field */}
+                    {index === fields.length - 1 && (
+                      <button onClick={addField} className="btn btn-outline-primary mt-2" type="button">
+                        <IoMdAdd size={20} /> Add More
+                      </button>
+                    )}
                   </div>
-                  <TAButton
-                    className="w-auto"
-                    buttonText={"Send Code"}
-                    handleClick={() =>
-                      !!subject.length
-                        ? setSendCodeModalOpen(true)
-                        : toast.warning(
-                            "Please Seelct subject First before sending code to your students!"
-                          )
-                    }
-                  />
-                </div>
+                ))
               )}
             </div>
             <div className="rounded shadow border m-2 p-4">
