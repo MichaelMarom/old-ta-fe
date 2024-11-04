@@ -439,44 +439,6 @@ option {
     border: 1px solid #000;
 }
 
-.tutor-footer {
-    height: 50px;
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    padding: 0 0 10px 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #ffffff;
-    margin: 0;
-}
-
-.tutor-footer button {
-    padding: 0 5px;
-    line-height: 33px;
-}
-
-
-
-.tutor-tab-rates {
-    height: calc(100vh - 100px);
-    width: 100%;
-}
-
-.tutor-tab-rate-section {
-    height: 100%;
-}
-
-.tutor-tab-rate-box {
-    height: 100%;
-    width: 50%;
-    float: left;
-    overflow: auto;
-    padding: 25px;
-    display: block;
-}
 
 .highlight {
     font-family: 'Roboto', sans-serif !important;

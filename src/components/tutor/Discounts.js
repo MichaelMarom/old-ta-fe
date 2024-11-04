@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useEffect } from "react";
-import { get_tutor_subjects, updateTutorSetup } from "../../axios/tutor";
+import { get_tutor_subjects, update_subject_rates, updateTutorSetup } from "../../axios/tutor";
 import { IoMdAdd, IoMdCopy, IoMdRefresh } from "react-icons/io";
 import { FaInfoCircle } from "react-icons/fa";
 import Tooltip from "../common/ToolTip";
@@ -16,6 +16,7 @@ import SendCodeModal from "./SendCodeModal";
 import { GeneralFieldLabel, MandatoryFieldLabel } from "./TutorSetup";
 import { setMissingFieldsAndTabs } from "../../redux/tutor/missingFieldsInTabs";
 import { postDiscount, updateDiscount } from "../../redux/tutor/discount";
+import Voucher from "../common/Voucher";
 
 const generateDiscountCode = () => {
   const length = 8;
@@ -58,8 +59,8 @@ const Discounts = () => {
   const [subject, setSubject] = useState("");
   const [codeUsed, setCodeUsed] = useState("new");
 
-  const [fields, setFields] = useState([{ id: 1, code: generateDiscountCode(), subject: '' }]);
-  
+  const [fields, setFields] = useState([{ id: 1, code: generateDiscountCode(), SID: '' }]);
+
 
   const fetchTutorRateRecord = () => {
     try {
@@ -73,11 +74,11 @@ const Discounts = () => {
         setSubscriptionPlan(discount.SubscriptionPlan);
         setDiscountCode(discount.DiscountCode);
         setClassTeaching(discount.MultiStudent);
-        setDiscountEnabled(discount.CodeShareable);
+        // setDiscountEnabled(discount.CodeShareable);
         setIntroSessionDiscount(discount.IntroSessionDiscount);
-         }
+      }
     } catch (err) {
-     toast.error(err.message)
+      toast.error(err.message)
     }
   };
 
@@ -92,7 +93,7 @@ const Discounts = () => {
   useEffect(() => {
     get_tutor_subjects(tutor.AcademyId)
       .then((result) => {
-        result?.length && setSubjects(result.map(subs=>subs.subject));
+        result?.length && setSubjects(result.map(subs => ({ subject: subs.subject, SID: subs.SID, DiscountCode:subs.DiscountCode })));
       })
       .catch((err) => toast.error(err.message));
   }, []);
@@ -130,6 +131,16 @@ const Discounts = () => {
   }, [currentState, dbState]);
 
   let saver = async () => {
+
+    //TODO:
+    //update tutorrates with  code.
+    //student apply it 
+    // code sttaus = used
+    // codeapplication logs will have date and student who used that code
+    fields.map(field =>
+      update_subject_rates(field.SID, { DiscountCode: field.code })
+    )
+
     if (discount.AcademyId)
       return dispatch(
         await updateDiscount(discount.id, {
@@ -164,18 +175,19 @@ const Discounts = () => {
     }
   };
 
+  console.log(discountEnabled,"value")
   let subscription_cols = [
+    { Header: "Package" },
     { Header: "Hours" },
-    { Header: "Select" },
     { Header: "Discount" },
   ];
 
   let subscription_discount = [
-    { discount: "0%", hours: "1-5" },
-    { discount: "5.0%", hours: "6-11" },
-    { discount: "10.0%", hours: "12-17" },
-    { discount: "15.0%", hours: "18-23" },
-    { discount: "20.0%", hours: "24+" },
+    { discount: "0%", hours: "1-5", package: "A-0" },
+    { discount: "5.0%", hours: "6-11", package: "A-6" },
+    { discount: "10.0%", hours: "12-17", package: "A-12" },
+    { discount: "15.0%", hours: "18-23", package: "A-18" },
+    { discount: "20.0%", hours: "24+", package: "A-24" },
   ];
 
   let multi_students_col = [
@@ -195,6 +207,7 @@ const Discounts = () => {
     { total: 9, disc: "48" },
     { total: 10, disc: "51" },
   ];
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -236,13 +249,16 @@ const Discounts = () => {
 
 
   const addField = () => {
-    setFields([...fields, { id: fields.length + 1, code: generateDiscountCode(), subject: '' }]);
+    setFields([...fields, { id: fields.length + 1, code: generateDiscountCode(), SID: '' }]);
   };
 
   return (
-    <div className="tutor-tab-rates">
+    <div style={{
+      height: " calc(100vh - 150px)",
+      width: " 100%"
+    }}>
       <div
-        className="tutor-tab-rate-section"
+        className="h-100"
         style={{ height: "80vh", overflowY: "auto" }}
       >
         <form
@@ -262,8 +278,8 @@ const Discounts = () => {
                   editMode={editMode}
                   label={
                     <MandatoryFieldLabel
-                    toolTipText= "How many hours before the lesson, you allow the student to cancel without penalty?"
-                 direction="bottomright"
+                      toolTipText="How many hours before the lesson, you allow the student to cancel without penalty?"
+                      direction="bottomright"
                       text="Cancellation Policy"
                       mandatoryFields={mandatoryFields}
                       name={"cancPolicy"}
@@ -364,20 +380,15 @@ const Discounts = () => {
                 />{" "}
                 &nbsp;
                 <label htmlFor="subscription-plan1">
-                Activate subscription option
+                  Activate subscription option
                 </label>
               </div>
 
               <div className="highlight">
-                Please ensure to select the checkbox above to enable this
-                feature. Your student can choose a payment option from the
-                following table to benefit from savings by paying in advance for
-                multiple sessions. The Academy will remit 50% of the discounted
-                total to you upfront, with the remaining balance provided after
-                completion. For instance, if a student opts for the 12-hour
-                package and your rate is $60.00 per hour, the calculation would
-                be $60.00 x 12 hours, totaling $720.00, less a 10% discount,
-                resulting in a final amount of $648.00.
+                To enable this feature, please select the checkbox above. Students may choose from the payment options listed in the table below to enjoy savings
+                by paying for multiple sessions in advance. The Academy will pay you 50% of the discounted total upfront, and the remaining balance upon
+                completion. For example, if a student selects the 12-hour package and your hourly rate is $60.00, the total would be $720.00.
+                After applying a 10% discount, your final earning would be $648.00 (gross)
               </div>
 
               <div
@@ -385,10 +396,10 @@ const Discounts = () => {
                 style={{
                   pointerEvents:
                     ActivateSubscriptionOption === "true" ||
-                    ActivateSubscriptionOption === true
+                      ActivateSubscriptionOption === true
                       ? "auto"
                       : "none",
-                  opacity: "0.5",
+                  opacity: ActivateSubscriptionOption ? "1" : "0.5",
                 }}
               >
                 <table className="m-0">
@@ -402,8 +413,10 @@ const Discounts = () => {
                   <tbody>
                     {subscription_discount.map((item, index) => (
                       <tr key={index}>
+                        <td>{item.package}</td>
+
                         <td>{item.hours}</td>
-                        <td>
+                        {/* <td>
                           <input
                             disabled={!editMode}
                             onInput={(e) => {
@@ -419,7 +432,7 @@ const Discounts = () => {
                               width: "20px",
                             }}
                           />
-                        </td>
+                        </td> */}
 
                         <td>{item.discount}</td>
                       </tr>
@@ -449,8 +462,8 @@ const Discounts = () => {
                     !!subjects.length
                       ? setDiscountEnabled(!discountEnabled)
                       : toast.warning(
-                          "Please select subject from Subjects Tab, after that you can share code with your students!"
-                        )
+                        "Please select subject from Subjects Tab, after that you can share code with your students!"
+                      )
                   }
                   checked={discountEnabled}
                 />
@@ -473,6 +486,12 @@ const Discounts = () => {
                 >
                   <FaInfoCircle size={20} color="#0096ff" />
                 </Tooltip>
+              </div>
+              <div className="d-flex flex-wrap gap-2">
+              <Voucher code={"ER324DCED"} subject={"English"} />
+              <Voucher code={"ER324DCED"} subject={"English"} />
+              <Voucher code={"ER324DCED"} subject={"English"} />
+
               </div>
 
               {discountEnabled && (
@@ -602,14 +621,16 @@ const Discounts = () => {
                       <Select
                         editMode={editMode}
                         label={<GeneralFieldLabel label="Subject" />}
-                        value={field.subject}
-                        // setValue={(value) => handleSubjectChange(field.id, value)}
+                        value={field.SID}
+                        setValue={(value) => { setFields(fields.map(item => item.id === field.id ? { ...item, SID: value, } : item)) }}
                       >
                         <option value="" disabled>
                           Select
                         </option>
-                        {subjects.map((subject, idx) => (
-                          <option key={idx} value={subject}>{subject}</option>
+                        {subjects.map(({ subject, SID }, idx) => (
+                          <option key={idx} value={SID}
+                            style={{ background: fields.filter(item => item.SID === SID).length ? "rgb(208 208 208)" : "" }}
+                            disabled={fields.filter(item => item.SID === SID).length}>{subject}</option>
                         ))}
                       </Select>
                     </div>
@@ -714,7 +735,7 @@ const Discounts = () => {
                 />{" "}
                 &nbsp;
                 <label htmlFor="subscription-plan">
-                 Activate multi students option
+                  Activate multi students option
                 </label>
               </div>
 
@@ -734,7 +755,7 @@ const Discounts = () => {
                 style={{
                   pointerEvents:
                     ActivateSubscriptionOption === "true" ||
-                    ActivateSubscriptionOption === true
+                      ActivateSubscriptionOption === true
                       ? "auto"
                       : "none",
                   opacity: "0.5",

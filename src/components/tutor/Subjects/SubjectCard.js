@@ -42,6 +42,7 @@ const SubjectCard = ({ subject, rateVal, gradesVal, faculty, id }) => {
             text: '8th Grade'
         },{
             value: '9th',
+            
             text: '9th Grade'
         },
         {

@@ -14,6 +14,7 @@ export let upload_new_subject = (body) => {
       });
   });
 };
+
 export const uploadFile = (file) => {
   try {
     const formData = new FormData();
@@ -159,11 +160,29 @@ export let upload_tutor_rates = async (rate, grades, id, faculty, subject) => {
   }
 };
 
+/**
+ * 
+ * @param {String} id 
+ * @param {String} body {id, faculty, subject, AcademyId, rate, grades, DiscountCode, CodeStatus}
+ * @returns 
+ */
+export const update_subject_rates = async (id, body) => {
+  try {
+    const { data } = await apiClient.put(
+      `/tutor/rates/${id}`, body
+    );
+    return data;
+  }
+  catch (err) {
+    showErrorToast(err);
+  }
+}
+
 export const remove_subject_rates = async (id) => {
   try {
     const { data } = await apiClient.delete(`/subject-rate/${id}`);
     return data;
-  } catch (err) {}
+  } catch (err) { }
 };
 
 export let get_my_edu = async (AcademyId) => {
