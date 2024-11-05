@@ -251,9 +251,9 @@ export const update_bank_details = async (id, body) => {
   }
 };
 
-export const code_applied = async (studentId, tutorId) => {
+export const code_applied = async (studentId, tutorId, SID) => {
   try {
-    let { data } = await apiClient.put(`/code-applied/${studentId}/${tutorId}`);
+    let { data } = await apiClient.put(`/code-applied/${studentId}/${tutorId}`,{params:{SubjectRateCodeRef:SID}});
     return data;
   } catch (err) {
     showErrorToast(err);

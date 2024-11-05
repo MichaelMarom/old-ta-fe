@@ -74,7 +74,7 @@ const Discounts = () => {
         setSubscriptionPlan(discount.SubscriptionPlan);
         setDiscountCode(discount.DiscountCode);
         setClassTeaching(discount.MultiStudent);
-        // setDiscountEnabled(discount.CodeShareable);
+        setDiscountEnabled(discount.CodeShareable);
         setIntroSessionDiscount(discount.IntroSessionDiscount);
       }
     } catch (err) {
@@ -93,19 +93,23 @@ const Discounts = () => {
   useEffect(() => {
     get_tutor_subjects(tutor.AcademyId)
       .then((result) => {
-        result?.length && setSubjects(result.map(subs => ({ subject: subs.subject, SID: subs.SID, DiscountCode:subs.DiscountCode })));
+        result?.length && setSubjects(result.map(subs =>
+          ({ subject: subs.subject, SID: subs.SID, DiscountCode: subs.DiscountCode, CodeStatus: subs.CodeStatus })));
       })
       .catch((err) => toast.error(err.message));
-  }, []);
+  }, [discount]);
 
   useEffect(() => {
-    if (discountEnabled) {
-      setDiscountCode(generateDiscountCode());
-      setSubject("");
-      setCodeUsed("new");
-    }
+    // if (discountEnabled) {
+    setDiscountCode(generateDiscountCode());
+    setSubject("");
+    setCodeUsed("new");
+    // }
+
+    console.log(generateDiscountCode())
   }, [discountEnabled, tutor]);
 
+  console.log(discountCode)
   useEffect(() => {
     fetchTutorRateRecord();
     // eslint-disable-next-line
@@ -138,7 +142,7 @@ const Discounts = () => {
     // code sttaus = used
     // codeapplication logs will have date and student who used that code
     fields.map(field =>
-      update_subject_rates(field.SID, { DiscountCode: field.code })
+      field.SID && update_subject_rates(field.SID, { DiscountCode: field.code })
     )
 
     if (discount.AcademyId)
@@ -175,7 +179,6 @@ const Discounts = () => {
     }
   };
 
-  console.log(discountEnabled,"value")
   let subscription_cols = [
     { Header: "Package" },
     { Header: "Hours" },
@@ -251,6 +254,17 @@ const Discounts = () => {
   const addField = () => {
     setFields([...fields, { id: fields.length + 1, code: generateDiscountCode(), SID: '' }]);
   };
+
+  // useEffect to generate new codes for all fields when discountEnabled changes
+  useEffect(() => {
+    if (discountEnabled) {
+      const updatedFields = fields.map(field => ({
+        ...field,
+        code: generateDiscountCode()  // Generate new code for each field
+      }));
+      setFields(updatedFields);
+    }
+  }, [discountEnabled]); // Run effect when discountEnabled changes
 
   return (
     <div style={{
@@ -382,14 +396,12 @@ const Discounts = () => {
                 <label htmlFor="subscription-plan1">
                   Activate subscription option
                 </label>
-              </div>
-
-              <div className="highlight">
-                To enable this feature, please select the checkbox above. Students may choose from the payment options listed in the table below to enjoy savings
+                <Tooltip width="400px" text={` To enable this feature, please select the checkbox above. Students may choose from the payment options listed in the table below to enjoy savings
                 by paying for multiple sessions in advance. The Academy will pay you 50% of the discounted total upfront, and the remaining balance upon
                 completion. For example, if a student selects the 12-hour package and your hourly rate is $60.00, the total would be $720.00.
-                After applying a 10% discount, your final earning would be $648.00 (gross)
+                After applying a 10% discount, your final earning would be $648.00 (gross)`} />
               </div>
+
 
               <div
                 className="rate-table m-0 d-flex justify-content-center w-100"
@@ -416,23 +428,6 @@ const Discounts = () => {
                         <td>{item.package}</td>
 
                         <td>{item.hours}</td>
-                        {/* <td>
-                          <input
-                            disabled={!editMode}
-                            onInput={(e) => {
-                              setSubscriptionPlan(e.target.value);
-                            }}
-                            type="radio"
-                            value={item.hours}
-                            checked={item.hours === "1-5"}
-                            name="student-subscription"
-                            id="student-subscription"
-                            style={{
-                              height: "20px",
-                              width: "20px",
-                            }}
-                          />
-                        </td> */}
 
                         <td>{item.discount}</td>
                       </tr>
@@ -444,12 +439,15 @@ const Discounts = () => {
           </div>
           <div className="d-flex flex-column" style={{ width: "30%" }}>
             <div className="p-4  float-end rounded shadow border m-2 ">
-              <h6 className="text-center">Tutor's Own Students</h6>
-              <div className="highlight">
-                To assist your current students on this platform, please provide
+              <div className="d-flex">
+                <h6 className="text-center w-100">Tutor's Own Students </h6><Tooltip direction="bottomright" width="300px" text={` To assist your current students on this platform, please provide
                 the following code to each student for use during their
                 registration process. It is important to generate a unique code
-                for every student..
+                for every student.`} /></div>
+              <div className="d-flex flex-wrap gap-2">
+                {subjects.map(({ subject, DiscountCode, CodeStatus }) =>
+                  DiscountCode && <Voucher code={DiscountCode} subject={subject} VoucherStatus={CodeStatus} />
+                )}
               </div>
               <div className="form-check form-switch d-flex align-items-center gap-2">
                 <input
@@ -487,105 +485,13 @@ const Discounts = () => {
                   <FaInfoCircle size={20} color="#0096ff" />
                 </Tooltip>
               </div>
-              <div className="d-flex flex-wrap gap-2">
-              <Voucher code={"ER324DCED"} subject={"English"} />
-              <Voucher code={"ER324DCED"} subject={"English"} />
-              <Voucher code={"ER324DCED"} subject={"English"} />
 
-              </div>
 
               {discountEnabled && (
-                // <div>
-                //   <div className="d-flex flex-column w-100 justify-content-end ">
-                //     <div className="d-flex align-items-end">
-                //       <h6 className="mt-4 d-inline text-center">Your Student's new code</h6>
-                //       <Tooltip text="Generate New Code">
-                //         <IoMdRefresh
-                //           size={20}
-                //           className="d-inline mb-2"
-                //           onClick={() =>
-                //             editMode && setDiscountCode(generateDiscountCode())
-                //           }
-                //         />
-                //       </Tooltip>
-                //     </div>
-                //     <div className="d-flex flex-column gap-3">
-                //       <div className="d-flex ">
-                //         <div className="input-group">
-                //           <input
-                //             disabled={!editMode}
-                //             type="text"
-                //             className="form-control m-0 h-100 p-2"
-                //             value={discountCode}
-                //             readOnly
-                //           />
-
-                //           <label
-                //             className="m-0 input-group-text"
-                //             type="button"
-                //             id="inputGroupFileAddon04"
-                //           >
-                //             <IoMdCopy
-                //               size={20}
-                //               color="#0096ff"
-                //               onClick={() => {
-                //                 copyToClipboard(discountCode);
-                //                 setCopied(true);
-                //               }}
-                //             />
-                //           </label>
-                //         </div>
-                //         {copied && (
-                //           <p className="text-success d-block">
-                //             Code copied to clipboard!
-                //           </p>
-                //         )}
-                //       </div>
-                //       <div className="input-group ">
-                //         <Select
-                //           editMode={editMode}
-                //           label={<GeneralFieldLabel label={"Subject"} />}
-                //           value={subject}
-                //           setValue={setSubject}
-                //         >
-                //           <option value="" disabled>
-                //             Select
-                //           </option>
-                //           {subjects.map((subject) => (
-                //             <option value={subject}>{subject}</option>
-                //           ))}
-                //         </Select>
-                //       </div>
-                //     </div>
-                //   </div>
-                //   <TAButton
-                //     className="w-auto"
-                //     buttonText={"Send Code"}
-                //     handleClick={() =>
-                //       !!subject.length
-                //         ? setSendCodeModalOpen(true)
-                //         : toast.warning(
-                //             "Please Seelct subject First before sending code to your students!"
-                //           )
-                //     }
-                //   />
-                // </div>
-
-
 
                 fields.map((field, index) => (
                   <div key={field.id} className="d-flex flex-column gap-3 mb-3">
                     <div className="d-flex align-items-end">
-                      {/* <h6 className="mt-4 d-inline text-center">Your Student's new code</h6> */}
-                      {/* <Tooltip text="Generate New Code">
-                        <IoMdRefresh
-                          size={20}
-                          className="d-inline mb-2"
-                          onClick={() => editMode && setFields(fields.map(f =>
-                            f.id === field.id ? { ...f, code: generateDiscountCode() } : f
-                          ))}
-                        />
-                      </Tooltip> */}
                     </div>
                     <div className="d-flex">
                       <div className="input-group">
@@ -627,8 +533,8 @@ const Discounts = () => {
                         <option value="" disabled>
                           Select
                         </option>
-                        {subjects.map(({ subject, SID }, idx) => (
-                          <option key={idx} value={SID}
+                        {subjects.map(({ subject, SID, DiscountCode }, idx) => (
+                          !DiscountCode && <option key={idx} value={SID}
                             style={{ background: fields.filter(item => item.SID === SID).length ? "rgb(208 208 208)" : "" }}
                             disabled={fields.filter(item => item.SID === SID).length}>{subject}</option>
                         ))}
@@ -645,18 +551,18 @@ const Discounts = () => {
               )}
             </div>
             <div className="rounded shadow border m-2 p-4">
-              <h6 className="text-center">School class Students</h6>
-
-              <div className="p-2 mt-4 highlight">
-                American public schools are currently experiencing a severe
+              <div className="d-flex">
+                <h6 className="text-center">School class Students</h6>
+                <Tooltip direction="bottomleft" width="300px" text={`   American public schools are currently experiencing a severe
                 shortage of teachers. If you possess a teaching certificate and
                 are willing to instruct online a full class of students, you
                 have the opportunity to advertise your services on our portal's
                 message board. This platform allows you to set a competitive
                 rate for your expertise. Likewise, schools in need of a
                 substitute teacher can easily locate your profile, which is
-                marked to indicate your availability.
+                marked to indicate your availability.`} />
               </div>
+
               <div className="form-check form-switch d-flex align-items-center gap-2 mt-4 justify-content-between">
                 <input
                   disabled={!editMode}
@@ -737,16 +643,13 @@ const Discounts = () => {
                 <label htmlFor="subscription-plan">
                   Activate multi students option
                 </label>
-              </div>
-
-              <div className="highlight">
-                You or your student may form a group to take advantage of the
+                <Tooltip direction="bottomleft" width="300px" text={`    You or your student may form a group to take advantage of the
                 discounts listed in the table below. For instance, if your
                 hourly rate is $60 and the group includes 6 students, each
                 student would receive a 39% discount per hour. A single student
                 will be accountable for managing the account. Please note, if a
                 student from the group misses a session, the payment for that
-                session is non-refundable.
+                session is non-refundable.`} />
               </div>
 
               <h6 className="text-center">Multi Students hourly rate</h6>
