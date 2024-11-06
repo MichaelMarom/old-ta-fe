@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from './Layout'
 import Input from '../../../components/common/Input'
 import { useSelector } from 'react-redux';
@@ -8,6 +8,7 @@ import { save_email_temp } from '../../../axios/admin';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { MandatoryFieldLabel } from '../../../components/tutor/TutorSetup';
+import RichTextEditor from '../../../components/common/RichTextEditor/RichTextEditor';
 
 const Create = () => {
   const [subject, setSubject] = useState('');
@@ -32,6 +33,15 @@ const Create = () => {
     })
   }
 
+  const [htmlContent, setHtmlContent] = useState('');
+
+  useEffect(() => {
+    fetch('/sample.html')
+      .then((response) => response.text())
+      .then((html) => setHtmlContent(html));
+  }, []);
+
+console.log(htmlContent)
   return (
     <Layout>
       <div className='container m-auto'>
@@ -42,14 +52,17 @@ const Create = () => {
                 <h5> Create Email Template</h5>
               <Input value={subject} setValue={setSubject} label={<MandatoryFieldLabel text={"Enter Subject"} />} />
 
-              <UserRichTextEditor
+              <RichTextEditor
                 onChange={(value) => setEmailText(value)}
                 placeholder={"Enter Email Text. This Email text will be followed by signature and it starts with logo"}
                 readOnly={false}
                 value={emailText}
                 height='300px'
               />
+
+              
               <TAButton buttonText={"Save"} type='submit' loading={creating} />
+{/* <div dangerouslySetInnerHTML={{ __html: htmlContent }} /> */}
             </div>
           </form>
         </div>

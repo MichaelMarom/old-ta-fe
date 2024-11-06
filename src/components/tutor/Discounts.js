@@ -17,6 +17,7 @@ import { GeneralFieldLabel, MandatoryFieldLabel } from "./TutorSetup";
 import { setMissingFieldsAndTabs } from "../../redux/tutor/missingFieldsInTabs";
 import { postDiscount, updateDiscount } from "../../redux/tutor/discount";
 import Voucher from "../common/Voucher";
+import Drawer from "../common/Drawer";
 
 const generateDiscountCode = () => {
   const length = 8;
@@ -440,15 +441,19 @@ const Discounts = () => {
           <div className="d-flex flex-column" style={{ width: "30%" }}>
             <div className="p-4  float-end rounded shadow border m-2 ">
               <div className="d-flex">
-                <h6 className="text-center w-100">Tutor's Own Students </h6><Tooltip direction="bottomright" width="300px" text={` To assist your current students on this platform, please provide
+                <h6 className="text-center w-100">Vouchers And Discounts </h6><Tooltip direction="bottomright" width="300px" text={` To assist your current students on this platform, please provide
                 the following code to each student for use during their
                 registration process. It is important to generate a unique code
                 for every student.`} /></div>
+
+                <Drawer childrenHeight="500px" header={"Vouchers List"} >
               <div className="d-flex flex-wrap gap-2">
                 {subjects.map(({ subject, DiscountCode, CodeStatus }) =>
                   DiscountCode && <Voucher code={DiscountCode} subject={subject} VoucherStatus={CodeStatus} />
                 )}
               </div>
+
+                </Drawer>
               <div className="form-check form-switch d-flex align-items-center gap-2">
                 <input
                   disabled={!editMode}
@@ -473,6 +478,7 @@ const Discounts = () => {
                 </label>
 
                 <Tooltip
+                direction="bottomright"
                   width="300px"
                   text="To link your student to your profile, please utilize 
                   the unique code provided below during the account setup 

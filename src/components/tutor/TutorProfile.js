@@ -30,6 +30,7 @@ import ScreenRecording from "../common/ScreenRecording";
 import EducationCards from "./EducationCards";
 import Pill from "../common/Pill";
 import Divider from "../common/Divider";
+import ReadMore from "../common/ReadMore";
 
 const TutorProfile = () => {
   const videoRef = useRef(null);
@@ -840,8 +841,9 @@ const TutorProfile = () => {
                 </div>
               </div>
               <Divider />
+              <ReadMore content={data.Introduction} maxLength={100} />
 
-              <p className="text-start w-100">{data.Introduction}</p>
+              {/* <p className="text-start w-100">{data.Introduction}</p> */}
             </div>
           </div>
 
@@ -849,9 +851,12 @@ const TutorProfile = () => {
             <div className="row mb-4">
               <div className="col-md-5 mx-2  rounded-2 d-flex shadow" style={{ background: "white" }}>
                 <FaQuoteLeft size={25} className="flex-shrink-0" />
-                <p className="p-2" style={{ fontSize: '1rem', color: '#343a40' }}>
-                  {data.Motivate} - <span className="fw-bold" style={{ fontSize: "12px" }}>Message from {data.TutorScreenname}</span>
-                </p>
+                <div>
+                  <ReadMore content={data.Motivate} maxLength={100} isHtml={false} />
+                  <span className="fw-bold" style={{ fontSize: "12px" }}>Message from {data.TutorScreenname}</span>
+                </div>
+                {/* <p className="p-2" style={{ fontSize: '1rem', color: '#343a40' }}> */}
+                {/* </p> */}
               </div>
               <div className="col-md-6">
                 <div>
@@ -899,7 +904,9 @@ const TutorProfile = () => {
             <div className="row mb-4">
 
               <div className="col">
-                <p className="  rounded-2 p-2 shadow" style={{ background: "white" }} dangerouslySetInnerHTML={{ __html: data.WorkExperience }} />
+                <div className="  rounded-2 p-2 shadow" style={{ background: "white" }}  >
+                 {data.Motivate} <ReadMore content={data.WorkExperience} maxLength={100} isHtml />
+                  </div>
               </div>
             </div>
 
