@@ -26,7 +26,6 @@ const StudentCalenderScheduling = () => {
   const [subscriptionHours, setActiveSubscriptionHours] = useState(null);
   const { selectedTutor } = useSelector((state) => state.selectedTutor);
   const [studentModalOpen, setStudentModalOpen] = useState(false);
-console.log(selectedTutor,'selectedTutor')
   const { student } = useSelector((state) => state.student);
 
   useEffect(() => {
@@ -108,143 +107,120 @@ console.log(selectedTutor,'selectedTutor')
       </div>
     );
   return (
-    <div className={`${studentModalOpen ? "w-75 float-end" : "w-100"} px-5`}>
-      <div
-        className={`d-flex ${selectedTutor.activateSubscriptionOption ? "justify-content-end" : ""
-          }`}
-      >
-        <div className="d-flex ">
-          {selectedTutor.activateSubscriptionOption && (
-            <div className="px-2 col-3 mt-3">
-              <h4 className="text-center ">Subscription Discount</h4>
-              <div className="rate-table">
-                <table>
-                  <thead>
-                    <tr>
-                      {subscription_cols.map((item) => (
-                        <th key={item.Header}>{item.Header}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {subscription_discount.map((item, index) => (
-                      <tr key={index}>
-                        <td>{item.hours}</td>
-                        <td>
-                          <input
-                            onChange={() =>
-                              setActiveSubscriptionHours(item.value)
-                            }
-                            type="radio"
-                            checked={item.value === subscriptionHours}
-                            name="student-subscription"
-                            id="student-subscription"
-                            style={{
-                              height: "20px",
-                              width: "20px",
-                            }}
-                          />
-                        </td>
+    <div className={`${studentModalOpen ? "w-75 float-end" : "w-100"}`}>
 
-                        <td>{item.discount}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-          <div className="d-flex flex-column">
-            <div
-              className={`w-100 align-items-center justify-content-between mt-3 d-flex row flex-row m-2 border`}
-            >
-              <div className="d-flex col-3 card m-2">
-                <div className="c d-flex flex-column">
-                  {/* <div className="d-inline  card-title ">
-                    <div className="d-flex align-items-center gap-3">
-                      <h5> Tutor:</h5>
-                      <div className="d-flex align-items-center"> <Avatar avatarSrc={selectedTutor.photo} showOnlineStatus size="30" />
-                        <p>  {capitalizeFirstLetter(
-                          formatName(selectedTutor.firstName, selectedTutor.lastName)
-                        )}</p></div>
-                    </div>
-                    <div className="d-flex align-items-center gap-3">  <h5> Subject:</h5><p> {selectedTutor.subject}</p></div>
-                    <div className="card-subtitle d-inline ml-2 card-text d-flex align-items-center gap-3">
-                      <h5> Time:</h5><p> {tutorTime}</p>
-                    </div>
-                  </div> */}
-                  <div
-                    key={selectedTutor.id}
-                    className="d-flex align-items-center p-3 rounded"
-                    style={{
-                      backgroundColor: "white",
-                      color: 'black',
-                      boxShadow: "gray 6px 3px 10px 1px"
-                    }}
-                  >
-                    {/* Tutor Avatar */}
-                    <div className="me-3">
-                      <Avatar avatarSrc={selectedTutor.photo} showOnlineStatus size="60" positionInPixle={6} />
-                    </div>
 
-                    {/* Tutor Info */}
-                    <div className="flex-grow-1">
-                      <h5 className="mb-1"> {capitalizeFirstLetter(
-                        formatName(selectedTutor.firstName, selectedTutor.lastName)
-                      )}</h5>
-                      <p className="mb-1">
-                        <FaBook className="me-2" />
-                        {selectedTutor.subject}
-                      </p>
-                      <p className="mb-0">
-                        <FaClock className="me-2" />
-                        {tutorTime}
-                      </p>
-                    </div>
+      <div className="d-flex justify-content-end" style={{ height: "calc(100vh - 50px)" }}>
+        <div className={`d-flex col-3 `} >
+          <div className="d-flex ">
+            <div className="d-flex flex-column">
+              {selectedTutor.activateSubscriptionOption && (
+                <div className="px-2 mt-3">
+                  <h6 className="text-center m-0 ">Subscription Discount</h6>
+                  <div className="">
+                    <table>
+                      <thead>
+                        <tr>
+                          {subscription_cols.map((item) => (
+                            <th key={item.Header}>{item.Header}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {subscription_discount.map((item, index) => (
+                          <tr key={index}>
+                            <td>{item.hours}</td>
+                            <td>
+                              <input
+                                onChange={() =>
+                                  setActiveSubscriptionHours(item.value)
+                                }
+                                type="radio"
+                                checked={item.value === subscriptionHours}
+                                name="student-subscription"
+                                id="student-subscription"
+                                style={{
+                                  height: "20px",
+                                  width: "20px",
+                                }}
+                              />
+                            </td>
+
+                            <td>{item.discount}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
-
                 </div>
+              )}
+              <div
+                className={`w-100 align-items-center justify-content-between mt-3 d-flex flex-column `}
+              >
+                <div className="d-flex card m-2">
+                  <div className="c d-flex flex-column">
+
+                    <div
+                      key={selectedTutor.id}
+                      className="d-flex flex-column align-items-center p-3 rounded-4 shadow-lg"
+                      style={{
+                        backgroundColor: "white",
+                        color: 'black',
+                        // boxShadow: "gray 6px 3px 10px 1px"
+                      }}
+                    >
+                      <div className="d-flex ">
+                        <div className="me-3">
+                          <Avatar avatarSrc={selectedTutor.photo} showOnlineStatus size="60" positionInPixle={6} />
+                        </div>
+
+                        <div className="flex-grow-1">
+                          <h5 className="mb-1"> {capitalizeFirstLetter(
+                            formatName(selectedTutor.firstName, selectedTutor.lastName)
+                          )}</h5>
+                          <p className="mb-1">
+                            <FaBook className="me-2" />
+                            {selectedTutor.subject}
+                          </p>
+                          <p className="mb-0">
+                            <FaClock className="me-2" />
+                            {tutorTime}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="text-center">
+                        <h5
+                          className={`d-inline mr-2 card ${getTimeDifferenceClass(
+                            calculateTimeDifference()
+                          )} px-1`}
+                        >
+                          Time Difference:{" "}
+                          {calculateTimeDifference() > 0
+                            ? `+${calculateTimeDifference()}`
+                            : calculateTimeDifference()}
+                        </h5>
+                        <h6>UTC: {moment().utc().format("hh:mm a")}</h6>
+                      </div>
+                      <div className=" d-flex align-items-center gap-2">
+                        <h5 className="m-0 d-inline mr-2 ">Your Time:</h5>
+                        <h6 className="m-0 text-start">
+                          {convertGMTOffsetToLocalString(student.GMT)}
+                        </h6>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+
               </div>
 
-              <div className="col-4 text-center">
-                <h5
-                  className={`d-inline mr-2 card ${getTimeDifferenceClass(
-                    calculateTimeDifference()
-                  )} px-1`}
-                >
-                  Time zones Difference:{" "}
-                  {calculateTimeDifference() > 0
-                    ? `+${calculateTimeDifference()}`
-                    : calculateTimeDifference()}
-                </h5>
-                <h6>UTC: {moment().utc().format("hh:mm a")}</h6>
-              </div>
-              <div className="d-flex col-3 card m-2">
-                <div className="card-body">
-                  <h4 className="d-inline mr-2 card-title">My Time:</h4>
-                  <h6 className="card-subtitle text-start">
-                    {convertGMTOffsetToLocalString(student.GMT)}
-                  </h6>
-                </div>
-              </div>
-            </div>
-            <div className="highlight small lh-sm mb-3">
-              Double click on an available (unblocked) slots. You must first book an
-              introduction lesson. Most tutors will discount the 'intro' by 50%. You
-              must conduct the "Introductory" (Intro) lesson, and provide feedback
-              before you can "Book" the next lesson with that tutor. You can book
-              multiple lessons for a discount. For that reason you can "Reserve" up to
-              6 time slots for 60 minutes until you make your final decision.
             </div>
           </div>
         </div>
-      </div>
-
-
-      <div className="d-flex justify-content-end" style={{ height: "57vh" }}>
         <div
-          className={` ${selectedTutor.activateSubscriptionOption ? "col-9" : "col-12"
-            } `}
+          className={` col-9`}
         >
           <ShowCalendar
             setIsModalOpen={setStudentModalOpen}

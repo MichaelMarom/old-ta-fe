@@ -905,7 +905,7 @@ const TutorProfile = () => {
 
               <div className="col">
                 <div className="  rounded-2 p-2 shadow" style={{ background: "white" }}  >
-                 {data.Motivate} <ReadMore content={data.WorkExperience} maxLength={100} isHtml />
+               <ReadMore content={data.WorkExperience} maxLength={400} isHtml />
                   </div>
               </div>
             </div>

@@ -38,6 +38,7 @@ import { RiVerifiedBadgeFill } from "react-icons/ri";
 import EducationCards from "../../components/tutor/EducationCards";
 import Divider from "../../components/common/Divider";
 import Pill from "../../components/common/Pill";
+import ReadMore from "../../components/common/ReadMore";
 
 const TutorPublicProfile = () => {
   const videoRef = useRef(null);
@@ -998,8 +999,9 @@ const TutorPublicProfile = () => {
                   </div>
                 </div>
                 <Divider />
+                <ReadMore content={tutor.Introduction} maxLength={100} />
 
-                <p className="text-start w-100">{tutor.Introduction}</p>
+                {/* <p className="text-start w-100">{tutor.Introduction}</p> */}
                 <Divider />
 
                 <div className="m-2 ">
@@ -1030,7 +1032,7 @@ const TutorPublicProfile = () => {
                   style={{ background: "white" }}
                 >
                   <FaQuoteLeft size={25} style={{ flexShrink: "0" }} />
-                  <p
+                  {/* <p
                     className="p-2"
                     style={{ fontSize: "1rem", color: "#343a40" }}
                   >
@@ -1038,7 +1040,11 @@ const TutorPublicProfile = () => {
                     <span className="fw-bold" style={{ fontSize: "12px" }}>
                       Message from {tutor.TutorScreenname}
                     </span>
-                  </p>
+                  </p> */}
+                  <div>
+                    <ReadMore content={tutor.Motivate} maxLength={100} isHtml={false} />
+                    <span className="fw-bold" style={{ fontSize: "12px" }}>Message from {tutor.TutorScreenname}</span>
+                  </div>
                 </div>
                 <div className="col-md-6">
                   <div>
@@ -1093,11 +1099,14 @@ const TutorPublicProfile = () => {
               </div>
               <div className="row mb-4">
                 <div className="col">
-                  <p
+                  {/* <p
                     className="  rounded-2 p-2"
                     style={{ background: "white" }}
                     dangerouslySetInnerHTML={{ __html: edu.WorkExperience }}
-                  />
+                  /> */}
+                  <div className="  rounded-2 p-2 shadow" style={{ background: "white" }}  >
+                 <ReadMore content={edu.WorkExperience} maxLength={400} isHtml />
+                  </div>
                 </div>
               </div>
 

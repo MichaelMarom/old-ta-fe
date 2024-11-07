@@ -39,7 +39,7 @@ const StudentFaculties = () => {
         rate: item.rate,
         disableColor: item.disableColor,
         introDiscountEnabled: item.IntroSessionDiscount || false,
-        activateSubscriptionOption: item.ActivateSubscriptionOption === "true",
+        activateSubscriptionOption: item.ActivateSubscriptionOption,
         discountHours: item.DiscountHours,
         StartVacation: item.StartVacation,
         EndVacation: item.EndVacation,
