@@ -156,6 +156,23 @@ export const send_email = async (body) => {
 
 
 
+
+/**
+ *
+ * @param {Array} body array of emails and message and subject
+ * @returns
+ */
+export const send_templated_tutor_marketing_email = async (body) => {
+  try {
+    const data = await apiClient.post("/send-email/tutor/template/marketing", body);
+    return data;
+  } catch (err) {
+    showErrorToast(err)
+  }
+};
+
+
+
 /**
  *
  * @param {Array} body array of emails and message and subject

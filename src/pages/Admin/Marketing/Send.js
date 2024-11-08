@@ -4,8 +4,9 @@ import * as XLSX from 'xlsx';
 import TAButton from '../../../components/common/TAButton'
 import Layout from './Layout'
 import _ from 'lodash';
-import { get_email_temp_list, get_sms_mms_list, send_email, send_sms } from '../../../axios/admin';
+import { get_email_temp_list, get_sms_mms_list, send_email, send_sms, send_templated_tutor_marketing_email } from '../../../axios/admin';
 import { toast } from 'react-toastify';
+import HtmlFilePreview from './EmailTemplateUploader';
 
 const Marketing = () => {
   const [headers, setHeaders] = useState([]);
@@ -22,6 +23,9 @@ const Marketing = () => {
   const [sentRecords, setSentRecords] = useState([])
   const [sending, setSending] = useState(false)
   const [fileUploaded, setFileUploaded] = useState(false)
+  const [isExternalTemplateSelected, setIsExternalTemplateSelected] = useState('');
+  const [uploadedHtmlContent, setUploadedHtmlContent] = useState(''); // New state for HTML content
+
 
   useEffect(() => {
     get_sms_mms_list().then(result => !result?.repsonse?.data && setSmsTemps(result))
@@ -49,7 +53,6 @@ const Marketing = () => {
       });
     });
 
-    console.log([updatedHeaders, arrayOfArraysFormat])
     const ws = XLSX.utils.aoa_to_sheet([updatedHeaders, ...arrayOfArraysFormat]);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
@@ -65,6 +68,30 @@ const Marketing = () => {
       toast.warning('No data to update.');
     }
   };
+
+  const checkExternalTemplateFile = async () => {
+    try {
+      const response = await fetch(`${process.env.PUBLIC_URL}/Marketing.html`);
+      if (response.ok) {
+        const text = await response.text();
+        setIsExternalTemplateSelected(text.includes('Marketing Template File'));
+      } else {
+        setIsExternalTemplateSelected(false);
+      }
+    } catch (error) {
+      setIsExternalTemplateSelected(false);
+    }
+  };
+  const handleHtmlFileSelect = (content) => {
+    setUploadedHtmlContent(content);
+  };
+  
+
+  useEffect(() => {
+    if (messageType === 'ext-temp') {
+      checkExternalTemplateFile();
+    }
+  }, [messageType]);
 
   const handleFileUpload = (e) => {
     setFileUploaded(true);
@@ -120,7 +147,7 @@ const Marketing = () => {
     const emails = selectedRows.map(row => {
       return row.Email
     })
-    console.log(numbers, messageType)
+
     if (!numbers.length && messageType === 'sms') return toast.warning('Please select phone number to send sms');
     if (!emails.length && messageType === "email") return toast.warning('Please select email(s)');
 
@@ -149,11 +176,15 @@ const Marketing = () => {
           setSending(false)
         })
     }
+
+    if(messageType === 'ext-temp' && emails.length) {
+      await send_templated_tutor_marketing_email({emails, subject:"Markting Emails"})
+    }
   }
 
   return (
     <Layout>
-      <div className='container m-auto w-100' style={{height:"calc(100vh - 80px)", overflowY:"auto"}}>
+      <div className='container m-auto w-100' style={{ height: "calc(100vh - 80px)", overflowY: "auto" }}>
         <input type="file" onChange={handleFileUpload} />
         <div className='d-flex w-100'>
           <div className='d-flex flex-column' style={{ width: "60%" }}>
@@ -221,7 +252,7 @@ const Marketing = () => {
               {fileUploaded && !data.length && <p className='text-danger'>No record found</p>}
             </div>
           </div>
-          <div className='rounded border p-2 m-2 shadow ' style={{ width: "40%"}}>
+          <div className='rounded border p-2 m-2 shadow ' style={{ width: "40%" }}>
             <form onSubmit={handleSubmit}>
               <div className='d-flex ' style={{ gap: "5px" }}>
 
@@ -236,7 +267,7 @@ const Marketing = () => {
                     />
                     SMS
                   </label>
-                  <label>
+                  <label style={{ marginRight: "20px" }}>
                     <input
                       type="radio"
                       name="messageType"
@@ -245,6 +276,16 @@ const Marketing = () => {
                       onChange={() => setMessageType('email')}
                     />
                     Email
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="messageType"
+                      value="ext-temp"
+                      checked={messageType === 'ext-temp'}
+                      onChange={() => setMessageType('ext-temp')}
+                    />
+                    External Template
                   </label>
                 </div>
               </div>
@@ -270,55 +311,65 @@ const Marketing = () => {
                           width: "20px",
                           cursor: "pointer",
                         }}
-                        checked={item.id === selectedTemplate.id}
+                        defaultChecked={item.id === selectedTemplate.id}
                       />
                     </div>
                   ))}
-                   {selectedTemplate.id&&  <div className='border p-2 m-2 shadow'>
-                 <h6 style={{fontWeight:"bold"}}> Message:</h6> 
-                 <div style={{maxHeight:"50vh", overflowY:"auto"}}  dangerouslySetInnerHTML={{__html:selectedTemplate.text}}></div>
+                  {selectedTemplate.id && <div className='border p-2 m-2 shadow'>
+                    <h6 style={{ fontWeight: "bold" }}> Message:</h6>
+                    <div style={{ maxHeight: "50vh", overflowY: "auto" }} dangerouslySetInnerHTML={{ __html: selectedTemplate.text }}></div>
                   </div>}
-                </div> :
-                <>
+                </div> : messageType === 'sms' ?
+                  <>
 
-                  {smsTemps.map((item) => (
-                    <div
-                      key={item.id}
-                      onClick={() => setSelectedSmsTemp(item)}
-                      className="click-effect-elem rounded shadow-sm p-2 
+                    {smsTemps.map((item) => (
+                      <div
+                        key={item.id}
+                        onClick={() => setSelectedSmsTemp(item)}
+                        className="click-effect-elem rounded shadow-sm p-2 
                         justify-content-between border m-1 d-flex border-primary"
-                    >
+                      >
 
-                      <h5 className="click-elem m-0 text-decoration-underline d-inline-block">
-                        {item.name}
-                      </h5>
+                        <h5 className="click-elem m-0 text-decoration-underline d-inline-block">
+                          {item.name}
+                        </h5>
 
-                      <input
-                        type="checkbox"
-                        style={{
-                          height: "20selepx",
-                          width: "20px",
-                          cursor: "pointer",
-                        }}
-                        checked={item.id === selectedSmsTemp.id}
-                      />
-                    </div>
-                  ))}
-                {selectedSmsTemp.id&&  <div className='border p-2 m-2 shadow'>
-                 <h6 style={{fontWeight:"bold"}}> Message:</h6> {selectedSmsTemp.text}
-                  </div>}
-                  {/* <div className='d-flex justify-content-between'>
+                        <input
+                          type="checkbox"
+                          style={{
+                            height: "20selepx",
+                            width: "20px",
+                            cursor: "pointer",
+                          }}
+                          defaultChecked={item.id === selectedSmsTemp.id}
+                        />
+                      </div>
+                    ))}
+                    {selectedSmsTemp.id && <div className='border p-2 m-2 shadow'>
+                      <h6 style={{ fontWeight: "bold" }}> Message:</h6> {selectedSmsTemp.text}
+                    </div>}
+                    {/* <div className='d-flex justify-content-between'>
                     <label className='d-inline'>Message</label>
                     <p className='text-sm text-secondary text-end d-inline w-75'
                       style={{ fontSize: "12px", color: "gray" }}> {message.length}/144 </p>
                   </div> */}
 
-                  {/* <textarea className='form-control' value={message}
+                    {/* <textarea className='form-control' value={message}
                     placeholder='Type message that you need to send to student or tutor'
                     style={{ height: "200px", width: "100%" }}
                     onChange={(e) => e.target.value.length < 145 && setMessage(e.target.value)} />
                   {message.length > 143 && <p className='text-danger w-100 text-end' style={{ fontSize: "12px" }}>
                     Maximum limit 144 characters</p>} */}
+                  </> :
+                  // <p>{isExternalTemplateSelected ? "Marketing Template Selected" : "Template Not Found"}</p>
+                  <>
+                  <HtmlFilePreview onFileSelect={handleHtmlFileSelect} />
+                  {/* {uploadedHtmlContent && (
+                    <div
+                      style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #ccc', padding: '10px' }}
+                      dangerouslySetInnerHTML={{ __html: uploadedHtmlContent }}
+                    ></div>
+                  )} */}
                 </>
               }
 

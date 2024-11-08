@@ -43,7 +43,7 @@ const SmallSideBar = ({ message = "", inMins }) => {
             onMouseLeave={() => setIsHovered(false)}
           >
             <div
-              className="d-flex justify-content-center align-items-center border p-2 rounded border-dark m-0 cursor-pointer "
+              className="d-flex justify-content-center align-items-center border p-2 rounded-left rounded-4 border-dark m-0 cursor-pointer "
               style={{
                 transition: "all 0.3s ease-in",
                 width: ishovered
@@ -66,7 +66,7 @@ const SmallSideBar = ({ message = "", inMins }) => {
               />
             </div>
             {
-              <div className="p-2 text-bg-secondary w-100 h-100 rounded border">
+              <div className="p-2 text-bg-secondary w-100 h-100 border">
                 {message.length
                   ? message
                   : "No Upcoming Events for the next 24 hours!"}
