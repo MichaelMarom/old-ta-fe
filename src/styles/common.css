@@ -229,6 +229,9 @@ span {
   background-color: #4caf50 !important;
   color: white;
 }
+.rbc-header span{
+  color:white;
+}
 
 .rbc-current-time-indicator:before {
   content: "Tutor UTC Time";

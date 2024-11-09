@@ -85,7 +85,7 @@ const Marketing = () => {
   const handleHtmlFileSelect = (content) => {
     setUploadedHtmlContent(content);
   };
-  
+
 
   useEffect(() => {
     if (messageType === 'ext-temp') {
@@ -137,49 +137,52 @@ const Marketing = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(selectedRows)
-    const numbers = selectedRows?.map(row => {
-      // if (row?.phone && row?.phone?.startsWith('"') && row?.phone?.endsWith('"') && row?.phone?.length >= 2) {
-      //   row.phone = row.phone.slice(1, -1);
-      // }
-      return `${row.phone}`
-    })
-    const emails = selectedRows.map(row => {
-      return row.Email
-    })
+    try {
+      const numbers = selectedRows?.map(row => {
+        // if (row?.phone && row?.phone?.startsWith('"') && row?.phone?.endsWith('"') && row?.phone?.length >= 2) {
+        //   row.phone = row.phone.slice(1, -1);
+        // }
+        return `${row.phone}`
+      })
+      const emails = selectedRows.map(row => {
+        return row.Email
+      })
 
-    if (!numbers.length && messageType === 'sms') return toast.warning('Please select phone number to send sms');
-    if (!emails.length && messageType === "email") return toast.warning('Please select email(s)');
+      if (!numbers.length && messageType === 'sms') return toast.warning('Please select phone number to send sms');
+      if (!emails.length && messageType === "email") return toast.warning('Please select email(s)');
 
 
-    if (messageType === 'sms' && !selectedSmsTemp.text)
-      return toast.warning('Please Select Sms Template')
+      if (messageType === 'sms' && !selectedSmsTemp.text)
+        return toast.warning('Please Select Sms Template')
 
-    if (messageType === 'email' && !selectedTemplate.id)
-      return toast.warning('Please select email template to send')
+      if (messageType === 'email' && !selectedTemplate.id)
+        return toast.warning('Please select email template to send')
 
-    if (messageType === 'sms') { await send_sms({ numbers, ...selectedSmsTemp, message: selectedSmsTemp.text, subject: selectedSmsTemp.name, }); }
-    if (messageType === 'email') {
-      setSending(true)
-      send_email({ emails, message: selectedTemplate.text, subject: selectedTemplate.name })
-        .then(() => {
-          setSentRecords([...sentRecords, ...selectedRows])
-          const updatedData = data.map(row => {
-            if (selectedRows.concat(sentRecords).some(record => record.Email === row.Email)) {
-              row.Sent = 1;
-            }
-            else row.Sent = 0
-            return row
-          });
-          setData(updatedData)
-        }).finally(() => {
-          setSending(false)
-        })
+      if (messageType === 'sms') { await send_sms({ numbers, ...selectedSmsTemp, message: selectedSmsTemp.text, subject: selectedSmsTemp.name, }); }
+      if (messageType === 'email') {
+        setSending(true)
+        send_email({ emails, message: selectedTemplate.text, subject: selectedTemplate.name })
+          .then(() => {
+            setSentRecords([...sentRecords, ...selectedRows])
+            const updatedData = data.map(row => {
+              if (selectedRows.concat(sentRecords).some(record => record.Email === row.Email)) {
+                row.Sent = 1;
+              }
+              else row.Sent = 0
+              return row
+            });
+            setData(updatedData)
+          }).finally(() => {
+            setSending(false)
+          })
+      }
+
+      if (messageType === 'ext-temp' && emails.length) {
+        await send_templated_tutor_marketing_email({ emails, subject: 'Marketing Emails', htmlTemplate: uploadedHtmlContent });
+        toast.success('Email sent successfully')
+      }
     }
-
-    if(messageType === 'ext-temp' && emails.length) {
-      await send_templated_tutor_marketing_email({emails, subject:"Markting Emails"})
-    }
+    catch (err) { }
   }
 
   return (
@@ -363,14 +366,14 @@ const Marketing = () => {
                   </> :
                   // <p>{isExternalTemplateSelected ? "Marketing Template Selected" : "Template Not Found"}</p>
                   <>
-                  <HtmlFilePreview onFileSelect={handleHtmlFileSelect} />
-                  {/* {uploadedHtmlContent && (
+                    <HtmlFilePreview onFileSelect={handleHtmlFileSelect} />
+                    {/* {uploadedHtmlContent && (
                     <div
                       style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #ccc', padding: '10px' }}
                       dangerouslySetInnerHTML={{ __html: uploadedHtmlContent }}
                     ></div>
                   )} */}
-                </>
+                  </>
               }
 
 

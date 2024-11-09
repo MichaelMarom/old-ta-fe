@@ -43,6 +43,8 @@ const Bids = () => {
               subject={ad.Subject}
               country={ad.Country}
               tutorId={ad.AcademyId}
+              adHeader={ad.AdHeader}
+              date={ad.Published_At}
             />
           )) : <div className="text-danger">No Shortlisted Ads.</div>}
       </div>

@@ -168,6 +168,7 @@ export const send_templated_tutor_marketing_email = async (body) => {
     return data;
   } catch (err) {
     showErrorToast(err)
+    throw new Error('Failed to send email')
   }
 };
 

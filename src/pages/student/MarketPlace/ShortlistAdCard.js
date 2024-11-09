@@ -6,6 +6,9 @@ import { useSelector } from "react-redux";
 import { deleteAdFromShortlist } from "../../../axios/student";
 import { Countries } from "../../../constants/constants";
 import { useNavigate } from "react-router-dom";
+import Pill from "../../../components/common/Pill";
+import { showDate } from "../../../utils/moment";
+import ReadMore from "../../../components/common/ReadMore";
 
 const ShortlistAdCard = ({
   photo,
@@ -16,6 +19,8 @@ const ShortlistAdCard = ({
   tutorId,
   subject,
   country,
+  date,
+  adHeader
 }) => {
   const { student } = useSelector((state) => state.student);
   const [code, setCode] = useState("");
@@ -44,7 +49,7 @@ const ShortlistAdCard = ({
           className="position-absolute top-0 start-0 p-1 cursor-pointer"
           onClick={handleDeleteAd}
         >
-          <MdCancel size={40} color="limegreen" />
+          <MdCancel size={25} color="limegreen" />
         </div>
         <Avatar avatarSrc={photo} size="100px" showOnlineStatus={false} />
         <div className="d-flex top-0 start-0 p-1 " style={{ gap: "5px" }}>
@@ -59,13 +64,13 @@ const ShortlistAdCard = ({
             alt={country}
           />
         </div>
-        <h5>{subject}</h5>
+        <h6 className="m-0">{adHeader}</h6>
+        <div className='d-flex'>
+          <Pill label={subject} />
+          <Pill label={showDate(date)} color='green' />
+        </div>
 
-        <div
-          className="border text-bg-dark p-2"
-          dangerouslySetInnerHTML={{ __html: adText }}
-          style={{ height: "200px", overflowY: "auto" }}
-        />
+        <ReadMore isHtml content={adText} />
 
         <div className="mt-2">
           <TAButton

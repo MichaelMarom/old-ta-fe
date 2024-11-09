@@ -413,7 +413,8 @@ const handleStudentClickInWeekOrDayTab = (
       );
       if (!existInReservedSlots) {
         if (introExistsInLessons) {
-          if (selectedSlots.length < 6) {
+          if(selectedSlots.some((slot) => convertToDate(slot.start).getTime() === convertToDate(startEventTime).getTime())) return
+          if (selectedSlots.length < 6 ) {
             setSelectedSlots([
               ...selectedSlots,
               {

@@ -37,9 +37,11 @@ const Bid = () => {
           ads.map((ad) => (
             <ShortlistCard
               photo={ad.Photo}
+              date={ad.Published_At}
               adText={ad.AdText}
               name={ad.ScreenName}
               id={ad.Id}
+              adHeader={ad.AdHeader}
               setAdDeleted={setAdDeleted}
               subject={ad.Subject}
               country={ad.Country}
