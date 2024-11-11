@@ -1,15 +1,30 @@
 import React from 'react'
 import CenteredModal from '../common/Modal'
 import ReactDatePicker from 'react-datepicker';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { moment } from '../../config/moment'
 import { FaCalendar } from 'react-icons/fa';
 import TAButton from '../common/TAButton'
 import { toast } from 'react-toastify';
+import { updateTutorSetup } from '../../axios/tutor';
+import { setTutor } from '../../redux/tutor/tutorData';
 
 const VacationSettingModal = ({ isOpen, handleClose, start, end, editMode, setStart, setEnd, timeZone }) => {
-    const { tutor } = useSelector(state => state.tutor)
+    const { tutor } = useSelector(state => state.tutor);
+    const dispatch = useDispatch();
 
+    const saveVacations = async () => {
+        if (!start || !end) {
+            toast.error('Start and end date are required.');
+            return;
+        }
+
+        const res = await updateTutorSetup(tutor.AcademyId, { StartVacation: start, EndVacation: end })
+        if (res?.message === 'updated!') {
+            toast.success(res?.message)
+            dispatch(setTutor({ ...tutor, StartVacation: start, EndVacation: end }));
+        }
+    }
 
     const gmtInInt = timeZone ? parseInt(timeZone) : 0;
     // for reactdatepicker because it opertae on new Date() not on moment.
@@ -24,6 +39,8 @@ const VacationSettingModal = ({ isOpen, handleClose, start, end, editMode, setSt
                     new Date().getTimezoneOffset()
                 )
         ) * -1;
+
+
     return (
         <CenteredModal show={isOpen} handleClose={handleClose} style={{ minHeight: "250px" }} title="Vacations Setting">
             <div>
@@ -83,10 +100,13 @@ const VacationSettingModal = ({ isOpen, handleClose, start, end, editMode, setSt
                         />
                     </div>
                 </div>
-                <div className='divider'>
-                    <TAButton buttonText="Setup" handleClick={() => { 
-                        toast.info("Please Save the Tab to Save Vacation Settings!");
-                         handleClose(); }} />
+                <div className='divider d-flex justify-content-between'>
+                    <TAButton buttonText={"Cancle"} handleClick={()=>handleClose()} />
+                    <TAButton buttonText="Save Dates" style={{width:"150px"}} handleClick={() => {
+                        // toast.info("Please Save the Tab to Save Vacation Settings!");
+                        saveVacations()
+                        handleClose();
+                    }} />
                 </div>
             </div>
 

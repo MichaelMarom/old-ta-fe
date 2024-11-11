@@ -243,7 +243,7 @@ const TutorSetup = () => {
         Introduction: "",
         Motivate: "",
         HeadLine: "",
-        VacationMode: false,
+        VacationMode: false
       };
     }
     let formValues = {

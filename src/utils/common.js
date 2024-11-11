@@ -104,11 +104,11 @@ export const unsavedChangesHelper = (fieldValues, tutor) => {
     (tutor.ZipCode !== undefined &&
       fieldValues.zipCode !== undefined &&
       tutor.ZipCode !== fieldValues.zipCode) ||
-    // (tutor.StartVacation !== undefined && fieldValues.start !== undefined && tutor.StartVacation !== fieldValues.start) ||
-    // (tutor.EndVacation !== undefined && fieldValues.end !== undefined && tutor.EndVacation !== fieldValues.end) ||
-    (tutor.VacationMode !== undefined &&
-      fieldValues.vacation_mode !== undefined &&
-      tutor.VacationMode !== fieldValues.vacation_mode)
+      (tutor.VacationMode !== undefined &&
+        fieldValues.vacation_mode !== undefined &&
+        tutor.VacationMode !== fieldValues.vacation_mode) 
+        // (tutor.StartVacation !== undefined && fieldValues.start !== undefined && tutor.StartVacation !== fieldValues.start) ||
+        // (tutor.EndVacation !== undefined && fieldValues.end !== undefined && tutor.EndVacation !== fieldValues.end) 
   );
 };
 

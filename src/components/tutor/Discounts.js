@@ -59,6 +59,8 @@ const Discounts = () => {
   const [subjects, setSubjects] = useState([]);
   const [subject, setSubject] = useState("");
   const [codeUsed, setCodeUsed] = useState("new");
+  const [sharedVoucher, setSharedVoucher] = useState({ code: '', subject: '' });
+
 
   const [fields, setFields] = useState([{ id: 1, code: generateDiscountCode(), SID: '' }]);
 
@@ -137,13 +139,8 @@ const Discounts = () => {
 
   let saver = async () => {
 
-    //TODO:
-    //update tutorrates with  code.
-    //student apply it 
-    // code sttaus = used
-    // codeapplication logs will have date and student who used that code
     fields.map(field =>
-      field.SID && update_subject_rates(field.SID, { DiscountCode: field.code })
+      field.SID && update_subject_rates(field.SID, { DiscountCode: field.code, CodeStatus: null })
     )
 
     if (discount.AcademyId)
@@ -446,14 +443,17 @@ const Discounts = () => {
                 registration process. It is important to generate a unique code
                 for every student.`} /></div>
 
-                <Drawer childrenHeight="500px" header={"Vouchers List"} >
-              <div className="d-flex flex-wrap gap-2">
-                {subjects.map(({ subject, DiscountCode, CodeStatus }) =>
-                  DiscountCode && <Voucher code={DiscountCode} subject={subject} VoucherStatus={CodeStatus} />
-                )}
-              </div>
+              <Drawer childrenHeight="500px" header={"Vouchers List"} >
+                <div className="d-flex flex-wrap gap-2">
+                  {subjects.map(({ subject, DiscountCode, CodeStatus }) =>
+                    DiscountCode && <Voucher code={DiscountCode}
+                      subject={subject} VoucherStatus={CodeStatus}
+                      sharedVoucher={sharedVoucher}
+                      setSharedVoucher={setSharedVoucher} />
+                  )}
+                </div>
 
-                </Drawer>
+              </Drawer>
               <div className="form-check form-switch d-flex align-items-center gap-2">
                 <input
                   disabled={!editMode}
@@ -478,7 +478,7 @@ const Discounts = () => {
                 </label>
 
                 <Tooltip
-                direction="bottomright"
+                  direction="bottomright"
                   width="300px"
                   text="To link your student to your profile, please utilize 
                   the unique code provided below during the account setup 
@@ -539,8 +539,8 @@ const Discounts = () => {
                         <option value="" disabled>
                           Select
                         </option>
-                        {subjects.map(({ subject, SID, DiscountCode }, idx) => (
-                          !DiscountCode && <option key={idx} value={SID}
+                        {subjects.map(({ subject, SID, DiscountCode, CodeStatus }, idx) => (
+                          (!DiscountCode || CodeStatus==="used" ) && <option key={idx} value={SID}
                             style={{ background: fields.filter(item => item.SID === SID).length ? "rgb(208 208 208)" : "" }}
                             disabled={fields.filter(item => item.SID === SID).length}>{subject}</option>
                         ))}
@@ -713,10 +713,11 @@ const Discounts = () => {
           />
         </form>
         <SendCodeModal
-          isOpen={sendCodeModalOpen}
-          onClose={() => setSendCodeModalOpen(false)}
-          subject={subject}
-          code={discountCode}
+          isOpen={sharedVoucher.code && sharedVoucher.subject
+          }
+          onClose={() => setSharedVoucher({ code: '', subject: '' })}
+          subject={sharedVoucher.subject}
+          code={sharedVoucher.code}
         />
       </div>
     </div>

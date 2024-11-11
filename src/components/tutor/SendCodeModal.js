@@ -13,6 +13,8 @@ const SendCodeModal = ({ isOpen, onClose, code, subject }) => {
     const { tutor } = useSelector(state => state.tutor)
     const [email, setEmail] = useState('')
     const [loading, setLoading] = useState(false)
+    const [errors, setErrors] = useState({})
+
     const [emailText, setEmailText] = useState(`Hi <b>${name}</b>,
     <p> I am a tutor, my screen name is  ${tutor.TutorScreenname} for the new tutoring platfor. I am happy to announce the launch of a new educational platform,
      that i am using for my tutoring.
@@ -22,8 +24,8 @@ const SendCodeModal = ({ isOpen, onClose, code, subject }) => {
         By entering this code, we'll be able to connect on the new platform.<p>`)
 
     useEffect(() => {
-        if (name?.length && code?.length && tutor?.TutorScreenname && subject?.length) {
-            setEmailText(`Hi <b>${name}</b>,
+        if (code?.length && tutor?.TutorScreenname && subject?.length) {
+            setEmailText(`Hi <b>${name || "Student Name Here"}</b>,
             <p> I am a tutor my screen name is ${tutor.TutorScreenname} for the new platform. I am happy to announce the launch of a new educational platform, 
             that i am using for my tutoring.
             <a href="${process.env.REACT_APP_BASE_URL}/signup?role=student">https://tutoriring-Academy.com</a>. 
@@ -34,34 +36,48 @@ const SendCodeModal = ({ isOpen, onClose, code, subject }) => {
     }, [name, code, tutor.TutorScreenname, subject, isOpen])
 
     const handleSubmit = async (e) => {
-       try{ e.preventDefault()
-        setLoading(true)
-        const data = await send_email({ emails: [email], message: emailText, subject: "Tutor's Code" })
-        if (!data?.response?.data) {
-            setEmail('')
-            setName('')
-            onClose()
-            setEmailText('')
-            toast.success("Email Sent Successfully")
+        try {
+            e.preventDefault()
+            if (errors.email) return
+
+            setLoading(true)
+            const data = await send_email({ emails: [email], message: emailText, subject: "Tutor's Code" })
+            if (!data?.response?.data) {
+                setEmail('')
+                setName('')
+                onClose()
+                setEmailText('')
+                toast.success("Email Sent Successfully")
+            }
+            else toast.error("Email Sent Error")
+            setLoading(false)
         }
-        else toast.error("Email Sent Error")
-        setLoading(false)}
-        catch(err){
+        catch (err) {
             toast.error("Email Sent Error", err.message)
         }
     }
 
     return (
-        <Modal show={isOpen} handleClose={onClose} 
-        title={`Send Code for <b>${subject}</b> To Student`} >
+        <Modal show={isOpen} handleClose={onClose}
+            title={`Send Code for <b>${subject}</b> To Student`} >
             <div>
                 <form onSubmit={handleSubmit}>
                     <div className='d-flex w-100'>
                         <div className='m-1 w-50'>
-                            <Input label={<MandatoryFieldLabel text={"Email of Student"} />} type="email " setValue={setEmail} value={email} />
+                            <Input
+                                label={<MandatoryFieldLabel text={"Email of Student"} />}
+                                validationFn={(email) => {
+                                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                                    return emailRegex.test(email) ? '' : 'Invalid email format';
+                                }
+                                }
+                                errors={errors}
+                                fieldName="email"
+                                setErrors={setErrors}
+                                type="email " setValue={setEmail} value={email} />
                         </div>
                         <div className='m-1 w-50'>
-                            <Input  label={<GeneralFieldLabel label={"Code"} />} editMode={false} value={code} />
+                            <Input label={<GeneralFieldLabel label={"Code"} />} editMode={false} value={code} />
                         </div>
                     </div>
                     <div className='d-flex w-100'>
@@ -69,12 +85,12 @@ const SendCodeModal = ({ isOpen, onClose, code, subject }) => {
                             <Input label={<MandatoryFieldLabel text={"Name of the Student"} />} setValue={setName} value={name} />
                         </div>
                         <div className='m-1 w-50'>
-                            <Input  label={<GeneralFieldLabel label={"Your Name"} />}  value={tutor.TutorScreenname} 
-                            editMode={false} />
+                            <Input label={<GeneralFieldLabel label={"Your Name"} />} value={tutor.TutorScreenname}
+                                editMode={false} />
                         </div>
                     </div>
-                    <div style={{pointerEvents:"none"}}>
-                        <div className='border p-2 m-1' 
+                    <div style={{ pointerEvents: "none" }}>
+                        <div className='border p-2 m-1'
                             dangerouslySetInnerHTML={{ __html: emailText }}
                         />
                     </div>
