@@ -74,7 +74,6 @@ const StudentProfile = () => {
             online={student.Online}
             indicSize="20px"
           />
-          {student.ChatID}{" "}
           <TAButton buttonText={"Contact"} handleClick={handleContact} />
         </div>
 

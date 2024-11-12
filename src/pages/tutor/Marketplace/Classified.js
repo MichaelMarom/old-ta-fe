@@ -15,6 +15,8 @@ import Pill from "../../../components/common/Pill";
 import { convertTutorIdToName } from "../../../utils/common";
 import Actions from "../../../components/common/Actions";
 import Loading from "../../../components/common/Loading";
+import Drawer from "../../../components/common/Drawer";
+import ReadMore from "../../../components/common/ReadMore";
 
 const Classified = () => {
   const [ad, setAds] = useState([]);
@@ -47,11 +49,14 @@ const Classified = () => {
             <Loading />
           ) : ad.length ? (
             ad.map((item) => (
-              <div
-                className=" rounded m-1 border"
-                style={{ background: "lightgray" }}
+              <Drawer
+                key={item.Id}
+                header={item.AdHeader}
+                date={showDate(moment(item.Published_At).toDate())}
+                subject={item.Subject}
+                childrenHeight="300px"
               >
-                <div
+                {/* <div
                   onClick={() =>
                     selectedAd.Id === item.Id
                       ? setSelectedAd({})
@@ -76,13 +81,13 @@ const Classified = () => {
                   <div>
                     <BiChevronDown />
                   </div>
-                </div>
+                </div> */}
                 <div
-                  className={`w-100 ${selectedAd === item ? "" : "opacity-0"} `}
+                  className={`w-100  `}
                   style={{
                     background: "white",
-                    maxHeight: selectedAd.Id === item.Id ? "200px" : "0",
-                    overflow: "hidden",
+                    // maxHeight: selectedAd.Id === item.Id ? "200px" : "0",
+                    // overflow: "hidden",
                     transition:
                       "max-height ease-in-out 0.5s, opacity 0.5s, visibility 0.5s",
                   }}
@@ -121,7 +126,7 @@ const Classified = () => {
                         </h6>
                         <p className="d-inline-block m-1">
                           {item.TutorExperience}
-                        </p> | 
+                        </p> |
                         <h6 className="text-start d-inline-block m-1">
                           Tutor Degree:
                         </h6>
@@ -133,22 +138,22 @@ const Classified = () => {
                         </h6>
                         <p className="d-inline-block m-1">
                           {item.TutorCertificate}
-                        </p> | 
+                        </p> |
                         <h6 className="text-start d-inline-block m-1">
                           Tutor TimeZone:
                         </h6>
                         <p className="d-inline-block m-1">{item.TutorGMT}</p>
 
-                        <div
-                          className="border text-bg-light p-2"
-                          dangerouslySetInnerHTML={{ __html: item.AdText }}
-                          style={{ height: "70px", overflowY: "auto" }}
+                        <ReadMore
+                          isHtml
+                          maxLength={200}
+                          content={item.AdText}
                         />
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </Drawer>
             ))
           ) : (
             <div className="text-danger">You are all caught up!</div>

@@ -1019,3 +1019,18 @@ input[type="checkbox"] {
   background-color: #dadada;
   cursor: pointer;
 }
+/* 
+div > span {
+  display: inline;
+}
+
+span[style*="display: inline;"] {
+  white-space: nowrap;
+}
+
+span[style*="color: blue"] {
+  display: inline;
+  cursor: pointer;
+  margin-left: 0;
+  white-space: nowrap;
+} */

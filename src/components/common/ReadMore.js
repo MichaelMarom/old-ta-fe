@@ -11,10 +11,8 @@ const ReadMore = ({ content, maxLength = 100, isHtml = false }) => {
     return text;
   };
 
-  // Check if the content is text or HTML
   const renderContent = () => {
     if (isHtml) {
-      // If it's HTML, use `dangerouslySetInnerHTML` to render HTML content
       return isExpanded ? (
         <div dangerouslySetInnerHTML={{ __html: content }} />
       ) : (
@@ -22,14 +20,13 @@ const ReadMore = ({ content, maxLength = 100, isHtml = false }) => {
       );
     }
 
-    // If it's plain text, render it with truncation
     const truncatedText = getTruncatedText(content);
     return isExpanded ? content : truncatedText;
   };
 
   return (
     <div>
-      <p>
+      <div>
         {renderContent()}
         {content.length > maxLength && (
           <span
@@ -39,7 +36,7 @@ const ReadMore = ({ content, maxLength = 100, isHtml = false }) => {
             {isExpanded ? 'Read less' : 'Read more'}
           </span>
         )}
-      </p>
+      </div>
     </div>
   );
 };

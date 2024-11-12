@@ -4,6 +4,7 @@ import BankDetails from "./BankDetails";
 import Tabs from "../../common/Tabs";
 import Lessons from "./Lessons";
 import { useSelector } from "react-redux";
+import { convertToDate } from "../../common/Calendar/Calendar";
 
 const StudentAccounting = () => {
   const [startDate, setStartDate] = useState("");
@@ -25,7 +26,9 @@ const StudentAccounting = () => {
       label: "Accounting",
       component: (
         <AccountingTable
-          paymentReportData={sessions}
+          paymentReportData=
+          {sessions.filter((data) => data.type !== "reserved" && 
+            convertToDate(data.end).getTime() < (new Date()).getTime()).sort((a,b)=>new Date(b.start)-new Date(a.start))}
           startDate={startDate}
           endDate={endDate}
           setStartDate={setStartDate}
@@ -37,9 +40,8 @@ const StudentAccounting = () => {
       label: "Lessons Records",
       component: (
         <Lessons
-          paymentReportData={sessions.filter(
-            (sess) => sess.type !== "reserved"
-          )}
+          paymentReportData={sessions.filter((data) => data.type !== "reserved" && 
+            convertToDate(data.end).getTime() < (new Date()).getTime()).sort((a,b)=>new Date(b.start)-new Date(a.start))}
         />
       ),
     },

@@ -17,7 +17,7 @@ const AccountingTable = ({
       <div className="row">
         <div className="col-md-8 p-0">
           <h2>Payment Report</h2>
-          {paymentReportData.filter((data) => data.type !== "reserved")
+          {paymentReportData
             .length ? (
             <div
               className="p-3"

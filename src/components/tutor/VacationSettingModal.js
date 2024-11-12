@@ -101,7 +101,7 @@ const VacationSettingModal = ({ isOpen, handleClose, start, end, editMode, setSt
                     </div>
                 </div>
                 <div className='divider d-flex justify-content-between'>
-                    <TAButton buttonText={"Cancle"} handleClick={()=>handleClose()} />
+                    <TAButton buttonText={"Cancel"} handleClick={()=>handleClose()} />
                     <TAButton buttonText="Save Dates" style={{width:"150px"}} handleClick={() => {
                         // toast.info("Please Save the Tab to Save Vacation Settings!");
                         saveVacations()

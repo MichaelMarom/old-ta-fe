@@ -11,6 +11,7 @@ import Pill from "../../../components/common/Pill";
 import Actions from "../../../components/common/Actions";
 import Loading from "../../../components/common/Loading";
 import Drawer from "../../../components/common/Drawer";
+import ReadMore from "../../../components/common/ReadMore";
 
 const Marketplace = () => {
   const [ad, setAds] = useState([]);
@@ -46,6 +47,7 @@ const Marketplace = () => {
                 header={item.AdHeader}
                 date={showDate(moment(item.Published_At).toDate())}
                 subject={item.Subject}
+                childrenHeight="300px"
               >
                 <div className="d-flex pb-3" style={{ gap: "50px" }}>
                   <div>
@@ -73,11 +75,13 @@ const Marketplace = () => {
                         <Pill key={grade} label={grade} />
                       ))}
                     </div>
-                    <div
+                    {/* <div
                       className="border text-bg-light p-2"
                       dangerouslySetInnerHTML={{ __html: item.AdText }}
                       style={{ height: "70px", overflowY: "auto" }}
-                    />
+                    /> */}
+
+                    <ReadMore content={item.AdText} isHtml maxLength={200} />
                   </div>
                 </div>
               </Drawer>
