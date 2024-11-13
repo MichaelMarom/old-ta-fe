@@ -10,7 +10,8 @@ export const uploadVideoToAzure = async (
   file,
   AcademyId,
   containerName,
-  type = "upload"
+  type = "upload",
+  onUploadProgress
 ) => {
   try {
     const formData = new FormData();
@@ -21,8 +22,9 @@ export const uploadVideoToAzure = async (
     formData.append("upload_type", type);
     formData.append("containerName", containerName);
 
-    return await fileUploadClient.post("/tutor/setup/record", formData);
-  } catch (err) {
+    return await fileUploadClient.post("/tutor/setup/record", formData, {
+      onUploadProgress,
+    });  } catch (err) {
     showErrorToast(err);
   }
 };

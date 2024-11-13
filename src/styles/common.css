@@ -84,10 +84,18 @@ p {
   font-style: italic;
 }
 
-h1, h2, h3, h4, h5, h6, div, p {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+div,
+p {
   font-family: "Work Sans", sans-serif;
 }
-p{
+
+p {
   line-height: 1.3;
 }
 
@@ -103,7 +111,9 @@ h3 {
   font-weight: 700;
 }
 
-h4, h5, h6 {
+h4,
+h5,
+h6 {
   font-weight: 600;
 }
 
@@ -229,8 +239,9 @@ span {
   background-color: #4caf50 !important;
   color: white;
 }
-.rbc-header span{
-  color:white;
+
+.rbc-header span {
+  color: white;
 }
 
 .rbc-current-time-indicator:before {
@@ -254,6 +265,14 @@ span {
   background-color: rgb(230, 16, 16) !important;
 }
 
+.tutor-vacation-dayoff::after {
+  content: "Day off";
+  height: 100%;
+  color: red;
+  display: block;
+  padding: 20px;
+}
+
 /* ----------------------------------------------------------react-datepicker--------------------------------------*/
 .react-datepicker__time-container {
   width: 75px !important;
@@ -270,12 +289,15 @@ span {
 }
 
 /*-------------------------------------------------pdfviwer--------------------------------------------*/
-.react-pdf__Document, .react-pdf__Page,.react-pdf__Page__canvas{
+.react-pdf__Document,
+.react-pdf__Page,
+.react-pdf__Page__canvas {
   /* width: 430px;
   height:500px; */
 }
-.react-pdf__Page__canvas{
-  top:0;
+
+.react-pdf__Page__canvas {
+  top: 0;
   /* width:430px !important;
   height:500px !important; */
 
@@ -295,7 +317,7 @@ span {
   fill: white;
 }
 
-.setup-private-info .Toastify__close-button > svg {
+.setup-private-info .Toastify__close-button>svg {
   width: 30px !important;
   height: 30px !important;
   color: rgb(0, 255, 51) !important;
@@ -426,7 +448,7 @@ span {
   height: 100%;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr;
-  background:white;
+  background: white;
   box-shadow: inset 0px -5px 0px #dddddd, 0px 0px 0px #f4f5f6;
   border-radius: 40px;
   transition: 0.13s ease-in-out;
@@ -486,7 +508,7 @@ span {
   box-shadow: none;
 }
 
-.button__content:hover{
+.button__content:hover {
   background-color: #ececec;
 }
 
@@ -507,7 +529,7 @@ span {
   height: 100%;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr;
-  background:rgb(162, 238, 162);
+  background: rgb(162, 238, 162);
   box-shadow: inset 0px -5px 0px #92be7e, 0px -8px 0px #fff;
   border-radius: 40px;
   transition: 0.13s ease-in-out;
@@ -593,7 +615,7 @@ fieldset:disabled .btn,
 ::-webkit-scrollbar-track {
   background: #bdbdbd;
   border-radius: 6px;
- 
+
 }
 
 /* Handle */
@@ -708,18 +730,18 @@ fieldset:disabled .btn,
   border-radius: var(--size-radius);
 }
 
-.input__field:not(:-moz-placeholder-shown) + .input__label {
+.input__field:not(:-moz-placeholder-shown)+.input__label {
   /* transform: translate(0.25rem, -65%) scale(0.8); */
   color: var(--color-accent);
 }
 
-.input__field:not(:-ms-input-placeholder) + .input__label {
+.input__field:not(:-ms-input-placeholder)+.input__label {
   /* transform: translate(0.25rem, -65%) scale(0.8); */
   color: var(--color-accent);
 }
 
-.input__field:focus + .input__label,
-.input__field:not(:placeholder-shown) + .input__label {
+.input__field:focus+.input__label,
+.input__field:not(:placeholder-shown)+.input__label {
   /* transform: translate(0.25rem, -65%) scale(0.8); */
   color: var(--color-accent);
 }
@@ -760,6 +782,7 @@ fieldset:disabled .btn,
   stroke: #eb1c1c;
 
 }
+
 .navitem-li {
   transform: none !important;
   padding: 5px 10px !important;
@@ -771,15 +794,18 @@ fieldset:disabled .btn,
   padding: 0px 10px !important;
 }
 
-.navitem,.navitem>*{
+.navitem,
+.navitem>* {
   transition: all 0.3s ease-in;
 }
 
-.navitem:hover, .navitem>*:hover{
+.navitem:hover,
+.navitem>*:hover {
   color: #5ae28e !important;
   /* text-decoration: underline; */
 }
-.navitem:hover{
+
+.navitem:hover {
   border-bottom: 3px solid #5ae28e;
 }
 
@@ -866,16 +892,12 @@ fieldset:disabled .btn,
   border-top: 0 !important;
 }
 
-.rbc-day-slot.rbc-time-column
-  .rbc-timeslot-group
-  .rbc-time-slot.place-holder-start-slot {
+.rbc-day-slot.rbc-time-column .rbc-timeslot-group .rbc-time-slot.place-holder-start-slot {
   border: 1px solid red !important;
   border-bottom: 0 !important;
 }
 
-.rbc-day-slot.rbc-time-column
-  .rbc-timeslot-group
-  .rbc-time-slot.place-holder-start-slot::after {
+.rbc-day-slot.rbc-time-column .rbc-timeslot-group .rbc-time-slot.place-holder-start-slot::after {
   content: "Place holder";
   display: block;
   color: rgb(249, 5, 5);
@@ -1015,10 +1037,11 @@ input[type="checkbox"] {
 
 
 
-.hoveringListItem:hover{
+.hoveringListItem:hover {
   background-color: #dadada;
   cursor: pointer;
 }
+
 /* 
 div > span {
   display: inline;

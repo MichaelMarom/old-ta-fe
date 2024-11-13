@@ -96,6 +96,7 @@ const TutorSetup = () => {
   const [vacation_mode, set_vacation_mode] = useState(false);
   const [start, setStart] = useState(moment(new Date()).toDate());
   const [end, setEnd] = useState(moment(new Date()).endOf("day").toDate());
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const [dbCountry, setDBCountry] = useState(null);
 
@@ -530,78 +531,60 @@ const TutorSetup = () => {
     }
   };
 
-  let handleVideo = async (e) => {
-    if (!tutor.AcademyId)
+  const handleVideo = async (e) => {
+    if (!tutor.AcademyId) {
       return toast.error(
-        `Please setup Firstname, Lastname and MiddleName(optional) first!`
+        `Please setup Firstname, Lastname, and MiddleName(optional) first!`
       );
+    }
     setVideoError(false);
-
     const file = e.target.files[0];
 
-    // if (file.size > 52428800)
-    //   return toast.warning("Video size should be less than 50MB");
-    if (!file?.type || file.type.split("/")?.[0] !== "video") {
+    if (!file?.type || file.type.split("/")[0] !== "video") {
       alert("Only Video Can Be Uploaded To This Field");
     } else {
       setVideoUploading(true);
-      let reader = new FileReader({});
+      setUploadProgress(0);
 
-      reader.onload = (result) => {
+      let reader = new FileReader();
+      reader.onload = async () => {
         try {
           const videoElement = document.createElement("video");
           videoElement.src = reader.result;
 
           videoElement.onloadedmetadata = async () => {
-            // toast.warning(`Size is ${file.size / 1024} KB and duration ${videoElement.duration}`)
-
             if (videoElement.duration <= 59.59) {
-              // set_video(reader.result);
+              // Call the upload function with progress tracking
               const { data } = await uploadVideoToAzure(
                 file,
                 tutor.AcademyId,
                 "tutor-intro-video",
-                selectedVideoOption
+                selectedVideoOption,
+                (progressEvent) => {
+                  const percentCompleted = Math.round(
+                    (progressEvent.loaded * 100) / progressEvent.total
+                  );
+                  setUploadProgress(percentCompleted);
+                }
               );
+
               updateTutorSetup(tutor.AcademyId, { Video: data.url });
-              toast.success("Video Succesfully Uploaded!");
+              toast.success("Video Successfully Uploaded!");
               set_video(data.url);
-              // dispatch(setTutor({ ...tutor, Video: data.url,
-              //   CellPhone: cell,
-              //   Address1: add1,
-              //   Address2: add2,
-              //   CityTown: city,
-              //   StateProvince: state,
-              //   ZipCode: zipCode,
-              //   Country: country,
-              //   GMT: timeZone,
-              //   ResponseHrs: response_zone,
-              //   Introduction: intro,
-              //   Motivate: motivation,
-              //   HeadLine: headline,
-              //   StartVacation: vacation_mode ? start : moment().toDate(),
-              //   EndVacation: vacation_mode ? end : moment().endOf().toDate(),
-              //   VacationMode: vacation_mode,
-              //   Step: 2,
-              //   Photo:photo
-              //  }));
-              console.log(data.url);
-              setVideoUploading(false);
             } else {
-              videoElement.src = null;
-              set_video(tutor.Video);
               toast.error("Video duration should be less than 1 minute");
             }
             setVideoUploading(false);
           };
         } catch (err) {
           setVideoUploading(false);
+          setVideoError(true);
         }
       };
       reader.readAsDataURL(file);
     }
   };
-
+console.log(uploadProgress,'proged')
   useEffect(() => {
     const localTime = convertGMTOffsetToLocalString(timeZone);
     setDateTime(localTime);
@@ -690,11 +673,10 @@ const TutorSetup = () => {
                   </p>
                 </div>
                 <h6
-                  className={`text-start m-0 ${
-                    mandatoryFields.find((item) => item.name === "photo").filled
+                  className={`text-start m-0 ${mandatoryFields.find((item) => item.name === "photo").filled
                       ? ""
                       : "blink_me"
-                  }`}
+                    }`}
                   style={{ whiteSpace: "nowrap" }}
                 >
                   Profile Photo
@@ -784,7 +766,7 @@ const TutorSetup = () => {
                   </div>
                 </label>
 
-                <div className="border p-2 shadow rounded w-100 mb-3">
+                {/* <div className="border p-2 shadow rounded w-100 mb-3">
                   <div
                     className="form-check form-switch d-flex gap-2  mt-2"
                     style={{ fontSize: "12px " }}
@@ -874,7 +856,7 @@ const TutorSetup = () => {
                       </div>
                     )}
                   </div>
-                </div>
+                </div> */}
               </div>
               <div
                 className="d-flex flex-column gap-2"
@@ -1315,7 +1297,7 @@ const TutorSetup = () => {
                     </div>
                   </div>
                 </div>
-                <div className="input w-100">
+                {/* <div className="input w-100">
                   <div
                     style={{
                       fontWeight: "900",
@@ -1353,7 +1335,7 @@ const TutorSetup = () => {
                       editMode={editMode}
                     />
                   </span>
-                </div>
+                </div> */}
               </div>
               <div
                 className=" "
@@ -1365,22 +1347,19 @@ const TutorSetup = () => {
                 }}
               >
                 <h6
-                  className={`${
-                    !!video.length && !videoError
+                  className={`${!!video.length && !videoError
                       ? ""
                       : "blinking-button text-success"
-                  }`}
+                    }`}
                 >
                   Elective Tutor's introduction video
                 </h6>
                 <div className="mb-2">
                   {videoUploading && (
-                    <Loading
-                      height="10px"
-                      iconSize="20px"
-                      smallerIcon
-                      loadingText="uploading video ..."
-                    />
+                   <div class="progress">
+                   <div class="progress-bar" role="progressbar" style={{width:`${uploadProgress}%` }}
+                   aria-valuenow={uploadProgress} aria-valuemin="0" aria-valuemax="100">{uploadProgress}%</div>
+                 </div>
                   )}
                 </div>
                 {selectedVideoOption === "record" ? (
@@ -1487,9 +1466,8 @@ const TutorSetup = () => {
                         <button
                           style={{ width: "100%", fontSize: "10px" }}
                           type="button"
-                          className={`action-btn btn small ${
-                            selectedVideoOption === "record" ? "active" : ""
-                          }`}
+                          className={`action-btn btn small ${selectedVideoOption === "record" ? "active" : ""
+                            }`}
                           disabled={!editMode}
                           onClick={() => {
                             set_video("");
@@ -1539,9 +1517,8 @@ const TutorSetup = () => {
                             fontSize: "10px",
                             border: " 1px solid #e1e1e1",
                           }}
-                          className={`action-btn btn ${
-                            selectedVideoOption === "upload" ? "active" : ""
-                          }`}
+                          className={`action-btn btn ${selectedVideoOption === "upload" ? "active" : ""
+                            }`}
                         >
                           <div className="button__content">
                             <div className="button__icon">
@@ -1568,7 +1545,142 @@ const TutorSetup = () => {
           </div>
         </div>
 
-        <div className="mt-1 ">
+        <div className="mt-1 container" >
+          <div className="d-flex gap-3 align-items-end">
+            <div style={{width:"20%"}}>
+              <div className="border p-2 shadow rounded w-100 mb-3">
+                <div
+                  className="form-check form-switch d-flex gap-2  mt-2"
+                  style={{ fontSize: "12px " }}
+                >
+                  <input
+                    disabled={!editMode}
+                    className="form-check-input border border-dark "
+                    type="checkbox"
+                    role="switch"
+                    style={{
+                      width: "30px",
+                      height: "15px",
+                    }}
+                    onChange={() =>
+                      toast.info(
+                        "Tutor must conduct 40 hours before can activate “Franchise” option."
+                      )
+                    }
+                  />
+                  <label
+                    className="form-check-label mr-3"
+                    htmlFor="flexSwitchCheckChecked"
+                  >
+                    My Franchise
+                  </label>
+                  <ToolTip
+                    text="The Tutoring Academy platform presents a unique 'Franchisey' opportunity, 
+                  enabling you to enhance your business by recruiting and supervising other 
+                  tutors. This model allows for scalability by setting a markup for each tutor's 
+                  services, thereby creating a potential revenue stream. It's an innovative 
+                  approach to expand your educational services while managing and growing a team 
+                  of skilled tutors."
+                    width="200px"
+                  />
+                </div>
+              </div>
+
+              <div className="border p-2 shadow rounded w-100">
+                <div className="d-flex gap-1 flex-column">
+                  <div
+                    className="form-check form-switch d-flex gap-2 w-100"
+                    style={{ fontSize: "12px " }}
+                  >
+                    <input
+                      disabled={!editMode}
+                      className="form-check-input border border-dark "
+                      type="checkbox"
+                      role="switch"
+                      style={{
+                        width: "30px",
+                        height: "15px",
+                      }}
+                      onChange={() => {
+                        set_vacation_mode(!vacation_mode);
+                        !vacation_mode && !isOpen && setIsOpen(true);
+                      }}
+                      checked={vacation_mode}
+                    />
+                    <label
+                      className="form-check-label mr-3"
+                      htmlFor="flexSwitchCheckChecked"
+                    >
+                      Vacation Mode
+                    </label>
+                    <ToolTip
+                      text="To set your unavailable days for tutoring, simply turn the switch to 'On'.
+                  This action allows you to choose the days you wish to take off. 
+                  Your selected dates will be highlighted in green on your calendar, signaling to
+                  students that you are not available for lessons during this time. Once the end 
+                  date is reached, the switch will automatically revert to 'Off', making you 
+                  available for bookings again."
+                      width="200px"
+                    />
+                  </div>
+                  {vacation_mode && (
+                    <div className="" style={{ fontSize: "12px" }}>
+                      <div>
+                        <span style={{ fontWeight: "bold" }}>
+                          Start Date:{" "}
+                        </span>{" "}
+                        {showDate(tutor.StartVacation)}
+                      </div>
+                      <div>
+                        <span style={{ fontWeight: "bold" }}>End Date: </span>{" "}
+                        {showDate(tutor.EndVacation)}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="input" style={{width:"60%"}}>
+              <div
+                style={{
+                  fontWeight: "900",
+                  fontSize: "14px",
+                  float: "right",
+                }}
+              >
+                {headline?.length}/80
+              </div>
+              <input
+                className="input__field m-0 shadow form-control"
+                value={headline}
+                maxLength={80}
+                spellCheck="true"
+                disabled={!editMode}
+                placeholder="Write A Catchy Headline.. Example: 21 years experienced nuclear science professor."
+                onChange={(e) => set_headline(e.target.value)}
+                type="text"
+                required={tutor.Status === "active"}
+              />
+              <span
+                className=""
+                style={{
+                  position: "absolute",
+                  top: "-5px",
+                  left: "10px",
+                  padding: "2px",
+                  fontSize: "12px",
+                }}
+              >
+                <MandatoryFieldLabel
+                  name="headline"
+                  mandatoryFields={mandatoryFields}
+                  text={"Profile Headline"}
+                  editMode={editMode}
+                />
+              </span>
+            </div>
+
+          </div>
           <div
             className="d-flex justify-content-center"
             style={{ gap: "20px", width: "100%" }}

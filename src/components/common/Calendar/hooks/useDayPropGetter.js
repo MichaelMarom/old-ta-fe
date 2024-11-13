@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import moment from "moment";
 import { convertToDate } from "../Calendar";
 import { isFutureDate } from "../utils/calenderUtils";
+import { useSelector } from "react-redux";
 
 const useDayPropGetter = ({
   disableWeekDays,
@@ -10,6 +11,8 @@ const useDayPropGetter = ({
   disableColor,
   isStudentLoggedIn,
 }) => {
+
+  const { tutor } = useSelector(state => state.tutor)
   return useCallback(
     (date) => {
       const dayName = moment(date).format("dddd");
@@ -19,18 +22,13 @@ const useDayPropGetter = ({
         (arrayDate) => convertToDate(arrayDate).getTime() === date.getTime()
       );
 
+      const start = moment.tz(tutor.StartVacation, tutor.timeZone);
+      const end = moment.tz(tutor.EndVacation, tutor.timeZone);
+      const compare = moment.tz(date, tutor.timeZone);
 
-  //     // Define the start and end dates using moment
-  // const startDate = moment(vacationStartDate);
-  // const endDate = moment(vacationEndDate);
-  
-  // // Convert the selected date to a moment object
-  // const selected = moment(date);
-  
-  // // Check if the selected date is between startDate and endDate (inclusive)
-  //  const vacataionalDate =  selected.isBetween(startDate, endDate, null, '[]');
-
-  //  console.log(vacataionalDate, date)
+      // Check if the compare date is within the range (inclusive)
+      const VacationDayOff = compare.isSameOrAfter(start) && compare.isSameOrBefore(end);
+      console.log(VacationDayOff, date, tutor)
 
       const existsInEnabledInWeek = enabledDays?.some((arrayDate) => {
         const slotDateMoment = moment(date);
@@ -62,6 +60,13 @@ const useDayPropGetter = ({
           },
         };
       }
+      if (VacationDayOff && isFutureDate(date))
+        return {
+          className: "tutor-vacation-dayoff",
+          style: {
+            backgroundColor: "rgb(226,244,227)",
+          },
+        }
       return {};
     },
     [
