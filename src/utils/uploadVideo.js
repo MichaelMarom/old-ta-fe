@@ -24,7 +24,8 @@ export const uploadVideoToAzure = async (
 
     return await fileUploadClient.post("/tutor/setup/record", formData, {
       onUploadProgress,
-    });  } catch (err) {
+    });
+  } catch (err) {
     showErrorToast(err);
   }
 };

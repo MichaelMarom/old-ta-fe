@@ -40,6 +40,7 @@ import Select from "../common/Select";
 import VacationSettingModal from "./VacationSettingModal";
 import { uploadTutorImage } from "../../axios/file";
 import { FaExclamationCircle } from "react-icons/fa";
+import { socket } from '../../config/socket'
 
 const phoneUtil = PhoneNumberUtil.getInstance();
 const isPhoneValid = (phone) => {
@@ -133,6 +134,17 @@ const TutorSetup = () => {
       }
     };
   }, [user.role, tutor.AcademyId, tutor.Status]);
+
+  useEffect(() => {
+    socket.on("uploadProgress", (data) => {
+      console.log(data)
+      setUploadProgress(data.progress);
+    });
+
+    return () => {
+      socket.off("uploadProgress");
+    };
+  }, []);
 
   useEffect(() => {
     if (
@@ -555,16 +567,16 @@ const TutorSetup = () => {
           videoElement.onloadedmetadata = async () => {
             if (videoElement.duration <= 59.59) {
               // Call the upload function with progress tracking
-              const { data } = await uploadVideoToAzure(
+              const { data={} } = await uploadVideoToAzure(
                 file,
                 tutor.AcademyId,
                 "tutor-intro-video",
                 selectedVideoOption,
                 (progressEvent) => {
-                  const percentCompleted = Math.round(
-                    (progressEvent.loaded * 100) / progressEvent.total
-                  );
-                  setUploadProgress(percentCompleted);
+                  // const percentCompleted = Math.round(
+                  //   (progressEvent.loaded * 100) / progressEvent.total
+                  // );
+                  // setUploadProgress(percentCompleted);
                 }
               );
 
@@ -584,7 +596,6 @@ const TutorSetup = () => {
       reader.readAsDataURL(file);
     }
   };
-console.log(uploadProgress,'proged')
   useEffect(() => {
     const localTime = convertGMTOffsetToLocalString(timeZone);
     setDateTime(localTime);
@@ -674,8 +685,8 @@ console.log(uploadProgress,'proged')
                 </div>
                 <h6
                   className={`text-start m-0 ${mandatoryFields.find((item) => item.name === "photo").filled
-                      ? ""
-                      : "blink_me"
+                    ? ""
+                    : "blink_me"
                     }`}
                   style={{ whiteSpace: "nowrap" }}
                 >
@@ -1348,18 +1359,18 @@ console.log(uploadProgress,'proged')
               >
                 <h6
                   className={`${!!video.length && !videoError
-                      ? ""
-                      : "blinking-button text-success"
+                    ? ""
+                    : "blinking-button text-success"
                     }`}
                 >
                   Elective Tutor's introduction video
                 </h6>
                 <div className="mb-2">
                   {videoUploading && (
-                   <div class="progress">
-                   <div class="progress-bar" role="progressbar" style={{width:`${uploadProgress}%` }}
-                   aria-valuenow={uploadProgress} aria-valuemin="0" aria-valuemax="100">{uploadProgress}%</div>
-                 </div>
+                    <div class="progress">
+                      <div class="progress-bar" role="progressbar" style={{ width: `${uploadProgress}%` }}
+                        aria-valuenow={uploadProgress} aria-valuemin="0" aria-valuemax="100">{uploadProgress}%</div>
+                    </div>
                   )}
                 </div>
                 {selectedVideoOption === "record" ? (
@@ -1547,7 +1558,7 @@ console.log(uploadProgress,'proged')
 
         <div className="mt-1 container" >
           <div className="d-flex gap-3 align-items-end">
-            <div style={{width:"20%"}}>
+            <div style={{ width: "20%" }}>
               <div className="border p-2 shadow rounded w-100 mb-3">
                 <div
                   className="form-check form-switch d-flex gap-2  mt-2"
@@ -1640,7 +1651,7 @@ console.log(uploadProgress,'proged')
                 </div>
               </div>
             </div>
-            <div className="input" style={{width:"60%"}}>
+            <div className="input" style={{ width: "60%" }}>
               <div
                 style={{
                   fontWeight: "900",
