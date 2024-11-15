@@ -567,7 +567,7 @@ const TutorSetup = () => {
           videoElement.onloadedmetadata = async () => {
             if (videoElement.duration <= 59.59) {
               // Call the upload function with progress tracking
-              const { data={} } = await uploadVideoToAzure(
+              const { data = {} } = await uploadVideoToAzure(
                 file,
                 tutor.AcademyId,
                 "tutor-intro-video",
@@ -1367,9 +1367,10 @@ const TutorSetup = () => {
                 </h6>
                 <div className="mb-2">
                   {videoUploading && (
-                    <div class="progress">
-                      <div class="progress-bar" role="progressbar" style={{ width: `${uploadProgress}%` }}
-                        aria-valuenow={uploadProgress} aria-valuemin="0" aria-valuemax="100">{uploadProgress}%</div>
+
+                    <div class="w3-light-grey">
+                      <div id="myBar" class="w3-container w3-green w3-center"
+                        style={{ width: `${uploadProgress}%` }}>{uploadProgress}%</div>
                     </div>
                   )}
                 </div>

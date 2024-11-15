@@ -598,13 +598,16 @@ const Discounts = () => {
               </div>
               {classTeaching && (
                 <>
+                <div className="w-100 d-flex justify-content-center m-1">
+
                   <div className="input-group  w-50">
-                    <span className="input-group-text">$</span>
+                    <span className="input-group-text p-2" style={{height:"30px"}}>$</span>
                     <input
+                    style={{height:"30px"}}
                       disabled={!editMode}
                       type="text"
                       required
-                      className="form-control m-0 py-4"
+                      className="form-control m-0 p-0"
                       aria-label="Amount (to the nearest dollar)"
                       value={MultiStudentHourlyRate}
                       onChange={(e) => {
@@ -612,8 +615,11 @@ const Discounts = () => {
                           setMultiStudentHourlyRate(e.target.value);
                       }}
                     />
-                    <span className="input-group-text">.00</span>
+                    <span className="input-group-text"
+                    style={{height:"30px"}}
+                    >.00</span>
                   </div>
+                </div>
                   <span className="small text-secondary bg-light">
                     Tutor must hold teaching certificate from his state to teach
                     in American public, private or charters' schools.{" "}
