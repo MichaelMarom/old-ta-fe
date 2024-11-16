@@ -238,9 +238,9 @@ const TutorAccSetup = ({
               <p className="  px-4  py-2 rounded m-2 col-4">
                 {!!sessions.length
                   ? showDate(
-                      sessions?.[sessions.length - 1]?.start,
-                      monthFormatWithYYYY
-                    )
+                    sessions?.[sessions.length - 1]?.start,
+                    monthFormatWithYYYY
+                  )
                   : "N/A"}
               </p>
             </div>
@@ -260,7 +260,12 @@ const TutorAccSetup = ({
             be available in your account. We appreciate your understanding and
             are committed to ensuring a smooth and timely payment process.
           </div>
-          <div
+          <div onClick={() =>
+            !editMode &&
+            toast.info(
+              'Please click the "Edit" to activate the Tab!'
+            )
+          }
             className="p-3 "
             style={{ fontWeight: "bold", height: "calc(100vh - 350px)" }}
           >
@@ -541,7 +546,12 @@ const TutorAccSetup = ({
             }}
           >
             {tutor.Country === "USA" && (
-              <div className="d-flex align-items-center mb-2 justify-content-between">
+              <div onClick={() =>
+                !editMode &&
+                toast.info(
+                  'Please click the "Edit" to activate the Tab!'
+                )
+              } className="d-flex align-items-center mb-2 justify-content-between">
                 <Input
                   editMode={editMode}
                   label={

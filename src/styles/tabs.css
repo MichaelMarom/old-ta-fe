@@ -157,7 +157,7 @@ ul.header li a {
     background-color: #ffffff;
 }
 
-ul {
+ul:not(.email-temp-preview *) {
     list-style-type: none;
     margin: 0;
     display: flex;
@@ -172,7 +172,7 @@ ul.header {
     overflow-x: auto;
 }
 
-ul li {
+ul li:not(.email-temp-preview *) {
     display: flex;
     white-space: nowrap;
     font-weight: 400;
@@ -219,7 +219,7 @@ ul.nav.nav-tabs li {
     margin: 20px 0 0 0;
 }
 
-table {
+table:not(.email-temp-preview *) {
     box-shadow: 2px 1px 15px 4px rgba(0, 0, 0, 0.3);
     border-radius: 20px;
     width: 100%;
@@ -230,7 +230,7 @@ table {
     /* margin: 10px; */
 }
 
-td {
+td:not(.email-temp-preview *) {
     /* border: 1px solid gray; */
     border: none;
     /* border-radius: 10px; */
@@ -241,11 +241,11 @@ td {
     height: 40px;
 }
 
-tr:nth-child(odd) {
+tr:nth-child(odd):not(.email-temp-preview *) {
     background-color: rgb(240, 240, 240);
 }
 
-th {
+th:not(.email-temp-preview *) {
     border: none;
     text-align: left;
     width: 20px;
@@ -255,18 +255,18 @@ th {
     top: 0;
     color: #fff;
     position: sticky;
-    background: #2471A3 
+    background: #2471A3
 }
 
-tr:nth-child(even) {
+tr:nth-child(even):not(.email-temp-preview *) {
     background-color: hsl(0, 0%, 100%);
 }
 
-table thead tr:first-child  th:first-child {
+table thead tr:first-child th:first-child:not(.email-temp-preview *) {
     border-top-left-radius: 12px;
 }
 
-table thead tr:first-child  th:last-child {
+table thead tr:first-child th:last-child:not(.email-temp-preview *) {
     border-top-right-radius: 12px;
 }
 
@@ -278,11 +278,11 @@ table tbody tr:first-child td:last-child {
     border-top-right-radius: 12px;
 } */
 
-table tbody tr:last-child td:first-child {
+table tbody tr:last-child td:first-child:not(.email-temp-preview *) {
     border-bottom-left-radius: 12px;
 }
 
-table tbody tr:last-child td:last-child {
+table tbody tr:last-child td:last-child:not(.email-temp-preview *) {
     border-bottom-right-radius: 12px;
 }
 

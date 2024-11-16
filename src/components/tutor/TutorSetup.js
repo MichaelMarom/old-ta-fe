@@ -625,8 +625,14 @@ const TutorSetup = () => {
 
   if (tutorDataLoading) return <Loading height="calc(100vh - 150px" />;
   return (
-    <form onSubmit={saveTutorSetup}>
+    <form onSubmit={saveTutorSetup}  >
       <div
+       onClick={() =>
+        !editMode &&
+        toast.info(
+          'Please click the "Edit" to activate the Tab!'
+        )
+      }
         style={{
           overflowY: "auto",
           height: "calc(100vh - 150px)",
@@ -684,11 +690,10 @@ const TutorSetup = () => {
                   </p>
                 </div>
                 <h6
-                  className={`text-start m-0 ${
-                    mandatoryFields.find((item) => item.name === "photo").filled
+                  className={`text-start m-0 ${mandatoryFields.find((item) => item.name === "photo").filled
                       ? ""
                       : "blink_me"
-                  }`}
+                    }`}
                   style={{ whiteSpace: "nowrap" }}
                 >
                   Profile Photo
@@ -747,12 +752,12 @@ const TutorSetup = () => {
                 />
                 <label
                   id="btn"
-                  onClick={() =>
-                    !editMode &&
-                    toast.info(
-                      'Please click the "Edit" button to activate the "Upload" Photo button!'
-                    )
-                  }
+                  // onClick={() =>
+                  //   !editMode &&
+                  //   toast.info(
+                  //     'Please click the "Edit" to activate the Tab!'
+                  //   )
+                  // }
                   style={{
                     width: "50%",
                   }}
@@ -1172,11 +1177,10 @@ const TutorSetup = () => {
                 }}
               >
                 <h6
-                  className={`${
-                    !!video.length && !videoError
+                  className={`${!!video.length && !videoError
                       ? ""
                       : "blinking-button text-success"
-                  }`}
+                    }`}
                 >
                   Elective Tutor's introduction video
                 </h6>
@@ -1293,9 +1297,8 @@ const TutorSetup = () => {
                         <button
                           style={{ width: "100%", fontSize: "10px" }}
                           type="button"
-                          className={`action-btn btn small ${
-                            selectedVideoOption === "record" ? "active" : ""
-                          }`}
+                          className={`action-btn btn small ${selectedVideoOption === "record" ? "active" : ""
+                            }`}
                           disabled={!editMode}
                           onClick={() => {
                             set_video("");
@@ -1345,9 +1348,8 @@ const TutorSetup = () => {
                             fontSize: "10px",
                             border: " 1px solid #e1e1e1",
                           }}
-                          className={`action-btn btn ${
-                            selectedVideoOption === "upload" ? "active" : ""
-                          }`}
+                          className={`action-btn btn ${selectedVideoOption === "upload" ? "active" : ""
+                            }`}
                         >
                           <div className="button__content">
                             <div className="button__icon">

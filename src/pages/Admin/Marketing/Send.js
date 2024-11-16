@@ -15,6 +15,7 @@ const Marketing = () => {
   const [messageType, setMessageType] = useState('sms');
   const [message, setMessage] = useState('')
   const [list, setList] = useState([])
+  const [sendButtonLoading, setSendButtonLoading] = useState(false)
 
   const [smsTemps, setSmsTemps] = useState([]);
   const [selectedSmsTemp, setSelectedSmsTemp] = useState({})
@@ -83,7 +84,6 @@ const Marketing = () => {
     }
   };
   const handleHtmlFileSelect = (content) => {
-    setUploadedHtmlContent(content);
   };
 
 
@@ -150,6 +150,7 @@ const Marketing = () => {
 
       if (!numbers.length && messageType === 'sms') return toast.warning('Please select phone number to send sms');
       if (!emails.length && messageType === "email") return toast.warning('Please select email(s)');
+      if (!emails.length && messageType === "ext-temp") return toast.warning('Please select email(s)');
 
 
       if (messageType === 'sms' && !selectedSmsTemp.text)
@@ -178,7 +179,15 @@ const Marketing = () => {
       }
 
       if (messageType === 'ext-temp' && emails.length) {
+        setSendButtonLoading(true)
+        
+        console.log(emails)
         await send_templated_tutor_marketing_email({ emails, subject: 'Marketing Emails', htmlTemplate: uploadedHtmlContent });
+        setUploadedHtmlContent('')
+        setFileUploaded('')
+        setSelectedRows([])
+        setData([])
+        setSendButtonLoading(false)
         toast.success('Email sent successfully')
       }
     }
@@ -366,7 +375,7 @@ const Marketing = () => {
                   </> :
                   // <p>{isExternalTemplateSelected ? "Marketing Template Selected" : "Template Not Found"}</p>
                   <>
-                    <HtmlFilePreview onFileSelect={handleHtmlFileSelect} />
+                    <HtmlFilePreview onFileSelect={ setUploadedHtmlContent} fileContent={uploadedHtmlContent} />
                     {/* {uploadedHtmlContent && (
                     <div
                       style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #ccc', padding: '10px' }}
@@ -377,7 +386,7 @@ const Marketing = () => {
               }
 
 
-              <TAButton buttonText={'Send'} type='submit' loading={sending} />
+              <TAButton  buttonText={'Send'} type='submit' loading={sending || sendButtonLoading} />
             </form>
           </div>
         </div>

@@ -278,7 +278,12 @@ const Discounts = () => {
           className="d-flex justify-content-center"
           style={{ width: "100%" }}
         >
-          <div className="d-flex flex-column" style={{ width: "30%" }}>
+          <div className="d-flex flex-column" style={{ width: "30%" }} onClick={() =>
+            !editMode &&
+            toast.info(
+              'Please click the "Edit" button to activate the "Upload" Photo button!'
+            )
+          }>
             <div className="rounded shadow border m-2 p-4">
               <div
                 className="dropdown d-flex align-items-center mb-4"
@@ -454,7 +459,12 @@ const Discounts = () => {
                 </div>
 
               </Drawer>
-              <div className="form-check form-switch d-flex align-items-center gap-2">
+              <div onClick={() =>
+                !editMode &&
+                toast.info(
+                  'Please click the "Edit" to activate the Tab!'
+                )
+              } className="form-check form-switch d-flex align-items-center gap-2">
                 <input
                   disabled={!editMode}
                   className="form-check-input border border-dark "
@@ -540,7 +550,7 @@ const Discounts = () => {
                           Select
                         </option>
                         {subjects.map(({ subject, SID, DiscountCode, CodeStatus }, idx) => (
-                          (!DiscountCode || CodeStatus==="used" ) && <option key={idx} value={SID}
+                          (!DiscountCode || CodeStatus === "used") && <option key={idx} value={SID}
                             style={{ background: fields.filter(item => item.SID === SID).length ? "rgb(208 208 208)" : "" }}
                             disabled={fields.filter(item => item.SID === SID).length}>{subject}</option>
                         ))}
@@ -598,28 +608,28 @@ const Discounts = () => {
               </div>
               {classTeaching && (
                 <>
-                <div className="w-100 d-flex justify-content-center m-1">
+                  <div className="w-100 d-flex justify-content-center m-1">
 
-                  <div className="input-group  w-50">
-                    <span className="input-group-text p-2" style={{height:"30px"}}>$</span>
-                    <input
-                    style={{height:"30px"}}
-                      disabled={!editMode}
-                      type="text"
-                      required
-                      className="form-control m-0 p-0"
-                      aria-label="Amount (to the nearest dollar)"
-                      value={MultiStudentHourlyRate}
-                      onChange={(e) => {
-                        if (e.target.value < 1000)
-                          setMultiStudentHourlyRate(e.target.value);
-                      }}
-                    />
-                    <span className="input-group-text"
-                    style={{height:"30px"}}
-                    >.00</span>
+                    <div className="input-group  w-50">
+                      <span className="input-group-text p-2" style={{ height: "30px" }}>$</span>
+                      <input
+                        style={{ height: "30px" }}
+                        disabled={!editMode}
+                        type="text"
+                        required
+                        className="form-control m-0 p-0"
+                        aria-label="Amount (to the nearest dollar)"
+                        value={MultiStudentHourlyRate}
+                        onChange={(e) => {
+                          if (e.target.value < 1000)
+                            setMultiStudentHourlyRate(e.target.value);
+                        }}
+                      />
+                      <span className="input-group-text"
+                        style={{ height: "30px" }}
+                      >.00</span>
+                    </div>
                   </div>
-                </div>
                   <span className="small text-secondary bg-light">
                     Tutor must hold teaching certificate from his state to teach
                     in American public, private or charters' schools.{" "}

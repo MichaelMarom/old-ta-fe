@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import CenteredModal from '../../../components/common/Modal';
 
-const HtmlFilePreview = ({ onFileSelect }) => {
-  const [fileContent, setFileContent] = useState('');
+const HtmlFilePreview = ({ onFileSelect, fileContent }) => {
   const [fileName, setFileName] = useState('');
+  const [seeFileContent, setSeeFileContent] = useState(false)
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -11,7 +12,6 @@ const HtmlFilePreview = ({ onFileSelect }) => {
       const reader = new FileReader();
       reader.onload = (event) => {
         const content = event.target.result;
-        setFileContent(content);
         onFileSelect(content); // Pass file content to the parent component
       };
       reader.readAsText(file);
@@ -29,11 +29,14 @@ const HtmlFilePreview = ({ onFileSelect }) => {
       />
       {fileContent && (
         <div>
-          <h5>Preview of {fileName}:</h5>
-          <div
-            style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #ccc', padding: '10px' }}
-            dangerouslySetInnerHTML={{ __html: fileContent }}
-          ></div>
+          <button className='btn btn-warning' type='button' onClick={()=>setSeeFileContent(true)}>See File Preview</button>
+          <CenteredModal title={"Email Preview"} minWidth='800px' style={{maxWidth:"800px"}} show={seeFileContent} handleClose={()=>setSeeFileContent(false)}          >
+            <div className='email-temp-preview' >
+              <div style={{ overflowY: 'auto'}}
+                dangerouslySetInnerHTML={{ __html: fileContent }} />
+            </div>
+
+          </CenteredModal>
         </div>
       )}
     </div>
