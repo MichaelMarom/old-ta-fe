@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as XLSX from 'xlsx';
 import TAButton from '../../../components/common/TAButton'
 import Layout from './Layout'
@@ -25,7 +25,11 @@ const Marketing = () => {
   const [sending, setSending] = useState(false)
   const [fileUploaded, setFileUploaded] = useState(false)
   const [isExternalTemplateSelected, setIsExternalTemplateSelected] = useState('');
-  const [uploadedHtmlContent, setUploadedHtmlContent] = useState(''); // New state for HTML content
+  const [uploadedHtmlContent, setUploadedHtmlContent] = useState('');
+
+  const csvFile = useRef(null);
+  const externmailTempFile = useRef(null);
+
 
 
   useEffect(() => {
@@ -180,7 +184,7 @@ const Marketing = () => {
 
       if (messageType === 'ext-temp' && emails.length) {
         setSendButtonLoading(true)
-        
+
         console.log(emails)
         await send_templated_tutor_marketing_email({ emails, subject: 'Marketing Emails', htmlTemplate: uploadedHtmlContent });
         setUploadedHtmlContent('')
@@ -188,6 +192,12 @@ const Marketing = () => {
         setSelectedRows([])
         setData([])
         setSendButtonLoading(false)
+        if(csvFile.current){
+          csvFile.current.value = null;
+        }
+        if(externmailTempFile.current){
+          externmailTempFile.current.value = null;
+        }
         toast.success('Email sent successfully')
       }
     }
@@ -197,7 +207,7 @@ const Marketing = () => {
   return (
     <Layout>
       <div className='container m-auto w-100' style={{ height: "calc(100vh - 80px)", overflowY: "auto" }}>
-        <input type="file" onChange={handleFileUpload} />
+        <input type="file" onChange={handleFileUpload} ref={csvFile} />
         <div className='d-flex w-100'>
           <div className='d-flex flex-column' style={{ width: "60%" }}>
             <div>
@@ -373,20 +383,12 @@ const Marketing = () => {
                   {message.length > 143 && <p className='text-danger w-100 text-end' style={{ fontSize: "12px" }}>
                     Maximum limit 144 characters</p>} */}
                   </> :
-                  // <p>{isExternalTemplateSelected ? "Marketing Template Selected" : "Template Not Found"}</p>
-                  <>
-                    <HtmlFilePreview onFileSelect={ setUploadedHtmlContent} fileContent={uploadedHtmlContent} />
-                    {/* {uploadedHtmlContent && (
-                    <div
-                      style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #ccc', padding: '10px' }}
-                      dangerouslySetInnerHTML={{ __html: uploadedHtmlContent }}
-                    ></div>
-                  )} */}
-                  </>
+                  <HtmlFilePreview onFileSelect={setUploadedHtmlContent}
+                    fileContent={uploadedHtmlContent} externmailTempFile={externmailTempFile} />
               }
 
 
-              <TAButton  buttonText={'Send'} type='submit' loading={sending || sendButtonLoading} />
+              <TAButton buttonText={'Send'} type='submit' loading={sending || sendButtonLoading} />
             </form>
           </div>
         </div>

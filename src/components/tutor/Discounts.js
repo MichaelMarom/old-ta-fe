@@ -448,7 +448,7 @@ const Discounts = () => {
                 registration process. It is important to generate a unique code
                 for every student.`} /></div>
 
-              <Drawer childrenHeight="500px" header={"Vouchers List"} >
+              <Drawer childrenHeight="500px" header={"View Vouchers"} >
                 <div className="d-flex flex-wrap gap-2">
                   {subjects.map(({ subject, DiscountCode, CodeStatus }) =>
                     DiscountCode && <Voucher code={DiscountCode}

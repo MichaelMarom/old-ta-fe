@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import Pill from "./Pill";
+import TAButton from './TAButton'
 
 const Drawer = ({ date, subject, header, children, childrenHeight="200px" }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,16 +21,19 @@ const Drawer = ({ date, subject, header, children, childrenHeight="200px" }) => 
          <div>
           <div className="d-flex align-items-center">
             {date && (
-              <p className="m-0 text-decoration-underline">{date}</p>
+              <p className="m-0 ">{date}</p>
             )}
             {subject && (
               <Pill label={subject} color="success" />
             )}
           </div>
-          <h5 className="m-0 text-decoration-underline">{header}</h5>
+          <div className="m-0">
+
+            <TAButton  buttonText={header}  style={{width:"150px"}} />
+          </div>
         </div>
         <div className={`chevron ${isOpen ? "open" : ""}`}>
-          <BiChevronDown />
+          <BiChevronDown size={25} />
         </div>
       </div>
       <div

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import CenteredModal from '../../../components/common/Modal';
 
-const HtmlFilePreview = ({ onFileSelect, fileContent }) => {
+const HtmlFilePreview = ({ onFileSelect, fileContent ,externmailTempFile}) => {
   const [fileName, setFileName] = useState('');
   const [seeFileContent, setSeeFileContent] = useState(false)
 
@@ -23,16 +23,17 @@ const HtmlFilePreview = ({ onFileSelect, fileContent }) => {
   return (
     <div>
       <input
+        ref={externmailTempFile}
         type="file"
         accept=".html"
         onChange={handleFileChange}
       />
       {fileContent && (
         <div>
-          <button className='btn btn-warning' type='button' onClick={()=>setSeeFileContent(true)}>See File Preview</button>
-          <CenteredModal title={"Email Preview"} minWidth='800px' style={{maxWidth:"800px"}} show={seeFileContent} handleClose={()=>setSeeFileContent(false)}          >
+          <button className='btn btn-warning' type='button' onClick={() => setSeeFileContent(true)}>See File Preview</button>
+          <CenteredModal title={"Email Preview"} minWidth='800px' style={{ maxWidth: "800px" }} show={seeFileContent} handleClose={() => setSeeFileContent(false)}          >
             <div className='email-temp-preview' >
-              <div style={{ overflowY: 'auto'}}
+              <div style={{ overflowY: 'auto' }}
                 dangerouslySetInnerHTML={{ __html: fileContent }} />
             </div>
 

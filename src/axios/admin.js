@@ -253,6 +253,20 @@ export const get_email_temp = async (id) => {
 }
 
 
+/**
+ * 
+ * @param {UUID} id 
+ * @returns 
+ */
+export const delete_email_temp = async (id) => {
+  try {
+    const { data } = await apiClient.delete(`/admin/email-template/${id}`)
+    return data
+  }
+  catch (err) {
+    showErrorToast(err)
+  }
+}
 
 /**
  * 

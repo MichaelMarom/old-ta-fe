@@ -41,7 +41,6 @@ const Create = () => {
       .then((html) => setHtmlContent(html));
   }, []);
 
-console.log(htmlContent)
   return (
     <Layout>
       <div className='container m-auto'>
@@ -52,7 +51,7 @@ console.log(htmlContent)
                 <h5> Create Email Template</h5>
               <Input value={subject} setValue={setSubject} label={<MandatoryFieldLabel text={"Enter Subject"} />} />
 
-              <RichTextEditor
+              <UserRichTextEditor
                 onChange={(value) => setEmailText(value)}
                 placeholder={"Enter Email Text. This Email text will be followed by signature and it starts with logo"}
                 readOnly={false}
