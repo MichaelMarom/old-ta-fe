@@ -15,12 +15,8 @@
     width: 100%;
     background-color: #6babff;
 }
-
-
-
-/* CLASS ROOM STYLES CLASS ROOM STYLES CLASS ROOM STYLES CLASS ROOM STYLES CLASS ROOM STYLES CLASS ROOM STYLES CLASS ROOM STYLES CLASS ROOM STYLES CLASS ROOM STYLES CLASS ROOM STYLES CLASS ROOM STYLES
- CLASS ROOM STYLES */
-.class-room {
+ */
+/* .class-room {
     width: 100vw;
     height: calc(100vh - 200px);
     position: relative;
@@ -249,8 +245,8 @@ canvas {
 #bb {
     border: 3px solid #0062ff;
 
-}
-
+} */
+/* 
 .writing-set div {
     height: 100%;
     width: 50px;
@@ -619,7 +615,7 @@ canvas {
     position: relative;
     border-radius: 2px;
     background-color: #3b3b3b;
-}
+} */
 
 /* .tutor-video-options {
     height: 50px;
@@ -755,7 +751,7 @@ canvas {
 
 } */
 
-.shape-styles {
+/* .shape-styles {
     height: 70%;
     width: 100%;
     display: block;
@@ -999,7 +995,7 @@ input:checked+.toggle:before {
 
 .toggle.round:before {
     border-radius: 50%;
-} */
+}  */
 
 /* * {
         box-sizing: border-box;
