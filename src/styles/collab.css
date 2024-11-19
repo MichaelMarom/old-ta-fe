@@ -1,4 +1,4 @@
-
+/* 
 .ReactModal__Overlay {
     z-index: 11;
     height: fit-content;
@@ -621,7 +621,7 @@ canvas {
     background-color: #3b3b3b;
 }
 
-.tutor-video-options {
+/* .tutor-video-options {
     height: 50px;
     width: 150px;
     border-radius: 2.5px;
@@ -649,14 +649,14 @@ canvas {
 
 .tutor-video-options div:hover {
     background-color: rgb(163, 163, 163, .5);
-}
+} */
 
-.student-lec-pane-head {
+/* .student-lec-pane-head {
     height: 60px;
     width: 100%;
-}
+} */
 
-.notification {
+/* .notification {
     min-height: 70px;
     padding: 18px;
     width: 400px;
@@ -672,9 +672,9 @@ canvas {
     right: 400px;
     margin-left: auto;
     margin-right: auto;
-}
+} */
 
-.popin {
+/* .popin {
     height: 50px;
     width: fit-content;
     font-size: large;
@@ -690,10 +690,10 @@ canvas {
     background-color: #000;
     margin-left: auto;
     margin-right: auto;
-}
+} */
 
 
-.reqbtn {
+/* .reqbtn {
     height: 30px;
     width: 60px;
     border-radius: 3px;
@@ -708,9 +708,9 @@ canvas {
     background-color: #0062ff;
     color: #fff;
     margin: 0 5px 0 5px;
-}
+} */
 
-.tutor-requests {
+/* .tutor-requests {
     height: fit-content;
     padding: 5px;
     width: 350px;
@@ -720,43 +720,23 @@ canvas {
     left: 60px;
     z-index: 10;
     bottom: 10px;
-}
+} */
 
 
-.request-bx {
+/* .request-bx {
     height: 120px;
     width: 100%;
     display: block;
     background-color: #fff;
-}
+} */
 
-.text {
+/* .text {
     height: 60%;
     width: 100%;
     padding: 10px;
-}
+} */
 
-.btns {
-    height: 40%;
-    width: 100%;
-    padding: 8px;
-}
-
-.btns button {
-    float: right;
-    margin-left: 10px;
-    height: 100%;
-    min-width: 80px;
-    white-space: nowrap;
-    font-weight: 500;
-    color: blue;
-    outline: none;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-}
-
-.shapes-option-cnt {
+/* .shapes-option-cnt {
     height: 400px;
     width: 300px;
     padding: 10px;
@@ -773,7 +753,7 @@ canvas {
     height: 30%;
     width: 100%;
 
-}
+} */
 
 .shape-styles {
     height: 70%;
@@ -1019,7 +999,7 @@ input:checked+.toggle:before {
 
 .toggle.round:before {
     border-radius: 50%;
-}
+} */
 
 /* * {
         box-sizing: border-box;
@@ -1262,7 +1242,7 @@ input:checked+.toggle:before {
         outline: none;
     } */
 
-    .StudentCollabHeader {
+    /* .StudentCollabHeader {
         height: 60px;
         padding: 0 20px 0 20px;
         width: 100%;
@@ -1317,8 +1297,8 @@ input:checked+.toggle:before {
         height: calc(100vh - 150px);
         width: calc(100vw - 35px);
         z-index: 1000;
-    }
-
+    } */
+/* 
     .StudentCollabFooter {
         height: 50px;
         width: 100%;
@@ -1372,9 +1352,9 @@ input:checked+.toggle:before {
         overflow: auto;
         background-color: #fff;
 
-    }
+    } */
 
-    .StudentAsideChatControl {
+    /* .StudentAsideChatControl {
         height: 50px;
         bottom: 0;
         width: 100%;
@@ -1392,9 +1372,9 @@ input:checked+.toggle:before {
         cursor: pointer;
         outline: none;
         margin: 0 5px 0 5px;
-    }
+    } */
 
-
+/* 
     .StudentMessageCnt {
         width: 100%;
         height: fit-content;
@@ -1416,7 +1396,7 @@ input:checked+.toggle:before {
         border-bottom-left-radius: 15px;
         background-color: #0062ff;
         color: #fff;
-    }
+    } */
 
     #StudentAside {
         right: -100%;
@@ -1444,37 +1424,6 @@ input:checked+.toggle:before {
         outline: none;
         justify-content: center;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     .TutorCollabHeader {

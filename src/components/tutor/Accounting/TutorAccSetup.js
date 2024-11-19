@@ -263,7 +263,10 @@ const TutorAccSetup = ({
           <div onClick={() =>
             !editMode &&
             toast.info(
-              'Please click the "Edit" to activate the Tab!'
+              'Please click the "Edit" to activate the Tab!',
+              {
+                className:"setup-private-info "
+              }
             )
           }
             className="p-3 "
@@ -549,7 +552,10 @@ const TutorAccSetup = ({
               <div onClick={() =>
                 !editMode &&
                 toast.info(
-                  'Please click the "Edit" to activate the Tab!'
+                  'Please click the "Edit" to activate the Tab!',
+                  {
+                    className:"setup-private-info "
+                  }
                 )
               } className="d-flex align-items-center mb-2 justify-content-between">
                 <Input

@@ -281,7 +281,10 @@ const Discounts = () => {
           <div className="d-flex flex-column" style={{ width: "30%" }} onClick={() =>
             !editMode &&
             toast.info(
-              'Please click the "Edit" button to activate the "Upload" Photo button!'
+              'Please click the "Edit" to activate the Tab!',
+              {
+                className:"setup-private-info "
+              }
             )
           }>
             <div className="rounded shadow border m-2 p-4">
@@ -462,7 +465,10 @@ const Discounts = () => {
               <div onClick={() =>
                 !editMode &&
                 toast.info(
-                  'Please click the "Edit" to activate the Tab!'
+                  'Please click the "Edit" to activate the Tab!',
+                  {
+                    className:"setup-private-info "
+                  }
                 )
               } className="form-check form-switch d-flex align-items-center gap-2">
                 <input

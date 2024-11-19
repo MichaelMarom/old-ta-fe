@@ -110,7 +110,7 @@ const Education = () => {
       !(cert_file_name || deg_file_name) &&
       toast(
         `If You graduated from an academic institute, then upload the highest diploma you earned. The academy only verifies your
-         credentials, and guard your privecy by not publishing it on the portal.`,
+         credentials, and guard your privacy by not publishing it on the portal.`,
         {
           hideProgressBar: true,
           autoClose: false,

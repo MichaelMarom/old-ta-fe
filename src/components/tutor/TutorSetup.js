@@ -627,12 +627,14 @@ const TutorSetup = () => {
   return (
     <form onSubmit={saveTutorSetup}  >
       <div
-       onClick={() =>
-        !editMode &&
-        toast.info(
-          'Please click the "Edit" to activate the Tab!'
-        )
-      }
+        onClick={() =>
+          !editMode &&
+          toast.info(
+            'Please click the "Edit" to activate the Tab!', {
+            className: "setup-private-info "
+          }
+          )
+        }
         style={{
           overflowY: "auto",
           height: "calc(100vh - 150px)",
@@ -691,8 +693,8 @@ const TutorSetup = () => {
                 </div>
                 <h6
                   className={`text-start m-0 ${mandatoryFields.find((item) => item.name === "photo").filled
-                      ? ""
-                      : "blink_me"
+                    ? ""
+                    : "blink_me"
                     }`}
                   style={{ whiteSpace: "nowrap" }}
                 >
@@ -747,19 +749,15 @@ const TutorSetup = () => {
                   name="photo"
                   onChange={handleImage}
                   style={{ display: "none" }}
-                  id="photo"
+                  id="profilePicture"
                   disabled={!editMode}
                 />
                 <label
                   id="btn"
-                  // onClick={() =>
-                  //   !editMode &&
-                  //   toast.info(
-                  //     'Please click the "Edit" to activate the Tab!'
-                  //   )
-                  // }
                   style={{
                     width: "50%",
+                    border: editMode ? "" : "2px solid #e1e1e1 ",
+                    opacity: editMode ? "1" : "0.7"
                   }}
                   type="label"
                   disabled={!editMode}
@@ -1178,8 +1176,8 @@ const TutorSetup = () => {
               >
                 <h6
                   className={`${!!video.length && !videoError
-                      ? ""
-                      : "blinking-button text-success"
+                    ? ""
+                    : "blinking-button text-success"
                     }`}
                 >
                   Elective Tutor's introduction video
@@ -1231,7 +1229,7 @@ const TutorSetup = () => {
                       can teach, and how you can help students achieve their
                       goals. You should speak clearly, and confidently. A good
                       introduction video can make a lasting impression and
-                      increase your chances of getting hired. View samples;{" "}
+                      increase your chances of getting hired. View samples:
                       <br />
                       <Link
                         to="https://www.youtube.com/watch?v=tZ3ndrKQXN8"
@@ -1261,7 +1259,10 @@ const TutorSetup = () => {
                     onClick={() =>
                       !editMode &&
                       toast.info(
-                        'Please click the "Edit" button to activate the "Upload", or "Record" video buttons!'
+                        'Please click the "Edit" button to activate the "Upload", or "Record" video buttons!',
+                        {
+                          className: "setup-private-info "
+                        }
                       )
                     }
                   >
@@ -1346,7 +1347,8 @@ const TutorSetup = () => {
                             borderColor: "none",
                             pointerEvents: !editMode ? "none" : "auto",
                             fontSize: "10px",
-                            border: " 1px solid #e1e1e1",
+                            opacity: editMode ? 1 : 0.7,
+                            border: editMode ? "" : "   2px solid #e1e1e1"
                           }}
                           className={`action-btn btn ${selectedVideoOption === "upload" ? "active" : ""
                             }`}
@@ -1461,6 +1463,7 @@ const TutorSetup = () => {
                   left: "10px",
                   padding: "2px",
                   fontSize: "12px",
+                  fontWeight: "600",
                 }}
               >
                 <MandatoryFieldLabel
@@ -1691,7 +1694,7 @@ export const MandatoryFieldLabel = ({
   };
 
   return (
-    <div className="d-flex">
+    <div className="d-flex ">
       <span
         className="d-flex gap-2"
         style={{
@@ -1706,7 +1709,7 @@ export const MandatoryFieldLabel = ({
             iconSize={13}
           />
         )}
-        <span className={`${blinkMe() ? "blink_me" : ""}`}> {text}</span>
+        <span className={` ${blinkMe() ? "blink_me" : ""}`}> {text}</span>
       </span>
       <span className="text-danger" style={{ fontSize: "13px" }}>
         *

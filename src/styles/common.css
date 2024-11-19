@@ -120,7 +120,7 @@ h6 {
 
 span {
   color: rgb(129, 129, 129);
-  font-weight: 400 !important;
+  /* font-weight: 400 !important; */
   font-family: "Work Sans", sans-serif !important;
 }
 
@@ -349,6 +349,7 @@ span {
   border-radius: 40px;
   transition: 0.13s ease-in-out;
   cursor: pointer;
+  border: 2px solid;
 }
 
 .action-btn.btn.save-btn:hover {
@@ -449,7 +450,7 @@ span {
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr;
   background: white;
-  box-shadow: inset 0px -5px 0px #dddddd, 0px 0px 0px #f4f5f6;
+  box-shadow: inset 0px -5px 0px #dddddd, 0px -2px 0px #f4f5f6;
   border-radius: 40px;
   transition: 0.13s ease-in-out;
   z-index: 1;
@@ -715,6 +716,7 @@ fieldset:disabled .btn,
   transition: transform 120ms ease-in;
   /* font-weight: 300; */
   font-size: 12px;
+  font-weight: 600;
   line-height: 1.2;
 }
 

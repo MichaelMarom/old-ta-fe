@@ -16,7 +16,8 @@ const slice = createSlice({
         },
         setNewSubj: (state, action) => {
             state.isLoading = false;
-            state.count = action.payload[0].count
+            console.log(action.payload)
+            state.count = action.payload?.[0]?.count
         }
     },
 });
