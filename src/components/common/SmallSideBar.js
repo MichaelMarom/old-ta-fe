@@ -43,7 +43,7 @@ const SmallSideBar = ({ message = "", inMins }) => {
             onMouseLeave={() => setIsHovered(false)}
           >
             <div
-              className="d-flex justify-content-center align-items-center border p-2 rounded-left rounded-4 border-dark m-0 cursor-pointer "
+              className="d-flex justify-content-center align-items-center border p-2 rounded-end rounded-4 border-dark m-0 cursor-pointer "
               style={{
                 transition: "all 0.3s ease-in",
                 width: ishovered

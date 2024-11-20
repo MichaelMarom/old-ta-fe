@@ -185,23 +185,26 @@ const Marketing = () => {
       if (messageType === 'ext-temp' && emails.length) {
         setSendButtonLoading(true)
 
-        console.log(emails)
-        await send_templated_tutor_marketing_email({ emails, subject: 'Marketing Emails', htmlTemplate: uploadedHtmlContent });
+        const response = await send_templated_tutor_marketing_email({ emails, subject: 'Marketing Emails', htmlTemplate: uploadedHtmlContent });
+        console.log(response)
         setUploadedHtmlContent('')
         setFileUploaded('')
         setSelectedRows([])
         setData([])
         setSendButtonLoading(false)
-        if(csvFile.current){
+        if (csvFile.current) {
           csvFile.current.value = null;
         }
-        if(externmailTempFile.current){
+        if (externmailTempFile.current) {
           externmailTempFile.current.value = null;
         }
         toast.success('Email sent successfully')
       }
     }
-    catch (err) { }
+
+    catch (err) {
+      setSendButtonLoading(false)
+    }
   }
 
   return (
