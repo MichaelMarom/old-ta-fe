@@ -204,6 +204,7 @@ const Marketing = () => {
 
     catch (err) {
       setSendButtonLoading(false)
+      toast.error(err?.response?.data?.body?.response?.body?.errors?.[0])
     }
   }
 

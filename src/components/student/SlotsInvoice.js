@@ -109,7 +109,6 @@ const SlotsInvoice = ({
                         {introDiscountEnabled && selectedType === "intro" ? (
                           <>
                             <td className="border-0">
-                              {" "}
                               <s>{rate}</s> ${rateHalf(rate)}
                             </td>
                           </>
@@ -118,6 +117,16 @@ const SlotsInvoice = ({
                         )}
                       </tr>
                     ))}
+                     <tr>
+                      <td className="border-0 k"></td>
+                      <td className="border-0 text-dar"><div className="d-flex gap-1"><Tooltip iconSize={15} 
+                      text={"There is one time booking charge for each invoice when you book one lesson or multi lessons"}
+                       width="200px" />
+                       <p>Booking Fee:</p>
+                        </div>
+                        </td>
+                      <td className="border-0 fw-bold">${process.env.REACT_APP_LESSON_BOOKING_FEE}</td>
+                    </tr>
                     <tr>
                       <td className="border-0 fw-bold">Subtotal:</td>
                       <td className="border-0"></td>
