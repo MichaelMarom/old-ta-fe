@@ -131,7 +131,7 @@ export const handleBulkEventCreate = async (
     selectedSlots[0].type === "reserved" &&
     lessons.map((les) => les.type === "reserved").length > 6
   ) {
-    toast.warning("You Can Reserve no more than 6 slots");
+    toast.warning("You Can not Reserve more than 6 slots");
     return;
   }
 

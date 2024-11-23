@@ -41,7 +41,6 @@ const Discounts = () => {
   let [ActivateSubscriptionOption, setActivateSubscriptionOption] =
     useState("");
   let [SubscriptionPlan, setSubscriptionPlan] = useState("");
-  const [sendCodeModalOpen, setSendCodeModalOpen] = useState(false);
 
   const [discountEnabled, setDiscountEnabled] = useState(false);
   const [classTeaching, setClassTeaching] = useState(false);

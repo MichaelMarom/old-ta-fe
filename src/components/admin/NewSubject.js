@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import {
+  accept_new_subject,
   delete_new_subject,
   get_tutor_new_subject,
-  post_new_subject,
 } from "../../axios/admin";
 import Loading from "../common/Loading";
 import { toast } from "react-toastify";
@@ -53,24 +53,15 @@ const TutorTable = () => {
   }, [actionTaken]);
 
   let acceptNewSubject = async (id, subject, AcademyId) => {
-    const response = await post_new_subject(id, subject, AcademyId);
-    if (response.bool) {
-      setActionTaken(!actionTaken);
-      toast.success("Record Updated Successfully!");
-    } else {
-      toast.error("Failed to Update the Record");
-    }
+    const response = await accept_new_subject(id, subject, AcademyId);
+    console.log(response)
+    if (response.updated) toast.success("Subject Accepted")
   };
 
   let declineNewSubject = async (subject, AcademyId) => {
     const response = await delete_new_subject(subject, AcademyId);
-
-    if (response.bool) {
-      setActionTaken(!actionTaken);
-      toast.success("Record Updated Successfully!");
-    } else {
-      toast.error("Failed to Update the Record");
-    }
+    console.log(response)
+    if (response.updated) toast.success("Subject Declined")
   };
 
   if (loading) return <Loading />;
@@ -96,48 +87,48 @@ const TutorTable = () => {
           <tbody>
             {data.length > 0
               ? data.map((item) => {
-                  return (
-                    <tr key={item.SID}>
-                      <td data-src={""}>{item.FirstName}</td>
-                      <td data-src={""}>{item.subject}</td>
-                      <td data-src={""}>{item.faculty}</td>
-                      <td data-src={""}>{item.reason}</td>
-                      <td data-src={""}>
-                        {item.IsRejected ? <RxCrossCircled size={20} /> : "-"}
-                      </td>
+                return (
+                  <tr key={item.SID}>
+                    <td data-src={""}>{item.FirstName}</td>
+                    <td data-src={""}>{item.subject}</td>
+                    <td data-src={""}>{item.faculty}</td>
+                    <td data-src={""}>{item.reason}</td>
+                    <td data-src={""}>
+                      {item.IsRejected ? <RxCrossCircled size={20} /> : "-"}
+                    </td>
 
-                      <td data-src="">
-                        <>
-                          <button
-                            onClick={() =>
-                              acceptNewSubject(
-                                item.facultyId,
-                                item.subject,
-                                item.AcademyId[0]
-                              )
-                            }
-                            className="action-btn btn btn-sm"
-                          >
-                            <div className="button__content">
-                              <p className="button__text">Accept </p>
-                            </div>
-                          </button>
-                          <button
-                            onClick={() =>
-                              declineNewSubject(item.subject, item.AcademyId[0])
-                            }
-                            className="action-btn btn btn-sm"
-                            disabled={item.IsRejected}
-                          >
-                            <div className="button__content">
-                              <p className="button__text">Decline </p>
-                            </div>
-                          </button>
-                        </>
-                      </td>
-                    </tr>
-                  );
-                })
+                    <td data-src="">
+                      <>
+                        <button
+                          onClick={() =>
+                            acceptNewSubject(
+                              item.facultyId,
+                              item.subject,
+                              item.AcademyId[0]
+                            )
+                          }
+                          className="action-btn btn btn-sm"
+                        >
+                          <div className="button__content">
+                            <p className="button__text">Accept </p>
+                          </div>
+                        </button>
+                        <button
+                          onClick={() =>
+                            declineNewSubject(item.subject, item.AcademyId[0])
+                          }
+                          className="action-btn btn btn-sm"
+                          disabled={item.IsRejected}
+                        >
+                          <div className="button__content">
+                            <p className="button__text">Decline </p>
+                          </div>
+                        </button>
+                      </>
+                    </td>
+                  </tr>
+                );
+              })
               : null}
           </tbody>
         </table>

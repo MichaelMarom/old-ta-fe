@@ -2,7 +2,7 @@ import { apiClient, showErrorToast } from "./config";
 
 export let delete_new_subject = async (subject, AcademyId) => {
   try {
-    const { data } = await apiClient.post("/admin/delete-new-subject", {
+    const data = await apiClient.post("/admin/delete-new-subject", {
       subject,
       AcademyId,
     });
@@ -12,9 +12,21 @@ export let delete_new_subject = async (subject, AcademyId) => {
   }
 };
 
-export let post_new_subject = async (id, subject, AcademyId) => {
+// export let post_new_subject = async (id, subject, AcademyId) => {
+//   try {
+//     const { data } = apiClient.post("/admin/add-new-subject", {
+//       id,
+//       subject,
+//       AcademyId,
+//     });
+//     return data;
+//   } catch (err) {
+//     showErrorToast(err);
+//   }
+// };
+export let accept_new_subject = async (id, subject, AcademyId) => {
   try {
-    const { data } = apiClient.post("/admin/post-new-subject", {
+    const  data =await apiClient.post("/admin/accept-new-subject", {
       id,
       subject,
       AcademyId,

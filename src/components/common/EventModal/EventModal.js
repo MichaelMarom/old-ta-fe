@@ -45,6 +45,7 @@ function EventModal({
   );
   const [invoiceNum, setInvoiceNum] = useState(null);
 
+
   // const formatUTC = (dateInt, addOffset = false) => {
   //   let date = !dateInt || dateInt.length < 1 ? new Date() : new Date(dateInt);
   //   const currentDate = new Date();
@@ -113,7 +114,7 @@ function EventModal({
   };
 
   const convertReservedToBooked = () => {
-    dispatch(updateStudentLesson(clickedSlot.id, { ...clickedSlot, type: "booked", title:"Booked" })
+    dispatch(updateStudentLesson(clickedSlot.id, { ...clickedSlot, type: "booked", title: "Booked" })
     )
   }
 
@@ -194,7 +195,19 @@ function EventModal({
     selectedTutor,
     student,
   ]);
+  let subscription_cols = [
+    { Header: "Package" },
+    { Header: "Hours" },
+    { Header: "Discount" },
+  ];
 
+  let subscription_discount = [
+    { discount: "0%", hours: "1-5", package: "A-0" },
+    { discount: "5.0%", hours: "6-11", package: "A-6" },
+    { discount: "10.0%", hours: "12-17", package: "A-12" },
+    { discount: "15.0%", hours: "18-23", package: "A-18" },
+    { discount: "20.0%", hours: "24+", package: "A-24" },
+  ];
   const conductedAndReviewedIntroLesson = () => {
     const introExist = lessons?.some((slot) => {
       return (
@@ -393,6 +406,27 @@ function EventModal({
             </button>
           </div>
         )}
+        <div className="text-danger fw-bold mx-3">
+          {(() => {
+            const totalSlots = lessons.filter(lesson => lesson.studentId === student.AcademyId).length + selectedSlots.length;
+
+            if (totalSlots < 6) {
+              const remainingSlots = 6 - totalSlots;
+              return `Book ${remainingSlots} more ${remainingSlots > 1 ? 'slots' : 'slot'} to get 5% discount.`;
+            } else if (totalSlots < 12) {
+              const remainingSlots = 12 - totalSlots;
+              return `Book ${remainingSlots} more ${remainingSlots > 1 ? 'lessons' : 'lesson'} to get 11% discount.`;
+            } else if (totalSlots < 18) {
+              const remainingSlots = 18 - totalSlots;
+              return `Book ${remainingSlots} more ${remainingSlots > 1 ? 'lessons' : 'lesson'} to get 15% discount.`;
+            } else if (totalSlots < 24) {
+              const remainingSlots = 24 - totalSlots;
+              return `Book ${remainingSlots} more ${remainingSlots > 1 ? 'lessons' : 'lesson'} to get 20% discount.`;
+            } else {
+              return `Congratulations! You've reached the maximum discount of 20%.`;
+            }
+          })()}
+        </div>
         {(selectedType === "intro" || selectedType === "booked") && (
           <div>
             <SlotsInvoice
@@ -411,8 +445,34 @@ function EventModal({
               handleAccept={handleAccept}
               handleClose={onRequestClose}
             />
+
           </div>
         )}
+
+
+
+        {/* {selectedTutor.activateSubscriptionOption && (
+          <table className="" style={{ width: "90%", margin: "5%" }}>
+            <thead>
+              <tr>
+                {subscription_cols.map((item) => (
+                  <th key={item.Header}>{item.Header}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {subscription_discount.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.package}</td>
+
+                  <td>{item.hours}</td>
+
+                  <td>{item.discount}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )} */}
       </div>
     </LeftSideBar>
   );

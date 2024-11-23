@@ -2,17 +2,13 @@ import { v4 as uuidv4 } from "uuid";
 import { apiClient, showErrorToast } from "./config";
 import { capitalizeFirstLetter } from "../utils/common";
 
-export let upload_new_subject = (body) => {
-  return new Promise((resolve, reject) => {
-    apiClient
+export let upload_new_subject = async (body) => {
+  try {
+    const {data} = await apiClient
       .post("/tutor/new-subject", body)
-      .then((result) => {
-        resolve(result.data);
-      })
-      .catch((err) => {
-        showErrorToast(err);
-      });
-  });
+    return data
+  }
+  catch (err) { showErrorToast(err); }
 };
 
 export const uploadFile = (file) => {

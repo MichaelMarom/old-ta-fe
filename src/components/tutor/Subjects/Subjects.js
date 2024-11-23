@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useEffect } from "react";
-import {
+import { 
   get_faculties,
   get_rates,
   new_subj_request_exist,

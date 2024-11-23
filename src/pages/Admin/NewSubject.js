@@ -4,8 +4,6 @@ import AdminLayout from "../../layouts/AdminLayout";
 const TutorNewSubject = () => {
     return ( 
         <NewSubject />
-        // <AdminLayout >
-        // </AdminLayout>
      );
 }
  

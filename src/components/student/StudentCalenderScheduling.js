@@ -38,16 +38,18 @@ const StudentCalenderScheduling = () => {
   }, [selectedTutor, navigate]);
 
   let subscription_cols = [
+    { Header: "Package" },
     { Header: "Hours" },
-    { Header: "Select" },
     { Header: "Discount" },
   ];
-  let subscription_discount = [
-    { discount: "0%", hours: "1-5", value: 5 },
-    { discount: "6.0%", hours: 6, value: 6 },
-    { discount: "12.0%", hours: 12, value: 12 },
-  ];
 
+  let subscription_discount = [
+    { discount: "0%", hours: "1-5", package: "A-0" },
+    { discount: "5.0%", hours: "6-11", package: "A-6" },
+    { discount: "10.0%", hours: "12-17", package: "A-12" },
+    { discount: "15.0%", hours: "18-23", package: "A-18" },
+    { discount: "20.0%", hours: "24+", package: "A-24" },
+  ];
   useEffect(() => {
     setTutorTime(convertGMTOffsetToLocalString(selectedTutor.GMT));
     setActiveSubscriptionHours(selectedTutor.discountHours);
@@ -114,45 +116,28 @@ const StudentCalenderScheduling = () => {
         <div className={`d-flex col-3 `} >
           <div className="d-flex ">
             <div className="d-flex flex-column">
+              <h6 className="m-0 text-center " style={{lineHeight:"0.7"}}>Subscription Discount</h6>
               {selectedTutor.activateSubscriptionOption && (
-                <div className="px-2 mt-3">
-                  <h6 className="text-center m-0 ">Subscription Discount</h6>
-                  <div className="">
-                    <table>
-                      <thead>
-                        <tr>
-                          {subscription_cols.map((item) => (
-                            <th key={item.Header}>{item.Header}</th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {subscription_discount.map((item, index) => (
-                          <tr key={index}>
-                            <td>{item.hours}</td>
-                            <td>
-                              <input
-                                onChange={() =>
-                                  setActiveSubscriptionHours(item.value)
-                                }
-                                type="radio"
-                                checked={item.value === subscriptionHours}
-                                name="student-subscription"
-                                id="student-subscription"
-                                style={{
-                                  height: "20px",
-                                  width: "20px",
-                                }}
-                              />
-                            </td>
+                <table className="" style={{ width: "90%", margin: "5%" }}>
+                  <thead>
+                    <tr>
+                      {subscription_cols.map((item) => (
+                        <th key={item.Header}>{item.Header}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {subscription_discount.map((item, index) => (
+                      <tr key={index}>
+                        <td>{item.package}</td>
 
-                            <td>{item.discount}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                        <td>{item.hours}</td>
+
+                        <td>{item.discount}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               )}
               <div
                 className={`w-100 align-items-center justify-content-between mt-3 d-flex flex-column `}
