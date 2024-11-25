@@ -407,7 +407,7 @@ function EventModal({
           </div>
         )}
         <div className="text-danger fw-bold mx-3">
-          {(() => {
+          {!!lessons.filter(lesson => lesson.studentId === student.AcademyId).length && (() => {
             const totalSlots = lessons.filter(lesson => lesson.studentId === student.AcademyId).length + selectedSlots.length;
 
             if (totalSlots < 6) {

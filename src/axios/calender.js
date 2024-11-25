@@ -89,9 +89,21 @@ export const get_tutor_bookings = async (tutorId) => {
   }
 };
 
-export const save_student_events = async (body) => {
+/**
+ * 
+ * @param {Object} invoice  InvoiceId: sql.NVarChar(200),
+    StudentId: sql.VarChar(100),
+    TutorId: sql.VarChar(100),
+    BookingFee: sql.Decimal(18, 2), 
+    TotalLessons: sql.Int,
+    DiscountAmount: sql.Decimal(18, 2), 
+    InvoiceDate: sql.DateTime
+ * @param {Array} lessons 
+ * 
+ */
+export const createStudentBookings = async (invoice, lessons) => {
   try {
-    await apiClient.post("/student/booking", body);
+    await apiClient.post("/student/booking", {invoice, lessons});
   } catch (e) {
     showErrorToast(e);
   }

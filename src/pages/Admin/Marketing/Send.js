@@ -7,6 +7,8 @@ import _ from 'lodash';
 import { get_email_temp_list, get_sms_mms_list, send_email, send_sms, send_templated_tutor_marketing_email } from '../../../axios/admin';
 import { toast } from 'react-toastify';
 import HtmlFilePreview from './EmailTemplateUploader';
+import Input from '../../../components/common/Input';
+import { MandatoryFieldLabel } from '../../../components/tutor/TutorSetup';
 
 const Marketing = () => {
   const [headers, setHeaders] = useState([]);
@@ -26,6 +28,7 @@ const Marketing = () => {
   const [fileUploaded, setFileUploaded] = useState(false)
   const [isExternalTemplateSelected, setIsExternalTemplateSelected] = useState('');
   const [uploadedHtmlContent, setUploadedHtmlContent] = useState('');
+  const [subject, setEmailSubject] = useState('')
 
   const csvFile = useRef(null);
   const externmailTempFile = useRef(null);
@@ -87,9 +90,6 @@ const Marketing = () => {
       setIsExternalTemplateSelected(false);
     }
   };
-  const handleHtmlFileSelect = (content) => {
-  };
-
 
   useEffect(() => {
     if (messageType === 'ext-temp') {
@@ -185,8 +185,11 @@ const Marketing = () => {
       if (messageType === 'ext-temp' && emails.length) {
         setSendButtonLoading(true)
 
-        const response = await send_templated_tutor_marketing_email({ emails, subject: 'Marketing Emails', htmlTemplate: uploadedHtmlContent });
-        console.log(response)
+        subject.length && await send_templated_tutor_marketing_email({
+          emails,
+          subject,
+          htmlTemplate: uploadedHtmlContent
+        });
         setUploadedHtmlContent('')
         setFileUploaded('')
         setSelectedRows([])
@@ -387,8 +390,13 @@ const Marketing = () => {
                   {message.length > 143 && <p className='text-danger w-100 text-end' style={{ fontSize: "12px" }}>
                     Maximum limit 144 characters</p>} */}
                   </> :
-                  <HtmlFilePreview onFileSelect={setUploadedHtmlContent}
-                    fileContent={uploadedHtmlContent} externmailTempFile={externmailTempFile} />
+                  <>
+                    <div className='m-2'>
+                      <Input value={subject} setValue={setEmailSubject} label={<MandatoryFieldLabel text={"Enter Subject"} />} />
+                    </div>
+                    <HtmlFilePreview onFileSelect={setUploadedHtmlContent}
+                      fileContent={uploadedHtmlContent} externmailTempFile={externmailTempFile} />
+                  </>
               }
 
 

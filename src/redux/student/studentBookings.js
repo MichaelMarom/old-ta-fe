@@ -1,6 +1,7 @@
 // slice.js
 import { createSlice } from "@reduxjs/toolkit";
 import {
+  createStudentBookings,
   delete_student_lesson,
   get_student_lesson,
   get_student_tutor_events,
@@ -125,12 +126,27 @@ export function postStudentLesson(data) {
     await save_student_lesson(data);
     const chatExists = getState().chat.chats.filter(
       (chat) => chat.AcademyId === data.tutorId
-      );
+    );
 
-      //create chat if chat is not initiated: it will create on first lessons
-      !chatExists.length &&
+    //create chat if chat is not initiated: it will create on first lessons
+    !chatExists.length &&
       (await create_chat({ User1ID: data.studentId, User2ID: data.tutorId }));
     return await dispatch(getStudentLessons(data.studentId, data.tutorId));
+  };
+}
+
+export function postStudentBookingWithInvoiceAndLessons(invoice, lessons) {
+  return async (dispatch, getState) => {
+    dispatch(slice.actions.isLoading(true));
+    await createStudentBookings(invoice, lessons);
+    const chatExists = getState().chat.chats.filter(
+      (chat) => chat.AcademyId === lessons[0].tutorId
+    );
+
+    //create chat if chat is not initiated: it will create on first lessons
+    !chatExists.length &&
+      (await create_chat({ User1ID: lessons[0].studentId, User2ID: lessons[0].tutorId }));
+    return await dispatch(getStudentLessons(lessons[0].studentId, lessons[0].tutorId));
   };
 }
 
