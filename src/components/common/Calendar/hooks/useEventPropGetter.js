@@ -9,14 +9,16 @@ const useEventPropGetter = ({
 }) => {
   return useCallback(
     (event) => {
+      // other subject or other tutor
       const secSubject = lessons?.some(
-        (slot) => slot.type === "intro" && event.subject !== selectedTutor.subject
+        (slot) => slot.type === "intro" && (event.subject !== selectedTutor.subject ||
+          event.tutorId !== selectedTutor.academyId)
       );
 
       const otherStudentSession = isStudentLoggedIn
         ? lessons?.some(
-            (slot) => slot.studentName !== student.FirstName && event.id === slot.id
-          )
+          (slot) => slot.studentName !== student.FirstName && event.id === slot.id
+        )
         : false;
 
       const deletedSession = lessons?.some(

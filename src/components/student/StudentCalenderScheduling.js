@@ -160,9 +160,7 @@ const StudentCalenderScheduling = () => {
                         </div>
 
                         <div className="flex-grow-1">
-                          <h5 className="mb-1"> {capitalizeFirstLetter(
-                            formatName(selectedTutor.firstName, selectedTutor.lastName)
-                          )}</h5>
+                          <h5 className="mb-1"> {selectedTutor.tutorScreenName}</h5>
                           <p className="mb-1">
                             <FaBook className="me-2" />
                             {selectedTutor.subject}

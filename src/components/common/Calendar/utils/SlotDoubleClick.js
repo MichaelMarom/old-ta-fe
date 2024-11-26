@@ -6,6 +6,7 @@ import {
   isPastDate,
 } from "./calenderUtils";
 import { toast } from "react-toastify";
+import { FeedbackMissing } from "../ToastMessages";
 
 export const handleSlotDoubleClick = (
   slotInfo,
@@ -372,13 +373,45 @@ const handleStudentClickInWeekOrDayTab = (
       (dateTime) => convertToDate(dateTime).getTime() === clickedDate.getTime()
     );
 
-    //student general
-    const existInReservedSlots = lessons
-      .filter((lesson) => lesson.type === "reserved")
+    //student general: lesson already exist in selected slot
+    const existInOccopiedSlots = lessons
       ?.some(
-        (dateTime) =>
-          convertToDate(dateTime).getTime() === clickedDate.getTime()
+        (lesson) =>
+          convertToDate(lesson.start).getTime() === clickedDate.getTime() ||
+          convertToDate(moment(lesson.start).add(30, 'minute').toDate()).getTime() === clickedDate.getTime()
       );
+
+    if (
+      lessons?.some((slot) => {
+        return (
+          slot.type === "intro" &&
+          slot.subject === selectedTutor.subject &&
+          slot.studentId === student.AcademyId &&
+          slot.tutorId === selectedTutor.academyId &&
+          slot.end.getTime() < new Date().getTime() &&
+          !slot.ratingByStudent
+        );
+      })
+    ) {
+      return toast.warning(`Your Feedback for the "${selectedTutor.subject}" LESSON is missing.
+           You must complete the feedback before booking!`
+      );
+    }
+    if (
+      lessons?.some((slot) => {
+        return (
+          slot.type === "intro" &&
+          slot.subject === selectedTutor.subject &&
+          slot.studentId === student.AcademyId &&
+          slot.tutorId === selectedTutor.academyId &&
+          slot.end.getTime() > new Date().getTime()
+        );
+      })
+    ) {
+      return toast.warning(`Your intro session must be conducted first for the "${selectedTutor.subject}" LESSON`
+      );
+    }
+
 
     const introExistsInLessons = lessons.some(
       (lesson) =>
@@ -406,15 +439,15 @@ const handleStudentClickInWeekOrDayTab = (
     } else {
       console.log(
         introExistsInLessons,
-        existInReservedSlots,
+        existInOccopiedSlots,
         lessons,
         student,
         selectedTutor
       );
-      if (!existInReservedSlots) {
+      if (!existInOccopiedSlots) {
         if (introExistsInLessons) {
-          if(selectedSlots.some((slot) => convertToDate(slot.start).getTime() === convertToDate(startEventTime).getTime())) return
-          if (selectedSlots.length < 6 ) {
+          if (selectedSlots.some((slot) => convertToDate(slot.start).getTime() === convertToDate(startEventTime).getTime())) return
+          if (selectedSlots.length < 6) {
             setSelectedSlots([
               ...selectedSlots,
               {

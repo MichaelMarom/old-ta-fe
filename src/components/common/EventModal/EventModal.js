@@ -155,21 +155,22 @@ function EventModal({
   }, [selectedType]);
 
   useEffect(() => {
-    const existIntroSession = lessons?.some(
+    const existIntroSessionOfSameSubjectSameTutor = lessons?.some(
       (slot) =>
         slot.type === "intro" &&
         selectedTutor.subject === slot.subject &&
+        slot.tutorId === selectedTutor.academyId &&
         (!isStudentLoggedIn || slot.studentId === student.AcademyId)
     );
     if (
-      existIntroSession &&
+      existIntroSessionOfSameSubjectSameTutor &&
       selectedType === "intro" &&
       selectedSlots[0]?.start
     ) {
       toast.warning("Cannot add more than 1 Intro Session!");
       setCanPostEvents(false);
     } else if (
-      !existIntroSession &&
+      !existIntroSessionOfSameSubjectSameTutor &&
       selectedType !== "intro" &&
       selectedSlots[0]?.start
     ) {
@@ -178,7 +179,7 @@ function EventModal({
         `Your first Session must be Introduction session for ${selectedTutor.subject}!`
       );
     } else if (
-      existIntroSession &&
+      existIntroSessionOfSameSubjectSameTutor &&
       selectedType === "intro" &&
       selectedSlots.length > 1
     ) {
@@ -200,7 +201,7 @@ function EventModal({
     { Header: "Hours" },
     { Header: "Discount" },
   ];
-
+console.log(lessons)
   let subscription_discount = [
     { discount: "0%", hours: "1-5", package: "A-0" },
     { discount: "5.0%", hours: "6-11", package: "A-6" },
@@ -213,7 +214,8 @@ function EventModal({
       return (
         slot.type === "intro" &&
         slot.subject === selectedTutor.subject &&
-        slot.studentId === student.AcademyId
+        slot.studentId === student.AcademyId &&
+        slot.tutorId === selectedTutor.tutorId
         // slot.end.getTime() > new Date().getTime()
       );
     });
@@ -222,6 +224,7 @@ function EventModal({
         slot.type === "intro" &&
         slot.subject === selectedTutor.subject &&
         slot.studentId === student.AcademyId &&
+        slot.tutorId === selectedTutor.tutorId &&
         slot.end.getTime() < (new Date()).getTime() &&
         slot.ratingByStudent
       );
@@ -407,25 +410,30 @@ function EventModal({
           </div>
         )}
         <div className="text-danger fw-bold mx-3">
-          {!!lessons.filter(lesson => lesson.studentId === student.AcademyId).length && (() => {
-            const totalSlots = lessons.filter(lesson => lesson.studentId === student.AcademyId).length + selectedSlots.length;
+          {!!lessons.filter(lesson => lesson.studentId === student.AcademyId &&
+            lesson.tutorId === selectedTutor.academyId &&
+            lesson.subject === selectedTutor.subject).length && (() => {
 
-            if (totalSlots < 6) {
-              const remainingSlots = 6 - totalSlots;
-              return `Book ${remainingSlots} more ${remainingSlots > 1 ? 'slots' : 'slot'} to get 5% discount.`;
-            } else if (totalSlots < 12) {
-              const remainingSlots = 12 - totalSlots;
-              return `Book ${remainingSlots} more ${remainingSlots > 1 ? 'lessons' : 'lesson'} to get 11% discount.`;
-            } else if (totalSlots < 18) {
-              const remainingSlots = 18 - totalSlots;
-              return `Book ${remainingSlots} more ${remainingSlots > 1 ? 'lessons' : 'lesson'} to get 15% discount.`;
-            } else if (totalSlots < 24) {
-              const remainingSlots = 24 - totalSlots;
-              return `Book ${remainingSlots} more ${remainingSlots > 1 ? 'lessons' : 'lesson'} to get 20% discount.`;
-            } else {
-              return `Congratulations! You've reached the maximum discount of 20%.`;
-            }
-          })()}
+              const totalSlots = lessons.filter(lesson => lesson.studentId === student.AcademyId &&
+                lesson.tutorId === selectedTutor.academyId &&
+                lesson.subject === selectedTutor.subject).length + selectedSlots.length;
+
+              if (totalSlots < 6) {
+                const remainingSlots = 6 - totalSlots;
+                return `Book ${remainingSlots} more ${remainingSlots > 1 ? 'slots' : 'slot'} to get 5% discount.`;
+              } else if (totalSlots < 12) {
+                const remainingSlots = 12 - totalSlots;
+                return `Book ${remainingSlots} more ${remainingSlots > 1 ? 'lessons' : 'lesson'} to get 11% discount.`;
+              } else if (totalSlots < 18) {
+                const remainingSlots = 18 - totalSlots;
+                return `Book ${remainingSlots} more ${remainingSlots > 1 ? 'lessons' : 'lesson'} to get 15% discount.`;
+              } else if (totalSlots < 24) {
+                const remainingSlots = 24 - totalSlots;
+                return `Book ${remainingSlots} more ${remainingSlots > 1 ? 'lessons' : 'lesson'} to get 20% discount.`;
+              } else {
+                return `Congratulations! You've reached the maximum discount of 20%.`;
+              }
+            })()}
         </div>
         {(selectedType === "intro" || selectedType === "booked") && (
           <div>

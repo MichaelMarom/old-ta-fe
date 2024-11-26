@@ -11,6 +11,7 @@ import { FeedbackMissing } from "../ToastMessages";
 import { toast } from "react-toastify";
 import { addInvoiceDetails } from "../../../../axios/student";
 import { generateRandomId } from "../../../../utils/common";
+import { calculateDiscount } from "./calenderUtils";
 
 export const handlePostpone = (
   setIsTutorSideSessionModalOpen,
@@ -99,6 +100,7 @@ export const handleBulkEventCreate = async (
         slot.type === "intro" &&
         slot.subject === selectedTutor.subject &&
         slot.studentId === student.AcademyId &&
+        slot.tutorId === selectedTutor.academyId &&
         slot.end.getTime() > new Date().getTime()
       );
     })
@@ -157,13 +159,13 @@ export const handleBulkEventCreate = async (
       tutorId: selectedTutor.academyId,
       rate:
         // type === "intro" && selectedTutor.introDiscountEnabled
-          // ? parseInt(selectedTutor.rate.split("$")[1]) / 2:
-           parseInt(selectedTutor.rate.split("$")[1]),
+        // ? parseInt(selectedTutor.rate.split("$")[1]) / 2:
+        parseInt(selectedTutor.rate.split("$")[1]),
     };
   });
-console.log(selectedTutor)
+  console.log(selectedTutor)
   //handle delete type later todo
-  if (type === "reserved" || type === "intro") {
+  if (type === "intro") {
     updatedSelectedSlots.map((lesson) => {
       // const res = addInvoiceDetails({
       //   InvoiceId: generateRandomId(), StudentId: student.AcademyId,
@@ -173,19 +175,30 @@ console.log(selectedTutor)
       // })
       // console.log(res)
     });
+
     const invoice = {
       InvoiceId: generateRandomId(),
       StudentId: student.AcademyId,
       TutorId: selectedTutor.academyId,
       TotalLessons: updatedSelectedSlots.length,
-      DiscountAmount: updatedSelectedSlots[0].type === "intro" ? 50 : 0,
+      DiscountAmount: 50,
       InvoiceDate: moment().utc()
     }
     dispatch(postStudentBookingWithInvoiceAndLessons(invoice, updatedSelectedSlots));
   } else if (type === "booked") {
-    updatedSelectedSlots.map((lesson) => {
-      // dispatch(postStudentLesson(lesson));
-    });
+    console.log(calculateDiscount(lessons, selectedSlots, selectedTutor, student))
+    // const invoice = {
+    //   InvoiceId: generateRandomId(),
+    //   StudentId: student.AcademyId,
+    //   TutorId: selectedTutor.academyId,
+    //   TotalLessons: updatedSelectedSlots.length,
+    //   DiscountAmount: updatedSelectedSlots[0].type === "intro" ? 50 : 0,
+    //   InvoiceDate: moment().utc()
+    // }
+    // dispatch(postStudentBookingWithInvoiceAndLessons(invoice, updatedSelectedSlots));
+  }
+  else {
+
   }
   // student.AcademyId && dispatch(await setStudentSessions(student));
 };

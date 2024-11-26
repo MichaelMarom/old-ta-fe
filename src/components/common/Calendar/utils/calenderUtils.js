@@ -34,6 +34,29 @@ export const isEventAlreadyExist = (lessons, slotInfo) => {
   );
 };
 
+export const extractLoggedinStudentLesson = (lessons, selectedTutor, student) => {
+  return lessons.filter((lesson) => lesson.tutorId === selectedTutor.tutorId &&
+    lesson.studentId === student.AcademyId &&
+    lesson.subject === selectedTutor.subject
+  )
+}
+
+export function calculateDiscount(allLessons, selectedSlots, selectedTutor, student) {
+  const totalSlots = extractLoggedinStudentLesson(allLessons, selectedTutor, student) + selectedSlots;
+
+  if (totalSlots >= 24) {
+    return 20; // Maximum discount
+  } else if (totalSlots >= 18) {
+    return 15;
+  } else if (totalSlots >= 12) {
+    return 11;
+  } else if (totalSlots >= 6) {
+    return 5;
+  } else {
+    return 0; // No discount for less than 6 slots
+  }
+}
+
 export const getSecond30MinsSlotWhenDoubleClick = (start, end) => {
   const secSlot = moment(convertToDate(start)).minutes() === 30;
   let endTime = secSlot
@@ -83,7 +106,7 @@ export const filterOtherStudentAndTutorSession = (
       slot.studentId === (studentId ? studentId : student.AcademyId) &&
       slot.tutorId === tutorId
   );
- 
+
   return {
     reservedSlots: tutorId ? updatedReservedSlots : reservedSlots,
     bookedSlots: tutorId ? updatedBookedSlots : bookedSlots,
