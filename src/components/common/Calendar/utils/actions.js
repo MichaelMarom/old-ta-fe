@@ -116,6 +116,7 @@ export const handleBulkEventCreate = async (
         slot.type === "intro" &&
         slot.subject === selectedTutor.subject &&
         slot.studentId === student.AcademyId &&
+        slot.tutorId === selectedTutor.academyId &&
         slot.end.getTime() < new Date().getTime() &&
         !slot.ratingByStudent
       );
@@ -166,16 +167,6 @@ export const handleBulkEventCreate = async (
   console.log(selectedTutor)
   //handle delete type later todo
   if (type === "intro") {
-    updatedSelectedSlots.map((lesson) => {
-      // const res = addInvoiceDetails({
-      //   InvoiceId: generateRandomId(), StudentId: student.AcademyId,
-      //   TutorId: selectedTutor.academyId, TotalLessons: updatedSelectedSlots.length,
-      //    DiscountAmount: lesson.type === "intro" ? 50 : 0,
-      //   InvoiceDate: moment().utc()
-      // })
-      // console.log(res)
-    });
-
     const invoice = {
       InvoiceId: generateRandomId(),
       StudentId: student.AcademyId,
@@ -186,19 +177,18 @@ export const handleBulkEventCreate = async (
     }
     dispatch(postStudentBookingWithInvoiceAndLessons(invoice, updatedSelectedSlots));
   } else if (type === "booked") {
-    console.log(calculateDiscount(lessons, selectedSlots, selectedTutor, student))
-    // const invoice = {
-    //   InvoiceId: generateRandomId(),
-    //   StudentId: student.AcademyId,
-    //   TutorId: selectedTutor.academyId,
-    //   TotalLessons: updatedSelectedSlots.length,
-    //   DiscountAmount: updatedSelectedSlots[0].type === "intro" ? 50 : 0,
-    //   InvoiceDate: moment().utc()
-    // }
-    // dispatch(postStudentBookingWithInvoiceAndLessons(invoice, updatedSelectedSlots));
+    const invoice = {
+      InvoiceId: generateRandomId(),
+      StudentId: student.AcademyId,
+      TutorId: selectedTutor.academyId,
+      TotalLessons: updatedSelectedSlots.length,
+      DiscountAmount: calculateDiscount(lessons, selectedSlots, selectedTutor, student),
+      InvoiceDate: moment().utc()
+    }
+    dispatch(postStudentBookingWithInvoiceAndLessons(invoice, updatedSelectedSlots));
   }
   else {
-
+    updatedSelectedSlots.map(lesson => dispatch(postStudentLesson(lesson)))
   }
   // student.AcademyId && dispatch(await setStudentSessions(student));
 };

@@ -197,7 +197,7 @@ const Actions = ({
       withBackRolePrefix: true,
     },
     {
-      next: "calender",
+      next: "calendar",
       current: "feedback",
       back: "accounting",
       withCurrentRolePrefix: true,
@@ -206,7 +206,7 @@ const Actions = ({
     },
     {
       next: "term-of-use",
-      current: "calender",
+      current: "calendar",
       back: "feedback",
       withCurrentRolePrefix: true,
       withNextRolePrefix: true,
@@ -215,7 +215,7 @@ const Actions = ({
     {
       next: "chat",
       current: "term-of-use",
-      back: "calender",
+      back: "calendar",
       withCurrentRolePrefix: true,
       withNextRolePrefix: true,
       withBackRolePrefix: true,

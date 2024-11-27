@@ -69,7 +69,7 @@ const Header = () => {
     { name: "Faculties", url: "/student/faculties" },
     { name: "Accounting", url: "/student/accounting" },
     { name: "Feedback", url: "/student/feedback" },
-    { name: "Calender", url: "/student/calender" },
+    { name: "Calendar", url: "/student/calendar" },
     { name: "Terms Of Use", url: "/student/term-of-use" },
     { name: "Message Board", url: "/student/chat" },
     { name: "Market place", url: "/student/market-place" },

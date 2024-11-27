@@ -8,6 +8,7 @@ import {
   save_student_events,
   save_student_lesson,
   update_student_lesson,
+  updateStudentBooking,
 } from "../../axios/calender";
 import { convertToDate } from "../../components/common/Calendar/Calendar";
 import { create_chat } from "../../axios/chat";
@@ -147,6 +148,16 @@ export function postStudentBookingWithInvoiceAndLessons(invoice, lessons) {
     !chatExists.length &&
       (await create_chat({ User1ID: lessons[0].studentId, User2ID: lessons[0].tutorId }));
     return await dispatch(getStudentLessons(lessons[0].studentId, lessons[0].tutorId));
+  };
+}
+
+
+export function updateStudentBookingWithInvoiceAndLessons(invoice, id, lesson) {
+  return async (dispatch, getState) => {
+    dispatch(slice.actions.isLoading(true));
+    await updateStudentBooking(id, lesson, invoice);
+
+    return await dispatch(getStudentLessons(lesson.studentId, lesson.tutorId));
   };
 }
 

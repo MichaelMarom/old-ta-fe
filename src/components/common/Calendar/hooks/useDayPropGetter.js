@@ -28,7 +28,6 @@ const useDayPropGetter = ({
 
       // Check if the compare date is within the range (inclusive)
       const VacationDayOff = compare.isSameOrAfter(start) && compare.isSameOrBefore(end);
-      console.log(VacationDayOff, date, tutor)
 
       const existsInEnabledInWeek = enabledDays?.some((arrayDate) => {
         const slotDateMoment = moment(date);

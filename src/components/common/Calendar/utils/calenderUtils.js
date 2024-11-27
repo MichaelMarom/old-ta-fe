@@ -35,14 +35,16 @@ export const isEventAlreadyExist = (lessons, slotInfo) => {
 };
 
 export const extractLoggedinStudentLesson = (lessons, selectedTutor, student) => {
-  return lessons.filter((lesson) => lesson.tutorId === selectedTutor.tutorId &&
+  return lessons.filter((lesson) =>
+    lesson.tutorId === selectedTutor.academyId &&
     lesson.studentId === student.AcademyId &&
     lesson.subject === selectedTutor.subject
   )
 }
 
 export function calculateDiscount(allLessons, selectedSlots, selectedTutor, student) {
-  const totalSlots = extractLoggedinStudentLesson(allLessons, selectedTutor, student) + selectedSlots;
+  const totalSlots = extractLoggedinStudentLesson(allLessons, selectedTutor, student).length + selectedSlots.length;
+  console.log(totalSlots)
 
   if (totalSlots >= 24) {
     return 20; // Maximum discount

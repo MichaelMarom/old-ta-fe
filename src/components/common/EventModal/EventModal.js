@@ -7,6 +7,7 @@ import SlotsInvoice from "../../student/SlotsInvoice";
 import {
   convertTutorIdToName,
   formatName,
+  generateRandomId,
   isEqualTwoObjectsRoot,
 } from "../../../utils/common";
 import { convertToDate } from "../Calendar/Calendar";
@@ -17,8 +18,10 @@ import { moment } from "../../../config/moment";
 import { useNavigate } from "react-router-dom";
 import {
   deleteStudentLesson,
+  updateStudentBookingWithInvoiceAndLessons,
   updateStudentLesson,
 } from "../../../redux/student/studentBookings";
+import { calculateDiscount } from "../Calendar/utils/calenderUtils";
 
 function EventModal({
   isStudentLoggedIn = false,
@@ -114,8 +117,16 @@ function EventModal({
   };
 
   const convertReservedToBooked = () => {
-    dispatch(updateStudentLesson(clickedSlot.id, { ...clickedSlot, type: "booked", title: "Booked" })
-    )
+    // TODO:
+    const invoice = {
+      InvoiceId: generateRandomId(),
+      StudentId: student.AcademyId,
+      TutorId: selectedTutor.academyId,
+      TotalLessons: 1,
+      DiscountAmount: calculateDiscount(lessons, selectedSlots, selectedTutor, student),
+      InvoiceDate: moment().utc()
+    }
+    dispatch(updateStudentBookingWithInvoiceAndLessons(invoice, clickedSlot.id, { ...clickedSlot, type: "booked", title: "Booked" }) )
   }
 
   const handleAccept = () => {
@@ -196,35 +207,21 @@ function EventModal({
     selectedTutor,
     student,
   ]);
-  let subscription_cols = [
-    { Header: "Package" },
-    { Header: "Hours" },
-    { Header: "Discount" },
-  ];
-console.log(lessons)
-  let subscription_discount = [
-    { discount: "0%", hours: "1-5", package: "A-0" },
-    { discount: "5.0%", hours: "6-11", package: "A-6" },
-    { discount: "10.0%", hours: "12-17", package: "A-12" },
-    { discount: "15.0%", hours: "18-23", package: "A-18" },
-    { discount: "20.0%", hours: "24+", package: "A-24" },
-  ];
+
   const conductedAndReviewedIntroLesson = () => {
-    const introExist = lessons?.some((slot) => {
-      return (
+    const introExist = lessons?.some((slot) =>
         slot.type === "intro" &&
         slot.subject === selectedTutor.subject &&
         slot.studentId === student.AcademyId &&
-        slot.tutorId === selectedTutor.tutorId
-        // slot.end.getTime() > new Date().getTime()
+        slot.tutorId === selectedTutor.academyId
       );
-    });
+    
     const feedbackedIntro = lessons?.some((slot) => {
       return (
         slot.type === "intro" &&
         slot.subject === selectedTutor.subject &&
         slot.studentId === student.AcademyId &&
-        slot.tutorId === selectedTutor.tutorId &&
+        slot.tutorId === selectedTutor.academyId &&
         slot.end.getTime() < (new Date()).getTime() &&
         slot.ratingByStudent
       );
@@ -270,6 +267,7 @@ console.log(lessons)
               />
             </div>
           )}
+          {!conductedAndReviewedIntroLesson().introExist && "hee"}
           <div className="form-group d-flex flex-column">
             {(!conductedAndReviewedIntroLesson().introExist &&
               !clickedSlot.type) ? (
@@ -286,15 +284,16 @@ console.log(lessons)
               //   conductedAndReviewedIntroLesson().feedbackedIntro) ||
               //   clickedSlot.start) && (
               <>
-                {((clickedSlot.start && clickedSlot.type === "reserved") || (!clickedSlot.start && conductedAndReviewedIntroLesson().introExist &&
+                {((clickedSlot.start && clickedSlot.type === "reserved") || 
+                (!clickedSlot.start && conductedAndReviewedIntroLesson().introExist &&
                   conductedAndReviewedIntroLesson().feedbackedIntro)) && (
                     <button
                       type="button"
                       className=" btn btn-sm btn-success"
                       onClick={() => setSelectedType("booked")}
                     >
-                      Mark as Booking Session
-                    </button>
+                      Book This Session!
+                    </button> 
                   )}
                 {(!clickedSlot.start && (conductedAndReviewedIntroLesson().introExist &&
                   conductedAndReviewedIntroLesson().feedbackedIntro)) && (

@@ -103,7 +103,14 @@ export const get_tutor_bookings = async (tutorId) => {
  */
 export const createStudentBookings = async (invoice, lessons) => {
   try {
-    await apiClient.post("/student/booking", {invoice, lessons});
+    await apiClient.post("/student/booking", { invoice, lessons });
+  } catch (e) {
+    showErrorToast(e);
+  }
+};
+export const updateStudentBooking = async (id, lesson, invoice) => {
+  try {
+    await apiClient.post(`/student/booking/${id}`, { params: { invoice, lesson } });
   } catch (e) {
     showErrorToast(e);
   }
