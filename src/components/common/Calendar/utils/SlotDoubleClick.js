@@ -34,7 +34,8 @@ export const handleSlotDoubleClick = (
   setSelectedSlots,
   setIsModalOpen,
   selectedTutor,
-  lessons
+  lessons,
+  selectedType
 ) => {
   //do nothing on single click
   // const clickedUpperSlot =
@@ -101,7 +102,7 @@ export const handleSlotDoubleClick = (
       selectedTutor,
       setIsModalOpen,
       setSelectedSlots,
-      lessons
+      lessons,selectedType
     );
   }
 };
@@ -180,7 +181,8 @@ export const handleSlotDoubleClickForStudent = (
   selectedTutor,
   setIsModalOpen,
   setSelectedSlots,
-  lessons
+  lessons,
+  selectedType
 ) => {
   handleStudentClickInWeekOrDayTab(
     slotInfo,
@@ -198,7 +200,8 @@ export const handleSlotDoubleClickForStudent = (
     selectedTutor,
     setIsModalOpen,
     setSelectedSlots,
-    lessons
+    lessons,
+    selectedType
   );
   // if (activeView === views.MONTH) {
   //   handleSlotMonthView(slotInfo, setDisableDateRange, setDisableDates);
@@ -338,7 +341,8 @@ const handleStudentClickInWeekOrDayTab = (
   selectedTutor,
   setIsModalOpen,
   setSelectedSlots,
-  lessons
+  lessons,
+  selectedType
 ) => {
   if (activeView !== views.MONTH) {
     //slots/month
@@ -446,20 +450,18 @@ const handleStudentClickInWeekOrDayTab = (
       );
       if (!existInOccopiedSlots) {
         if (introExistsInLessons) {
-          if (selectedSlots.some((slot) => convertToDate(slot.start).getTime() === convertToDate(startEventTime).getTime())) return
-          if (selectedSlots.length < 6) {
-            setSelectedSlots([
-              ...selectedSlots,
-              {
-                start: startEventTime.toDate(),
-                end: endEventTime.toDate(),
-                subject: selectedTutor.subject,
-              },
-            ]);
-            setIsModalOpen(true);
-          } else {
-            toast.error("You can not Place Hold more than 6 Slots! ");
-          }
+          if (selectedSlots.some((slot) => 
+            convertToDate(slot.start).getTime() === convertToDate(startEventTime).getTime())) return
+          if(selectedSlots.length >= 6 && selectedType === "reserved") return toast.warning("You reached the limit of 6 reserved lessons, You must book any reserved lesson before you can reserve more.")
+          setSelectedSlots([
+            ...selectedSlots,
+            {
+              start: startEventTime.toDate(),
+              end: endEventTime.toDate(),
+              subject: selectedTutor.subject,
+            },
+          ]);
+          setIsModalOpen(true);
         } else {
           setSelectedSlots([
             {

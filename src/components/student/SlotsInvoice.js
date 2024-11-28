@@ -6,6 +6,7 @@ import { HiPrinter } from "react-icons/hi2";
 import { MdDownloadForOffline } from "react-icons/md";
 import Tooltip from "../common/ToolTip";
 import ReactToPrint from "react-to-print";
+import { calculateDiscount } from "../common/Calendar/utils/calenderUtils";
 
 const SlotsInvoice = ({
   selectedType,
@@ -20,18 +21,30 @@ const SlotsInvoice = ({
   introDiscountEnabled,
   timeZone,
 }) => {
-  const subtotal =
-    (selectedSlots.length *
-      (introDiscountEnabled && selectedType === "intro"
-        ? ((rate.split("$")[1]) / 2)
-        : (rate.split("$")[1]))).toFixed(2);
+  const subtotal = (
+    selectedSlots.length *
+    (introDiscountEnabled && selectedType === "intro"
+      ? rate.split("$")[1] / 2
+      : rate.split("$")[1])
+  ).toFixed(2);
 
-  const rateHalf = (rate) => ((rate.split("$")[1]) / 2).toFixed(2);
+  const rateHalf = (rate) => (rate.split("$")[1] / 2).toFixed(2);
+
+  const bookingFee = parseFloat(process.env.REACT_APP_LESSON_BOOKING_FEE || 0);
+
+  // Discount calculation
+  const discountAmount = ((subtotal * calculateDiscount([], selectedSlots)) / 100).toFixed(2);
+  const totalAfterDiscount = (subtotal - discountAmount).toFixed(2);
+
+  // Final total (after discount + booking fee)
+  const totalAmount = (parseFloat(totalAfterDiscount) + bookingFee).toFixed(2);
+
   const currentTime = () => {
     const currentDate = moment().tz(timeZone).toDate();
     return currentDate;
   };
-  const invoiceRef = useRef(null)
+
+  const invoiceRef = useRef(null);
 
   return (
     <div className="container mt-4" ref={invoiceRef}>
@@ -67,6 +80,14 @@ const SlotsInvoice = ({
                       Avail 50% discount for this Intro Session
                     </h5>
                   )}
+                  {/* {!!calculateDiscount([], selectedSlots) && (
+                    <h5
+                      className="text-center mb-3 text-danger font-weight-bold"
+                      style={{ fontSize: "16px" }}
+                    >
+                      {calculateDiscount([], selectedSlots)}% discount for selected Lessons!
+                    </h5>
+                  )} */}
                   <div className="d-flex justify-content-between px-2">
                     <div style={{ fontSize: "12px" }}>
                       <span className="fs-6 font-weight-bold">Student: </span>
@@ -85,16 +106,19 @@ const SlotsInvoice = ({
                   <thead>
                     <tr>
                       <th
-                        className="  border-0"
+                        className="border-0"
                         style={{ background: "#2471A3" }}
                       >
                         Slot
                       </th>
-                      <th className=" border-0" style={{ background: "#2471A3" }}>
+                      <th
+                        className="border-0"
+                        style={{ background: "#2471A3" }}
+                      >
                         Subject
                       </th>
                       <th
-                        className="  border-0"
+                        className="border-0"
                         style={{ background: "#2471A3" }}
                       >
                         Price
@@ -113,24 +137,40 @@ const SlotsInvoice = ({
                             </td>
                           </>
                         ) : (
-                          <td className="border-0"> {rate}</td>
+                          <td className="border-0">{rate}</td>
                         )}
                       </tr>
                     ))}
-                     <tr>
-                      <td className="border-0 k"></td>
-                      <td className="border-0 text-dar"><div className="d-flex gap-1"><Tooltip iconSize={15} 
-                      text={"There is one time booking charge for each invoice when you book one lesson or multi lessons"}
-                       width="200px" />
-                       <p>Booking Fee:</p>
+                    <tr>
+                      <td className="border-0"></td>
+                      <td className="border-0 text-dark">
+                        <div className="d-flex gap-1">
+                          <Tooltip
+                            iconSize={15}
+                            text={
+                              "There is a one-time booking charge for each invoice when you book one or multiple lessons."
+                            }
+                            width="200px"
+                          />
+                          <p>Booking Fee:</p>
                         </div>
-                        </td>
-                      <td className="border-0 fw-bold">${process.env.REACT_APP_LESSON_BOOKING_FEE}</td>
+                      </td>
+                      <td className="border-0 fw-bold">${bookingFee}</td>
                     </tr>
                     <tr>
                       <td className="border-0 fw-bold">Subtotal:</td>
                       <td className="border-0"></td>
                       <td className="border-0 fw-bold">${subtotal}</td>
+                    </tr>
+                    <tr>
+                      <td className="border-0 fw-bold text-danger">Discount:</td>
+                      <td className="border-0"></td>
+                      <td className="border-0 fw-bold">-${discountAmount}</td>
+                    </tr>
+                    <tr>
+                      <td className="border-0 fw-bold">Total Amount:</td>
+                      <td className="border-0"></td>
+                      <td className="border-0 fw-bold">${totalAmount}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -144,12 +184,11 @@ const SlotsInvoice = ({
                     <HiPrinter
                       size={20}
                       style={{ cursor: "pointer" }}
-                    // onClick={() => window.print()}
                     />
                   )}
                   content={() => invoiceRef.current}
                 />
-                <Tooltip text={"download invoice"}>
+                <Tooltip text={"Download invoice"}>
                   <MdDownloadForOffline
                     size={20}
                     style={{ cursor: "pointer" }}

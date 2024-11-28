@@ -66,7 +66,7 @@ const Header = () => {
   const tabs = [
     { name: "Introduction", url: "/student/intro" },
     { name: "Setup", url: "/student/setup" },
-    { name: "Faculties", url: "/student/faculties" },
+    { name: "Find Your Tutor", url: "/student/find-tutor" },
     { name: "Accounting", url: "/student/accounting" },
     { name: "Feedback", url: "/student/feedback" },
     { name: "Calendar", url: "/student/calendar" },

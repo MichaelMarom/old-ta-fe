@@ -468,7 +468,7 @@ const StudentSetup = () => {
         const result = await code_applied(student.AcademyId, data.AcademyId, data.SID);
         if (result.message && result?.response?.status !== 400) {
           toast.success(result.message);
-          navigate("/student/faculties");
+          navigate("/student/find-tutor");
         }
       }
     }

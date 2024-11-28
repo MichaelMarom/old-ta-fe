@@ -33,7 +33,7 @@ const StudentCalenderScheduling = () => {
       toast.warning(
         "Please select subject and then tutor to open tutor schedule!"
       );
-      navigate("/student/faculties");
+      navigate("/student/find-tutor");
     }
   }, [selectedTutor, navigate]);
 
@@ -113,98 +113,90 @@ const StudentCalenderScheduling = () => {
 
 
       <div className="d-flex justify-content-end" style={{ height: "calc(100vh - 50px)" }}>
-        <div className={`d-flex col-3 `} >
-          <div className="d-flex ">
-            <div className="d-flex flex-column">
-              <h6 className="m-0 text-center " style={{lineHeight:"0.7"}}>Subscription Discount</h6>
-              {selectedTutor.activateSubscriptionOption && (
-                <table className="" style={{ width: "90%", margin: "5%" }}>
-                  <thead>
-                    <tr>
-                      {subscription_cols.map((item) => (
-                        <th key={item.Header}>{item.Header}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {subscription_discount.map((item, index) => (
-                      <tr key={index}>
-                        <td>{item.package}</td>
-
-                        <td>{item.hours}</td>
-
-                        <td>{item.discount}</td>
-                      </tr>
+        {/* <div className="w-100 d-flex flex-column">
+          {selectedTutor.activateSubscriptionOption && (
+            <>
+              <h6 className="m-0 text-center " style={{ lineHeight: "0.7" }}>Subscription Discount</h6>
+              <table className="" style={{ width: "90%", margin: "5%" }}>
+                <thead>
+                  <tr>
+                    {subscription_cols.map((item) => (
+                      <th key={item.Header}>{item.Header}</th>
                     ))}
-                  </tbody>
-                </table>
-              )}
-              <div
-                className={`w-100 align-items-center justify-content-between mt-3 d-flex flex-column `}
-              >
-                <div className="d-flex card m-2">
-                  <div className="c d-flex flex-column">
+                  </tr>
+                </thead>
+                <tbody>
+                  {subscription_discount.map((item, index) => (
+                    <tr key={index}>
+                      <td>{item.package}</td>
 
-                    <div
-                      key={selectedTutor.id}
-                      className="d-flex flex-column align-items-center p-3 rounded-4 shadow-lg"
-                      style={{
-                        backgroundColor: "white",
-                        color: 'black',
-                        // boxShadow: "gray 6px 3px 10px 1px"
-                      }}
-                    >
-                      <div className="d-flex ">
-                        <div className="me-3">
-                          <Avatar avatarSrc={selectedTutor.photo} showOnlineStatus size="60" positionInPixle={6} />
-                        </div>
+                      <td>{item.hours}</td>
 
-                        <div className="flex-grow-1">
-                          <h5 className="mb-1"> {selectedTutor.tutorScreenName}</h5>
-                          <p className="mb-1">
-                            <FaBook className="me-2" />
-                            {selectedTutor.subject}
-                          </p>
-                          <p className="mb-0">
-                            <FaClock className="me-2" />
-                            {tutorTime}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="text-center">
-                        <h5
-                          className={`d-inline mr-2 card ${getTimeDifferenceClass(
-                            calculateTimeDifference()
-                          )} px-1`}
-                        >
-                          Time Difference:{" "}
-                          {calculateTimeDifference() > 0
-                            ? `+${calculateTimeDifference()}`
-                            : calculateTimeDifference()}
-                        </h5>
-                        <h6>UTC: {moment().utc().format("hh:mm a")}</h6>
-                      </div>
-                      <div className=" d-flex align-items-center gap-2">
-                        <h5 className="m-0 d-inline mr-2 ">Your Time:</h5>
-                        <h6 className="m-0 text-start">
-                          {convertGMTOffsetToLocalString(student.GMT)}
-                        </h6>
-                      </div>
+                      <td>{item.discount}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </>
+          )}
+        </div> */}
+        <div
+          className={`d-flex flex-column col-12`}
+        >
+         
+            <div className="d-flex m-2 align-items-center  justify-content-between mx-3">
+              <div className=" d-flex flex-column">
+                <div
+                  key={selectedTutor.id}
+                  className="d-flex flex-column align-items-center p-3 rounded-4 shadow-lg"
+                  style={{
+                    backgroundColor: "white",
+                    color: 'black',
+                    // boxShadow: "gray 6px 3px 10px 1px"
+                  }}
+                >
+                  <div className="d-flex ">
+                    <div className="me-3">
+                      <Avatar avatarSrc={selectedTutor.photo} showOnlineStatus size="60" positionInPixle={6} />
                     </div>
 
+                    <div className="flex-grow-1">
+                      <h5 className="mb-1"> {selectedTutor.tutorScreenName}</h5>
+                      <p className="mb-1">
+                        <FaBook className="me-2" />
+                        {selectedTutor.subject}
+                      </p>
+                      <p className="mb-0">
+                        <FaClock className="me-2" />
+                        {tutorTime}
+                      </p>
+                    </div>
                   </div>
+
+
                 </div>
-
-
               </div>
-
+              <div className="text-center">
+                <h5
+                  className={`d-inline mr-2 card ${getTimeDifferenceClass(
+                    calculateTimeDifference()
+                  )} px-1`}
+                >
+                  Time Difference:{" "}
+                  {calculateTimeDifference() > 0
+                    ? `+${calculateTimeDifference()}`
+                    : calculateTimeDifference()}
+                </h5>
+                <h6>UTC: {moment().utc().format("hh:mm a")}</h6>
+              </div>
+              <div className=" d-flex flex-column align-items-center gap-2">
+                <h5 className="m-0 d-inline mr-2 ">Your Time:</h5>
+                <h6 className="m-0 text-start">
+                  {convertGMTOffsetToLocalString(student.GMT)}
+                </h6>
+              </div>
             </div>
-          </div>
-        </div>
-        <div
-          className={` col-9`}
-        >
+
           <ShowCalendar
             setIsModalOpen={setStudentModalOpen}
             isModalOpen={studentModalOpen}

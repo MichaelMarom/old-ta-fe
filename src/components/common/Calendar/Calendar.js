@@ -85,6 +85,7 @@ const ShowCalendar = ({
   const tutorAcademyId = localStorage.getItem("tutor_user_id");
 
   //student states
+  const [selectedType, setSelectedType] = useState(null);
   const [selectedSlots, setSelectedSlots] = useState([]);
   // const [isModalOpen, setIsModalOpen] = useState(false);
   const [clickedSlot, setClickedSlot] = useState({});
@@ -459,7 +460,8 @@ const ShowCalendar = ({
             setSelectedSlots,
             setIsModalOpen,
             selectedTutor,
-            lessons
+            lessons,
+            selectedType
           )
         }
         dayPropGetter={dayPropGetter}
@@ -469,6 +471,8 @@ const ShowCalendar = ({
       />
       <EventModal
         isOpen={isModalOpen}
+        selectedType={selectedType}
+        setSelectedType={setSelectedType}
         // lessons={lessons}
         onRequestClose={onStudentModalRequestClose}
         student={student}

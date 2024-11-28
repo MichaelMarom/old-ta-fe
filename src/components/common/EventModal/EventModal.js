@@ -21,7 +21,7 @@ import {
   updateStudentBookingWithInvoiceAndLessons,
   updateStudentLesson,
 } from "../../../redux/student/studentBookings";
-import { calculateDiscount } from "../Calendar/utils/calenderUtils";
+import { calculateDiscount, extractLoggedinStudentLesson } from "../Calendar/utils/calenderUtils";
 
 function EventModal({
   isStudentLoggedIn = false,
@@ -34,11 +34,12 @@ function EventModal({
   clickedSlot,
   setClickedSlot,
   timeZone,
+  selectedType,
+  setSelectedType
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [selectedType, setSelectedType] = useState(null);
   const { lessons } = useSelector((state) => state.bookings);
   const { tutor } = useSelector((state) => state.tutor);
   const [canPostEvents, setCanPostEvents] = useState(true);
@@ -126,7 +127,8 @@ function EventModal({
       DiscountAmount: calculateDiscount(lessons, selectedSlots, selectedTutor, student),
       InvoiceDate: moment().utc()
     }
-    dispatch(updateStudentBookingWithInvoiceAndLessons(invoice, clickedSlot.id, { ...clickedSlot, type: "booked", title: "Booked" }) )
+    dispatch(updateStudentBookingWithInvoiceAndLessons(invoice, clickedSlot.id,
+      { ...clickedSlot, type: "booked", title: "Booked" }))
   }
 
   const handleAccept = () => {
@@ -210,12 +212,13 @@ function EventModal({
 
   const conductedAndReviewedIntroLesson = () => {
     const introExist = lessons?.some((slot) =>
-        slot.type === "intro" &&
-        slot.subject === selectedTutor.subject &&
-        slot.studentId === student.AcademyId &&
-        slot.tutorId === selectedTutor.academyId
-      );
-    
+      slot.type === "intro" &&
+      slot.subject === selectedTutor.subject &&
+      slot.studentId === student.AcademyId &&
+      slot.tutorId === selectedTutor.academyId
+    );
+
+
     const feedbackedIntro = lessons?.some((slot) => {
       return (
         slot.type === "intro" &&
@@ -228,6 +231,43 @@ function EventModal({
     });
     return { introExist, feedbackedIntro };
   };
+  let subscription_cols = [
+    { Header: "Package" },
+    { Header: "Hours" },
+    { Header: "Discount" },
+  ];
+
+  let subscription_discount = [
+    { discount: "0%", hours: "1-5", package: "A-0" },
+    { discount: "5.0%", hours: "6-11", package: "A-6" },
+    { discount: "10.0%", hours: "12-17", package: "A-12" },
+    { discount: "15.0%", hours: "18-23", package: "A-18" },
+    { discount: "20.0%", hours: "24+", package: "A-24" },
+  ];
+  useEffect(() => {
+    if (selectedType && selectedType !== "reserved") {
+      const totalSlots = extractLoggedinStudentLesson(lessons, selectedTutor, student)
+        .filter(lesson => lesson.type !== 'reserved').length + selectedSlots.length;
+
+      let message = '';
+      if (selectedSlots.length < 6) {
+        const remainingSlots = 6 - selectedSlots.length;
+        message = `Book ${remainingSlots} more ${remainingSlots > 1 ? 'slots' : 'slot'} to get 5% discount.`;
+      } else if (selectedSlots.length < 12) {
+        const remainingSlots = 12 - selectedSlots.length;
+        message = `Book ${remainingSlots} more ${remainingSlots > 1 ? 'lessons' : 'lesson'} to get 10% discount.`;
+      } else if (selectedSlots.length < 18) {
+        const remainingSlots = 18 - selectedSlots.length;
+        message = `Book ${remainingSlots} more ${remainingSlots > 1 ? 'lessons' : 'lesson'} to get 15% discount.`;
+      } else if (selectedSlots.length < 24) {
+        const remainingSlots = 24 - selectedSlots.length;
+        message = `Book ${remainingSlots} more ${remainingSlots > 1 ? 'lessons' : 'lesson'} to get 20% discount.`;
+      } else {
+        message = `Congratulations! You've reached the maximum discount of 20%.`;
+      }
+      toast.info(message)
+    }
+  }, [lessons, selectedSlots, selectedTutor, student, selectedType]);
 
   return (
     <LeftSideBar
@@ -267,7 +307,27 @@ function EventModal({
               />
             </div>
           )}
-          {!conductedAndReviewedIntroLesson().introExist && "hee"}
+          {selectedType === "reserved" && (
+            <div className=" d-flex justify-content-center">
+              <button
+                type="button"
+                className="action-btn btn btn-sm"
+                onClick={handleAccept}
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                onClick={() => {
+                  onRequestClose();
+                  setSelectedType(null);
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          )}
           <div className="form-group d-flex flex-column">
             {(!conductedAndReviewedIntroLesson().introExist &&
               !clickedSlot.type) ? (
@@ -284,16 +344,16 @@ function EventModal({
               //   conductedAndReviewedIntroLesson().feedbackedIntro) ||
               //   clickedSlot.start) && (
               <>
-                {((clickedSlot.start && clickedSlot.type === "reserved") || 
-                (!clickedSlot.start && conductedAndReviewedIntroLesson().introExist &&
-                  conductedAndReviewedIntroLesson().feedbackedIntro)) && (
+                {((clickedSlot.start && clickedSlot.type === "reserved") ||
+                  (!clickedSlot.start && conductedAndReviewedIntroLesson().introExist &&
+                    conductedAndReviewedIntroLesson().feedbackedIntro)) && (
                     <button
                       type="button"
                       className=" btn btn-sm btn-success"
                       onClick={() => setSelectedType("booked")}
                     >
                       Book This Session!
-                    </button> 
+                    </button>
                   )}
                 {(!clickedSlot.start && (conductedAndReviewedIntroLesson().introExist &&
                   conductedAndReviewedIntroLesson().feedbackedIntro)) && (
@@ -302,7 +362,11 @@ function EventModal({
                       className="btn  btn-sm btn-warning"
                       style={{ background: "yellow" }}
                       disabled={clickedSlot.start}
-                      onClick={() => setSelectedType("reserved")}
+                      onClick={() => {
+                        selectedSlots.length > 6 ?
+                          toast.warning("You reached the limit of 6 reserved lessons, You must book any reserved lesson before you can reserve more.") :
+                          setSelectedType("reserved")
+                      }}
                     >
                       Mark as Reserved Session
                     </button>
@@ -318,14 +382,6 @@ function EventModal({
                 )}
                 {clickedSlot.request === "postpone" && (
                   <div className="d-flex justify-content-between align-items-center h-100">
-                    {/* <DatePicker
-                        selected={formatUTC(rescheduleTime, true)}
-                        onChange={(date) => setRescheduleTime(formatUTC(date))}
-                        showTimeSelect
-                        dateFormat="MMM d, yyyy hh:mm aa"
-                        className="form-control m-2 w-80"
-                        timeIntervals={60}
-                      /> */}
                     <DatePicker
                       selected={rescheduleTime}
                       onChange={(date) => setRescheduleTime(date)}
@@ -348,6 +404,16 @@ function EventModal({
           </div>
         </div>
 
+        <div>
+          <div className="rounded d-flex text-dark m-1" style={{background:"#f7f5f6", fontWeight:"600"}}>
+            <div className={`rounded p-3 m-1 ${selectedType === "booked" ? "bg-success-light" : ""}`}>Booking</div>
+            <div className={`rounded p-3  m-1 ${selectedType === "intro" ? "bg-success" : ""}`}>Intro</div>
+
+            <div className={`rounded p-3 m-1 ${selectedType === "reserved" ? "bg-success" : ""}`}>Reserve</div>
+
+            </div>
+        </div>
+
         {selectedType === "delete" && (
           <div className=" p-4">
             <hr />
@@ -361,23 +427,6 @@ function EventModal({
                 className="action-btn btn btn-sm float-end"
                 onClick={() => {
                   dispatch(deleteStudentLesson(clickedSlot));
-                  // handleRemoveReservedSlot(
-                  //   reservedSlots.filter(
-                  //     (slot) => !isEqualTwoObjectsRoot(slot, clickedSlot)
-                  //   ),
-                  //   //
-                  //   dispatch,
-                  //   studentId,
-                  //   tutorId,
-                  //   subjectName,
-                  //   bookedSlots,
-                  //   //
-                  //   tutor,
-                  //   clickedSlot,
-                  //   selectedTutor,
-                  //   isStudentLoggedIn,
-                  //   student
-                  // );
                   setClickedSlot({});
                   onRequestClose();
                 }}
@@ -387,52 +436,33 @@ function EventModal({
             </div>
           </div>
         )}
-        {selectedType === "reserved" && (
-          <div className="modal-footer">
-            <button
-              type="button"
-              className="action-btn btn btn-sm"
-              onClick={handleAccept}
-            >
-              Save
-            </button>
-            <button
-              type="button"
-              className="btn btn-secondary btn-sm"
-              onClick={() => {
-                onRequestClose();
-                setSelectedType(null);
-              }}
-            >
-              Cancel
-            </button>
-          </div>
-        )}
-        <div className="text-danger fw-bold mx-3">
-          {!!lessons.filter(lesson => lesson.studentId === student.AcademyId &&
-            lesson.tutorId === selectedTutor.academyId &&
-            lesson.subject === selectedTutor.subject).length && (() => {
 
-              const totalSlots = lessons.filter(lesson => lesson.studentId === student.AcademyId &&
-                lesson.tutorId === selectedTutor.academyId &&
-                lesson.subject === selectedTutor.subject).length + selectedSlots.length;
+        <div className="w-100 d-flex flex-column">
+          {selectedTutor.activateSubscriptionOption && (
+            <>
+              <h6 className="m-0 text-center " style={{ lineHeight: "0.7" }}>Subscription Discount</h6>
+              <table className="" style={{ width: "90%", margin: "5%" }}>
+                <thead>
+                  <tr>
+                    {subscription_cols.map((item) => (
+                      <th key={item.Header}>{item.Header}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {subscription_discount.map((item, index) => (
+                    <tr key={index}>
+                      <td>{item.package}</td>
 
-              if (totalSlots < 6) {
-                const remainingSlots = 6 - totalSlots;
-                return `Book ${remainingSlots} more ${remainingSlots > 1 ? 'slots' : 'slot'} to get 5% discount.`;
-              } else if (totalSlots < 12) {
-                const remainingSlots = 12 - totalSlots;
-                return `Book ${remainingSlots} more ${remainingSlots > 1 ? 'lessons' : 'lesson'} to get 11% discount.`;
-              } else if (totalSlots < 18) {
-                const remainingSlots = 18 - totalSlots;
-                return `Book ${remainingSlots} more ${remainingSlots > 1 ? 'lessons' : 'lesson'} to get 15% discount.`;
-              } else if (totalSlots < 24) {
-                const remainingSlots = 24 - totalSlots;
-                return `Book ${remainingSlots} more ${remainingSlots > 1 ? 'lessons' : 'lesson'} to get 20% discount.`;
-              } else {
-                return `Congratulations! You've reached the maximum discount of 20%.`;
-              }
-            })()}
+                      <td>{item.hours}</td>
+
+                      <td>{item.discount}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </>
+          )}
         </div>
         {(selectedType === "intro" || selectedType === "booked") && (
           <div>

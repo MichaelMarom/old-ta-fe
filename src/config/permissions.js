@@ -94,7 +94,7 @@ const rolePermissions = {
   student: [
     { path: "/student/intro", component: <StudentIntro /> },
     { path: "/student/setup", component: <StudentSetup /> },
-    { path: "/student/faculties", component: <StudentFaculty /> },
+    { path: "/student/find-tutor", component: <StudentFaculty /> },
     { path: "/student/accounting", component: <StudentAccountings /> },
     { path: "/student/market-place", component: <Marketplace /> },
     { path: "/student/booking", component: <StudentScheduling /> },

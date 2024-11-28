@@ -43,16 +43,16 @@ export const extractLoggedinStudentLesson = (lessons, selectedTutor, student) =>
 }
 
 export function calculateDiscount(allLessons, selectedSlots, selectedTutor, student) {
-  const totalSlots = extractLoggedinStudentLesson(allLessons, selectedTutor, student).length + selectedSlots.length;
-  console.log(totalSlots)
+  // const totalSlots = extractLoggedinStudentLesson(allLessons, selectedTutor, student)
+  //   .filter(lesson => lesson.type !== 'reserved').length + selectedSlots.length;
 
-  if (totalSlots >= 24) {
+  if (selectedSlots.length >= 24) {
     return 20; // Maximum discount
-  } else if (totalSlots >= 18) {
+  } else if (selectedSlots.length >= 18) {
     return 15;
-  } else if (totalSlots >= 12) {
-    return 11;
-  } else if (totalSlots >= 6) {
+  } else if (selectedSlots.length >= 12) {
+    return 10;
+  } else if (selectedSlots.length >= 6) {
     return 5;
   } else {
     return 0; // No discount for less than 6 slots

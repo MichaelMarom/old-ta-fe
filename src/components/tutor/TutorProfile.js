@@ -141,7 +141,7 @@ const TutorProfile = () => {
     setScheduleModalOpen(true);
     // if (!studentId)
     //   return toast.error("You need to select 1 student from students-list!");
-    // navigate("/student/faculties");
+    // navigate("/student/find-tutor");
   };
 
   const handleChatClick = async () => {

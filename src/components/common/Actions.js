@@ -173,7 +173,7 @@ const Actions = ({
       withBackRolePrefix: true,
     },
     {
-      next: "faculties",
+      next: "find-tutor",
       current: "setup",
       back: "intro",
       withCurrentRolePrefix: true,
@@ -182,7 +182,7 @@ const Actions = ({
     },
     {
       next: "accounting",
-      current: "faculties",
+      current: "find-tutor",
       back: "setup",
       withCurrentRolePrefix: true,
       withNextRolePrefix: true,
@@ -191,7 +191,7 @@ const Actions = ({
     {
       next: "feedback",
       current: "accounting",
-      back: "faculties",
+      back: "find-tutor",
       withCurrentRolePrefix: true,
       withNextRolePrefix: true,
       withBackRolePrefix: true,
