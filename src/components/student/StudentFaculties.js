@@ -28,7 +28,6 @@ const StudentFaculties = () => {
   const handleNavigateToSchedule = async (item) => {
     dispatch(
       setSelectedTutor({
-        id: item.SID,
         photo: item.Photo,
         academyId: item.AcademyId,
         GMT: item.GMT,

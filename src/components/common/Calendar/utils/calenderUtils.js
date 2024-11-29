@@ -25,13 +25,16 @@ export const isFutureDate = (date) => date.getTime() >= new Date().getTime();
 export const isPastDate = (date) => date.getTime() < new Date().getTime();
 
 export const isEventAlreadyExist = (lessons, slotInfo) => {
-  return lessons?.some((event) =>
-    [event.start, event.end].some(
-      (date) =>
-        convertToDate(date).getTime() === slotInfo.start.getTime() ||
-        convertToDate(date).getTime() === slotInfo.end.getTime()
-    )
-  );
+  const slotStart = slotInfo.start.getTime();
+  const slotEnd = slotInfo.end.getTime();
+
+  return lessons?.some(({ start, end }) => {
+    const eventStart = convertToDate(start).getTime();
+    const eventEnd = convertToDate(end).getTime();
+    console.log(convertToDate(start).getMinutes(), convertToDate(end).getMinutes(), 
+    convertToDate(slotInfo.start).getMinutes(), convertToDate(slotInfo.end).getMinutes());
+    return eventStart === slotStart || eventEnd === slotEnd;
+  });
 };
 
 export const extractLoggedinStudentLesson = (lessons, selectedTutor, student) => {

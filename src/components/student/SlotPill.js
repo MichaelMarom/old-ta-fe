@@ -11,7 +11,7 @@ const SlotPill = ({ selectedSlots, handleRemoveSlot, selectedType }) => {
                     className={`text-xs p-2 m-2 pill d-flex justify-content-center btn align-item-center gap-2 rounded-pill ${item.type}`}
                     style={{
                         border: `1px solid ${selectedType ? selectedType === 'intro' ? 'rgb(71 180 255)' : selectedType === 'booked' ? '#2db82d' : 'orange ' : 'black'}`,
-                        backgroundColor: `${selectedType ? selectedType === 'intro' ? 'rgb(15 121 187 / 22%)' : selectedType === 'booked' ? '#0080001f' : '#ffff404f' : ' gray'}`,
+                        backgroundColor: `${selectedType ? selectedType === 'intro' ? 'rgb(15 121 187 / 22%)' : selectedType === 'booked' ? '#0080001f' : '#ffff404f' : ' #e1e1e1'}`,
                         color: `${selectedType ? selectedType === 'intro' ? '#0087ff' : selectedType === 'booked' ? '#008b00' : 'orange' : 'black'}`
                     }}
                 >

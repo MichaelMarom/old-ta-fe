@@ -143,71 +143,72 @@ const StudentCalenderScheduling = () => {
         <div
           className={`d-flex flex-column col-12`}
         >
-         
-            <div className="d-flex m-2 align-items-center  justify-content-between mx-3">
-              <div className=" d-flex flex-column">
-                <div
-                  key={selectedTutor.id}
-                  className="d-flex flex-column align-items-center p-3 rounded-4 shadow-lg"
-                  style={{
-                    backgroundColor: "white",
-                    color: 'black',
-                    // boxShadow: "gray 6px 3px 10px 1px"
-                  }}
-                >
-                  <div className="d-flex ">
-                    <div className="me-3">
-                      <Avatar avatarSrc={selectedTutor.photo} showOnlineStatus size="60" positionInPixle={6} />
-                    </div>
 
-                    <div className="flex-grow-1">
-                      <h5 className="mb-1"> {selectedTutor.tutorScreenName}</h5>
-                      <p className="mb-1">
-                        <FaBook className="me-2" />
-                        {selectedTutor.subject}
-                      </p>
-                      <p className="mb-0">
-                        <FaClock className="me-2" />
-                        {tutorTime}
-                      </p>
-                    </div>
+          <div className="d-flex m-2 align-items-center  justify-content-between mx-3">
+            <div className=" d-flex flex-column">
+              <div
+                key={selectedTutor.id}
+                className="d-flex flex-column align-items-center p-3 rounded-4 shadow-lg"
+                style={{
+                  backgroundColor: "white",
+                  color: 'black',
+                  // boxShadow: "gray 6px 3px 10px 1px"
+                }}
+              >
+                <div className="d-flex ">
+                  <div className="me-3">
+                    <Avatar avatarSrc={selectedTutor.photo} showOnlineStatus size="60" positionInPixle={6} />
                   </div>
 
-
+                  <div className="flex-grow-1">
+                    <h5 className="mb-1"> {selectedTutor.tutorScreenName}</h5>
+                    <p className="mb-1">
+                      <FaBook className="me-2" />
+                      {selectedTutor.subject}
+                    </p>
+                    <p className="mb-0">
+                      <FaClock className="me-2" />
+                      {tutorTime}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="text-center">
-                <h5
-                  className={`d-inline mr-2 card ${getTimeDifferenceClass(
-                    calculateTimeDifference()
-                  )} px-1`}
-                >
-                  Time Difference:{" "}
-                  {calculateTimeDifference() > 0
-                    ? `+${calculateTimeDifference()}`
-                    : calculateTimeDifference()}
-                </h5>
-                <h6>UTC: {moment().utc().format("hh:mm a")}</h6>
-              </div>
-              <div className=" d-flex flex-column align-items-center gap-2">
-                <h5 className="m-0 d-inline mr-2 ">Your Time:</h5>
-                <h6 className="m-0 text-start">
-                  {convertGMTOffsetToLocalString(student.GMT)}
-                </h6>
+
+
               </div>
             </div>
-
-          <ShowCalendar
-            setIsModalOpen={setStudentModalOpen}
-            isModalOpen={studentModalOpen}
-            timeDifference={calculateTimeDifference()}
-            disableColor={selectedTutor.disableColor}
-            activeTab={activeTab}
-            disableWeekDays={disableWeekDays}
-            disabledHours={disabledHours}
-            setDisabledWeekDays={setDisabledWeekDays}
-            setDisabledHours={setDisabledHours}
-          />
+            <div className="text-center">
+              <h5
+                className={`d-inline mr-2 card ${getTimeDifferenceClass(
+                  calculateTimeDifference()
+                )} px-1`}
+              >
+                Time Difference:{" "}
+                {calculateTimeDifference() > 0
+                  ? `+${calculateTimeDifference()}`
+                  : calculateTimeDifference()}
+              </h5>
+              <h6>UTC: {moment().utc().format("hh:mm a")}</h6>
+            </div>
+            <div className=" d-flex flex-column align-items-center gap-2">
+              <h5 className="m-0 d-inline mr-2 ">Your Time:</h5>
+              <h6 className="m-0 text-start">
+                {convertGMTOffsetToLocalString(student.GMT)}
+              </h6>
+            </div>
+          </div>
+          <div style={{height:"calc(100vh - 180px)", overflow:"auto"}}>
+            <ShowCalendar
+              setIsModalOpen={setStudentModalOpen}
+              isModalOpen={studentModalOpen}
+              timeDifference={calculateTimeDifference()}
+              disableColor={selectedTutor.disableColor}
+              activeTab={activeTab}
+              disableWeekDays={disableWeekDays}
+              disabledHours={disabledHours}
+              setDisabledWeekDays={setDisabledWeekDays}
+              setDisabledHours={setDisabledHours}
+            />
+          </div>
         </div>
       </div>
     </div>

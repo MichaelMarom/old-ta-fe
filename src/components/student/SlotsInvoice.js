@@ -7,6 +7,10 @@ import { MdDownloadForOffline } from "react-icons/md";
 import Tooltip from "../common/ToolTip";
 import ReactToPrint from "react-to-print";
 import { calculateDiscount } from "../common/Calendar/utils/calenderUtils";
+import PaymentDetailsModal from "./PaymentDetailsModal";
+import { useSelector } from "react-redux";
+
+import { toast } from "react-toastify";
 
 const SlotsInvoice = ({
   selectedType,
@@ -21,6 +25,8 @@ const SlotsInvoice = ({
   introDiscountEnabled,
   timeZone,
 }) => {
+  const { selectedTutor } = useSelector((state) => state.selectedTutor);
+
   const subtotal = (
     selectedSlots.length *
     (introDiscountEnabled && selectedType === "intro"
@@ -33,7 +39,10 @@ const SlotsInvoice = ({
   const bookingFee = parseFloat(process.env.REACT_APP_LESSON_BOOKING_FEE || 0);
 
   // Discount calculation
-  const discountAmount = ((subtotal * calculateDiscount([], selectedSlots)) / 100).toFixed(2);
+  const discountAmount = selectedTutor.activateSubscriptionOption
+    ? ((subtotal * calculateDiscount([], selectedSlots)) / 100).toFixed(2)
+    : 0;
+
   const totalAfterDiscount = (subtotal - discountAmount).toFixed(2);
 
   // Final total (after discount + booking fee)
@@ -72,22 +81,16 @@ const SlotsInvoice = ({
                     </div>
                     <div>Date: {showDate(currentTime())}</div>
                   </div>
-                  {selectedType === "intro" && introDiscountEnabled && (
-                    <h5
-                      className="text-center mb-3 text-danger font-weight-bold"
-                      style={{ fontSize: "16px" }}
-                    >
-                      Avail 50% discount for this Intro Session
-                    </h5>
-                  )}
-                  {/* {!!calculateDiscount([], selectedSlots) && (
-                    <h5
-                      className="text-center mb-3 text-danger font-weight-bold"
-                      style={{ fontSize: "16px" }}
-                    >
-                      {calculateDiscount([], selectedSlots)}% discount for selected Lessons!
-                    </h5>
-                  )} */}
+                  {selectedType === "intro" &&
+                    introDiscountEnabled &&
+                    selectedTutor.activateSubscriptionOption && (
+                      <h5
+                        className="text-center mb-3 text-danger font-weight-bold"
+                        style={{ fontSize: "16px" }}
+                      >
+                        Avail 50% discount for this Intro Session
+                      </h5>
+                    )}
                   <div className="d-flex justify-content-between px-2">
                     <div style={{ fontSize: "12px" }}>
                       <span className="fs-6 font-weight-bold">Student: </span>
@@ -130,7 +133,9 @@ const SlotsInvoice = ({
                       <tr key={index}>
                         <td className="border-0">{showDate(slot.start)}</td>
                         <td className="border-0">{subject}</td>
-                        {introDiscountEnabled && selectedType === "intro" ? (
+                        {introDiscountEnabled &&
+                        selectedType === "intro" &&
+                        selectedTutor.activateSubscriptionOption ? (
                           <>
                             <td className="border-0">
                               <s>{rate}</s> ${rateHalf(rate)}
@@ -157,16 +162,17 @@ const SlotsInvoice = ({
                       </td>
                       <td className="border-0 fw-bold">${bookingFee}</td>
                     </tr>
-                    <tr>
-                      <td className="border-0 fw-bold">Subtotal:</td>
-                      <td className="border-0"></td>
-                      <td className="border-0 fw-bold">${subtotal}</td>
-                    </tr>
-                    <tr>
-                      <td className="border-0 fw-bold text-danger">Discount:</td>
-                      <td className="border-0"></td>
-                      <td className="border-0 fw-bold">-${discountAmount}</td>
-                    </tr>
+                    {selectedTutor.activateSubscriptionOption && (
+                      <tr>
+                        <td className="border-0 fw-bold text-danger">
+                          Discount:
+                        </td>
+                        <td className="border-0"></td>
+                        <td className="border-0 fw-bold text-danger">
+                          -${discountAmount}
+                        </td>
+                      </tr>
+                    )}
                     <tr>
                       <td className="border-0 fw-bold">Total Amount:</td>
                       <td className="border-0"></td>
@@ -206,7 +212,7 @@ const SlotsInvoice = ({
                   className="btn btn-sm btn-primary"
                   onClick={handleAccept}
                 >
-                  Book Lesson
+                  Pay Invoice
                 </button>
               </div>
             </div>
@@ -218,3 +224,4 @@ const SlotsInvoice = ({
 };
 
 export default SlotsInvoice;
+

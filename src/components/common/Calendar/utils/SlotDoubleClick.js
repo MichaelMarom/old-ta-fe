@@ -102,7 +102,7 @@ export const handleSlotDoubleClick = (
       selectedTutor,
       setIsModalOpen,
       setSelectedSlots,
-      lessons,selectedType
+      lessons, selectedType
     );
   }
 };
@@ -441,18 +441,15 @@ const handleStudentClickInWeekOrDayTab = (
     ) {
       alert("This slot is blocked, please select a white slot.");
     } else {
-      console.log(
-        introExistsInLessons,
-        existInOccopiedSlots,
-        lessons,
-        student,
-        selectedTutor
-      );
       if (!existInOccopiedSlots) {
         if (introExistsInLessons) {
-          if (selectedSlots.some((slot) => 
-            convertToDate(slot.start).getTime() === convertToDate(startEventTime).getTime())) return
-          if(selectedSlots.length >= 6 && selectedType === "reserved") return toast.warning("You reached the limit of 6 reserved lessons, You must book any reserved lesson before you can reserve more.")
+          const ifAlreadySelecetd = selectedSlots.some((slot) =>
+            convertToDate(slot.start).getTime() === convertToDate(startEventTime).getTime())
+          if (ifAlreadySelecetd) return
+          const threeHoursGap = new Date(new Date().getTime() + 3 * 60 * 60 * 1000);
+          if (startEventTime.toDate() < threeHoursGap) return toast.warning("You can only reserve slots starting at least 3 hours from now.");
+
+          if (selectedSlots.length >= 6 && selectedType === "reserved") return toast.warning("You reached the limit of 6 reserved lessons, You must book any reserved lesson before you can reserve more.")
           setSelectedSlots([
             ...selectedSlots,
             {

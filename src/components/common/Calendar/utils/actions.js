@@ -138,7 +138,7 @@ export const handleBulkEventCreate = async (
     selectedSlots[0].type === "reserved" &&
     lessons.map((les) => les.type === "reserved").length > 6
   ) {
-    toast.warning("You Can not Reserve more than 6 slots");
+    toast.warning("You can not Reserve more than 6 slots");
     return;
   }
 
@@ -172,7 +172,7 @@ export const handleBulkEventCreate = async (
       StudentId: student.AcademyId,
       TutorId: selectedTutor.academyId,
       TotalLessons: updatedSelectedSlots.length,
-      DiscountAmount: 50,
+      DiscountAmount: selectedTutor.introDiscountEnabled ? 50 : 0,
       InvoiceDate: moment().utc()
     }
     dispatch(postStudentBookingWithInvoiceAndLessons(invoice, updatedSelectedSlots));
@@ -182,7 +182,8 @@ export const handleBulkEventCreate = async (
       StudentId: student.AcademyId,
       TutorId: selectedTutor.academyId,
       TotalLessons: updatedSelectedSlots.length,
-      DiscountAmount: calculateDiscount(lessons, selectedSlots, selectedTutor, student),
+      DiscountAmount: selectedTutor.activateSubscriptionOption ?
+        calculateDiscount(lessons, selectedSlots, selectedTutor, student) : 0,
       InvoiceDate: moment().utc()
     }
     dispatch(postStudentBookingWithInvoiceAndLessons(invoice, updatedSelectedSlots));

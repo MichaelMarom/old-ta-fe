@@ -372,6 +372,7 @@ const ShowCalendar = ({
     selectedTutor,
     student,
     lessons,
+    clickedSlot
   });
 
   const dayPropGetter = useDayPropGetter({

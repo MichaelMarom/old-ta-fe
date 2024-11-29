@@ -22,6 +22,7 @@ import {
   updateStudentLesson,
 } from "../../../redux/student/studentBookings";
 import { calculateDiscount, extractLoggedinStudentLesson } from "../Calendar/utils/calenderUtils";
+import PaymentDetailsModal from "../../student/PaymentDetailsModal";
 
 function EventModal({
   isStudentLoggedIn = false,
@@ -42,6 +43,7 @@ function EventModal({
 
   const { lessons } = useSelector((state) => state.bookings);
   const { tutor } = useSelector((state) => state.tutor);
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false)
   const [canPostEvents, setCanPostEvents] = useState(true);
   const { selectedTutor } = useSelector((state) => state.selectedTutor);
   const [rescheduleTime, setRescheduleTime] = useState(
@@ -118,13 +120,13 @@ function EventModal({
   };
 
   const convertReservedToBooked = () => {
-    // TODO:
     const invoice = {
       InvoiceId: generateRandomId(),
       StudentId: student.AcademyId,
       TutorId: selectedTutor.academyId,
       TotalLessons: 1,
-      DiscountAmount: calculateDiscount(lessons, selectedSlots, selectedTutor, student),
+      DiscountAmount: selectedTutor.activateSubscriptionOption ?
+        calculateDiscount(lessons, selectedSlots, selectedTutor, student) : 0,
       InvoiceDate: moment().utc()
     }
     dispatch(updateStudentBookingWithInvoiceAndLessons(invoice, clickedSlot.id,
@@ -245,10 +247,7 @@ function EventModal({
     { discount: "20.0%", hours: "24+", package: "A-24" },
   ];
   useEffect(() => {
-    if (selectedType && selectedType !== "reserved") {
-      const totalSlots = extractLoggedinStudentLesson(lessons, selectedTutor, student)
-        .filter(lesson => lesson.type !== 'reserved').length + selectedSlots.length;
-
+    if (selectedType && selectedType !== "reserved" && selectedTutor.activateSubscriptionOption) {
       let message = '';
       if (selectedSlots.length < 6) {
         const remainingSlots = 6 - selectedSlots.length;
@@ -262,233 +261,233 @@ function EventModal({
       } else if (selectedSlots.length < 24) {
         const remainingSlots = 24 - selectedSlots.length;
         message = `Book ${remainingSlots} more ${remainingSlots > 1 ? 'lessons' : 'lesson'} to get 20% discount.`;
-      } else {
-        message = `Congratulations! You've reached the maximum discount of 20%.`;
       }
-      toast.info(message)
+      message.length && toast.info(message)
     }
   }, [lessons, selectedSlots, selectedTutor, student, selectedType]);
 
   return (
-    <LeftSideBar
-      isOpen={isOpen}
-      onClose={() => {
-        onRequestClose();
-        setSelectedType(null);
-      }}
-    >
-      <div className="">
-        <div className="modal-header">
-          <h4 className="modal-title text-center" style={{ width: "100%" }}>
-            Selected Slots
-          </h4>
-        </div>
+    <>
+      <LeftSideBar
+        isOpen={isOpen}
+        onClose={() => {
+          onRequestClose();
+          setSelectedType(null);
+        }}
+      >
         <div className="">
-          {clickedSlot.request === "postpone" && (
-            <h5 className="text-danger font-weight-bold text-center m-2">
-              {convertTutorIdToName(clickedSlot.tutorId)} is requesting
-              Reschedule
-            </h5>
-          )}
-          {clickedSlot.start ? (
-            <div>
-              <SlotPill
-                selectedSlots={[clickedSlot]}
-                handleRemoveSlot={() => setClickedSlot({})}
-                selectedType={selectedType}
-              />
-            </div>
-          ) : (
-            <div>
-              <SlotPill
-                selectedSlots={selectedSlots}
-                handleRemoveSlot={handleRemoveSlot}
-                selectedType={selectedType}
-              />
-            </div>
-          )}
-          {selectedType === "reserved" && (
-            <div className=" d-flex justify-content-center">
-              <button
-                type="button"
-                className="action-btn btn btn-sm"
-                onClick={handleAccept}
-              >
-                Save
-              </button>
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                onClick={() => {
-                  onRequestClose();
-                  setSelectedType(null);
-                }}
-              >
-                Cancel
-              </button>
-            </div>
-          )}
-          <div className="form-group d-flex flex-column">
-            {(!conductedAndReviewedIntroLesson().introExist &&
-              !clickedSlot.type) ? (
-              <button
-                type="button"
-                className={` btn btn-sm btn-primary`}
-                disabled={clickedSlot.start}
-                onClick={() => setSelectedType("intro")}
-              >
-                Mark as Intro Session
-              </button>
+          <div className="modal-header">
+            <h4 className="modal-title text-center" style={{ width: "100%" }}>
+              Selected Time Slots
+            </h4>
+          </div>
+          <div className="">
+            {clickedSlot.request === "postpone" && (
+              <h5 className="text-danger font-weight-bold text-center m-2">
+                {convertTutorIdToName(clickedSlot.tutorId)} is requesting
+                Reschedule
+              </h5>
+            )}
+            {clickedSlot.start ? (
+              <div>
+                <SlotPill
+                  selectedSlots={[clickedSlot]}
+                  handleRemoveSlot={() => setClickedSlot({})}
+                  selectedType={selectedType}
+                />
+              </div>
             ) : (
-              // ((conductedAndReviewedIntroLesson().introExist &&
-              //   conductedAndReviewedIntroLesson().feedbackedIntro) ||
-              //   clickedSlot.start) && (
-              <>
-                {((clickedSlot.start && clickedSlot.type === "reserved") ||
-                  (!clickedSlot.start && conductedAndReviewedIntroLesson().introExist &&
+              <div>
+                <SlotPill
+                  selectedSlots={selectedSlots}
+                  handleRemoveSlot={handleRemoveSlot}
+                  selectedType={selectedType}
+                />
+              </div>
+            )}
+            {selectedType === "reserved" && (
+              <div className=" d-flex justify-content-center">
+                <button
+                  type="button"
+                  className="action-btn btn btn-sm"
+                  onClick={handleAccept}
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => {
+                    onRequestClose();
+                    setSelectedType(null);
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+            <div className="form-group d-flex flex-column">
+              {(!conductedAndReviewedIntroLesson().introExist &&
+                !clickedSlot.type) ? (
+                <button
+                  type="button"
+                  className={` btn btn-sm btn-primary`}
+                  disabled={clickedSlot.start}
+                  onClick={() => setSelectedType("intro")}
+                >
+                  Mark as Intro Session
+                </button>
+              ) : (
+                // ((conductedAndReviewedIntroLesson().introExist &&
+                //   conductedAndReviewedIntroLesson().feedbackedIntro) ||
+                //   clickedSlot.start) && (
+                <>
+                  {((clickedSlot.start && clickedSlot.type === "reserved") ||
+                    (!clickedSlot.start && conductedAndReviewedIntroLesson().introExist &&
+                      conductedAndReviewedIntroLesson().feedbackedIntro)) && (
+                      <button
+                        type="button"
+                        className=" btn btn-sm btn-success"
+                        onClick={() => setSelectedType("booked")}
+                      >
+                        Book This Session!
+                      </button>
+                    )}
+                  {(!clickedSlot.start && (conductedAndReviewedIntroLesson().introExist &&
                     conductedAndReviewedIntroLesson().feedbackedIntro)) && (
+                      <button
+                        type="button"
+                        className="btn  btn-sm btn-warning"
+                        style={{ background: "yellow" }}
+                        disabled={clickedSlot.start}
+                        onClick={() => {
+                          selectedSlots.length > 6 ?
+                            toast.warning("You reached the limit of 6 reserved lessons, You must book any reserved lesson before you can reserve more.") :
+                            setSelectedType("reserved")
+                            // handleAccept()
+                        }}
+                      >
+                        Mark as Reserved Session
+                      </button>
+                    )}
+                  {clickedSlot.start && (
                     <button
                       type="button"
-                      className=" btn btn-sm btn-success"
-                      onClick={() => setSelectedType("booked")}
+                      className=" btn btn-sm btn-danger"
+                      onClick={() => setSelectedType("delete")}
                     >
-                      Book This Session!
+                      Delete
                     </button>
                   )}
-                {(!clickedSlot.start && (conductedAndReviewedIntroLesson().introExist &&
-                  conductedAndReviewedIntroLesson().feedbackedIntro)) && (
-                    <button
-                      type="button"
-                      className="btn  btn-sm btn-warning"
-                      style={{ background: "yellow" }}
-                      disabled={clickedSlot.start}
-                      onClick={() => {
-                        selectedSlots.length > 6 ?
-                          toast.warning("You reached the limit of 6 reserved lessons, You must book any reserved lesson before you can reserve more.") :
-                          setSelectedType("reserved")
-                      }}
-                    >
-                      Mark as Reserved Session
-                    </button>
+                  {clickedSlot.request === "postpone" && (
+                    <div className="d-flex justify-content-between align-items-center h-100">
+                      <DatePicker
+                        selected={rescheduleTime}
+                        onChange={(date) => setRescheduleTime(date)}
+                        showTimeSelect
+                        dateFormat="MMM d, yyyy hh:mm aa"
+                        className="form-control m-2 w-80"
+                        timeIntervals={60}
+                      />
+                      <Button
+                        className="btn-success btn-sm"
+                        onClick={() => handleReschedule()}
+                      >
+                        Postpone
+                      </Button>
+                    </div>
                   )}
-                {clickedSlot.start && (
-                  <button
-                    type="button"
-                    className=" btn btn-sm btn-danger"
-                    onClick={() => setSelectedType("delete")}
-                  >
-                    Delete
-                  </button>
-                )}
-                {clickedSlot.request === "postpone" && (
-                  <div className="d-flex justify-content-between align-items-center h-100">
-                    <DatePicker
-                      selected={rescheduleTime}
-                      onChange={(date) => setRescheduleTime(date)}
-                      showTimeSelect
-                      dateFormat="MMM d, yyyy hh:mm aa"
-                      className="form-control m-2 w-80"
-                      timeIntervals={60}
-                    />
-                    <Button
-                      className="btn-success btn-sm"
-                      onClick={() => handleReschedule()}
-                    >
-                      Postpone
-                    </Button>
-                  </div>
-                )}
+                </>
+                //)
+              )}
+            </div>
+          </div>
+
+          {/* <div>
+            <div className="rounded d-flex text-dark m-1" style={{ background: "#f7f5f6", fontWeight: "600" }}>
+              <div className={`rounded p-3 m-1 ${selectedType === "booked" ? "bg-success-light" : ""}`}>Booking</div>
+              <div className={`rounded p-3  m-1 ${selectedType === "intro" ? "bg-success" : ""}`}>Intro</div>
+
+              <div className={`rounded p-3 m-1 ${selectedType === "reserved" ? "bg-success" : ""}`}>Reserve</div>
+
+            </div>
+          </div> */}
+
+          {selectedType === "delete" && (
+            <div className=" p-4">
+              <hr />
+              <p className="text-danger">
+                Are you sure you want to delete your reserved time slots lessons?!
+              </p>
+              <hr />
+              <div>
+                <button
+                  type="button"
+                  className="action-btn btn btn-sm float-end"
+                  onClick={() => {
+                    dispatch(deleteStudentLesson(clickedSlot));
+                    setClickedSlot({});
+                    onRequestClose();
+                  }}
+                >
+                  Confirm
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div className="w-100 d-flex flex-column">
+            {selectedTutor.activateSubscriptionOption && (
+              <>
+                <h6 className="m-0 text-center " style={{ lineHeight: "0.7" }}>Subscription Discount</h6>
+                <table className="" style={{ width: "90%", margin: "5%" }}>
+                  <thead>
+                    <tr>
+                      {subscription_cols.map((item) => (
+                        <th key={item.Header}>{item.Header}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {subscription_discount.map((item, index) => (
+                      <tr key={index}>
+                        <td>{item.package}</td>
+
+                        <td>{item.hours}</td>
+
+                        <td>{item.discount}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </>
-              //)
             )}
           </div>
-        </div>
-
-        <div>
-          <div className="rounded d-flex text-dark m-1" style={{background:"#f7f5f6", fontWeight:"600"}}>
-            <div className={`rounded p-3 m-1 ${selectedType === "booked" ? "bg-success-light" : ""}`}>Booking</div>
-            <div className={`rounded p-3  m-1 ${selectedType === "intro" ? "bg-success" : ""}`}>Intro</div>
-
-            <div className={`rounded p-3 m-1 ${selectedType === "reserved" ? "bg-success" : ""}`}>Reserve</div>
-
-            </div>
-        </div>
-
-        {selectedType === "delete" && (
-          <div className=" p-4">
-            <hr />
-            <p className="text-danger">
-              Are you sure you want to delete your reservation?!
-            </p>
-            <hr />
+          {(selectedType === "intro" || selectedType === "booked") && (
             <div>
-              <button
-                type="button"
-                className="action-btn btn btn-sm float-end"
-                onClick={() => {
-                  dispatch(deleteStudentLesson(clickedSlot));
-                  setClickedSlot({});
-                  onRequestClose();
-                }}
-              >
-                Confirm
-              </button>
+              <SlotsInvoice
+                timeZone={timeZone}
+                selectedType={selectedType}
+                studentName={formatName(student.FirstName, student.LastName)}
+                tutorName={formatName(
+                  selectedTutor.firstName,
+                  selectedTutor.lastName
+                )}
+                invoiceNum={invoiceNum}
+                selectedSlots={clickedSlot.start ? [clickedSlot] : selectedSlots}
+                subject={selectedTutor.subject}
+                rate={selectedTutor.rate}
+                introDiscountEnabled={selectedTutor.introDiscountEnabled}
+                handleAccept={() => setPaymentModalOpen(true)}
+                handleClose={onRequestClose}
+              />
+
             </div>
-          </div>
-        )}
-
-        <div className="w-100 d-flex flex-column">
-          {selectedTutor.activateSubscriptionOption && (
-            <>
-              <h6 className="m-0 text-center " style={{ lineHeight: "0.7" }}>Subscription Discount</h6>
-              <table className="" style={{ width: "90%", margin: "5%" }}>
-                <thead>
-                  <tr>
-                    {subscription_cols.map((item) => (
-                      <th key={item.Header}>{item.Header}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {subscription_discount.map((item, index) => (
-                    <tr key={index}>
-                      <td>{item.package}</td>
-
-                      <td>{item.hours}</td>
-
-                      <td>{item.discount}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </>
           )}
-        </div>
-        {(selectedType === "intro" || selectedType === "booked") && (
-          <div>
-            <SlotsInvoice
-              timeZone={timeZone}
-              selectedType={selectedType}
-              studentName={formatName(student.FirstName, student.LastName)}
-              tutorName={formatName(
-                selectedTutor.firstName,
-                selectedTutor.lastName
-              )}
-              invoiceNum={invoiceNum}
-              selectedSlots={clickedSlot.start ? [clickedSlot] : selectedSlots}
-              subject={selectedTutor.subject}
-              rate={selectedTutor.rate}
-              introDiscountEnabled={selectedTutor.introDiscountEnabled}
-              handleAccept={handleAccept}
-              handleClose={onRequestClose}
-            />
-
-          </div>
-        )}
 
 
 
-        {/* {selectedTutor.activateSubscriptionOption && (
+          {/* {selectedTutor.activateSubscriptionOption && (
           <table className="" style={{ width: "90%", margin: "5%" }}>
             <thead>
               <tr>
@@ -510,8 +509,10 @@ function EventModal({
             </tbody>
           </table>
         )} */}
-      </div>
-    </LeftSideBar>
+        </div>
+      </LeftSideBar>
+      <PaymentDetailsModal open={paymentModalOpen} handleAccept={() => { handleAccept(); setPaymentModalOpen(false) }} onClose={() => setPaymentModalOpen(false)} />
+    </>
   );
 }
 

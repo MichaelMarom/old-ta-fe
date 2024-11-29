@@ -5,20 +5,41 @@ const useEventPropGetter = ({
   isStudentLoggedIn,
   selectedTutor,
   student,
-  lessons
+  lessons,
+  clickedSlot,
 }) => {
   return useCallback(
     (event) => {
-      // other subject or other tutor
+      // Check if the event matches the clickedSlot and it's a reserved slot
+      if (
+        clickedSlot &&
+        event.start === clickedSlot.start &&
+        clickedSlot.type === "reserved"
+      ) {
+        return {
+          className: "clicked-reserved-slot",
+          style: {
+            border: "none",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            backgroundColor: "orange",
+            color: "black",
+          },
+        };
+      }
+
+      // Other conditions
       const secSubject = lessons?.some(
-        (slot) => slot.type === "intro" && (event.subject !== selectedTutor.subject ||
-          event.tutorId !== selectedTutor.academyId)
+        (slot) =>
+          slot.type === "intro" &&
+          (event.subject !== selectedTutor.subject ||
+            event.tutorId !== selectedTutor.academyId)
       );
 
       const otherStudentSession = isStudentLoggedIn
         ? lessons?.some(
-          (slot) => slot.studentName !== student.FirstName && event.id === slot.id
-        )
+            (slot) =>
+              slot.studentName !== student.FirstName && event.id === slot.id
+          )
         : false;
 
       const deletedSession = lessons?.some(
@@ -118,7 +139,7 @@ const useEventPropGetter = ({
 
       return {};
     },
-    [isStudentLoggedIn, selectedTutor, student, lessons]
+    [isStudentLoggedIn, selectedTutor, student, lessons, clickedSlot]
   );
 };
 

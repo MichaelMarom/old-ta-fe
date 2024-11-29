@@ -33,6 +33,7 @@ const TutorCard = ({
     ResponseHrs,
     CancellationPolicy,
     IntroSessionDiscount,
+    ActivateSubscriptionOption
   } = tutor;
   const { student } = useSelector((state) => state.student);
   const scrollContainerRef = useRef(null);
@@ -304,11 +305,38 @@ const TutorCard = ({
                 </strong>
               </div>
               <div className="col-6 text-end">
-                {!IntroSessionDiscount ? (
+                {IntroSessionDiscount ? (
                   <FaCheckCircle color="green" />
                 ) : (
                   <MdCancel color="red" />
                 )}
+              </div>
+            </div>
+            <div
+              className="row py-2 w-auto"
+              style={{ backgroundColor: "#e9ecef" }}
+            >
+              <div className="col-6 text-start">
+                <strong
+                  title="Introduction Discount"
+                  style={{
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                    display: "block",
+                    overflow: "hidden",
+                    fontSize: "13px"
+
+                  }}
+                >
+                 Subscription Active:
+                </strong>
+              </div>
+              <div className="col-6 text-end">
+                {ActivateSubscriptionOption ? (
+                  <FaCheckCircle color="green" />
+                ) : (
+                  <MdCancel color="red" />
+                )}  
               </div>
             </div>
             <div

@@ -401,7 +401,6 @@ function BankDetails() {
                             </div> */}
                             </div>
                         </div>
-
                     </div>
                     {emailPaymentOptions.includes(PaymentOption) &&
                         <div className='form-row row mb-2'>
