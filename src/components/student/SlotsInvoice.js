@@ -6,11 +6,12 @@ import { HiPrinter } from "react-icons/hi2";
 import { MdDownloadForOffline } from "react-icons/md";
 import Tooltip from "../common/ToolTip";
 import ReactToPrint from "react-to-print";
-import { calculateDiscount } from "../common/Calendar/utils/calenderUtils";
+import { calculateDiscount, extractLoggedinStudentLesson } from "../common/Calendar/utils/calenderUtils";
 import PaymentDetailsModal from "./PaymentDetailsModal";
 import { useSelector } from "react-redux";
 
 import { toast } from "react-toastify";
+import { slotPillDateFormat } from "../../constants/constants";
 
 const SlotsInvoice = ({
   selectedType,
@@ -26,6 +27,10 @@ const SlotsInvoice = ({
   timeZone,
 }) => {
   const { selectedTutor } = useSelector((state) => state.selectedTutor);
+  const { lessons } = useSelector((state) => state.bookings);
+  const { student } = useSelector((state) => state.student);
+
+
 
   const subtotal = (
     selectedSlots.length *
@@ -37,16 +42,23 @@ const SlotsInvoice = ({
   const rateHalf = (rate) => (rate.split("$")[1] / 2).toFixed(2);
 
   const bookingFee = parseFloat(process.env.REACT_APP_LESSON_BOOKING_FEE || 0);
-
   // Discount calculation
-  const discountAmount = selectedTutor.activateSubscriptionOption
-    ? ((subtotal * calculateDiscount([], selectedSlots)) / 100).toFixed(2)
-    : 0;
+  const discountPercentage = (!extractLoggedinStudentLesson(lessons, selectedTutor, student).
+    some(lesson => lesson.type === "intro") && introDiscountEnabled ? 50 :
+    selectedTutor.activateSubscriptionOption
+      ? calculateDiscount([], selectedSlots)
+      : 0);
 
+  const discountAmount = ((subtotal * discountPercentage) / 100).toFixed(2);
+
+  // Total after discount
   const totalAfterDiscount = (subtotal - discountAmount).toFixed(2);
 
   // Final total (after discount + booking fee)
-  const totalAmount = (parseFloat(totalAfterDiscount) + bookingFee).toFixed(2);
+  const totalAmount = (
+    parseFloat(totalAfterDiscount) +
+    parseFloat(bookingFee)
+  ).toFixed(2);
 
   const currentTime = () => {
     const currentDate = moment().tz(timeZone).toDate();
@@ -56,12 +68,12 @@ const SlotsInvoice = ({
   const invoiceRef = useRef(null);
 
   return (
-    <div className="container mt-4" ref={invoiceRef}>
-      <div className="row">
-        <div className="col-12 p-2">
-          <div className="card">
+    <> <div className="container mt-4" >
+      <div className="row  border rounded-4 p-1 shadow">
+        <div className="col-12 p-1" ref={invoiceRef}>
+          <div className="">
             <div>
-              <div className="card-header text-center p-0">
+              <div className=" text-center p-0">
                 <div className="w-100">
                   <img
                     src={logo}
@@ -72,7 +84,7 @@ const SlotsInvoice = ({
                   />
                 </div>
               </div>
-              <div className="card-body">
+              <div className="">
                 <div className="mb-4">
                   <div className="d-flex justify-content-between align-items-center mb-3">
                     <div className="text-center " style={{ fontSize: "16px" }}>
@@ -81,9 +93,9 @@ const SlotsInvoice = ({
                     </div>
                     <div>Date: {showDate(currentTime())}</div>
                   </div>
-                  {selectedType === "intro" &&
-                    introDiscountEnabled &&
-                    selectedTutor.activateSubscriptionOption && (
+                  {!extractLoggedinStudentLesson(lessons, selectedTutor, student).
+                    some(lesson => lesson.type === "intro") &&
+                    introDiscountEnabled && (
                       <h5
                         className="text-center mb-3 text-danger font-weight-bold"
                         style={{ fontSize: "16px" }}
@@ -91,7 +103,7 @@ const SlotsInvoice = ({
                         Avail 50% discount for this Intro Session
                       </h5>
                     )}
-                  <div className="d-flex justify-content-between px-2">
+                  <div className="d-flex justify-content-between">
                     <div style={{ fontSize: "12px" }}>
                       <span className="fs-6 font-weight-bold">Student: </span>
                       {studentName}
@@ -103,27 +115,24 @@ const SlotsInvoice = ({
                   </div>
                 </div>
                 <table
-                  className="table table-borderless table-striped"
+                  className="table table-borderless table-striped m-0"
                   style={{ fontSize: "12px" }}
                 >
                   <thead>
                     <tr>
                       <th
+                        style={{ width: "5%" }} // Set width to 5px here
                         className="border-0"
-                        style={{ background: "#2471A3" }}
                       >
+                        #
+                      </th>
+                      <th className="border-0" style={{ background: "#2471A3" }}>
                         Slot
                       </th>
-                      <th
-                        className="border-0"
-                        style={{ background: "#2471A3" }}
-                      >
+                      <th className="border-0" style={{ background: "#2471A3" }}>
                         Subject
                       </th>
-                      <th
-                        className="border-0"
-                        style={{ background: "#2471A3" }}
-                      >
+                      <th className="border-0" style={{ background: "#2471A3" }}>
                         Price
                       </th>
                     </tr>
@@ -131,22 +140,18 @@ const SlotsInvoice = ({
                   <tbody>
                     {selectedSlots.map((slot, index) => (
                       <tr key={index}>
-                        <td className="border-0">{showDate(slot.start)}</td>
+                        <td style={{ width: "5px" }}>{index + 1}</td>
+                        <td className="border-0">
+                          {showDate(slot.start, slotPillDateFormat)}
+                        </td>
                         <td className="border-0">{subject}</td>
-                        {introDiscountEnabled &&
-                        selectedType === "intro" &&
-                        selectedTutor.activateSubscriptionOption ? (
-                          <>
-                            <td className="border-0">
-                              <s>{rate}</s> ${rateHalf(rate)}
-                            </td>
-                          </>
-                        ) : (
-                          <td className="border-0">{rate}</td>
-                        )}
+                        <td className="border-0">
+                          {introDiscountEnabled ? rateHalf(rate) : rate}
+                        </td>
                       </tr>
                     ))}
                     <tr>
+                      <td className="border-0"></td>
                       <td className="border-0"></td>
                       <td className="border-0 text-dark">
                         <div className="d-flex gap-1">
@@ -164,62 +169,67 @@ const SlotsInvoice = ({
                     </tr>
                     {selectedTutor.activateSubscriptionOption && (
                       <tr>
-                        <td className="border-0 fw-bold text-danger">
-                          Discount:
-                        </td>
                         <td className="border-0"></td>
+                        <td className="border-0 fw-bold text-danger"></td>
+                        <td className="border-0 fw-bold text-danger">
+                          Discount({discountPercentage} %):
+                        </td>
                         <td className="border-0 fw-bold text-danger">
                           -${discountAmount}
                         </td>
                       </tr>
                     )}
                     <tr>
-                      <td className="border-0 fw-bold">Total Amount:</td>
                       <td className="border-0"></td>
+                      <td className="border-0"></td>
+                      <td className="border-0 fw-bold">Total Amount:</td>
                       <td className="border-0 fw-bold">${totalAmount}</td>
                     </tr>
                   </tbody>
                 </table>
-                <hr />
+
+
               </div>
             </div>
-            <div className="d-flex justify-content-between align-items-center">
-              <div className="d-flex " style={{ gap: "10px" }}>
-                <ReactToPrint
-                  trigger={() => (
-                    <HiPrinter
-                      size={20}
-                      style={{ cursor: "pointer" }}
-                    />
-                  )}
-                  content={() => invoiceRef.current}
-                />
-                <Tooltip text={"Download invoice"}>
-                  <MdDownloadForOffline
-                    size={20}
-                    style={{ cursor: "pointer" }}
-                  />
-                </Tooltip>
-              </div>
-              <div>
-                <button
-                  className="btn btn-sm btn-secondary"
-                  onClick={handleClose}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="btn btn-sm btn-primary"
-                  onClick={handleAccept}
-                >
-                  Pay Invoice
-                </button>
-              </div>
-            </div>
+
           </div>
         </div>
       </div>
-    </div>
+    </div >
+      <div className="d-flex justify-content-between align-items-center px-3">
+        <div className="d-flex " style={{ gap: "10px" }}>
+          <ReactToPrint
+            trigger={() => (
+              <HiPrinter
+                size={20}
+                style={{ cursor: "pointer" }}
+              />
+            )}
+            content={() => invoiceRef.current}
+          />
+          <Tooltip text={"Download invoice"}>
+            <MdDownloadForOffline
+              size={20}
+              style={{ cursor: "pointer" }}
+            />
+          </Tooltip>
+        </div>
+        <div>
+          <button
+            className="btn btn-sm btn-secondary"
+            onClick={handleClose}
+          >
+            Cancel
+          </button>
+          <button
+            className="btn btn-sm btn-primary"
+            onClick={handleAccept}
+          >
+            Pay Invoice
+          </button>
+        </div>
+      </div>
+    </>
   );
 };
 

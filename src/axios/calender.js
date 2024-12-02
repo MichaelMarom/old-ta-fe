@@ -108,6 +108,7 @@ export const createStudentBookings = async (invoice, lessons) => {
     showErrorToast(e);
   }
 };
+
 export const updateStudentBooking = async (id, lesson, invoice) => {
   try {
     await apiClient.post(`/student/booking/${id}`, { params: { invoice, lesson } });
@@ -118,7 +119,8 @@ export const updateStudentBooking = async (id, lesson, invoice) => {
 
 export const save_student_lesson = async (body) => {
   try {
-    await apiClient.post("/student/lesson", body);
+    const { data } = await apiClient.post("/student/lesson", body);
+    return data
   } catch (e) {
     showErrorToast(e);
   }

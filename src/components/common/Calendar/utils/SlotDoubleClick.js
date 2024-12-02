@@ -6,7 +6,7 @@ import {
   isPastDate,
 } from "./calenderUtils";
 import { toast } from "react-toastify";
-import { FeedbackMissing } from "../ToastMessages";
+import { save_student_lesson } from "../../../../axios/calender";
 
 export const handleSlotDoubleClick = (
   slotInfo,
@@ -325,7 +325,7 @@ const handleMonthViewDisable = (
   }
 };
 
-const handleStudentClickInWeekOrDayTab = (
+const handleStudentClickInWeekOrDayTab = async (
   slotInfo,
   student,
   activeView,
@@ -449,15 +449,37 @@ const handleStudentClickInWeekOrDayTab = (
           const threeHoursGap = new Date(new Date().getTime() + 3 * 60 * 60 * 1000);
           if (startEventTime.toDate() < threeHoursGap) return toast.warning("You can only reserve slots starting at least 3 hours from now.");
 
-          if (selectedSlots.length >= 6 && selectedType === "reserved") return toast.warning("You reached the limit of 6 reserved lessons, You must book any reserved lesson before you can reserve more.")
+          // if (selectedSlots.length >= 6 && selectedType === "reserved") return toast.warning("You reached the limit of 6 reserved lessons, You must book any reserved lesson before you can reserve more.")
+
+          const result = await save_student_lesson({
+            end: endEventTime.toDate(),
+            start: startEventTime.toDate(),
+            subject: selectedTutor.subject,
+            type: 'reserved',
+            studentId: student.AcademyId,
+            studentName: student.FirstName,
+            tutorId: selectedTutor.academyId,
+            tutorScreenName: selectedTutor.tutorScreenName,
+            title: "Reserved"
+          })
+          console.log(result, "individual lesson")
           setSelectedSlots([
             ...selectedSlots,
             {
+              id: result[0].id,
               start: startEventTime.toDate(),
               end: endEventTime.toDate(),
               subject: selectedTutor.subject,
+              type: 'booked',
+
+              // invoiceNum: generateRandomId()
             },
           ]);
+          // TODO: add slot here: it will generate id comb=ine thoes ids into and array
+          // next slot will be like [{id, other details}. {id, other details}] = 
+          // already saved in db with type = reserved 
+          // after hitting pay: it will individullay update the ids with type = "booked" add invoiceNum
+          // and then add invoice Record with discount, booking fee etc
           setIsModalOpen(true);
         } else {
           setSelectedSlots([
@@ -465,6 +487,8 @@ const handleStudentClickInWeekOrDayTab = (
               start: startEventTime.toDate(),
               end: endEventTime.toDate(),
               subject: selectedTutor.subject,
+              type: 'intro',
+              // invoiceNum: generateRandomId()
             },
           ]);
           setIsModalOpen(true);

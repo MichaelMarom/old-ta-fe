@@ -133,23 +133,22 @@ export const handleBulkEventCreate = async (
   }
 
   //limit of max 6 lslot reservation at /bookingone time
-  if (
-    selectedSlots.length &&
-    selectedSlots[0].type === "reserved" &&
-    lessons.map((les) => les.type === "reserved").length > 6
-  ) {
-    toast.warning("You can not Reserve more than 6 slots");
-    return;
-  }
+  // if (
+  //   selectedSlots.length &&
+  //   selectedSlots[0].type === "reserved" &&
+  //   lessons.map((les) => les.type === "reserved").length > 6
+  // ) {
+  //   toast.warning("You can not Reserve more than 6 slots");
+  //   return;
+  // }
 
   const updatedSelectedSlots = selectedSlots?.map((slot) => {
     return {
       ...slot,
-      type,
       title:
-        type === "reserved"
+        slot.type === "reserved"
           ? "Reserved"
-          : type === "intro"
+          : slot.type === "intro"
             ? "Intro"
             : "Booked",
       studentName: student.FirstName,
@@ -166,7 +165,7 @@ export const handleBulkEventCreate = async (
   });
   console.log(selectedTutor)
   //handle delete type later todo
-  if (type === "intro") {
+  if (selectedSlots[0].type === "intro") {
     const invoice = {
       InvoiceId: generateRandomId(),
       StudentId: student.AcademyId,
@@ -176,7 +175,7 @@ export const handleBulkEventCreate = async (
       InvoiceDate: moment().utc()
     }
     dispatch(postStudentBookingWithInvoiceAndLessons(invoice, updatedSelectedSlots));
-  } else if (type === "booked") {
+  } else if (selectedSlots[0].type === "booked") {
     const invoice = {
       InvoiceId: generateRandomId(),
       StudentId: student.AcademyId,

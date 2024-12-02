@@ -9,8 +9,8 @@ import { deleteStudentLesson } from "../../../redux/student/studentBookings";
 function CustomEvent({
   event,
   isStudentLoggedIn,
-  handleEventClick = () => {},
-  sessions=[]
+  handleEventClick = () => { },
+  sessions = []
 }) {
   const dispatch = useDispatch();
   const [remainingTime, setRemainingTime] = useState(
@@ -27,7 +27,7 @@ function CustomEvent({
 
       if (
         (newRemainingTime.minutes === 0 && newRemainingTime.seconds === 1) ||
-        newRemainingTime.minutes >= 60
+        newRemainingTime.minutes >= 30
       ) {
         clearInterval(intervalId);
         setExtraFiveMinStart(true);
@@ -48,7 +48,7 @@ function CustomEvent({
       const inputTime = moment(event.createdAt);
       const diffInMinutes = currentTime.diff(inputTime, "minutes");
       //5 min extra after expire
-      if (diffInMinutes >= 65 && event.type === "reserved") {
+      if (diffInMinutes >= 30 && event.type === "reserved") {
         // await delete_student_lesson(event.id)
         dispatch(deleteStudentLesson(event))
         setExtraFiveMinStart(false);
@@ -76,14 +76,14 @@ function CustomEvent({
     if (
       duration.hours() > 2 ||
       duration.days() > 1 ||
-      now.diff(createdAtMoment, "minutes") > 64
+      now.diff(createdAtMoment, "minutes") > 29
     ) {
       return {
         minutes: 0,
         seconds: 1,
       };
     }
-    const remainingMinutes = 60 - duration.minutes() - 1;
+    const remainingMinutes = 30 - duration.minutes() - 1;
     const remainingSeconds = 60 - duration.seconds() - 1;
 
     return {
@@ -94,33 +94,32 @@ function CustomEvent({
 
   return (
     <div
-      className={`text-center h-100 ${
-        event.request === "postpone" ? "blinking-button" : ""
-      } `}
+      className={`text-center h-100 ${event.request === "postpone" ? "blinking-button" : ""
+        } `}
       style={{ fontSize: "12px" }}
       onClick={() => handleEventClick(event)}
     >
       {event.type === "reserved" && extraFiveMinStart ? (
         <div>
-          {event.title} by {event.studentName} - expired
+          Marked For Booking - expired
         </div>
       ) : (
         <div>
-          {event.title}{" "}
-          {isStudentLoggedIn && student.FirstName !== event.studentName
+          Marked For Booking
+          {(isStudentLoggedIn && student.FirstName !== event.studentName) ||
+            event.type === "reserved"
             ? ``
-            : ` ${
-                isStudentLoggedIn
-                  ? `from ${event.tutorScreenName || "unknown"}`
-                  : `by ${event.studentName}`
-              }`}
+            : ` ${isStudentLoggedIn
+              ? `from ${event.tutorScreenName || "unknown"}`
+              : `by ${event.studentName}`
+            }`}
           {event.type === "reserved" && (
             <div>
               {String(remainingTime.minutes).padStart(2, "0")} :
               {String(remainingTime.seconds).padStart(2, "0")}
             </div>
           )}
-          {<div>"{event.subject}"</div>}
+          { event.type !== "reserved" && <div>"{event.subject}"</div>}
           {event.request === "postpone" && <div>Postpone Request</div>}
           {event.request === "delete" && <div>Deleted</div>}
           {!isStudentLoggedIn && event.ratingByStudent && (

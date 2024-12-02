@@ -42,33 +42,12 @@ function EventModal({
   const navigate = useNavigate();
 
   const { lessons } = useSelector((state) => state.bookings);
-  const { tutor } = useSelector((state) => state.tutor);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false)
-  const [canPostEvents, setCanPostEvents] = useState(true);
   const { selectedTutor } = useSelector((state) => state.selectedTutor);
   const [rescheduleTime, setRescheduleTime] = useState(
     moment().add(1, "hours").set({ minute: 0 }).toDate()
   );
   const [invoiceNum, setInvoiceNum] = useState(null);
-
-
-  // const formatUTC = (dateInt, addOffset = false) => {
-  //   let date = !dateInt || dateInt.length < 1 ? new Date() : new Date(dateInt);
-  //   const currentDate = new Date();
-  //   if (date < currentDate) {
-  //     return null; // You can also throw an error here if you prefer
-  //   }
-  //   if (typeof dateInt === "string") {
-  //     return date;
-  //   } else {
-  //     const offset = addOffset
-  //       ? date.getTimezoneOffset()
-  //       : -date.getTimezoneOffset();
-  //     const offsetDate = new Date();
-  //     offsetDate.setTime(date.getTime() + offset * 60000);
-  //     return offsetDate;
-  //   }
-  // };
 
   useEffect(() => {
     if (clickedSlot.id) {
@@ -134,10 +113,10 @@ function EventModal({
   }
 
   const handleAccept = () => {
-    if (canPostEvents && clickedSlot.id) {
+    if (clickedSlot.id) {
       convertReservedToBooked()
     }
-    if (canPostEvents && !clickedSlot.id) {
+    else {
       handleBulkEventCreate(
         selectedType,
         dispatch,
@@ -168,49 +147,6 @@ function EventModal({
       setInvoiceNum(null);
     }
   }, [selectedType]);
-
-  useEffect(() => {
-    const existIntroSessionOfSameSubjectSameTutor = lessons?.some(
-      (slot) =>
-        slot.type === "intro" &&
-        selectedTutor.subject === slot.subject &&
-        slot.tutorId === selectedTutor.academyId &&
-        (!isStudentLoggedIn || slot.studentId === student.AcademyId)
-    );
-    if (
-      existIntroSessionOfSameSubjectSameTutor &&
-      selectedType === "intro" &&
-      selectedSlots[0]?.start
-    ) {
-      toast.warning("Cannot add more than 1 Intro Session!");
-      setCanPostEvents(false);
-    } else if (
-      !existIntroSessionOfSameSubjectSameTutor &&
-      selectedType !== "intro" &&
-      selectedSlots[0]?.start
-    ) {
-      setCanPostEvents(false);
-      toast.warning(
-        `Your first Session must be Introduction session for ${selectedTutor.subject}!`
-      );
-    } else if (
-      existIntroSessionOfSameSubjectSameTutor &&
-      selectedType === "intro" &&
-      selectedSlots.length > 1
-    ) {
-      setCanPostEvents(false);
-      toast.warning("Cannot book the same subject intro session twice!");
-    } else {
-      setCanPostEvents(true);
-    }
-  }, [
-    selectedSlots,
-    selectedType,
-    lessons,
-    isStudentLoggedIn,
-    selectedTutor,
-    student,
-  ]);
 
   const conductedAndReviewedIntroLesson = () => {
     const introExist = lessons?.some((slot) =>
@@ -247,7 +183,7 @@ function EventModal({
     { discount: "20.0%", hours: "24+", package: "A-24" },
   ];
   useEffect(() => {
-    if (selectedType && selectedType !== "reserved" && selectedTutor.activateSubscriptionOption) {
+    if (selectedTutor.activateSubscriptionOption && !!selectedSlots.length && !!extractLoggedinStudentLesson(lessons, selectedTutor, student).some(lesson => lesson.type === "intro")) {
       let message = '';
       if (selectedSlots.length < 6) {
         const remainingSlots = 6 - selectedSlots.length;
@@ -262,9 +198,9 @@ function EventModal({
         const remainingSlots = 24 - selectedSlots.length;
         message = `Book ${remainingSlots} more ${remainingSlots > 1 ? 'lessons' : 'lesson'} to get 20% discount.`;
       }
-      message.length && toast.info(message)
+      message.length && toast.info(message, { className: 'setup-private-info' })
     }
-  }, [lessons, selectedSlots, selectedTutor, student, selectedType]);
+  }, [lessons, selectedSlots, selectedTutor, student]);
 
   return (
     <>
@@ -277,10 +213,15 @@ function EventModal({
       >
         <div className="">
           <div className="modal-header">
-            <h4 className="modal-title text-center" style={{ width: "100%" }}>
-              Selected Time Slots
+            <h4 className="modal-title text-centerd-block" style={{ width: "80%" }}>
+              Marked for Booking Slots
+
             </h4>
+
           </div>
+          <p className="d-block text-black p-2" style={{ fontSize: "12px", fontWeight: "300" }}>
+            (to remove, click the slot's <span className="fw-bold">"X"</span> below)
+          </p>
           <div className="">
             {clickedSlot.request === "postpone" && (
               <h5 className="text-danger font-weight-bold text-center m-2">
@@ -293,7 +234,8 @@ function EventModal({
                 <SlotPill
                   selectedSlots={[clickedSlot]}
                   handleRemoveSlot={() => setClickedSlot({})}
-                  selectedType={selectedType}
+                  selectedType={!!extractLoggedinStudentLesson(lessons, selectedTutor, student).some(lesson => lesson.type === "intro") ?
+                    'booked' : 'intro'}
                 />
               </div>
             ) : (
@@ -301,11 +243,12 @@ function EventModal({
                 <SlotPill
                   selectedSlots={selectedSlots}
                   handleRemoveSlot={handleRemoveSlot}
-                  selectedType={selectedType}
+                  selectedType={!!extractLoggedinStudentLesson(lessons, selectedTutor, student).some(lesson => lesson.type === "intro") ?
+                    'booked' : 'intro'}
                 />
               </div>
             )}
-            {selectedType === "reserved" && (
+            {/* {selectedType === "reserved" && (
               <div className=" d-flex justify-content-center">
                 <button
                   type="button"
@@ -325,24 +268,25 @@ function EventModal({
                   Cancel
                 </button>
               </div>
-            )}
+            )} */}
             <div className="form-group d-flex flex-column">
               {(!conductedAndReviewedIntroLesson().introExist &&
                 !clickedSlot.type) ? (
-                <button
-                  type="button"
-                  className={` btn btn-sm btn-primary`}
-                  disabled={clickedSlot.start}
-                  onClick={() => setSelectedType("intro")}
-                >
-                  Mark as Intro Session
-                </button>
+                <></>
+                // <button
+                //   type="button"
+                //   className={` btn btn-sm btn-primary`}
+                //   disabled={clickedSlot.start}
+                //   onClick={() => setSelectedType("intro")}
+                // >
+                //   Mark as Intro Session
+                // </button>
               ) : (
                 // ((conductedAndReviewedIntroLesson().introExist &&
                 //   conductedAndReviewedIntroLesson().feedbackedIntro) ||
                 //   clickedSlot.start) && (
                 <>
-                  {((clickedSlot.start && clickedSlot.type === "reserved") ||
+                  {/* {((clickedSlot.start && clickedSlot.type === "reserved") ||
                     (!clickedSlot.start && conductedAndReviewedIntroLesson().introExist &&
                       conductedAndReviewedIntroLesson().feedbackedIntro)) && (
                       <button
@@ -352,8 +296,8 @@ function EventModal({
                       >
                         Book This Session!
                       </button>
-                    )}
-                  {(!clickedSlot.start && (conductedAndReviewedIntroLesson().introExist &&
+                    )} */}
+                  {/* {(!clickedSlot.start && (conductedAndReviewedIntroLesson().introExist &&
                     conductedAndReviewedIntroLesson().feedbackedIntro)) && (
                       <button
                         type="button"
@@ -369,7 +313,7 @@ function EventModal({
                       >
                         Mark as Reserved Session
                       </button>
-                    )}
+                    )} */}
                   {clickedSlot.start && (
                     <button
                       type="button"
@@ -436,6 +380,27 @@ function EventModal({
             </div>
           )}
 
+
+          <div>
+            <SlotsInvoice
+              timeZone={timeZone}
+              selectedType={selectedType}
+              studentName={formatName(student.FirstName, student.LastName)}
+              tutorName={formatName(
+                selectedTutor.firstName,
+                selectedTutor.lastName
+              )}
+              invoiceNum={invoiceNum}
+              selectedSlots={clickedSlot.start ? [clickedSlot] : selectedSlots}
+              subject={selectedTutor.subject}
+              rate={selectedTutor.rate}
+              introDiscountEnabled={selectedTutor.introDiscountEnabled}
+              handleAccept={() => setPaymentModalOpen(true)}
+              handleClose={onRequestClose}
+            />
+
+          </div>
+
           <div className="w-100 d-flex flex-column">
             {selectedTutor.activateSubscriptionOption && (
               <>
@@ -463,29 +428,6 @@ function EventModal({
               </>
             )}
           </div>
-          {(selectedType === "intro" || selectedType === "booked") && (
-            <div>
-              <SlotsInvoice
-                timeZone={timeZone}
-                selectedType={selectedType}
-                studentName={formatName(student.FirstName, student.LastName)}
-                tutorName={formatName(
-                  selectedTutor.firstName,
-                  selectedTutor.lastName
-                )}
-                invoiceNum={invoiceNum}
-                selectedSlots={clickedSlot.start ? [clickedSlot] : selectedSlots}
-                subject={selectedTutor.subject}
-                rate={selectedTutor.rate}
-                introDiscountEnabled={selectedTutor.introDiscountEnabled}
-                handleAccept={() => setPaymentModalOpen(true)}
-                handleClose={onRequestClose}
-              />
-
-            </div>
-          )}
-
-
 
           {/* {selectedTutor.activateSubscriptionOption && (
           <table className="" style={{ width: "90%", margin: "5%" }}>

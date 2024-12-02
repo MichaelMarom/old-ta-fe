@@ -890,19 +890,25 @@ fieldset:disabled .btn,
 }
 
 .rbc-day-slot.rbc-time-column .place-holder-end-slot {
-  border: 1px solid red !important;
+  border: 1px solid rgb(228, 204, 28)  !important;
+  background-color: rgb(228, 204, 28) ;
   border-top: 0 !important;
 }
 
 .rbc-day-slot.rbc-time-column .rbc-timeslot-group .rbc-time-slot.place-holder-start-slot {
-  border: 1px solid red !important;
+  border: 1px solid rgb(228, 204, 28) !important;
+  background-color: rgb(228, 204, 28) ;
+
   border-bottom: 0 !important;
 }
 
 .rbc-day-slot.rbc-time-column .rbc-timeslot-group .rbc-time-slot.place-holder-start-slot::after {
-  content: "Place holder";
+  content: "Marked for Booking";
   display: block;
-  color: rgb(249, 5, 5);
+  color: red;
+  height: 100%;
+  width: 100%;
+  margin-top:10px  ;
   font-size: 9px;
 }
 
