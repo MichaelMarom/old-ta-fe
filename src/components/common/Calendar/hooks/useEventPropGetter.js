@@ -7,6 +7,7 @@ const useEventPropGetter = ({
   student,
   lessons,
   clickedSlot,
+  selectedSlots,
 }) => {
   return useCallback(
     (event) => {
@@ -27,6 +28,24 @@ const useEventPropGetter = ({
         };
       }
 
+      // Check if the event is present in the selectedSlots
+      const isSelectedSlot = selectedSlots?.some(
+        (slot) => convertToDate(slot.start).getTime() === convertToDate(event.start).getTime() &&
+        convertToDate(slot.end).getTime() === convertToDate(event.end).getTime()
+      );
+
+      if (isSelectedSlot) {
+        return {
+          className: "selected-slot",
+          style: {
+            border: "none",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            backgroundColor: "orange",
+            color: "black",
+          },
+        };
+      }
+
       // Other conditions
       const secSubject = lessons?.some(
         (slot) =>
@@ -37,13 +56,14 @@ const useEventPropGetter = ({
 
       const otherStudentSession = isStudentLoggedIn
         ? lessons?.some(
-            (slot) =>
-              slot.studentName !== student.FirstName && event.id === slot.id
-          )
+          (slot) =>
+            slot.studentName !== student.FirstName && event.id === slot.id
+        )
         : false;
 
       const deletedSession = lessons?.some(
-        (slot) => slot.request === "delete" && slot.start === convertToDate(event.start)
+        (slot) =>
+          slot.request === "delete" && slot.start === convertToDate(event.start)
       );
 
       if (deletedSession)
@@ -139,7 +159,7 @@ const useEventPropGetter = ({
 
       return {};
     },
-    [isStudentLoggedIn, selectedTutor, student, lessons, clickedSlot]
+    [isStudentLoggedIn, selectedTutor, student, lessons, clickedSlot, selectedSlots]
   );
 };
 

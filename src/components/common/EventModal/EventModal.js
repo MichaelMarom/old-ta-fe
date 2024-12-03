@@ -23,6 +23,7 @@ import {
 } from "../../../redux/student/studentBookings";
 import { calculateDiscount, extractLoggedinStudentLesson } from "../Calendar/utils/calenderUtils";
 import PaymentDetailsModal from "../../student/PaymentDetailsModal";
+import TAButton from '../TAButton'
 
 function EventModal({
   isStudentLoggedIn = false,
@@ -214,7 +215,7 @@ function EventModal({
         <div className="">
           <div className="modal-header">
             <h4 className="modal-title text-centerd-block" style={{ width: "80%" }}>
-              Marked for Booking Slots
+              Marked Slots for Booking.
 
             </h4>
 
@@ -314,7 +315,7 @@ function EventModal({
                         Mark as Reserved Session
                       </button>
                     )} */}
-                  {clickedSlot.start && (
+                  {/* {clickedSlot.start && (
                     <button
                       type="button"
                       className=" btn btn-sm btn-danger"
@@ -322,7 +323,7 @@ function EventModal({
                     >
                       Delete
                     </button>
-                  )}
+                  )} */}
                   {clickedSlot.request === "postpone" && (
                     <div className="d-flex justify-content-between align-items-center h-100">
                       <DatePicker
@@ -357,31 +358,25 @@ function EventModal({
             </div>
           </div> */}
 
-          {selectedType === "delete" && (
+          {clickedSlot.id && (
             <div className=" p-4">
               <hr />
               <p className="text-danger">
-                Are you sure you want to delete your reserved time slots lessons?!
+                Are you sure you want to delete your Marked slot?
               </p>
               <hr />
-              <div>
-                <button
-                  type="button"
-                  className="action-btn btn btn-sm float-end"
-                  onClick={() => {
-                    dispatch(deleteStudentLesson(clickedSlot));
-                    setClickedSlot({});
-                    onRequestClose();
-                  }}
-                >
-                  Confirm
-                </button>
+              <div style={{float:"right"}} >
+                
+                <TAButton style={{margin:"0"}} type="button" buttonText={"Confirm"} handleClick={() => {
+                  dispatch(deleteStudentLesson(clickedSlot));
+                  setClickedSlot({});
+                  onRequestClose();
+                }} />
               </div>
             </div>
           )}
 
-
-          <div>
+          {!!selectedSlots.length && (
             <SlotsInvoice
               timeZone={timeZone}
               selectedType={selectedType}
@@ -397,12 +392,10 @@ function EventModal({
               introDiscountEnabled={selectedTutor.introDiscountEnabled}
               handleAccept={() => setPaymentModalOpen(true)}
               handleClose={onRequestClose}
-            />
-
-          </div>
+            />)}
 
           <div className="w-100 d-flex flex-column">
-            {selectedTutor.activateSubscriptionOption && (
+            {selectedTutor.activateSubscriptionOption && !!selectedSlots.length && (
               <>
                 <h6 className="m-0 text-center " style={{ lineHeight: "0.7" }}>Subscription Discount</h6>
                 <table className="" style={{ width: "90%", margin: "5%" }}>

@@ -43,10 +43,6 @@ export const TutorFeedbackModal = ({
     }
   }, [clickedSlot]);
 
-  const handleClose = () => {
-    onClose();
-  };
-
   return (
     <CenteredModal
       isTitleReactNode
@@ -62,7 +58,7 @@ export const TutorFeedbackModal = ({
         </div>
       }
       show={isOpen}
-      handleClose={handleClose}
+      handleClose={onClose}
     >
       <div className="">
         {

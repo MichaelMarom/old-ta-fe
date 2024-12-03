@@ -20,7 +20,7 @@ import "../../../styles/common.css";
 import useDebouncedEffect from "../../../hooks/DebouceWithDeps";
 import { TutorEventModal } from "../EventModal/TutorEventModal/TutorEventModal";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { convertToGmt } from "./utils/calenderUtils";
+import { convertToGmt, isPastDate } from "./utils/calenderUtils";
 import useEventPropGetter from "./hooks/useEventPropGetter";
 import {
   handleBulkEventCreate,
@@ -286,6 +286,7 @@ const ShowCalendar = ({
   );
 
   const handleEventClick = (event) => {
+    if (!!selectedSlots.length) return
     const ownSession =
       !isStudentLoggedIn || event.studentId === student?.AcademyId;
     if (!ownSession) {
@@ -298,10 +299,10 @@ const ShowCalendar = ({
     const isPastEvent =
       convertToDate(convertToDate(event.end)).getTime() < new Date().getTime();
     if (isStudentLoggedIn && !isPastEvent) {
-      setIsModalOpen(true);
+      // setIsModalOpen(true);
       setIsTutorSideSessionModalOpen(false);
     } else {
-      setIsModalOpen(false);
+      // setIsModalOpen(false);
       setIsTutorSideSessionModalOpen(true);
     }
   };
@@ -372,7 +373,8 @@ const ShowCalendar = ({
     selectedTutor,
     student,
     lessons,
-    clickedSlot
+    clickedSlot,
+    selectedSlots
   });
 
   const dayPropGetter = useDayPropGetter({
@@ -398,6 +400,18 @@ const ShowCalendar = ({
     tutor,
     lessons,
   });
+
+  useEffect(() => {
+    if (selectedSlots.length || (clickedSlot.id && clickedSlot.type === 'reserved' && !isPastDate(convertToDate(clickedSlot.end))))
+      setIsModalOpen(true)
+    else setIsModalOpen(false)
+  }, [selectedSlots, clickedSlot])
+
+  useEffect(() => {
+    if (selectedSlots.length)
+      setClickedSlot({})
+
+  }, [selectedSlots])
 
   const localizer = momentLocalizer(moment);
   if (!dataFetched) return <Loading height="60vh" />;
@@ -437,6 +451,7 @@ const ShowCalendar = ({
         step={30}
         onSelectSlot={(slotInfo) =>
           handleSlotDoubleClick(
+            dispatch,
             slotInfo,
             student,
             // reservedSlots,

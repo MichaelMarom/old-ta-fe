@@ -146,7 +146,7 @@ const SlotsInvoice = ({
                         </td>
                         <td className="border-0">{subject}</td>
                         <td className="border-0">
-                          {introDiscountEnabled ? rateHalf(rate) : rate}
+                          { rate}
                         </td>
                       </tr>
                     ))}

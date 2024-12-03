@@ -124,7 +124,7 @@ export const setLessons = (lessons) => {
 export function postStudentLesson(data) {
   return async (dispatch, getState) => {
     dispatch(slice.actions.isLoading(true));
-    await save_student_lesson(data);
+   const result =  await save_student_lesson(data);
     const chatExists = getState().chat.chats.filter(
       (chat) => chat.AcademyId === data.tutorId
     );
@@ -132,7 +132,8 @@ export function postStudentLesson(data) {
     //create chat if chat is not initiated: it will create on first lessons
     !chatExists.length &&
       (await create_chat({ User1ID: data.studentId, User2ID: data.tutorId }));
-    return await dispatch(getStudentLessons(data.studentId, data.tutorId));
+      await dispatch(getStudentLessons(data.studentId, data.tutorId));
+    return result;
   };
 }
 

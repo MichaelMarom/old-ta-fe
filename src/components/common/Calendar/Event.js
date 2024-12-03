@@ -99,26 +99,26 @@ function CustomEvent({
       style={{ fontSize: "12px" }}
       onClick={() => handleEventClick(event)}
     >
-      {event.type === "reserved" && extraFiveMinStart ? (
+      {event.type === "reserved" ? (
+        <>
+          Marked For Booking {extraFiveMinStart && <div>
+          - expired
+        </div>  }
         <div>
-          Marked For Booking - expired
-        </div>
+              {String(remainingTime.minutes).padStart(2, "0")} :
+              {String(remainingTime.seconds).padStart(2, "0")}
+            </div>
+        </>
       ) : (
         <div>
-          Marked For Booking
-          {(isStudentLoggedIn && student.FirstName !== event.studentName) ||
-            event.type === "reserved"
+          {event.title}
+          {(isStudentLoggedIn && student.FirstName !== event.studentName)
             ? ``
             : ` ${isStudentLoggedIn
               ? `from ${event.tutorScreenName || "unknown"}`
               : `by ${event.studentName}`
             }`}
-          {event.type === "reserved" && (
-            <div>
-              {String(remainingTime.minutes).padStart(2, "0")} :
-              {String(remainingTime.seconds).padStart(2, "0")}
-            </div>
-          )}
+       
           { event.type !== "reserved" && <div>"{event.subject}"</div>}
           {event.request === "postpone" && <div>Postpone Request</div>}
           {event.request === "delete" && <div>Deleted</div>}

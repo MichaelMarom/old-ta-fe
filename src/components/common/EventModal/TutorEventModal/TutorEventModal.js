@@ -7,6 +7,7 @@ import LeftSideBar from "../../LeftSideBar";
 import { SessionActions } from "./SessionActions";
 import { SessionFeedback } from "./SessionFeedback";
 import CenteredModal from "../../Modal";
+import { useSelector } from "react-redux";
 
 export const TutorEventModal = ({
   isOpen,
@@ -19,9 +20,10 @@ export const TutorEventModal = ({
   const [questions, setQuestions] = useState([]);
   const [questionLoading, setQuestionLoading] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const {student} = useSelector(state=>state.student)
 
   useEffect(() => {
-    if (clickedSlot.id) {
+    if (clickedSlot.id && !student.AcademyId) {
       setQuestionLoading(true);
       const fetchFeedbackToQuestion = async () => {
         const data = await get_feedback_to_question(
@@ -45,7 +47,7 @@ export const TutorEventModal = ({
       };
       fetchFeedbackToQuestion();
     }
-  }, [clickedSlot]);
+  }, [clickedSlot, student.AcademyId]);
 
   const handleClose = () => {
     setConfirmDelete(false);

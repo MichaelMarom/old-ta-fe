@@ -7,8 +7,10 @@ import {
 } from "./calenderUtils";
 import { toast } from "react-toastify";
 import { save_student_lesson } from "../../../../axios/calender";
+import { postStudentLesson } from "../../../../redux/student/studentBookings";
 
 export const handleSlotDoubleClick = (
+  dispatch,
   slotInfo,
   student,
   // reservedSlots,
@@ -86,7 +88,8 @@ export const handleSlotDoubleClick = (
       // reservedSlots
     );
   } else {
-    handleSlotDoubleClickForStudent(
+    handleStudentClickInWeekOrDayTab(
+      dispatch,
       slotInfo,
       student,
       activeView,
@@ -102,7 +105,8 @@ export const handleSlotDoubleClick = (
       selectedTutor,
       setIsModalOpen,
       setSelectedSlots,
-      lessons, selectedType
+      lessons,
+      selectedType
     );
   }
 };
@@ -165,61 +169,6 @@ export const handleSlotDoubleClickForTutor = (
   }
 };
 
-export const handleSlotDoubleClickForStudent = (
-  slotInfo,
-  student,
-  activeView,
-  enabledDays,
-  clickedDate,
-  disableDates,
-  disableHourSlots,
-  enableHourSlots,
-  // reservedSlots,
-  disableWeekDays,
-  disabledHours,
-  selectedSlots,
-  selectedTutor,
-  setIsModalOpen,
-  setSelectedSlots,
-  lessons,
-  selectedType
-) => {
-  handleStudentClickInWeekOrDayTab(
-    slotInfo,
-    student,
-    activeView,
-    enabledDays,
-    clickedDate,
-    disableDates,
-    disableHourSlots,
-    enableHourSlots,
-    // reservedSlots,
-    disableWeekDays,
-    disabledHours,
-    selectedSlots,
-    selectedTutor,
-    setIsModalOpen,
-    setSelectedSlots,
-    lessons,
-    selectedType
-  );
-  // if (activeView === views.MONTH) {
-  //   handleSlotMonthView(slotInfo, setDisableDateRange, setDisableDates);
-  // } else {
-  //   handleSlotWeekDayView(
-  //     slotInfo,
-  //     setDisableHourSlots,
-  //     setEnableHourSlots,
-
-  //     disableHourSlots,
-  //     disableDates,
-  //     enableHourSlots,
-  //     reservedSlots,
-  //     activeView
-  //   );
-  // }
-};
-
 const checkIfClickedSlotExistInDisabledHoursRange = (date, blockedHours, timeZone) => {
   // Convert the given UTC date to the tutor's timezone and extract the time part
   const tutorTime = moment.utc(date).tz(timeZone).format('h:mm a');
@@ -250,7 +199,6 @@ const checkIfClickedSlotExistInDisabledHoursRange = (date, blockedHours, timeZon
 
   return false; // The date's hour is not blocked
 }
-
 
 // Handling slot actions for tutor
 const handleEnableHoursAndDays = (
@@ -326,6 +274,7 @@ const handleMonthViewDisable = (
 };
 
 const handleStudentClickInWeekOrDayTab = async (
+  dispatch,
   slotInfo,
   student,
   activeView,
@@ -352,6 +301,7 @@ const handleStudentClickInWeekOrDayTab = async (
     let startEventTime = momentStartTime.minute(0);
     let endEventTime = momentStartTime.clone().minute(0).add(1, "hour");
 
+    // check blocked slots
     const existsinEnabledInMonth = enabledDays?.some(
       (arrayDate) =>
         convertToDate(arrayDate).getTime() === clickedDate.getTime()
@@ -378,12 +328,13 @@ const handleStudentClickInWeekOrDayTab = async (
     );
 
     //student general: lesson already exist in selected slot
-    const existInOccopiedSlots = lessons
-      ?.some(
-        (lesson) =>
-          convertToDate(lesson.start).getTime() === clickedDate.getTime() ||
-          convertToDate(moment(lesson.start).add(30, 'minute').toDate()).getTime() === clickedDate.getTime()
-      );
+    const ifAlreadySelecetd = selectedSlots.some((slot) =>
+      convertToDate(slot.start).getTime() === convertToDate(startEventTime).getTime())
+    if (ifAlreadySelecetd) return
+
+    const threeHoursGap = new Date(new Date().getTime() + 3 * 60 * 60 * 1000);
+    if (startEventTime.toDate() < threeHoursGap) return toast.warning("You can only reserve slots starting at least 3 hours from now.");
+
 
     if (
       lessons?.some((slot) => {
@@ -412,16 +363,15 @@ const handleStudentClickInWeekOrDayTab = async (
         );
       })
     ) {
-      return toast.warning(`Your intro session must be conducted first for the "${selectedTutor.subject}" LESSON`
-      );
+      return toast.warning(`Your intro session must be conducted first for the "${selectedTutor.subject}" LESSON`);
     }
-
 
     const introExistsInLessons = lessons.some(
       (lesson) =>
         lesson.type === "intro" &&
         lesson.studentId === student.AcademyId &&
-        lesson.subject === selectedTutor.subject
+        lesson.subject === selectedTutor.subject &&
+        lesson.tutorId === selectedTutor.academyId
     );
     if (
       (!existInEnableSlots &&
@@ -430,7 +380,7 @@ const handleStudentClickInWeekOrDayTab = async (
         !existsinEnabledInWeek) ||
       isDisableDate
     ) {
-      alert(`This slot is blocked, please select a white slot1.`);
+      alert(`This slot is blocked, please select a white slot.`);
     } else if (
       existInDisableHourSlots ||
       (!existInEnableSlots &&
@@ -441,58 +391,47 @@ const handleStudentClickInWeekOrDayTab = async (
     ) {
       alert("This slot is blocked, please select a white slot.");
     } else {
-      if (!existInOccopiedSlots) {
-        if (introExistsInLessons) {
-          const ifAlreadySelecetd = selectedSlots.some((slot) =>
-            convertToDate(slot.start).getTime() === convertToDate(startEventTime).getTime())
-          if (ifAlreadySelecetd) return
-          const threeHoursGap = new Date(new Date().getTime() + 3 * 60 * 60 * 1000);
-          if (startEventTime.toDate() < threeHoursGap) return toast.warning("You can only reserve slots starting at least 3 hours from now.");
+      if (introExistsInLessons) {
+        const result =await dispatch( postStudentLesson({
+          end: endEventTime.toDate(),
+          start: startEventTime.toDate(),
+          subject: selectedTutor.subject,
+          type: 'reserved',
+          studentId: student.AcademyId,
+          studentName: student.FirstName,
+          tutorId: selectedTutor.academyId,
+          tutorScreenName: selectedTutor.tutorScreenName,
+          title: "Reserved"
+        }))
 
-          // if (selectedSlots.length >= 6 && selectedType === "reserved") return toast.warning("You reached the limit of 6 reserved lessons, You must book any reserved lesson before you can reserve more.")
-
-          const result = await save_student_lesson({
-            end: endEventTime.toDate(),
+        result?.[0]?.id && setSelectedSlots([
+          ...selectedSlots,
+          {
+            id: result[0].id,
             start: startEventTime.toDate(),
+            end: endEventTime.toDate(),
             subject: selectedTutor.subject,
-            type: 'reserved',
-            studentId: student.AcademyId,
-            studentName: student.FirstName,
-            tutorId: selectedTutor.academyId,
-            tutorScreenName: selectedTutor.tutorScreenName,
-            title: "Reserved"
-          })
-          console.log(result, "individual lesson")
-          setSelectedSlots([
-            ...selectedSlots,
-            {
-              id: result[0].id,
-              start: startEventTime.toDate(),
-              end: endEventTime.toDate(),
-              subject: selectedTutor.subject,
-              type: 'booked',
+            type: 'booked',
 
-              // invoiceNum: generateRandomId()
-            },
-          ]);
-          // TODO: add slot here: it will generate id comb=ine thoes ids into and array
-          // next slot will be like [{id, other details}. {id, other details}] = 
-          // already saved in db with type = reserved 
-          // after hitting pay: it will individullay update the ids with type = "booked" add invoiceNum
-          // and then add invoice Record with discount, booking fee etc
-          setIsModalOpen(true);
-        } else {
-          setSelectedSlots([
-            {
-              start: startEventTime.toDate(),
-              end: endEventTime.toDate(),
-              subject: selectedTutor.subject,
-              type: 'intro',
-              // invoiceNum: generateRandomId()
-            },
-          ]);
-          setIsModalOpen(true);
-        }
+            // invoiceNum: generateRandomId()
+          },
+        ]);
+        
+        // TODO: add slot here: it will generate id comb=ine thoes ids into and array
+        // next slot will be like [{id, other details}. {id, other details}] = 
+        // already saved in db with type = reserved 
+        // after hitting pay: it will individullay update the ids with type = "booked" add invoiceNum
+        // and then add invoice Record with discount, booking fee etc
+      } else {
+        setSelectedSlots([
+          {
+            start: startEventTime.toDate(),
+            end: endEventTime.toDate(),
+            subject: selectedTutor.subject,
+            type: 'intro',
+            // invoiceNum: generateRandomId()
+          },
+        ]);
       }
     }
   }
