@@ -220,9 +220,6 @@ function EventModal({
             </h4>
 
           </div>
-          <p className="d-block text-black p-2" style={{ fontSize: "12px", fontWeight: "300" }}>
-            (to remove, click the slot's <span className="fw-bold">"X"</span> below)
-          </p>
           <div className="">
             {clickedSlot.request === "postpone" && (
               <h5 className="text-danger font-weight-bold text-center m-2">
@@ -230,7 +227,7 @@ function EventModal({
                 Reschedule
               </h5>
             )}
-            {clickedSlot.start ? (
+            {/* {clickedSlot.start ? (
               <div>
                 <SlotPill
                   selectedSlots={[clickedSlot]}
@@ -248,7 +245,7 @@ function EventModal({
                     'booked' : 'intro'}
                 />
               </div>
-            )}
+            )} */}
             {/* {selectedType === "reserved" && (
               <div className=" d-flex justify-content-center">
                 <button
@@ -365,9 +362,9 @@ function EventModal({
                 Are you sure you want to delete your Marked slot?
               </p>
               <hr />
-              <div style={{float:"right"}} >
-                
-                <TAButton style={{margin:"0"}} type="button" buttonText={"Confirm"} handleClick={() => {
+              <div style={{ float: "right" }} >
+
+                <TAButton style={{ margin: "0" }} type="button" buttonText={"Confirm"} handleClick={() => {
                   dispatch(deleteStudentLesson(clickedSlot));
                   setClickedSlot({});
                   onRequestClose();
@@ -379,6 +376,7 @@ function EventModal({
           {!!selectedSlots.length && (
             <SlotsInvoice
               timeZone={timeZone}
+              setSelectedSlots={setSelectedSlots}
               selectedType={selectedType}
               studentName={formatName(student.FirstName, student.LastName)}
               tutorName={formatName(

@@ -74,17 +74,6 @@ export const TutorEventModal = ({
       handleClose={handleClose}
     >
       <div className="">
-        {/* <div className="modal-header">
-          <div className="text-center" style={{ width: "90%" }}>
-            <p
-              className="modal-title fs-5"
-              style={{ fontSize: "14px", fontWeight: "700" }}
-            >
-              {showDate(clickedSlot.start, wholeDateFormat)} -{" "}
-              {clickedSlot.studentName}
-            </p>
-          </div>
-        </div> */}
         {convertToDate(clickedSlot.end).getTime() <= new Date().getTime() ? (
           !clickedSlot.ratingByStudent ? (
             <div
@@ -105,7 +94,6 @@ export const TutorEventModal = ({
           <SessionActions
             setConfirmDelete={setConfirmDelete}
             confirmDelete={confirmDelete}
-            clickedSlot={clickedSlot}
             handlePostpone={handlePostpone}
             handleDeleteSessionByTutor={handleDeleteSessionByTutor}
             handleClose={handleClose}

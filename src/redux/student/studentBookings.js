@@ -163,10 +163,12 @@ export function updateStudentBookingWithInvoiceAndLessons(invoice, id, lesson) {
 }
 
 export function updateStudentLesson(id, body) {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     dispatch(slice.actions.isLoading(true));
     await update_student_lesson(id, body);
-    return await dispatch(getStudentLessons(body.studentId, body.tutorId));
+    const lessons = getState().bookings.lessons
+    console.log(lessons)
+    // return await dispatch(setLessons());
   };
 }
 
@@ -174,6 +176,7 @@ export function getStudentLessons(studentId, tutorId) {
   return async (dispatch) => {
     dispatch(slice.actions.isLoading(true));
     const result = await get_student_lesson(studentId, tutorId);
+    console.log(result, studentId, tutorId, '177')
     if (result?.length) {
       dispatch(slice.actions.setLessons(result));
     }
@@ -185,6 +188,7 @@ export function deleteStudentLesson(event) {
   return async (dispatch) => {
     dispatch(slice.actions.isLoading(true));
     const result = await delete_student_lesson(event.id);
+    console.log(event)
     return await dispatch(getStudentLessons(event.studentId, event.tutorId));
   };
 }

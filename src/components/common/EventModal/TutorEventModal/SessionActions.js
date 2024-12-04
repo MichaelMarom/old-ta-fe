@@ -1,10 +1,14 @@
 import React from 'react'
 import Button from '../../Button'
 
-export const SessionActions = ({ clickedSlot, handlePostpone,
-     handleDeleteSessionByTutor, 
-    setConfirmDelete, handleClose, confirmDelete }) => {
-   
+export const SessionActions = ({
+    handlePostpone,
+    handleDeleteSessionByTutor,
+    setConfirmDelete,
+    handleClose,
+    confirmDelete
+}) => {
+
     return (
         <div style={{ width: "95%" }}>
 
