@@ -57,6 +57,7 @@ const SmallSideBar = ({ message = "", inMins }) => {
               onClick={toggleSidebar}
             >
               <BiSolidChevronsRight
+              className="rounded-circle p-1"
                 style={{
                   animation: inMins ? "blinking 1s infinite" : "none",
                   transition: "all 0.3s ease-in",

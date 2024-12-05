@@ -167,7 +167,6 @@ export function updateStudentLesson(id, body) {
     dispatch(slice.actions.isLoading(true));
     await update_student_lesson(id, body);
     const lessons = getState().bookings.lessons
-    console.log(lessons)
     // return await dispatch(setLessons());
   };
 }
