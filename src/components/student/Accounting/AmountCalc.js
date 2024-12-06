@@ -1,32 +1,32 @@
-import React, { useState } from "react";
-import { convertToDate } from "../../common/Calendar/Calendar";
-import moment from "moment-timezone";
+import React from "react";
+import { moment } from "../../../config/moment";
 import ReactDatePicker from "react-datepicker";
 import { useSelector } from "react-redux";
 
-const AmountCalc = ({ sortedAndPastLessons }) => {
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
-
+const AmountCalc = ({ sortedAndPastLessons, startDate, setStartDate, endDate, setEndDate }) => {
     const { student } = useSelector((state) => state.student);
-    const gmtInInt = student.GMT ? parseInt(student.GMT) : 0;
+    const timeZone = student.timeZone || "UTC"; // Default to UTC if timeZone is undefined
 
-    // Calculate local GMT offset in milliseconds
-    const getLocalGMTOffset = new Date().getTimezoneOffset() * -60000; // in milliseconds
-
-    const calculateTutorTime = (date) => {
-        if (!date) return null;
-        const tutorTimeOffset = (gmtInInt * 3600 + getLocalGMTOffset / 1000) * 1000; // in milliseconds
-        return new Date(moment(date ).toDate().getTime() + tutorTimeOffset);
+    // Adjust a date to the start of the day in the student's timezone
+    const startOfDayInStudentTimeZone = (date) => {
+        const utcDate = moment(date).utc();
+        return utcDate.tz(timeZone).startOf("day").toDate();
     };
 
+    // Adjust a date to the end of the day in the student's timezone
+    const endOfDayInStudentTimeZone = (date) => {
+        const utcDate = moment(date).utc();
+        return utcDate.tz(timeZone).endOf("day").toDate();
+    };
+
+    // Calculate the total amount
     const totalAmount = sortedAndPastLessons
         .filter((row) => {
             if (!startDate || !endDate) return true;
-            const lessonDate = convertToDate(row.start).getTime();
+            const lessonDate = new Date(row.start).getTime();
             return (
-                lessonDate >= startDate.getTime() &&
-                lessonDate <= endDate.getTime()
+                lessonDate >= startOfDayInStudentTimeZone(startDate).getTime() &&
+                lessonDate <= endOfDayInStudentTimeZone(endDate).getTime()
             );
         })
         .reduce((total, row) => total + parseFloat(row.rate), 0);
@@ -35,31 +35,28 @@ const AmountCalc = ({ sortedAndPastLessons }) => {
         <div className="col-md-4">
             <h2>Filter by Date and Time</h2>
             <div className="form-group">
-                <label htmlFor="startDate">Start Date and Time</label>
+                <label htmlFor="startDate">Start Date</label>
                 <ReactDatePicker
-                    selected={startDate ? calculateTutorTime(startDate) : null}
-                    onChange={(date) => {
-                        if (!date) return;
-                        setStartDate(date);
-                    }}
-                    dateFormat="MMM d, yyyy HH:mm:ss"
+                    selected={startDate}
+                    onChange={(date) => setStartDate(date)}
+                    dateFormat="MMM d, yyyy"
                     className="form-control m-2"
                 />
             </div>
             <div className="form-group">
-                <label htmlFor="endDate">End Date and Time</label>
+                <label htmlFor="endDate">End Date</label>
                 <ReactDatePicker
-                    selected={endDate ? calculateTutorTime(endDate) : null}
-                    onChange={(date) => {
-                        if (!date) return;
-                        setEndDate(date);
-                    }}
-                    dateFormat="MMM d, yyyy HH:mm:ss"
+                    selected={endDate}
+                    onChange={(date) => setEndDate(date)}
+                    dateFormat="MMM d, yyyy"
                     className="form-control m-2"
                 />
             </div>
             <div className="alert alert-info">
-                Total Amount Paid: ${totalAmount.toFixed(2)}
+                Total Amount Paid: ${new Intl.NumberFormat("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                }).format(totalAmount)}
             </div>
         </div>
     );

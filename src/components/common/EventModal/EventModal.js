@@ -212,14 +212,13 @@ function EventModal({
           setSelectedType(null);
         }}
       >
-        <div className="">
+        <div>
           <div className="modal-header">
-            <h4 className="modal-title text-centerd-block" style={{ width: "80%" }}>
+            <h6 className="m-0 modal-title text-centerd-block" style={{ width: "80%" }}>
               Marked Slots for Booking.
-
-            </h4>
-
+            </h6>
           </div>
+          <p className="p-2" style={{ fontSize: "13px", fontWeight: "600" }}>To delete a lesson from the invoice below click the delete icon</p>
           <div className="">
             {clickedSlot.request === "postpone" && (
               <h5 className="text-danger font-weight-bold text-center m-2">
@@ -363,7 +362,6 @@ function EventModal({
               </p>
               <hr />
               <div style={{ float: "right" }} >
-
                 <TAButton style={{ margin: "0" }} type="button" buttonText={"Confirm"} handleClick={() => {
                   dispatch(deleteStudentLesson(clickedSlot));
                   setClickedSlot({});
@@ -395,9 +393,13 @@ function EventModal({
           <div className="w-100 d-flex flex-column">
             {selectedTutor.activateSubscriptionOption && !!selectedSlots.length && (
               <>
-                <h6 className="m-0 text-center " style={{ lineHeight: "0.7" }}>Subscription Discount</h6>
                 <table className="" style={{ width: "90%", margin: "5%" }}>
                   <thead>
+                    <tr>
+                      <th colSpan={3}>
+                        Subscription Discount
+                      </th>
+                    </tr>
                     <tr>
                       {subscription_cols.map((item) => (
                         <th key={item.Header}>{item.Header}</th>

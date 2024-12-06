@@ -20,7 +20,7 @@ import "../../../styles/common.css";
 import useDebouncedEffect from "../../../hooks/DebouceWithDeps";
 import { TutorEventModal } from "../EventModal/TutorEventModal/TutorEventModal";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { convertToGmt, isPastDate } from "./utils/calenderUtils";
+import { convertToGmt, isFutureDate, isPastDate } from "./utils/calenderUtils";
 import useEventPropGetter from "./hooks/useEventPropGetter";
 import {
   handleBulkEventCreate,
@@ -30,6 +30,7 @@ import {
 import { handleSlotDoubleClick } from "./utils/SlotDoubleClick";
 import useDayPropGetter from "./hooks/useDayPropGetter";
 import useSlotPropGetter from "./hooks/useSlotPropGetter";
+import StudentFutureEventModal from "./StudentFutureEventModal";
 
 export const views = {
   WEEK: "week",
@@ -529,6 +530,15 @@ const ShowCalendar = ({
           )
         }
       />
+      <StudentFutureEventModal
+        show={clickedSlot.id &&
+          clickedSlot.studentId === student.AcademyId &&
+          clickedSlot.tutorId === selectedTutor.academyId &&
+          !!isFutureDate(convertToDate(clickedSlot.start))}
+        handleClose={() => setClickedSlot({})}
+        clickedSlot={clickedSlot}
+        setClickedSlot={setClickedSlot}
+         />
     </div>
   );
 };

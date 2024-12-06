@@ -82,6 +82,9 @@ const SlotsInvoice = ({
         >
           <thead>
             <tr>
+              <th colspan="4">Invoice (proposed)</th>
+            </tr>
+            <tr>
               <th
                 style={{ width: "5%" }} // Set width to 5px here
 
@@ -178,15 +181,15 @@ const SlotsInvoice = ({
             />
           </Tooltip>
         </div> */}
-        <div>
+        <div className="w-100 d-flex justify-content-center">
           <button
-            className="btn btn-sm btn-secondary"
+            className="btn btn-sm btn-danger"
             onClick={handleClose}
           >
             Cancel
           </button>
           <button
-            className="btn btn-sm btn-primary"
+            className="btn btn-sm btn-success"
             onClick={handleAccept}
           >
             Pay Invoice

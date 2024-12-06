@@ -29,22 +29,22 @@ const useEventPropGetter = ({
       }
 
       // Check if the event is present in the selectedSlots
-      const isSelectedSlot = selectedSlots?.some(
-        (slot) => convertToDate(slot.start).getTime() === convertToDate(event.start).getTime() &&
-        convertToDate(slot.end).getTime() === convertToDate(event.end).getTime()
-      );
+      // const isSelectedSlot = selectedSlots?.some(
+      //   (slot) => convertToDate(slot.start).getTime() === convertToDate(event.start).getTime() &&
+      //   convertToDate(slot.end).getTime() === convertToDate(event.end).getTime()
+      // );
 
-      if (isSelectedSlot) {
-        return {
-          className: "selected-slot",
-          style: {
-            border: "none",
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            backgroundColor: "orange",
-            color: "black",
-          },
-        };
-      }
+      // if (isSelectedSlot) {
+      //   return {
+      //     className: "selected-slot",
+      //     style: {
+      //       border: "none",
+      //       boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      //       backgroundColor: "orange",
+      //       color: "black",
+      //     },
+      //   };
+      // }
 
       // Other conditions
       const secSubject = lessons?.some(
