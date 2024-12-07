@@ -1,5 +1,7 @@
 import { useCallback } from "react";
 import { convertToDate } from "../Calendar";
+import { isPastDate } from "../utils/calenderUtils";
+
 
 const useEventPropGetter = ({
   isStudentLoggedIn,
@@ -12,39 +14,10 @@ const useEventPropGetter = ({
   return useCallback(
     (event) => {
       // Check if the event matches the clickedSlot and it's a reserved slot
-      if (
+      const isFutureActiveLessonSelected =
         clickedSlot &&
         event.start === clickedSlot.start &&
-        clickedSlot.type === "reserved"
-      ) {
-        return {
-          className: "clicked-reserved-slot",
-          style: {
-            border: "none",
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            backgroundColor: "orange",
-            color: "black",
-          },
-        };
-      }
-
-      // Check if the event is present in the selectedSlots
-      // const isSelectedSlot = selectedSlots?.some(
-      //   (slot) => convertToDate(slot.start).getTime() === convertToDate(event.start).getTime() &&
-      //   convertToDate(slot.end).getTime() === convertToDate(event.end).getTime()
-      // );
-
-      // if (isSelectedSlot) {
-      //   return {
-      //     className: "selected-slot",
-      //     style: {
-      //       border: "none",
-      //       boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-      //       backgroundColor: "orange",
-      //       color: "black",
-      //     },
-      //   };
-      // }
+        !isPastDate(convertToDate(clickedSlot.end)) && clickedSlot.request!=='delete' ;
 
       // Other conditions
       const secSubject = lessons?.some(
@@ -56,9 +29,9 @@ const useEventPropGetter = ({
 
       const otherStudentSession = isStudentLoggedIn
         ? lessons?.some(
-          (slot) =>
-            slot.studentName !== student.FirstName && event.id === slot.id
-        )
+            (slot) =>
+              slot.studentName !== student.FirstName && event.id === slot.id
+          )
         : false;
 
       const deletedSession = lessons?.some(
@@ -68,6 +41,7 @@ const useEventPropGetter = ({
 
       if (deletedSession)
         return {
+          className: isFutureActiveLessonSelected ? "blinking-button" : "",
           style: {
             border: "none",
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
@@ -78,6 +52,7 @@ const useEventPropGetter = ({
 
       if (otherStudentSession && (event.type === "intro" || event.type === "booked")) {
         return {
+          className: isFutureActiveLessonSelected ? "blinking-button" : "",
           style: {
             border: "none",
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
@@ -89,6 +64,7 @@ const useEventPropGetter = ({
 
       if (otherStudentSession && event.type === "reserved") {
         return {
+          className: isFutureActiveLessonSelected ? "blinking-button" : "",
           style: {
             border: "none",
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
@@ -100,7 +76,9 @@ const useEventPropGetter = ({
 
       if (secSubject && event.type === "intro") {
         return {
-          className: "sec-reserved-event",
+          className: `sec-reserved-event ${
+            isFutureActiveLessonSelected ? "blinking-button" : ""
+          }`,
           style: {
             border: "none",
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
@@ -112,7 +90,9 @@ const useEventPropGetter = ({
 
       if (secSubject && event.type === "reserved") {
         return {
-          className: "sec-reserved-event",
+          className: `sec-reserved-event ${
+            isFutureActiveLessonSelected ? "blinking-button" : ""
+          }`,
           style: {
             border: "none",
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
@@ -124,7 +104,9 @@ const useEventPropGetter = ({
 
       if (secSubject && event.type === "booked") {
         return {
-          className: "sec-reserved-event",
+          className: `sec-reserved-event ${
+            isFutureActiveLessonSelected ? "blinking-button" : ""
+          }`,
           style: {
             border: "none",
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
@@ -136,7 +118,9 @@ const useEventPropGetter = ({
 
       if (event.type === "reserved") {
         return {
-          className: "reserved-event",
+          className: `reserved-event ${
+            isFutureActiveLessonSelected ? "blinking-button" : ""
+          }`,
           style: {
             border: "none",
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
@@ -148,7 +132,9 @@ const useEventPropGetter = ({
 
       if (event.type === "booked") {
         return {
-          className: "booked-event",
+          className: `booked-event ${
+            isFutureActiveLessonSelected ? "blinking-button" : ""
+          }`,
           style: {
             border: "none",
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",

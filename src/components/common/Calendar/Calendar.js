@@ -88,9 +88,9 @@ const ShowCalendar = ({
   //student states
   const [selectedType, setSelectedType] = useState(null);
   const [selectedSlots, setSelectedSlots] = useState([]);
-  // const [isModalOpen, setIsModalOpen] = useState(false);
   const [clickedSlot, setClickedSlot] = useState({});
   const { student } = useSelector((state) => state.student);
+  const [slotForPostpone, setSlotForPostpone] = useState({})
   // const tutorId = selectedTutor.academyId;
   // const studentId = student?.AcademyId;
   // const subjectName = selectedTutor?.subject;
@@ -403,7 +403,8 @@ const ShowCalendar = ({
   });
 
   useEffect(() => {
-    if (selectedSlots.length || (clickedSlot.id && clickedSlot.type === 'reserved' && !isPastDate(convertToDate(clickedSlot.end))))
+    if (selectedSlots.length ||
+      (clickedSlot.id && clickedSlot.type === 'reserved' && !isPastDate(convertToDate(clickedSlot.end))))
       setIsModalOpen(true)
     else setIsModalOpen(false)
   }, [selectedSlots, clickedSlot])
@@ -413,6 +414,12 @@ const ShowCalendar = ({
       setClickedSlot({})
 
   }, [selectedSlots])
+
+
+  useEffect(() => {
+    if (clickedSlot.id && !isPastDate(convertToDate(clickedSlot.end)) && clickedSlot.request !== 'delete')
+      toast.info("If you want to postpone selected Slot, click empty slot!")
+  }, [clickedSlot.id])
 
   const localizer = momentLocalizer(moment);
   if (!dataFetched) return <Loading height="60vh" />;
@@ -457,6 +464,8 @@ const ShowCalendar = ({
             student,
             // reservedSlots,
             // bookedSlots,
+            slotForPostpone,
+            setSlotForPostpone,
             disableColor,
             isStudentLoggedIn,
             activeView,
@@ -478,7 +487,9 @@ const ShowCalendar = ({
             setIsModalOpen,
             selectedTutor,
             lessons,
-            selectedType
+            selectedType,
+            clickedSlot,
+            setClickedSlot
           )
         }
         dayPropGetter={dayPropGetter}
@@ -530,15 +541,19 @@ const ShowCalendar = ({
           )
         }
       />
-      <StudentFutureEventModal
-        show={clickedSlot.id &&
-          clickedSlot.studentId === student.AcademyId &&
-          clickedSlot.tutorId === selectedTutor.academyId &&
-          !!isFutureDate(convertToDate(clickedSlot.start))}
-        handleClose={() => setClickedSlot({})}
-        clickedSlot={clickedSlot}
-        setClickedSlot={setClickedSlot}
-         />
+      {/* {clickedSlot.id &&
+        clickedSlot.studentId === student.AcademyId &&
+        clickedSlot.tutorId === selectedTutor.academyId &&
+        !!isFutureDate(convertToDate(clickedSlot.start)) &&
+        <StudentFutureEventModal
+          show={clickedSlot.id &&
+            clickedSlot.studentId === student.AcademyId &&
+            clickedSlot.tutorId === selectedTutor.academyId &&
+            !!isFutureDate(convertToDate(clickedSlot.start))}
+          handleClose={() => setClickedSlot({})}
+          clickedSlot={clickedSlot}
+          setClickedSlot={setClickedSlot}
+        />} */}
     </div>
   );
 };

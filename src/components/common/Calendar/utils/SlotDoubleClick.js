@@ -7,7 +7,7 @@ import {
 } from "./calenderUtils";
 import { toast } from "react-toastify";
 import { save_student_lesson } from "../../../../axios/calender";
-import { postStudentLesson } from "../../../../redux/student/studentBookings";
+import { postStudentLesson, updateStudentLesson } from "../../../../redux/student/studentBookings";
 
 export const handleSlotDoubleClick = (
   dispatch,
@@ -15,6 +15,8 @@ export const handleSlotDoubleClick = (
   student,
   // reservedSlots,
   // bookedSlots,
+  slotForPostpone,
+  setSlotForPostpone,
   disableColor,
   isStudentLoggedIn,
   activeView,
@@ -37,16 +39,11 @@ export const handleSlotDoubleClick = (
   setIsModalOpen,
   selectedTutor,
   lessons,
-  selectedType
+  selectedType,
+  clickedSlot,
+  setClickedSlot
 ) => {
-  //do nothing on single click
-  // const clickedUpperSlot =
-  //   moment(convertToDate(slotInfo.end)).diff(
-  //     moment(convertToDate(slotInfo.start)),
-  //     "days"
-  //   ) === 1;
 
-  // if (clickedUpperSlot && activeView !== views.MONTH) return;
   if (
     haveErrorsWhenDoubleClick(
       slotInfo,
@@ -57,10 +54,7 @@ export const handleSlotDoubleClick = (
   )
     return;
 
-  // const secSlot = moment(convertToDate(slotInfo.start)).minutes() === 30;
-  // let endTime = secSlot
-  //   ? moment(convertToDate(slotInfo.start)).subtract(30, "minutes").toDate()
-  //   : slotInfo.end;
+
 
   const endTime = getSecond30MinsSlotWhenDoubleClick(
     slotInfo.start,
@@ -92,6 +86,8 @@ export const handleSlotDoubleClick = (
       dispatch,
       slotInfo,
       student,
+      slotForPostpone,
+      setSlotForPostpone,
       activeView,
       enabledDays,
       slotInfo.start,
@@ -106,7 +102,9 @@ export const handleSlotDoubleClick = (
       setIsModalOpen,
       setSelectedSlots,
       lessons,
-      selectedType
+      selectedType,
+      clickedSlot,
+      setClickedSlot
     );
   }
 };
@@ -277,6 +275,8 @@ const handleStudentClickInWeekOrDayTab = async (
   dispatch,
   slotInfo,
   student,
+  slotForPostpone,
+  setSlotForPostpone,
   activeView,
   enabledDays,
   clickedDate,
@@ -291,7 +291,10 @@ const handleStudentClickInWeekOrDayTab = async (
   setIsModalOpen,
   setSelectedSlots,
   lessons,
-  selectedType
+  selectedType,
+  clickedSlot, 
+  setClickedSlot
+
 ) => {
   if (activeView !== views.MONTH) {
     //slots/month
@@ -361,7 +364,7 @@ const handleStudentClickInWeekOrDayTab = async (
           slot.tutorId === selectedTutor.academyId &&
           slot.end.getTime() > new Date().getTime()
         );
-      })
+      }) && !clickedSlot.id
     ) {
       return toast.warning(`Your intro session must be conducted first for the "${selectedTutor.subject}" LESSON`);
     }
@@ -390,9 +393,9 @@ const handleStudentClickInWeekOrDayTab = async (
         }))
     ) {
       alert("This slot is blocked, please select a white slot.");
-    } else {
+    } else if (!clickedSlot.id) {
       if (introExistsInLessons) {
-        const result =await dispatch( postStudentLesson({
+        const result = await dispatch(postStudentLesson({
           end: endEventTime.toDate(),
           start: startEventTime.toDate(),
           subject: selectedTutor.subject,
@@ -416,7 +419,7 @@ const handleStudentClickInWeekOrDayTab = async (
             // invoiceNum: generateRandomId()
           },
         ]);
-        
+
         // TODO: add slot here: it will generate id comb=ine thoes ids into and array
         // next slot will be like [{id, other details}. {id, other details}] = 
         // already saved in db with type = reserved 
@@ -433,6 +436,15 @@ const handleStudentClickInWeekOrDayTab = async (
           },
         ]);
       }
+    }
+    else {
+      dispatch(updateStudentLesson(clickedSlot.id, {
+        ...clickedSlot,
+        end: endEventTime.toDate(),
+        start: startEventTime.toDate(),
+        request: null,
+      }))
+     setClickedSlot({})
     }
   }
 };
