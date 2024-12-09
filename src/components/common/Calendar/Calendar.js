@@ -418,7 +418,7 @@ const ShowCalendar = ({
 
   useEffect(() => {
     if (clickedSlot.id && !isPastDate(convertToDate(clickedSlot.end)) && clickedSlot.request !== 'delete')
-      toast.info("If you want to postpone selected Slot, click empty slot!")
+      toast.info("To postpone the selected (blinking) booked lesson, click on an empty slot! Your tutor will receive a notice.")
   }, [clickedSlot.id])
 
   const localizer = momentLocalizer(moment);

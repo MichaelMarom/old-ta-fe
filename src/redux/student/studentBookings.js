@@ -175,7 +175,6 @@ export function getStudentLessons(studentId, tutorId) {
   return async (dispatch) => {
     dispatch(slice.actions.isLoading(true));
     const result = await get_student_lesson(studentId, tutorId);
-    console.log(result, studentId, tutorId, '177')
     if (result?.length) {
       dispatch(slice.actions.setLessons(result));
     }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ShowCalendar from "../common/Calendar/Calendar";
+import ShowCalendar from "../../components/common/Calendar/Calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useSelector } from "react-redux";
 import {
@@ -13,10 +13,10 @@ import { setStudent } from "../../redux/student/studentData";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import moment from "moment";
-import Avatar from "../common/Avatar";
+import Avatar from "../../components/common/Avatar";
 import { FaBook, FaClock, FaUserCircle } from "react-icons/fa";
 
-const StudentCalenderScheduling = () => {
+const StudentBookingCalender = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [disableWeekDays, setDisabledWeekDays] = useState([]);
@@ -215,4 +215,4 @@ const StudentCalenderScheduling = () => {
   );
 };
 
-export default StudentCalenderScheduling;
+export default StudentBookingCalender;

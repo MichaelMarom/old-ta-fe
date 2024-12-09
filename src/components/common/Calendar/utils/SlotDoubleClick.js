@@ -1,7 +1,7 @@
 import moment from "moment-timezone";
 import { convertToDate, views } from "../Calendar";
 import {
-  getSecond30MinsSlotWhenDoubleClick,
+  getStartAndEndDateOfSlotForBlocking,
   isEventAlreadyExist,
   isPastDate,
 } from "./calenderUtils";
@@ -44,19 +44,16 @@ export const handleSlotDoubleClick = (
   setClickedSlot
 ) => {
 
-  if (
-    haveErrorsWhenDoubleClick(
-      slotInfo,
-      disableColor,
-      isStudentLoggedIn,
-      lessons
-    )
-  )
+  if (haveErrorsWhenDoubleClick(
+    slotInfo,
+    disableColor,
+    isStudentLoggedIn,
+    lessons
+  ))
     return;
 
 
-
-  const endTime = getSecond30MinsSlotWhenDoubleClick(
+  const { end: endTime } = getStartAndEndDateOfSlotForBlocking(
     slotInfo.start,
     slotInfo.end
   );
@@ -292,7 +289,7 @@ const handleStudentClickInWeekOrDayTab = async (
   setSelectedSlots,
   lessons,
   selectedType,
-  clickedSlot, 
+  clickedSlot,
   setClickedSlot
 
 ) => {
@@ -444,7 +441,7 @@ const handleStudentClickInWeekOrDayTab = async (
         start: startEventTime.toDate(),
         request: null,
       }))
-     setClickedSlot({})
+      setClickedSlot({})
     }
   }
 };

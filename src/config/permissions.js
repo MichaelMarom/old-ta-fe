@@ -27,8 +27,8 @@ const Agency = lazy(() => import('../pages/tutor/Agency/Agency'));
 const StudentSetup = lazy(() => import('../pages/student/StudentSetup'));
 const StudentFaculty = lazy(() => import('../pages/student/StudentFaculty'));
 const StudentAccountings = lazy(() => import('../pages/student/StudentAccounting'));
-const StudentScheduling = lazy(() => import('../pages/student/StudentScheduling'));
-const Schedules = lazy(() => import('../pages/student/Schedules'))
+const StudentScheduling = lazy(() => import('../pages/student/StudentBookingCalender'));
+const StudentCalender = lazy(() => import('../pages/student/StudentCalender'))
 const StudentTermOfUse = lazy(() => import('../pages/student/TermOfUse'));
 const StudentProfile = lazy(() => import('../pages/student/StudentProfile'));
 const TutorPublicProfile = lazy(() => import('../pages/student/TutorPublicProfile'));
@@ -98,7 +98,7 @@ const rolePermissions = {
     { path: "/student/accounting", component: <StudentAccountings /> },
     { path: "/student/market-place", component: <Marketplace /> },
     { path: "/student/booking", component: <StudentScheduling /> },
-    { path: "/student/calendar", component: <Schedules /> },
+    { path: "/student/calendar", component: <StudentCalender /> },
     { path: "/student/term-of-use", component: <StudentTermOfUse /> },
     { path: "/student/profile", component: <StudentProfile /> },
     { path: '/student/feedback', component: <Feedback /> },

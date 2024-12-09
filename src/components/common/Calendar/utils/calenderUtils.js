@@ -31,8 +31,8 @@ export const isEventAlreadyExist = (lessons, slotInfo) => {
   return lessons?.some(({ start, end }) => {
     const eventStart = convertToDate(start).getTime();
     const eventEnd = convertToDate(end).getTime();
-    console.log(convertToDate(start).getMinutes(), convertToDate(end).getMinutes(), 
-    convertToDate(slotInfo.start).getMinutes(), convertToDate(slotInfo.end).getMinutes());
+    console.log(convertToDate(start).getMinutes(), convertToDate(end).getMinutes(),
+      convertToDate(slotInfo.start).getMinutes(), convertToDate(slotInfo.end).getMinutes());
     return eventStart === slotStart || eventEnd === slotEnd;
   });
 };
@@ -62,13 +62,22 @@ export function calculateDiscount(allLessons, selectedSlots, selectedTutor, stud
   }
 }
 
-export const getSecond30MinsSlotWhenDoubleClick = (start, end) => {
+export const getStartAndEndDateOfSlotForLesson = (start, end) => {
+  const secSlot = moment(convertToDate(start)).minutes() === 30;
+  const startTime = secSlot ? moment(start).minute(0).toDate() : start
+  const endTime = moment(startTime).add(1, "hours").toDate()
+
+  return { start: startTime, end:endTime  };
+};
+
+
+export const getStartAndEndDateOfSlotForBlocking = (start, end) => {
   const secSlot = moment(convertToDate(start)).minutes() === 30;
   let endTime = secSlot
     ? moment(convertToDate(start)).subtract(30, "minutes").toDate()
     : end;
 
-  return endTime;
+  return {  end:endTime  };
 };
 
 export const convertToGmt = (date) => {
