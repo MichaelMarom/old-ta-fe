@@ -67,7 +67,7 @@ export const getStartAndEndDateOfSlotForLesson = (start, end) => {
   const startTime = secSlot ? moment(start).minute(0).toDate() : start
   const endTime = moment(startTime).add(1, "hours").toDate()
 
-  return { start: startTime, end:endTime  };
+  return { start: startTime, end: endTime };
 };
 
 
@@ -77,7 +77,7 @@ export const getStartAndEndDateOfSlotForBlocking = (start, end) => {
     ? moment(convertToDate(start)).subtract(30, "minutes").toDate()
     : end;
 
-  return {  end:endTime  };
+  return { end: endTime };
 };
 
 export const convertToGmt = (date) => {
@@ -160,7 +160,7 @@ export const checkDisableWeekTimeSlots = (
 export const checkReservedSlots = (date, reservedSlots) => {
   return reservedSlots?.some((slot) => {
     return (
-      convertToDate(convertToDate(slot.start)).getTime() === date.getTime()
+      convertToDate(slot.start).getTime() === convertToDate(date).getTime()
     );
   });
 };

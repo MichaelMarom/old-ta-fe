@@ -5,6 +5,8 @@ import { showDate } from "../../../utils/moment";
 import LeftSideBar from "../../common/LeftSideBar";
 import { SessionFeedback } from "../../common/EventModal/TutorEventModal/SessionFeedback";
 import CenteredModal from "../../common/Modal";
+import { isPastDate } from "../../common/Calendar/utils/calenderUtils";
+import { convertToDate } from "../../common/Calendar/Calendar";
 
 export const TutorFeedbackModal = ({
   isOpen,
@@ -18,7 +20,7 @@ export const TutorFeedbackModal = ({
   const [questionLoading, setQuestionLoading] = useState(false);
 
   useEffect(() => {
-    if (clickedSlot.id) {
+    if (clickedSlot.id && isPastDate(convertToDate(clickedSlot.end))) {
       setQuestionLoading(true);
       const fetchFeedbackToQuestion = async () => {
         const data = await get_feedback_to_question(

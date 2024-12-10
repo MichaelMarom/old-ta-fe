@@ -8,13 +8,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import Actions from '../../components/common/Actions';
 import { TutorFeedbackModal } from '../../components/student/CalenderTab/TutorFeedbackModal';
 import Loading from '../../components/common/Loading';
-import { getStartAndEndDateOfSlotForLesson, isFutureDate, isPastDate } from '../../components/common/Calendar/utils/calenderUtils';
+import { getStartAndEndDateOfSlotForLesson, isFutureDate, isPastDate }
+    from '../../components/common/Calendar/utils/calenderUtils';
 import { toast } from 'react-toastify';
 import { update } from 'lodash';
 import { getStudentLessons, updateStudentLesson } from '../../redux/student/studentBookings';
-import { fetch_calender_detals } from '../../axios/tutor';
+import { fetch_calender_detals, get_tutor_setup } from '../../axios/tutor';
 import { useLocation } from 'react-router-dom';
 import { getNameUsingIdColumn } from '../../axios/common';
+import useSlotPropGetter from '../../components/common/Calendar/hooks/useSlotPropGetter';
+import { get_tutor_data } from '../../axios/admin';
+import SlotPill from '../../components/student/SlotPill';
 
 const StudentCalender = () => {
     const [timeZone, setTimeZone] = useState('America/New_York');
@@ -28,15 +32,15 @@ const StudentCalender = () => {
     const [tutorCalender, setTutorCalender] = useState();
     const { user } = useSelector(state => state.user);
     const location = useLocation();
-    const [tutorGMT, setTutorGMT] = useState(null);
-    const [timeDiff, setTimeDiff] = useState()
+    const [selectedtutor, setSelectedTutor] = useState({});
+    const [timeDiff, setTimeDiff] = useState();
 
     const isStudentRoute = location.pathname.split("/")[1] === "student";
 
     const calculateTimeDifference = () => {
-        if (tutorGMT && student.GMT) {
+        if (selectedtutor.GMT && student.GMT) {
             const studentOffset = parseInt(student.GMT, 10);
-            const tutorOffset = parseInt(tutorGMT, 10);
+            const tutorOffset = parseInt(selectedtutor.GMT, 10);
 
             const difference = studentOffset - tutorOffset;
             return difference;
@@ -54,10 +58,12 @@ const StudentCalender = () => {
     const [enableHourSlots, setEnableHourSlots] = useState([]);
     const [disableDates, setDisableDates] = useState([]);
     const [enabledDays, setEnabledDays] = useState([]);
-    const [disabledWeekDays, setDisabledWeekDays] = useState([]);
+    const [disableWeekDays, setDisabledWeekDays] = useState([]);
     const [disableHourSlots, setDisableHourSlots] = useState([]);
     const [disabledHours, setDisabledHours] = useState([]);
     const [disableColor, setDisableColor] = useState('');
+    const [weekDaysTimeSlots, setWeekDaysTimeSlots] = useState([]);
+
 
     useEffect(() => {
         dispatch(getStudentLessons(student.AcademyId));
@@ -76,11 +82,12 @@ const StudentCalender = () => {
     }, [student]);
 
     const handleEventClick = (event) => {
-        setClickedSlot(event);
         if (isPastDate(convertToDate(event.end))) {
+            setClickedSlot(event);
             setIsModalOpen(true);
         } else if (activeView === 'week') {
             setIsModalOpen(false);
+            setClickedSlot(event);
             toast.info("Click on an Empty slot to postpone your selected (blinking) Booked lesson.");
         }
     };
@@ -90,8 +97,10 @@ const StudentCalender = () => {
         return updatedDate;
     };
 
-    const handleDoubleClickSlot = (slot) => {
+    const handleDoubleClickSlot = (slot, event) => {
+       
         if (clickedSlot.id && slot.action === "doubleClick" && activeView === 'week') {
+            // const isPresentinBlockedSlot = ()=>{}
             const { start, end } = getStartAndEndDateOfSlotForLesson(slot.start, slot.end);
             dispatch(updateStudentLesson(clickedSlot.id, {
                 studentId: clickedSlot.studentId,
@@ -103,7 +112,6 @@ const StudentCalender = () => {
         }
     };
 
-    console.log(timeDiff)
     const getTimeZonedDisableHoursRange = (initialArray) => {
         if (!isStudentLoggedIn) return initialArray;
 
@@ -135,15 +143,15 @@ const StudentCalender = () => {
 
     useEffect(() => {
         if (isFutureDate(convertToDate(clickedSlot.start)) && clickedSlot.id) {
-            getNameUsingIdColumn(clickedSlot.tutorId, 'TutorSetup', 'GMT').then(res => setTutorGMT(res[0].GMT))
+            get_tutor_setup({ AcademyId: clickedSlot.tutorId }).then(res => setSelectedTutor(res[0]))
         }
     }, [clickedSlot]);
 
     useEffect(() => {
-        if (tutorGMT) {
+        if (selectedtutor.GMT) {
             setTimeDiff(calculateTimeDifference())
         }
-    }, [tutorGMT])
+    }, [selectedtutor.GMT])
 
     useEffect(() => {
         if (clickedSlot.tutorId && timeDiff) {
@@ -179,7 +187,8 @@ const StudentCalender = () => {
         const isFutureClickedLesson = !!clickedSlot.id &&
             !!isFutureDate(convertToDate(clickedSlot.start)) &&
             convertToDate(event.start).getTime() === convertToDate(clickedSlot.start).getTime() &&
-            clickedSlot.request !== 'delete';
+            clickedSlot.request !== 'delete' &&
+            activeView !== 'month';
 
         if (event.type === 'reserved') {
             return {
@@ -201,8 +210,46 @@ const StudentCalender = () => {
                 },
             };
         }
-        return {};
+        return { className: `${isFutureClickedLesson ? ' blinking-button' : ''}`, };
     };
+
+    const slotPropGetter = useSlotPropGetter({
+        disableColor,
+        disableDates,
+        disabledHours,
+        disableHourSlots,
+        enableHourSlots,
+        isStudentLoggedIn,
+        timeDifference: timeDiff,
+        timeZone: student.timeZone,
+        selectedSlots: [],
+        selectedTutor: selectedtutor,
+        weekDaysTimeSlots,
+        tutor: {},
+        lessons,
+    });
+    //getting array of disableqweekdays timeslot per week
+    useEffect(() => {
+        if (timeZone) {
+            const timeDifference = { value: 30, unit: "minutes" };
+            const currentTime = moment();
+
+            const timeSlots = [];
+
+            (disableWeekDays ?? []).forEach((weekday) => {
+                const nextWeekday = currentTime.clone().day(weekday).startOf("day");
+
+                const endOfDay = nextWeekday.clone().endOf("day");
+
+                let currentSlotTime = nextWeekday.clone();
+                while (currentSlotTime.isBefore(endOfDay)) {
+                    timeSlots.push(currentSlotTime.utc().toDate());
+                    currentSlotTime.add(timeDifference.value, timeDifference.unit);
+                }
+            });
+            setWeekDaysTimeSlots(timeSlots);
+        }
+    }, [timeZone, disableWeekDays]);
 
     const handleViewChange = (view) => setActiveView(view);
 
@@ -211,7 +258,15 @@ const StudentCalender = () => {
     return (
         <div>
             <div>
-                <h4 className='text-center m-3'>Your Schedule</h4>
+                <div className='d-flex justify-content-between w-50 align-items-center'>
+                  { clickedSlot.id && isFutureDate(convertToDate(clickedSlot.start)) &&
+                  <div className='d-flex align-items-center'>
+                    <h6 className='m-0' style={{whiteSpace:"nowrap"}}>Selected Lesson:</h6>
+                    <SlotPill selectedType={clickedSlot.type} selectedSlots={[clickedSlot]} handleRemoveSlot={() => setClickedSlot({})} />
+                  </div>
+                  } 
+                   <h3 className=' text-end' style={{whiteSpace:"nowrap"}}>Your Schedule</h3>
+                </div>
                 <div className='m-3 student-calender' style={{ height: "65vh" }}>
                     <Calendar
                         localizer={localizer}
@@ -236,6 +291,8 @@ const StudentCalender = () => {
                         selectable={true}
                         onSelectSlot={handleDoubleClickSlot}
                         endAccessor="end"
+                        slotPropGetter={slotPropGetter}
+
                         style={{ minHeight: "100%" }}
                     />
                 </div>

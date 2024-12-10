@@ -30,8 +30,8 @@ const useSlotPropGetter = ({
 }) => {
   return useCallback(
     (date) => {
-      if (!date) return {};
-
+      if (!date || ( !selectedTutor.AcademyId &&  !tutor.AcademyId)) return {};
+console.log(selectedTutor, tutor, date)
       const formattedTime = moment(date).format("h:00 a");
 
       const existBetweenVacationRange = checkDateBetweenVacation(
@@ -51,8 +51,7 @@ const useSlotPropGetter = ({
 
       const existsinReservedSlots = checkReservedSlots(
         date,
-        lessons,
-        convertToDate
+        lessons
       );
 
       const { existInSelectedSlotStart, existInSelectedSlotEnd } =
@@ -107,7 +106,7 @@ const useSlotPropGetter = ({
           },
           className: "disable-slot",
         };
-      } 
+      }
       else if (
         isFutureDate(date) &&
         disabledHours &&
@@ -127,7 +126,7 @@ const useSlotPropGetter = ({
             window.alert("This slot is blocked, please select a white slot.");
           },
         };
-      } 
+      }
       else if (existInEnableSlots) {
         return {
           style: {

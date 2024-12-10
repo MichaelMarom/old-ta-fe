@@ -11,8 +11,10 @@ const SlotPill = ({ selectedSlots, handleRemoveSlot, selectedType }) => {
             {selectedSlots.map((item, index) => (
                 <button
                     key={index}
-                    className={`text-xs p-1 m-1 pill d-flex justify-content-center btn align-item-center gap-2 rounded-pill ${item.type}`}
+
+                    className={`d-flex align-items-center text-xs p-1 m-1 pill d-flex justify-content-center btn align-item-center gap-2 rounded-pill ${item.type}`}
                     style={{
+                        height:"25px",
                         border: `1px solid ${selectedType ? selectedType === 'intro' ?
                             introPillColor.border : selectedType === 'booked' ?
                                 bookedPillColor.border : 'orange ' : 'black'}`,

@@ -55,6 +55,11 @@ export let get_tutor_new_subject = async () => {
   }
 };
 
+/**
+ * 
+ * @param {String} status get tutors list accroding to status passed
+ * @returns 
+ */
 export let get_tutor_data = async (status) => {
   try {
     const { data } = await apiClient
