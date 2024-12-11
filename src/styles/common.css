@@ -317,14 +317,14 @@ span {
   fill: white;
 }
 
-.setup-private-info .Toastify__close-button>svg {
+.Toastify__close-button>svg {
   width: 30px !important;
   height: 30px !important;
   color: rgb(0, 255, 51) !important;
   animation: blink 1s infinite;
 }
 
-.setup-private-info .Toastify__close-button {
+.Toastify__close-button {
   opacity: 1 !important;
 }
 

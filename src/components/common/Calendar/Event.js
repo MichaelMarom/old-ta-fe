@@ -10,7 +10,8 @@ function CustomEvent({
   event,
   isStudentLoggedIn,
   handleEventClick = () => { },
-  sessions = []
+  sessions = [],
+  onDoubleClick = () => { }
 }) {
   const dispatch = useDispatch();
   const [remainingTime, setRemainingTime] = useState(
@@ -94,6 +95,7 @@ function CustomEvent({
 
   return (
     <div
+      onDoubleClick={onDoubleClick}
       className={`text-center h-100 ${event.request === "postpone" ? "blinking-button" : ""
         } `}
       style={{ fontSize: "12px" }}
@@ -102,12 +104,12 @@ function CustomEvent({
       {event.type === "reserved" ? (
         <>
           Marked For Booking {extraFiveMinStart && <div>
-          - expired
-        </div>  }
-        <div>
-              {String(remainingTime.minutes).padStart(2, "0")} :
-              {String(remainingTime.seconds).padStart(2, "0")}
-            </div>
+            - expired
+          </div>}
+          <div>
+            {String(remainingTime.minutes).padStart(2, "0")} :
+            {String(remainingTime.seconds).padStart(2, "0")}
+          </div>
         </>
       ) : (
         <div>
@@ -118,8 +120,8 @@ function CustomEvent({
               ? `from ${event.tutorScreenName || "unknown"}`
               : `by ${event.studentName}`
             }`}
-       
-          { event.type !== "reserved" && <div>"{event.subject}"</div>}
+
+          {event.type !== "reserved" && <div>"{event.subject}"</div>}
           {event.request === "postpone" && <div>Postpone Request</div>}
           {event.request === "delete" && <div>Deleted</div>}
           {!isStudentLoggedIn && event.ratingByStudent && (

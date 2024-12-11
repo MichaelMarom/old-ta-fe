@@ -6,7 +6,8 @@ import UserRichTextEditor from '../common/RichTextEditor/UserRichTextEditor';
 import { useSelector } from 'react-redux';
 import { send_email } from '../../axios/admin';
 import { toast } from 'react-toastify';
-import { GeneralFieldLabel, MandatoryFieldLabel, OptionalFieldLabel } from './TutorSetup';
+import {MandatoryFieldLabel, GeneralFieldLabel} from "../common/Input/InputLabel"
+
 
 const SendCodeModal = ({ isOpen, onClose, code, subject }) => {
     const [name, setName] = useState('')

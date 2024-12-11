@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setTutor } from "../../redux/tutor/tutorData";
 import Select from "../common/Select";
 import SendCodeModal from "./SendCodeModal";
-import { GeneralFieldLabel, MandatoryFieldLabel } from "./TutorSetup";
+import { GeneralFieldLabel, MandatoryFieldLabel } from "../common/Input/InputLabel";
 import { setMissingFieldsAndTabs } from "../../redux/tutor/missingFieldsInTabs";
 import { postDiscount, updateDiscount } from "../../redux/tutor/discount";
 import Voucher from "../common/Voucher";
@@ -280,10 +280,7 @@ const Discounts = () => {
           <div className="d-flex flex-column" style={{ width: "30%" }} onClick={() =>
             !editMode &&
             toast.info(
-              'Please click the "Edit" to activate the Tab!',
-              {
-                className:"setup-private-info "
-              }
+              'Please click the "Edit" to activate the Tab!'
             )
           }>
             <div className="rounded shadow border m-2 p-4">
@@ -464,10 +461,7 @@ const Discounts = () => {
               <div onClick={() =>
                 !editMode &&
                 toast.info(
-                  'Please click the "Edit" to activate the Tab!',
-                  {
-                    className:"setup-private-info "
-                  }
+                  'Please click the "Edit" to activate the Tab!'
                 )
               } className="form-check form-switch d-flex align-items-center gap-2">
                 <input

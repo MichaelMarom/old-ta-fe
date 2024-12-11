@@ -30,7 +30,7 @@ import { useNavigate } from "react-router-dom";
 import Avatar from "../common/Avatar";
 import Input from "../common/Input";
 import Select from "../common/Select";
-import { MandatoryFieldLabel, OptionalFieldLabel } from "../tutor/TutorSetup";
+import { MandatoryFieldLabel, OptionalFieldLabel } from "../common/Input/InputLabel";
 import Loading from "../common/Loading";
 import { uploadStudentImages } from "../../axios/file";
 import _ from "lodash";
@@ -126,7 +126,7 @@ const StudentSetup = () => {
           hideProgressBar: true,
           autoClose: false,
           draggable: true,
-          className: "setup-private-info center-center",
+          className: "  center-center",
         }
       );
     setToastShown(true);

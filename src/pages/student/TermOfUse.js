@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import StudentLayout from '../../layouts/StudentLayout'
 import Actions from '../../components/common/Actions'
 import { useDispatch, useSelector } from 'react-redux'
-import RichTextEditor from '../../components/common/RichTextEditor/RichTextEditor'
-// import { get_adminConstants, post_termsOfUse } from '../../axios/admin'
-import Loading from '../../components/common/Loading'
+
 import { toast } from 'react-toastify'
 import { showDate } from '../../utils/moment'
 import { convertToDate } from '../../components/common/Calendar/Calendar'
-import { post_student_agreement, setAgreementDateToNullForAllStudents } from '../../axios/student'
+import { post_student_agreement } from '../../axios/student'
 import { setStudent } from '../../redux/student/studentData'
-import { MandatoryFieldLabel } from '../../components/tutor/TutorSetup'
 import _ from 'lodash'
 
 const TermOfUse = () => {

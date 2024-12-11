@@ -88,7 +88,10 @@ const StudentCalender = () => {
         } else if (activeView === 'week') {
             setIsModalOpen(false);
             setClickedSlot(event);
-            toast.info("Click on an Empty slot to postpone your selected (blinking) Booked lesson.");
+            toast.info("Click on an Empty slot to postpone your selected (blinking) Booked lesson. Made a mistake? then click on the lesson you want to pospone.");
+        }
+        else {
+            toast.info('You are currently on "Month" view. To Postpone booked lesson, Move to a "Week" or "Day" view.');
         }
     };
 
@@ -97,8 +100,8 @@ const StudentCalender = () => {
         return updatedDate;
     };
 
-    const handleDoubleClickSlot = (slot, event) => {
-       
+    const handleDoubleClickSlot = (slot) => {
+        console.log(getStartAndEndDateOfSlotForLesson(slot.start, slot.end), clickedSlot, 'jn' )
         if (clickedSlot.id && slot.action === "doubleClick" && activeView === 'week') {
             // const isPresentinBlockedSlot = ()=>{}
             const { start, end } = getStartAndEndDateOfSlotForLesson(slot.start, slot.end);
@@ -223,7 +226,7 @@ const StudentCalender = () => {
         timeDifference: timeDiff,
         timeZone: student.timeZone,
         selectedSlots: [],
-        selectedTutor: selectedtutor,
+        selectedTutor: { ...selectedtutor, academyId: selectedtutor.AcademyId },
         weekDaysTimeSlots,
         tutor: {},
         lessons,
@@ -259,13 +262,13 @@ const StudentCalender = () => {
         <div>
             <div>
                 <div className='d-flex justify-content-between w-50 align-items-center'>
-                  { clickedSlot.id && isFutureDate(convertToDate(clickedSlot.start)) &&
-                  <div className='d-flex align-items-center'>
-                    <h6 className='m-0' style={{whiteSpace:"nowrap"}}>Selected Lesson:</h6>
-                    <SlotPill selectedType={clickedSlot.type} selectedSlots={[clickedSlot]} handleRemoveSlot={() => setClickedSlot({})} />
-                  </div>
-                  } 
-                   <h3 className=' text-end' style={{whiteSpace:"nowrap"}}>Your Schedule</h3>
+                    {clickedSlot.id && isFutureDate(convertToDate(clickedSlot.start)) &&
+                        <div className='d-flex align-items-center'>
+                            <h6 className='m-0' style={{ whiteSpace: "nowrap" }}>Selected Lesson:</h6>
+                            <SlotPill selectedType={clickedSlot.type} selectedSlots={[clickedSlot]} handleRemoveSlot={() => setClickedSlot({})} />
+                        </div>
+                    }
+                    <h3 className=' text-end' style={{ whiteSpace: "nowrap" }}>Your Schedule</h3>
                 </div>
                 <div className='m-3 student-calender' style={{ height: "65vh" }}>
                     <Calendar
@@ -282,6 +285,7 @@ const StudentCalender = () => {
                                     {...event}
                                     isStudentLoggedIn={true}
                                     handleEventClick={handleEventClick}
+                                    onDoubleClick={()=>console.log('doubkeclicked event')}
                                     sessions={lessons}
                                 />
                             ),

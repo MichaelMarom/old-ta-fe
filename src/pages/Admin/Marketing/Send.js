@@ -8,7 +8,7 @@ import { get_email_temp_list, get_sms_mms_list, send_email, send_sms, send_templ
 import { toast } from 'react-toastify';
 import HtmlFilePreview from './EmailTemplateUploader';
 import Input from '../../../components/common/Input';
-import { MandatoryFieldLabel } from '../../../components/tutor/TutorSetup';
+import { MandatoryFieldLabel } from '../../../components/common/Input/InputLabel';
 
 const Marketing = () => {
   const [headers, setHeaders] = useState([]);

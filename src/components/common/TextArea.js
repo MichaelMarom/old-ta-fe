@@ -1,5 +1,4 @@
 import React from 'react'
-import { MandatoryFieldLabel } from '../tutor/TutorSetup'
 
 const TextArea = ({ value,
     setValue,

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Layout from "./Layout";
 import TextArea from "../../../components/common/TextArea";
-import { MandatoryFieldLabel } from "../../../components/tutor/TutorSetup";
+import { MandatoryFieldLabel } from "../../../components/common/Input/InputLabel"
+
 import TAButton from "../../../components/common/TAButton";
-import { FaCheck, FaPlus, FaTrashAlt } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa";
 import Input from "../../../components/common/Input";
 import { MdEdit } from "react-icons/md";
 import { get_sms_mms_list, save_sms_mms_temp, update_sms_mms_temp } from "../../../axios/admin";
 import { toast } from "react-toastify";
-import FileUpload from "../../../components/common/FileUpload";
 
 function AddSMSTemps() {
   const [smsSamples, setSmsSamples] = useState([]);
@@ -83,7 +83,7 @@ function AddSMSTemps() {
                 height={80}
                 required
               />
-             
+
             </div>
             <div className="d-flex justify-content-between w-100 m-2">
               <div className="w-50">

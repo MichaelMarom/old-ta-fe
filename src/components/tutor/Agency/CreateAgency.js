@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import CenteredModal from "../../common/Modal";
 import Input from "../../common/Input";
-import { MandatoryFieldLabel } from "../TutorSetup";
+import { MandatoryFieldLabel } from "../../common/Input/InputLabel";
 import TAButton from "../../common/TAButton";
 import { useSelector } from "react-redux";
 

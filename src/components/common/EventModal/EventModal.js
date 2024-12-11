@@ -199,7 +199,7 @@ function EventModal({
         const remainingSlots = 24 - selectedSlots.length;
         message = `Book ${remainingSlots} more ${remainingSlots > 1 ? 'lessons' : 'lesson'} to get 20% discount.`;
       }
-      message.length && toast.info(message, { className: 'setup-private-info' })
+      message.length && toast.info(message)
     }
   }, [lessons, selectedSlots, selectedTutor, student]);
 

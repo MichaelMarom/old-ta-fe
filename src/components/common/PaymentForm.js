@@ -3,7 +3,8 @@ import React from "react";
 // import "react-credit-cards-2/dist/es/styles-compiled.css";
 import Payment from "payment";
 import Input from "./Input";
-import { MandatoryFieldLabel, OptionalFieldLabel, options } from "../tutor/TutorSetup";
+import { options } from "../../pages/tutor/TutorSetup";
+import {MandatoryFieldLabel, OptionalFieldLabel} from "../common/Input/InputLabel"
 import { Countries } from "../../constants/constants";
 
 const PaymentForm = ({ setCreditDebitState, creditDebitState, editMode, errors, setErrors, card = "primary", setCard = () => { } }) => {

@@ -7,8 +7,8 @@ import UserRichTextEditor from '../../../components/common/RichTextEditor/UserRi
 import { save_email_temp } from '../../../axios/admin';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { MandatoryFieldLabel } from '../../../components/tutor/TutorSetup';
-import RichTextEditor from '../../../components/common/RichTextEditor/RichTextEditor';
+import {MandatoryFieldLabel} from "../../../components/common/Input/InputLabel"
+
 
 const Create = () => {
   const [subject, setSubject] = useState('');

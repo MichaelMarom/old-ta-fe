@@ -30,7 +30,8 @@ import ReactDatePicker from "react-datepicker";
 import { useDispatch, useSelector } from "react-redux";
 import { setTutor } from "../../../redux/tutor/tutorData";
 import DebounceInput from "../../common/DebounceInput";
-import { MandatoryFieldLabel } from "../TutorSetup";
+import {MandatoryFieldLabel} from "../../common/Input/InputLabel"
+
 import FormSelect from "../../common/Select";
 import _ from "lodash";
 import { setMissingFieldsAndTabs } from "../../../redux/tutor/missingFieldsInTabs";
@@ -115,7 +116,7 @@ const Education = () => {
           hideProgressBar: true,
           autoClose: false,
           draggable: true,
-          className: "setup-private-info center-center",
+          className: "  center-center",
         }
       );
 

@@ -10,21 +10,17 @@ import {
   setAgreementDateToNullForAll,
   updateTutorSetup,
 } from "../../axios/tutor";
-import Loading from "../common/Loading";
 import { setTutor } from "../../redux/tutor/tutorData";
 import { useDispatch, useSelector } from "react-redux";
 import { showDate } from "../../utils/moment";
 import { convertToDate } from "../common/Calendar/Calendar";
 import {
   PROFILE_STATUS,
-  applicationMandatoryFields,
 } from "../../constants/constants";
 import { toast } from "react-toastify";
 import _ from "lodash";
-import { MandatoryFieldLabel } from "./TutorSetup";
 import { setMissingFieldsAndTabs } from "../../redux/tutor/missingFieldsInTabs";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
-import { BsNutFill } from "react-icons/bs";
 
 const TermOfUse = () => {
   const [unSavedChanges, setUnSavedChanges] = useState(false);

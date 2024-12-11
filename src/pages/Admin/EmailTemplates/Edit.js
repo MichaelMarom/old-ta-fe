@@ -7,7 +7,7 @@ import UserRichTextEditor from '../../../components/common/RichTextEditor/UserRi
 import { get_email_temp, save_email_temp, update_email_temp } from '../../../axios/admin';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { MandatoryFieldLabel } from '../../../components/tutor/TutorSetup';
+import { MandatoryFieldLabel } from '../../../components/common/Input/InputLabel';
 
 const Edit = () => {
     const [subject, setSubject] = useState('');

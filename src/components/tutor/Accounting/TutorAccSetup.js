@@ -14,14 +14,13 @@ import { compareStates } from "../../../utils/common";
 import { setTutor } from "../../../redux/tutor/tutorData";
 import Tooltip from "../../common/ToolTip";
 import Input from "../../common/Input";
-import { GeneralFieldLabel, MandatoryFieldLabel } from "../TutorSetup";
+import {  MandatoryFieldLabel } from "../../common/Input/InputLabel";
 import Select from "../../common/Select";
 import { setMissingFieldsAndTabs } from "../../../redux/tutor/missingFieldsInTabs";
 import {
   updateAccounting,
   updateAccountingState,
 } from "../../../redux/tutor/accounting";
-import { FaExclamationCircle } from "react-icons/fa";
 
 const TutorAccSetup = ({
   sessions,
@@ -263,10 +262,7 @@ const TutorAccSetup = ({
           <div onClick={() =>
             !editMode &&
             toast.info(
-              'Please click the "Edit" to activate the Tab!',
-              {
-                className:"setup-private-info "
-              }
+              'Please click the "Edit" to activate the Tab!'
             )
           }
             className="p-3 "
@@ -552,10 +548,7 @@ const TutorAccSetup = ({
               <div onClick={() =>
                 !editMode &&
                 toast.info(
-                  'Please click the "Edit" to activate the Tab!',
-                  {
-                    className:"setup-private-info "
-                  }
+                  'Please click the "Edit" to activate the Tab!'
                 )
               } className="d-flex align-items-center mb-2 justify-content-between">
                 <Input

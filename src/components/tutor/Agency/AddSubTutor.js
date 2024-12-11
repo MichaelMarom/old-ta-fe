@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import LeftSideBar from "../../common/LeftSideBar";
 import Input from "../../common/Input";
 import TAButton from "../../common/TAButton";
-import { MandatoryFieldLabel } from "../TutorSetup";
+import {MandatoryFieldLabel} from "../../common/Input/InputLabel"
+
 import Select from "../../common/Select";
 import { useSelector } from "react-redux";
 import {
@@ -10,7 +11,7 @@ import {
   get_rates,
 } from "../../../axios/tutor";
 import { capitalize } from "lodash";
-import { create_subTutor, get_subTutors } from "../../../axios/agency";
+import { create_subTutor } from "../../../axios/agency";
 import { useParams } from "react-router-dom";
 
 const AddSubTutor = ({

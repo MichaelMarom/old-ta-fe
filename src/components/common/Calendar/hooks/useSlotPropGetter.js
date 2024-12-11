@@ -30,8 +30,7 @@ const useSlotPropGetter = ({
 }) => {
   return useCallback(
     (date) => {
-      if (!date || ( !selectedTutor.AcademyId &&  !tutor.AcademyId)) return {};
-console.log(selectedTutor, tutor, date)
+      if (!date || ( !selectedTutor.academyId &&  !tutor.AcademyId)) return {};
       const formattedTime = moment(date).format("h:00 a");
 
       const existBetweenVacationRange = checkDateBetweenVacation(

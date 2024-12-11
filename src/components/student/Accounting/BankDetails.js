@@ -2,12 +2,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import PaymentForm from '../../common/PaymentForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { get_bank_details, post_bank_details, update_bank_details, upload_student_setup_by_fields } from '../../../axios/student';
+import {  upload_student_setup_by_fields } from '../../../axios/student';
 import Actions from '../../common/Actions';
 import _ from "lodash";
 import { compareStates } from '../../../utils/common';
 import Input from '../../common/Input';
-import { MandatoryFieldLabel } from '../../tutor/TutorSetup';
+import {MandatoryFieldLabel} from "../../common/Input/InputLabel"
+
 import Select from '../../common/Select';
 import { setStudent } from '../../../redux/student/studentData';
 import { postStudentAccounting, updateStudentAccounting } from '../../../redux/student/accounting';

@@ -34,7 +34,7 @@ root.render(
   <>
     <ToastContainer
       position="bottom-center"
-      className="custom-toast-container"
+      className="custom-toast-container "
     />
     <Provider store={store}>
       <Router>

@@ -30,7 +30,7 @@ import {
 import { handleSlotDoubleClick } from "./utils/SlotDoubleClick";
 import useDayPropGetter from "./hooks/useDayPropGetter";
 import useSlotPropGetter from "./hooks/useSlotPropGetter";
-import StudentFutureEventModal from "./StudentFutureEventModal";
+import SlotPill from "../../student/SlotPill";
 
 export const views = {
   WEEK: "week",
@@ -428,6 +428,10 @@ const ShowCalendar = ({
       style={{ height: "100%" }}
       className={`${isStudentLoggedIn ? "student-calender" : "tutor-calender"}`}
     >
+      {clickedSlot.id && <div>
+        <SlotPill selectedType={clickedSlot.type}
+          selectedSlots={[clickedSlot]} handleRemoveSlot={() => setClickedSlot({})} />
+      </div>}
       <Calendar
         views={["day", "week", "month"]}
         localizer={localizer}
