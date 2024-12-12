@@ -11,13 +11,10 @@ import Loading from '../../components/common/Loading';
 import { getStartAndEndDateOfSlotForLesson, isFutureDate, isPastDate }
     from '../../components/common/Calendar/utils/calenderUtils';
 import { toast } from 'react-toastify';
-import { update } from 'lodash';
 import { getStudentLessons, updateStudentLesson } from '../../redux/student/studentBookings';
 import { fetch_calender_detals, get_tutor_setup } from '../../axios/tutor';
 import { useLocation } from 'react-router-dom';
-import { getNameUsingIdColumn } from '../../axios/common';
 import useSlotPropGetter from '../../components/common/Calendar/hooks/useSlotPropGetter';
-import { get_tutor_data } from '../../axios/admin';
 import SlotPill from '../../components/student/SlotPill';
 
 const StudentCalender = () => {
@@ -66,8 +63,8 @@ const StudentCalender = () => {
 
 
     useEffect(() => {
-        dispatch(getStudentLessons(student.AcademyId));
-    }, [student.AcademyId]);
+        dispatch(getStudentLessons(student.AcademyId, selectedtutor.AcademyId));
+    }, [student.AcademyId, selectedtutor.AcademyId]);
 
     useEffect(() => {
         moment.tz.setDefault(timeZone);
@@ -82,6 +79,7 @@ const StudentCalender = () => {
     }, [student]);
 
     const handleEventClick = (event) => {
+        if( student.AcademyId !== event.studentId) return toast.warning("You cannot see details of another student lesson")
         if (isPastDate(convertToDate(event.end))) {
             setClickedSlot(event);
             setIsModalOpen(true);
@@ -101,13 +99,12 @@ const StudentCalender = () => {
     };
 
     const handleDoubleClickSlot = (slot) => {
-        console.log(getStartAndEndDateOfSlotForLesson(slot.start, slot.end), clickedSlot, 'jn' )
         if (clickedSlot.id && slot.action === "doubleClick" && activeView === 'week') {
             // const isPresentinBlockedSlot = ()=>{}
             const { start, end } = getStartAndEndDateOfSlotForLesson(slot.start, slot.end);
             dispatch(updateStudentLesson(clickedSlot.id, {
                 studentId: clickedSlot.studentId,
-                tutorId: clickedSlot.tutorId,
+                // tutorId: clickedSlot.tutorId,
                 start,
                 end,
             }));
@@ -148,6 +145,7 @@ const StudentCalender = () => {
         if (isFutureDate(convertToDate(clickedSlot.start)) && clickedSlot.id) {
             get_tutor_setup({ AcademyId: clickedSlot.tutorId }).then(res => setSelectedTutor(res[0]))
         }
+        if (!clickedSlot.id) setSelectedTutor({})
     }, [clickedSlot]);
 
     useEffect(() => {
@@ -192,7 +190,14 @@ const StudentCalender = () => {
             convertToDate(event.start).getTime() === convertToDate(clickedSlot.start).getTime() &&
             clickedSlot.request !== 'delete' &&
             activeView !== 'month';
-
+        const otherStudentLesson = event.studentId !== student.AcademyId;
+        if (otherStudentLesson)
+            return {
+                style: {
+                    backgroundColor: "yellow",
+                    color: "black",
+                }
+            }
         if (event.type === 'reserved') {
             return {
                 className: `reserved-event ${isFutureClickedLesson ? ' blinking-button' : ''}`,
@@ -285,7 +290,7 @@ const StudentCalender = () => {
                                     {...event}
                                     isStudentLoggedIn={true}
                                     handleEventClick={handleEventClick}
-                                    onDoubleClick={()=>console.log('doubkeclicked event')}
+                                    onDoubleClick={() => console.log('doubkeclicked event')}
                                     sessions={lessons}
                                 />
                             ),

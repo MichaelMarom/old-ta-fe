@@ -34,6 +34,7 @@ import Avatar from "../../components/common/Avatar";
 import { showDate } from "../../utils/moment";
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
 import { setLessons } from "../../redux/student/studentBookings";
+import { BiBell } from "react-icons/bi";
 
 const Header = () => {
   const { signOut } = useClerk();
@@ -52,11 +53,10 @@ const Header = () => {
   const { tutor } = useSelector((state) => state.tutor);
   const scrollRef = useRef(null);
   const profileDropdownRef = useRef(null);
+  const [isNotifyOpen, setIsNotifyOpen] = useState(false);
   const scrollStep = 500; // Adjust the scroll step as needed
 
   useEffect(() => {
-console.log("render")
-
     const checkOverflow = () => {
       const el = scrollRef.current;
       if (el) {
@@ -98,10 +98,10 @@ console.log("render")
   };
 
   // useEffect(() => {
-    // const element = document.getElementById("tutor-tab-header-list-active1");
-    // if (element) {
-    //   element.scrollIntoView({ behavior: "smooth", block: "center" });
-    // }
+  // const element = document.getElementById("tutor-tab-header-list-active1");
+  // if (element) {
+  //   element.scrollIntoView({ behavior: "smooth", block: "center" });
+  // }
   // }, [location.pathname, activeTab]);
 
   // Handle click outside the dropdown
@@ -141,6 +141,28 @@ console.log("render")
     { url: "/tutor/agency", name: "Agency" },
     { url: "/collab", name: "Collaboration", common: true, video: collabVideo },
     { url: `/tutor/tutor-profile/${tutor.AcademyId}`, name: "Profile" },
+  ];
+  const notifications = [
+    {
+      name: "John Doe",
+      text: "Liked your post.",
+      date: "2024-12-11",
+    },
+    {
+      name: "Jane Smith",
+      text: "Commented on your picture.",
+      date: "2024-12-10",
+    },
+    {
+      name: "Alex Johnson",
+      text: "Sent you a friend request.",
+      date: "2024-12-09",
+    },
+    {
+      name: "Emily Davis",
+      text: "Shared your post.",
+      date: "2024-12-08",
+    },
   ];
 
   const StatusValues = {
@@ -383,13 +405,13 @@ console.log("render")
                     color:
                       tutor.Status ===
                         (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
-                      user.role !== "admin"
+                        user.role !== "admin"
                         ? "#b5b5b5"
                         : "white",
                     cursor:
                       tutor.Status ===
                         (PROFILE_STATUS.PENDING || !tutor.AcademyId) &&
-                      user.role !== "admin"
+                        user.role !== "admin"
                         ? "not-allowed"
                         : "pointer",
                     // pointerEvents:
@@ -407,17 +429,17 @@ console.log("render")
                     {!!missingFields.find(
                       (field) => field.tab === tab.name
                     ) && (
-                      <span
-                        className="rounded-circle m-1 bg-light d-flex justify-content-center align-items-center"
-                        style={{ width: "15px", height: "15px" }}
-                      >
-                        <FaExclamation
-                          className="blinking-button"
-                          color="rgb(255, 78, 78)"
-                          size={10}
-                        />
-                      </span>
-                    )}
+                        <span
+                          className="rounded-circle m-1 bg-light d-flex justify-content-center align-items-center"
+                          style={{ width: "15px", height: "15px" }}
+                        >
+                          <FaExclamation
+                            className="blinking-button"
+                            color="rgb(255, 78, 78)"
+                            size={10}
+                          />
+                        </span>
+                      )}
                     {tab.name}
                     {!!filteredSessions.length &&
                       tab.url === "/tutor/feedback" && (
@@ -469,6 +491,63 @@ console.log("render")
           <IoChevronForwardOutline color="#47c176" size={30} />
         </div>
       )}
+
+      <div className="position-relative d-flex align-items-center h-100 m-2" style={{ color: "white" }}>
+        <BiBell size={30}
+          style={{ cursor: "pointer", transition: "transform 0.3s ease-in-out" }}
+          onClick={() => setIsNotifyOpen(!isNotifyOpen)}
+        />
+        <span
+          style={{
+            position: "absolute",
+            top: "10px",
+            right: "5px",
+            width: "8px",
+            height: "8px",
+            backgroundColor: "red",
+            borderRadius: "50%",
+          }}
+        ></span>
+        <div
+          className={`position-absolute shadow border rounded`}
+          style={{
+            top: "50px",
+            right: "-30px",
+            width: "300px",
+            overflow: "auto",
+            maxHeight: isNotifyOpen ? "200px" : "0",
+            transition: "max-height 0.3s ease-in-out",
+            color: "white",
+            background: "#212f3c",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              top: "-10px",
+              right: "40px",
+              width: "0",
+              height: "0",
+              borderLeft: "10px solid transparent",
+              borderRight: "10px solid transparent",
+              borderBottom: "10px solid #212f3c",
+              zIndex: "1",
+              display: isNotifyOpen ? "block" : "none",
+            }}
+          ></div>
+          <div className="d m-0 p-2">
+            {notifications.map((notification, index) => (
+              <div key={index} className="p-2 border-bottom">
+                <strong>{notification.name}</strong>
+                <br />
+                <span>{notification.text}</span>
+                <br />
+                <small className="text-muted">{notification.date}</small>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
       <TabInfoVideoToast
         video={tabs.find((tab) => tab.url === isOpen)?.video}
         isOpen={isOpen}

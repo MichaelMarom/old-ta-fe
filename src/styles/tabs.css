@@ -157,7 +157,7 @@ ul.header li a {
     background-color: #ffffff;
 }
 
-ul:not(.email-temp-preview *) {
+/* ul:not(.email-temp-preview *) {
     list-style-type: none;
     margin: 0;
     display: flex;
@@ -165,7 +165,7 @@ ul:not(.email-temp-preview *) {
     overflow-x: auto;
     overflow-y: hidden;
     scroll-behavior: smooth;
-}
+} */
 
 ul.header {
     height: 100%;
