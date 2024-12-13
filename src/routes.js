@@ -208,7 +208,6 @@ const App = () => {
   useEffect(() => {
     if (userId && token && isSignedIn) {
       const fetchData = () => {
-        console.log(loggedInUserDetail, "logged User")
         if (loggedInUserDetail.AcademyId) {
           dispatch(setChats(loggedInUserDetail.AcademyId, role));
         }

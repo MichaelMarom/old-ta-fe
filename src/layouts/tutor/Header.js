@@ -73,6 +73,37 @@ const Header = () => {
     return () => window.removeEventListener("resize", checkOverflow);
   }, []);
 
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      const handleServiceWorker = async () => {
+        try {
+          const register = await navigator.serviceWorker.register("/service-worker.js");
+          console.log(register);
+
+          const subscription = await register.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: "BH733_egaibxYA5wW3Q5A7YTTBcbVYf38CtYMh19-FOVhthiWEShSNztddrhf6JJEPoiqMFBLVEReLLyEf4c03I",
+          });
+
+          const res = await fetch("http://localhost:9876/subscribe", {
+            method: "POST",
+            body: JSON.stringify(subscription),
+            headers: {
+              "content-type": "application/json",
+            },
+          });
+
+          // const data = await data.json();
+          console.log( res);
+        }
+        catch (error) {
+          console.log("Error subscribing to push notifications", error);
+        }
+      };
+      handleServiceWorker();
+    }
+  }, []);
+
   const handleScrollLeft = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollLeft -= scrollStep;
