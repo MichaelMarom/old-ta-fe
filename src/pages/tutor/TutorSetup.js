@@ -375,10 +375,11 @@ const TutorSetup = () => {
     };
 
     useEffect(() => {
+        // Sort and map country list
         const sortedCountries = Countries.sort((a, b) =>
             a.Country.localeCompare(b.Country)
         );
-        let countries = sortedCountries.map((item) => (
+        const countries = sortedCountries.map((item) => (
             <option
                 key={item.Country}
                 className={item.Country}
@@ -394,9 +395,10 @@ const TutorSetup = () => {
                 {item.Country}
             </option>
         ));
-        let countries_select_head = (
+        const countries_select_head = (
             <option
-                value={""}
+                value=""
+                key="select-country-head"
                 style={{
                     height: "50px",
                     width: "100%",
@@ -611,8 +613,6 @@ const TutorSetup = () => {
     }, [vacation_mode]);
 
     const mandatoryFields = [
-        // { name: "fname", filled: !!fname.length, value: fname },
-        // { name: "lname", filled: !!lname.length, value: lname },
         { name: "phone", filled: !!cell?.length, value: cell },
         { name: "rtime", filled: !!response_zone?.length, value: response_zone },
         { name: "country", filled: !!country?.length, value: country },
@@ -1021,9 +1021,7 @@ const TutorSetup = () => {
                                                     ))}
                                                 </Select>
                                             </div>
-                                        ) : (
-                                            ""
-                                        )}
+                                        ) : null}
                                     </div>
                                     <div className="" style={{ width: "100%" }}>
                                         <div

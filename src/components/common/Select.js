@@ -2,7 +2,7 @@ import React from "react";
 import Tooltip from "./ToolTip";
 
 const Select = ({
-  setValue,
+  setValue=()=>{},
   value,
   editMode = true,
   disabled = false,

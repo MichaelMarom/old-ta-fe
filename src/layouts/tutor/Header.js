@@ -35,6 +35,7 @@ import { showDate } from "../../utils/moment";
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
 import { setLessons } from "../../redux/student/studentBookings";
 import { BiBell } from "react-icons/bi";
+import axios from "axios";
 
 const Header = () => {
   const { signOut } = useClerk();
@@ -84,17 +85,19 @@ const Header = () => {
             userVisibleOnly: true,
             applicationServerKey: "BH733_egaibxYA5wW3Q5A7YTTBcbVYf38CtYMh19-FOVhthiWEShSNztddrhf6JJEPoiqMFBLVEReLLyEf4c03I",
           });
+          console.log(subscription)
 
-          const res = await fetch("http://localhost:9876/subscribe", {
+          const res = await axios.post("http://localhost:9876/subscribe", subscription   );
+          const ded = await axios("http://localhost:9876/send-notification", {
             method: "POST",
-            body: JSON.stringify(subscription),
+            body: subscription,
             headers: {
               "content-type": "application/json",
             },
-          });
+          })
 
           // const data = await data.json();
-          console.log( res);
+          console.log( res, subscription);
         }
         catch (error) {
           console.log("Error subscribing to push notifications", error);
