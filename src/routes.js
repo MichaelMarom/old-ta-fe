@@ -38,6 +38,7 @@ import StudentLayout from "./layouts/StudentLayout";
 import TutorLayout from "./layouts/TutorLayout";
 import { setStudentAccounting } from "./redux/student/accounting";
 import { setStudentMissingFeildsAndTabs } from "./redux/student/mandatoryStudentFieldsInTabs";
+import { socket } from "./config/socket"
 
 const App = () => {
   let location = useLocation();
@@ -116,6 +117,14 @@ const App = () => {
   }, [userId, token, isSignedIn]);
 
   useEffect(() => {
+    if (student.AcademyId) {
+      socket.emit("join-as-a-user", student.AcademyId);
+    }
+    else if (tutor.AcademyId)
+      socket.emit("join-as-a-user", tutor.AcademyId);
+  }, [tutor, student])
+
+  useEffect(() => {
     if (user.role === "admin" && isSignedIn && token) {
       dispatch(setNewSubjCount());
     }
@@ -150,7 +159,7 @@ const App = () => {
         const tutorSessions = await dispatch(await setTutorSessions(tutor));
         handleExpiredToken(tutorSessions);
 
-         intervalTutorRef.current = setInterval(async () => {
+        intervalTutorRef.current = setInterval(async () => {
           const tutorSessions = await dispatch(await setTutorSessions(tutor));
           if (handleExpiredToken(tutorSessions)) clearInterval(intervalTutorRef.current);
         }, 60000);
@@ -159,7 +168,7 @@ const App = () => {
       };
       dispatchUserSessions();
     }
-     return () => {
+    return () => {
       if (intervalTutorRef.current) {
         clearInterval(intervalTutorRef.current);
       }
@@ -177,7 +186,7 @@ const App = () => {
         );
         handleExpiredToken(studentSessions);
 
-       intervalStudentRef.current = setInterval(async () => {
+        intervalStudentRef.current = setInterval(async () => {
           const studentSessions = await dispatch(
             await setStudentSessions(student)
           );
@@ -189,7 +198,7 @@ const App = () => {
       };
       dispatchUserSessions();
     }
-      return () => {
+    return () => {
       if (intervalStudentRef.current) {
         clearInterval(intervalStudentRef.current);
       }

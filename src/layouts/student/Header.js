@@ -24,6 +24,11 @@ import { PiVideoBold } from "react-icons/pi";
 import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
 import { setLessons } from "../../redux/student/studentBookings";
+import { socket } from '../../config/socket'
+import { toast } from "react-toastify";
+import FloatingMessage from "../../components/common/FloatingMessages";
+import { BiBell } from "react-icons/bi";
+import { setNotifications } from "../../redux/common/notifications";
 
 const Header = () => {
   const { signOut } = useClerk();
@@ -34,15 +39,19 @@ const Header = () => {
   const dispatch = useDispatch();
   const [filteredSessions, setFilteredSessions] = useState([]);
   const { sessions } = useSelector((state) => state.studentSessions);
+  const { notifications } = useSelector((state) => state.notifications);
   const { studentMissingFields } = useSelector(
     (state) => state.studentMissingFields
   );
   const [isOverflowing, setIsOverflowing] = useState(false);
   const [profileDropdownOpened, setProfileDropdownOpened] = useState(false);
+  const [isNotifyOpen, setIsNotifyOpen] = useState(false);
+
   const scrollRef = useRef();
   const profileDropdownRef = useRef();
   const scrollStep = 500;
   let location = useLocation();
+  const [incomingNotificationMessage, setIncomingNotificationMessage] = useState({});
 
   const { student } = useSelector((state) => state.student);
 
@@ -148,13 +157,34 @@ const Header = () => {
     const filteredSessions = sessions.filter((session) => {
       const sessionEndDate = moment(session.end);
       const diffMinutes = sessionEndDate.diff(currentTime, "minutes");
-      return diffMinutes <= 10 && !session.ratingByStudent && session.type !=="reserved"
+      return diffMinutes <= 10 && !session.ratingByStudent && session.type !== "reserved"
     });
     setFilteredSessions(filteredSessions);
   }, [sessions]);
 
+  useEffect(() => {
+    socket.on('notification', (data) => {
+      // toast.info(data.doerName)
+    dispatch(  setNotifications([...notifications, {...data, date: new Date()}]))
+      setIncomingNotificationMessage({ title: data.title, message: data.message, doerName: data.doerName });
+    });
+
+    return () => {
+      socket.off('notification');
+    };
+  }, []);
+  console.log(notifications)
+
   return (
-    <div className="tutor-tab-header shadow-sm" style={{background:"#074b90"}}>
+    <div className="tutor-tab-header shadow-sm" style={{ background: "#074b90" }}>
+      <div>
+        {incomingNotificationMessage.title && (
+          <FloatingMessage
+            message={incomingNotificationMessage}
+            setIncomingNotificationMessage={setIncomingNotificationMessage}
+          />
+        )}
+      </div>
       <div
         ref={profileDropdownRef}
         className={`screen-name position-relative flex-column px-1 gap-2`}
@@ -323,8 +353,8 @@ const Header = () => {
           <div
             id={
               activeTab.includes(tab.url) ||
-              (activeTab.split("/").length > 3 &&
-                activeTab.split("/")[2] === tab.url)
+                (activeTab.split("/").length > 3 &&
+                  activeTab.split("/")[2] === tab.url)
                 ? "tutor-tab-header-list-active1"
                 : ""
             }
@@ -343,17 +373,17 @@ const Header = () => {
                 {!!studentMissingFields.find(
                   (field) => field.tab === tab.name
                 ) && (
-                  <span
-                    className="rounded-circle m-1 bg-light d-flex justify-content-center align-items-center"
-                    style={{ width: "15px", height: "15px" }}
-                  >
-                    <FaExclamation
-                      className="blinking-button"
-                      color="rgb(255, 78, 78)"
-                      size={10}
-                    />
-                  </span>
-                )}
+                    <span
+                      className="rounded-circle m-1 bg-light d-flex justify-content-center align-items-center"
+                      style={{ width: "15px", height: "15px" }}
+                    >
+                      <FaExclamation
+                        className="blinking-button"
+                        color="rgb(255, 78, 78)"
+                        size={10}
+                      />
+                    </span>
+                  )}
                 {tab.name}
                 {!!filteredSessions.length &&
                   tab.url === "/student/feedback" && (
@@ -405,6 +435,62 @@ const Header = () => {
           <IoChevronForwardOutline color="#47c176" size={30} />
         </div>
       )}
+      <div className="position-relative d-flex align-items-center h-100 m-2" style={{ color: "white" }}>
+        <BiBell size={30}
+          style={{ cursor: "pointer", transition: "transform 0.3s ease-in-out" }}
+          onClick={() => setIsNotifyOpen(!isNotifyOpen)}
+        />
+        <span
+          style={{
+            position: "absolute",
+            top: "10px",
+            right: "5px",
+            width: "8px",
+            height: "8px",
+            backgroundColor: "red",
+            borderRadius: "50%",
+          }}
+        ></span>
+        <div
+          className={`position-absolute shadow border rounded`}
+          style={{
+            top: "50px",
+            right: "-30px",
+            width: "300px",
+            overflow: "auto",
+            maxHeight: isNotifyOpen ? "200px" : "0",
+            transition: "max-height 0.3s ease-in-out",
+            color: "white",
+            background: "#212f3c",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              top: "-10px",
+              right: "40px",
+              width: "0",
+              height: "0",
+              borderLeft: "10px solid transparent",
+              borderRight: "10px solid transparent",
+              borderBottom: "10px solid #212f3c",
+              zIndex: "1",
+              display: isNotifyOpen ? "block" : "none",
+            }}
+          ></div>
+          <div className="d m-0 p-2">
+            {notifications.map((notification, index) => (
+              <div key={index} className="p-2 border-bottom">
+                <strong>{notification.doerName}</strong>
+                <br />
+                <span>{notification.message}</span>
+                <br />
+                <small className="text-muted">{showDate(notification.date, wholeDateFormat)}</small>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
       <TabInfoVideoToast
         video={tabs.find((tab) => tab.url === isOpen)?.video}
         isOpen={isOpen}

@@ -17,10 +17,13 @@ import discountReducer from './tutor/discount.js'
 import accountingReducer from './tutor/accounting.js'
 import studentbankReducer from './student/accounting.js'
 import studentMissingFieldsReducer from './student/mandatoryStudentFieldsInTabs.js'
+import notificationReducer from './common/notifications.js'
+
 
 let store = configureStore({
   reducer: {
     user: userReducer,
+    notifications: notificationReducer,
 
     selectedTutor: selectedTutorReducer,
     studentSessions: studentSessionsReducer,

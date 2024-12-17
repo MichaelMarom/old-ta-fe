@@ -28,6 +28,7 @@ import facultiesVideo from "../../assets/videos/faculties.mp4";
 import setupVideo from "../../assets/videos/setup.mp4";
 import marketplaceVideo from "../../assets/videos/marketplace.mp4";
 import { PiVideoBold } from "react-icons/pi";
+import { socket } from '../../config/socket'
 
 import TabInfoVideoToast from "../../components/common/TabInfoVideoToast";
 import Avatar from "../../components/common/Avatar";
@@ -35,7 +36,9 @@ import { showDate } from "../../utils/moment";
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
 import { setLessons } from "../../redux/student/studentBookings";
 import { BiBell } from "react-icons/bi";
-import axios from "axios";
+import { showNotification, subscribeToPushNotifications } from "../../axios/common";
+import { toast } from "react-toastify";
+import FloatingMessage from "../../components/common/FloatingMessages";
 
 const Header = () => {
   const { signOut } = useClerk();
@@ -56,6 +59,8 @@ const Header = () => {
   const profileDropdownRef = useRef(null);
   const [isNotifyOpen, setIsNotifyOpen] = useState(false);
   const scrollStep = 500; // Adjust the scroll step as needed
+
+  const [incomingNotificationMessage, setIncomingNotificationMessage] = useState({})
 
   useEffect(() => {
     const checkOverflow = () => {
@@ -86,25 +91,35 @@ const Header = () => {
             applicationServerKey: "BH733_egaibxYA5wW3Q5A7YTTBcbVYf38CtYMh19-FOVhthiWEShSNztddrhf6JJEPoiqMFBLVEReLLyEf4c03I",
           });
           console.log(subscription)
-
-          const res = await axios.post("http://localhost:9876/subscribe", subscription   );
-          const ded = await axios("http://localhost:9876/send-notification", {
-            method: "POST",
-            body: subscription,
-            headers: {
-              "content-type": "application/json",
+          const notificationPayload = {
+            title: "New Notification",
+            body: "This is a new notification",
+            icon: "https://rsfunctionapp9740.blob.core.windows.net/tutoring-academy-tutor-imgs/asiyab4dfa73-b2841097-0760-4929-afe8-1218f8fb7aac-4-thispersondoesnotexist.png",
+            data: {
+              url: "https://tutoring-academy.com",
             },
-          })
-
-          // const data = await data.json();
-          console.log( res, subscription);
+          };
+          const res = await subscribeToPushNotifications(subscription)
+          const ded = await showNotification(notificationPayload)
+          console.log(res, subscription);
         }
         catch (error) {
-          console.log("Error subscribing to push notifications", error);
+          toast.error("Error subscribing to push notifications", error);
         }
       };
       handleServiceWorker();
     }
+  }, []);
+
+  useEffect(() => {
+    socket.on('notification', (data) => {
+      // toast.info(data.message)
+      setIncomingNotificationMessage({  title:data.title, message: data.message})
+    });
+
+    return () => {
+      socket.off('notification');
+    };
   }, []);
 
   const handleScrollLeft = () => {
@@ -246,6 +261,14 @@ const Header = () => {
 
   return (
     <div className="tutor-tab-header shadow-sm">
+      <div>
+        {incomingNotificationMessage.title && (
+          <FloatingMessage
+            message={incomingNotificationMessage}
+            setIncomingNotificationMessage={setIncomingNotificationMessage}
+          />
+        )}
+      </div>
       <div
         ref={profileDropdownRef}
         className={`screen-name position-relative flex-column px-1 gap-2`}

@@ -14,12 +14,12 @@ self.addEventListener("push", (event) => {
     },
   };
   self.registration.showNotification(title, notificationOptions)
-  self.registration.sendNotification("My notifcaton", {
-    title: "New Notification",
-    body: "This is a new notification",
-    icon: "https://rsfunctionapp9740.blob.core.windows.net/tutoring-academy-tutor-imgs/asiyab4dfa73-b2841097-0760-4929-afe8-1218f8fb7aac-4-thispersondoesnotexist.png",
-    data: {
-      url: "https://tutoring-academy.com",
-    }
-  });
+  // self.registration.sendNotification("My notifcaton", {
+  //   title: "New Notification",
+  //   body: "This is a new notification",
+  //   icon: "https://rsfunctionapp9740.blob.core.windows.net/tutoring-academy-tutor-imgs/asiyab4dfa73-b2841097-0760-4929-afe8-1218f8fb7aac-4-thispersondoesnotexist.png",
+  //   data: {
+  //     url: "https://tutoring-academy.com",
+  //   }
+  // });
 });

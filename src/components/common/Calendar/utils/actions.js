@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import { addInvoiceDetails } from "../../../../axios/student";
 import { generateRandomId } from "../../../../utils/common";
 import { calculateDiscount } from "./calenderUtils";
+import { socket } from "../../../../config/socket";
 
 export const handlePostpone = (
   setIsTutorSideSessionModalOpen,
@@ -19,7 +20,8 @@ export const handlePostpone = (
   clickedSlot,
   setDisableHourSlots,
   disableHourSlots,
-  navigate
+  navigate,
+
 ) => {
   setIsTutorSideSessionModalOpen(false);
   handleDisableSlot(
@@ -33,6 +35,7 @@ export const handlePostpone = (
   toast.success(
     "You have Successfully sent Postpone request! You are redirecting to Chat Page to Talk to your subject's student About this."
   );
+  socket.emit("postpone_request", { title: "Meeting Postponed", recieverId: clickedSlot.studentId, doerName:clickedSlot.tutorScreenName})
   setTimeout(() => {
     navigate(`/tutor/chat`);
   }, 4000);

@@ -28,3 +28,41 @@ export const updateFieldUsingIdColumn = async (id, tableName, fields) => {
     showErrorToast(err);
   }
 };
+
+
+export const subscribeToPushNotifications = async (subscription) => {
+  try {
+    const response = await apiClient.post('/subscribe', subscription);
+    return response.data;
+  } catch (err) {
+    showErrorToast(err);
+  }
+}
+
+export const showNotification = async (notificationObj) => {
+  try {
+    const response = await apiClient.post('/send-notification', notificationObj);
+    return response.data;
+  } catch (err) {
+    showErrorToast(err);
+  }
+}
+
+export const post_notification = async (notification) => {
+  try {
+    const response = await apiClient.post('/notification', notification);
+    return response.data;
+  } catch (err) {
+    showErrorToast(err);
+  }
+}
+
+export const update_notification = async (id, body) => {
+  try {
+    const response = await apiClient.put(`/notification/${id}`, body);
+    return response.data;
+  } catch (err) {
+    showErrorToast(err);
+  }
+}
+

@@ -417,7 +417,7 @@ const ShowCalendar = ({
 
 
   useEffect(() => {
-    if (clickedSlot.id && !isPastDate(convertToDate(clickedSlot.end)) && clickedSlot.request !== 'delete')
+    if (clickedSlot.id && !isPastDate(convertToDate(clickedSlot.end)) && clickedSlot.request !== 'delete' && isStudentLoggedIn)
       toast.info("To postpone the selected (blinking) booked lesson, click on an empty slot! Your tutor will receive a notice.")
   }, [clickedSlot.id])
 
