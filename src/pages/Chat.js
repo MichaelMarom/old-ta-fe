@@ -18,8 +18,7 @@ import { setChats } from "../redux/chat/chat";
 import Actions from "../components/common/Actions";
 import Loading from "../components/common/Loading";
 import Recomendation from "../components/Chat/Recomendation";
-import { send_email, send_temaplted_email } from "../axios/admin";
-import { throttle } from 'lodash';
+import { send_temaplted_email } from "../axios/admin";
 
 function Chat() {
   const [selectedChat, setSelectedChat] = useState({});
@@ -36,7 +35,7 @@ function Chat() {
   const [arrivalMsg, setArrivalMsg] = useState(null);
   const [fetchingMessages, setFetchingMessages] = useState(false);
   const loggedInRole = studentLoggedIn ? "student" : "tutor";
-  const [recentMessages, setRecentMessages] = useState([])
+  const [isTyping, setIsTyping] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -198,7 +197,7 @@ function Chat() {
     }
 
     if (messagesToSend?.length > 0) {
-    sendMessagesToEmail(messagesToSend, files)
+      sendMessagesToEmail(messagesToSend, files)
 
       setMessages((prevMessages) => [...prevMessages, ...messagesToSend]);
     }
@@ -217,34 +216,46 @@ function Chat() {
     if (socket) {
       // Remove any previous listener for these events
       socket.off("msg-recieve");
+      socket.off("typing");
+      socket.off("stop-typing");
       socket.off("online");
       socket.off("offline");
-  
+
       // Attach new event listeners
       socket.on("msg-recieve", (msgObj) => {
         setArrivalMsg(msgObj);
       });
-  
+
+      socket.on("userTyping", (data) => {
+        if (loggedInUserDetail.AcademyId && data.typingUserId !== loggedInUserDetail.AcademyId) {
+          setIsTyping(data.isTyping);
+        }
+      });
+
+      // socket.on("stop-typing", (chatId) => {
+      //   if (chatId === selectedChat.id) {
+      //     setIsTyping(false);
+      //   }
+      // });
+
       socket.on("online", (id) => {
-        console.log(id, loggedInUserDetail.AcademyId, "online");
         dispatch(setChats(loggedInUserDetail.AcademyId, loggedInRole));
       });
-  
+
       socket.on("offline", (id, role, action) => {
-        console.log(id, loggedInUserDetail.AcademyId,role, "offline");
         set_online_status(0, id, role);
         dispatch(setChats(loggedInUserDetail.AcademyId, loggedInRole));
       });
-  
-      // Cleanup function to remove listeners when component unmounts
+
       return () => {
         socket.off("msg-recieve");
+        socket.off("typing");
+        socket.off("stop-typing");
         socket.off("online");
         socket.off("offline");
       };
     }
-  }, [loggedInUserDetail, loggedInRole, socket]);
-  
+  }, [loggedInUserDetail, loggedInRole, socket, selectedChat.id]);
 
   useEffect(() => {
     setFetchingMessages(true);
@@ -287,12 +298,12 @@ function Chat() {
                 discussionData={chats}
                 selectedChat={selectedChat}
               />
-              <div className="ks-messages  ks-messenger__messages" style={{width:"50%"}}>
+              <div className="ks-messages  ks-messenger__messages" style={{ width: "50%" }}>
                 {!params.id ? (
                   <NoChatSelectedScreen />
                 ) : (
                   <>
-                    <Header selectedChat={selectedChat} />
+                    <Header selectedChat={selectedChat} isTyping={isTyping} />
                     <Messages
                       selectedChat={selectedChat}
                       files={files}
@@ -301,6 +312,7 @@ function Chat() {
                     />
                     <SendMessage
                       selectedChat={selectedChat}
+                      loggedInUserDetail={loggedInUserDetail}
                       messages={messages}
                       setMessages={setMessages}
                       files={files}
