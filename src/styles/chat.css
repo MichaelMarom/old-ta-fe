@@ -949,8 +949,8 @@
   
   .dot-animation {
     display: inline-block;
-    width: 6px;
-    height: 6px;
+    width: 4px;
+    height: 4px;
     margin-left: 2px;
     background-color: #000;
     border-radius: 50%;

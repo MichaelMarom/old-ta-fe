@@ -119,7 +119,6 @@ function EventModal({
     }
     else {
       handleBulkEventCreate(
-        selectedType,
         dispatch,
         student,
         selectedTutor,

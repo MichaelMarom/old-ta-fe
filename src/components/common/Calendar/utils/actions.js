@@ -21,7 +21,6 @@ export const handlePostpone = (
   setDisableHourSlots,
   disableHourSlots,
   navigate,
-
 ) => {
   setIsTutorSideSessionModalOpen(false);
   handleDisableSlot(
@@ -35,7 +34,11 @@ export const handlePostpone = (
   toast.success(
     "You have Successfully sent Postpone request! You are redirecting to Chat Page to Talk to your subject's student About this."
   );
-  socket.emit("postpone_request", { title: "Meeting Postponed", recieverId: clickedSlot.studentId, doerName:clickedSlot.tutorScreenName})
+  socket.emit("postpone_request", {
+    title: "Meeting Postponed",
+    recieverId: clickedSlot.studentId,
+    doerName: clickedSlot.tutorScreenName
+  })
   setTimeout(() => {
     navigate(`/tutor/chat`);
   }, 4000);
@@ -86,7 +89,6 @@ export const handleDisableSlot = (
 // TODO: check params
 // Function to handle bulk event creation
 export const handleBulkEventCreate = async (
-  type,
   dispatch,
   student,
   selectedTutor,
@@ -109,7 +111,7 @@ export const handleBulkEventCreate = async (
     })
   ) {
     return toast.warning(
-      ` Your intro session must be conducted first for the "${selectedTutor.subject}" LESSON`
+      `Your intro session must be conducted first for the "${selectedTutor.subject}" LESSON`
     );
   }
   // //feedback missing
@@ -178,6 +180,7 @@ export const handleBulkEventCreate = async (
       InvoiceDate: moment().utc()
     }
     dispatch(postStudentBookingWithInvoiceAndLessons(invoice, updatedSelectedSlots));
+    // socket.emit("postLessonsEvent",{} )
   } else if (selectedSlots[0].type === "booked") {
     const invoice = {
       InvoiceId: generateRandomId(),

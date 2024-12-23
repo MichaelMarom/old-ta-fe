@@ -5,7 +5,6 @@ import "../styles/chat.css";
 import SendMessage from "../components/Chat/SendMessage";
 import { Header } from "../components/Chat/Header";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import CommonLayout from "../layouts/CommonLayout";
 import { NoChatSelectedScreen } from "../components/Chat/NoChatSelectedScreen";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -214,10 +213,9 @@ function Chat() {
 
   useEffect(() => {
     if (socket) {
-      // Remove any previous listener for these events
       socket.off("msg-recieve");
-      socket.off("typing");
-      socket.off("stop-typing");
+      socket.off("userTyping");
+      // socket.off("stop-typing");
       socket.off("online");
       socket.off("offline");
 
@@ -227,7 +225,10 @@ function Chat() {
       });
 
       socket.on("userTyping", (data) => {
-        if (loggedInUserDetail.AcademyId && data.typingUserId !== loggedInUserDetail.AcademyId) {
+        console.log(loggedInUserDetail, data)
+        if (loggedInUserDetail.AcademyId &&
+          data.typingUserId !== loggedInUserDetail.AcademyId &&
+          data.chatId === selectedChat.id) {
           setIsTyping(data.isTyping);
         }
       });
@@ -249,8 +250,8 @@ function Chat() {
 
       return () => {
         socket.off("msg-recieve");
-        socket.off("typing");
-        socket.off("stop-typing");
+        socket.off("userTyping");
+        // socket.off("stop-typing");
         socket.off("online");
         socket.off("offline");
       };

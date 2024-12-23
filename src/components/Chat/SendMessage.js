@@ -18,17 +18,17 @@ function SendMessage({ sendMessage, setFiles, files, selectedChat, loggedInUserD
   }
 
   const handleTyping = () => {
-    console.log(loggedInUserDetail)
+    console.log(loggedInUserDetail, selectedChat)
     // if (!isTyping) {
-      // setIsTyping(true);
-      socket.emit('typing', {chatId:selectedChat.id, typingUserId:loggedInUserDetail?.AcademyId, isTyping:true});
+    // setIsTyping(true);
+    socket.emit('typing', { chatId: selectedChat.id, typingUserId: loggedInUserDetail?.AcademyId, isTyping: true });
 
     // }
 
     // Stop typing after 1 second of inactivity
     setTimeout(() => {
       // setIsTyping(false);
-      socket.emit('typing', {chatId:selectedChat.id, typingUserId:loggedInUserDetail?.AcademyId, isTyping:false});
+      socket.emit('typing', { chatId: selectedChat.id, typingUserId: loggedInUserDetail?.AcademyId, isTyping: false });
 
     }, 3000);
   };
@@ -40,8 +40,6 @@ function SendMessage({ sendMessage, setFiles, files, selectedChat, loggedInUserD
 
   const handleFileChange = (e, type) => {
     const file = e.target.files[0];
-console.log(loggedInUserDetail)
-
     setSendingFilesOpen(false)
     if (file) {
       setFiles((prevFiles) => ({
@@ -73,7 +71,8 @@ console.log(loggedInUserDetail)
         </div>}
       </div>
       <input type="text" className="form-control m-0 border-0" placeholder="Type Message...."
-        onChange={(e) => {setText(e.target.value);
+        onChange={(e) => {
+          setText(e.target.value);
           handleTyping()
         }} value={text} />
       <button className="btn btn-outline-success m-0" type="button"
