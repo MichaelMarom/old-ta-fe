@@ -3,13 +3,11 @@ import { moment } from "../../../../config/moment";
 import { convertToDate } from "../Calendar";
 import {
   postStudentBookingWithInvoiceAndLessons,
-  postSTudentBookingWithInvoiceAndLessons,
   postStudentLesson,
   updateStudentLesson,
 } from "../../../../redux/student/studentBookings";
 import { FeedbackMissing } from "../ToastMessages";
 import { toast } from "react-toastify";
-import { addInvoiceDetails } from "../../../../axios/student";
 import { generateRandomId } from "../../../../utils/common";
 import { calculateDiscount } from "./calenderUtils";
 import { socket } from "../../../../config/socket";
@@ -180,7 +178,12 @@ export const handleBulkEventCreate = async (
       InvoiceDate: moment().utc()
     }
     dispatch(postStudentBookingWithInvoiceAndLessons(invoice, updatedSelectedSlots));
-    // socket.emit("postLessonsEvent",{} )
+    socket.emit("newLessonsEvent", {
+      doerName: student.FirstName,
+      title: "New Intro Lesson",
+      message: "New Lesson Booked By student. Go to your calendar and contact your student fro further details",
+      recieverId: selectedTutor.academyId
+    })
   } else if (selectedSlots[0].type === "booked") {
     const invoice = {
       InvoiceId: generateRandomId(),
@@ -191,6 +194,12 @@ export const handleBulkEventCreate = async (
         calculateDiscount(lessons, selectedSlots, selectedTutor, student) : 0,
       InvoiceDate: moment().utc()
     }
+    socket.emit("newLessonsEvent", {
+      doerName: student.FirstName,
+      title: "New Booked Lesson",
+      message: "New Lesson Booked By student. Go to your calendar and contact your student fro further details",
+      recieverId: selectedTutor.academyId
+    })
     dispatch(postStudentBookingWithInvoiceAndLessons(invoice, updatedSelectedSlots));
   }
   else {

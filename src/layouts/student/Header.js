@@ -165,7 +165,7 @@ const Header = () => {
   useEffect(() => {
     socket.on('notification', (data) => {
       // toast.info(data.doerName)
-    dispatch(  setNotifications([...notifications, {...data, date: new Date()}]))
+      dispatch(setNotifications([...notifications, { ...data, date: new Date() }]))
       setIncomingNotificationMessage({ title: data.title, message: data.message, doerName: data.doerName });
     });
 

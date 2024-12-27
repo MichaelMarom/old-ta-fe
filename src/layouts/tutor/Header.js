@@ -39,6 +39,7 @@ import { BiBell } from "react-icons/bi";
 import { showNotification, subscribeToPushNotifications } from "../../axios/common";
 import { toast } from "react-toastify";
 import FloatingMessage from "../../components/common/FloatingMessages";
+import { setNotifications } from "../../redux/common/notifications";
 
 const Header = () => {
   const { signOut } = useClerk();
@@ -51,6 +52,8 @@ const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [profileDropdownOpened, setProfileDropdownOpened] = useState(false);
   const [isOverflowing, setIsOverflowing] = useState(false);
+  const { notifications } = useSelector((state) => state.notifications);
+
   const dispatch = useDispatch();
 
   const { missingFields } = useSelector((state) => state.missingFields);
@@ -114,7 +117,8 @@ const Header = () => {
   useEffect(() => {
     socket.on('notification', (data) => {
       // toast.info(data.message)
-      setIncomingNotificationMessage({  title:data.title, message: data.message})
+      dispatch(setNotifications([...notifications, { ...data, date: new Date() }]))
+      setIncomingNotificationMessage({ title: data.title, message: data.message, doerName: data.doerName });
     });
 
     return () => {
@@ -191,28 +195,29 @@ const Header = () => {
     { url: "/collab", name: "Collaboration", common: true, video: collabVideo },
     { url: `/tutor/tutor-profile/${tutor.AcademyId}`, name: "Profile" },
   ];
-  const notifications = [
-    {
-      name: "John Doe",
-      text: "Liked your post.",
-      date: "2024-12-11",
-    },
-    {
-      name: "Jane Smith",
-      text: "Commented on your picture.",
-      date: "2024-12-10",
-    },
-    {
-      name: "Alex Johnson",
-      text: "Sent you a friend request.",
-      date: "2024-12-09",
-    },
-    {
-      name: "Emily Davis",
-      text: "Shared your post.",
-      date: "2024-12-08",
-    },
-  ];
+
+  // const notifications = [
+  //   {
+  //     name: "John Doe",
+  //     text: "Liked your post.",
+  //     date: "2024-12-11",
+  //   },
+  //   {
+  //     name: "Jane Smith",
+  //     text: "Commented on your picture.",
+  //     date: "2024-12-10",
+  //   },
+  //   {
+  //     name: "Alex Johnson",
+  //     text: "Sent you a friend request.",
+  //     date: "2024-12-09",
+  //   },
+  //   {
+  //     name: "Emily Davis",
+  //     text: "Shared your post.",
+  //     date: "2024-12-08",
+  //   },
+  // ];
 
   const StatusValues = {
     "under-review": "Under Review",
@@ -595,11 +600,11 @@ const Header = () => {
           <div className="d m-0 p-2">
             {notifications.map((notification, index) => (
               <div key={index} className="p-2 border-bottom">
-                <strong>{notification.name}</strong>
+                <strong>{notification.doerName}</strong>
                 <br />
-                <span>{notification.text}</span>
+                <span>{notification.message}</span>
                 <br />
-                <small className="text-muted">{notification.date}</small>
+                <small className="text-muted">{showDate(notification.date, wholeDateFormat)}</small>
               </div>
             ))}
           </div>
