@@ -8,7 +8,7 @@ import {
 } from "../../../../redux/student/studentBookings";
 import { FeedbackMissing } from "../ToastMessages";
 import { toast } from "react-toastify";
-import { generateRandomId } from "../../../../utils/common";
+import { emitSocketNotification, generateRandomId } from "../../../../utils/common";
 import { calculateDiscount } from "./calenderUtils";
 import { socket } from "../../../../config/socket";
 
@@ -32,11 +32,21 @@ export const handlePostpone = (
   toast.success(
     "You have Successfully sent Postpone request! You are redirecting to Chat Page to Talk to your subject's student About this."
   );
-  socket.emit("postpone_request", {
-    title: "Meeting Postponed",
-    recieverId: clickedSlot.studentId,
-    doerName: clickedSlot.tutorScreenName
-  })
+
+  // socket.emit("postpone_request", {
+  //   title: "Meeting Postponed",
+  //   recieverId: clickedSlot.studentId,
+  //   doerName: clickedSlot.tutorScreenName
+  // })
+  emitSocketNotification("postpone_request",
+    clickedSlot.studentId,
+    clickedSlot.tutorScreenName,
+    "Meeting Postponed",
+    "lesson pospone request",
+    "tutor",
+    clickedSlot.tutorId
+  )
+
   setTimeout(() => {
     navigate(`/tutor/chat`);
   }, 4000);
@@ -178,12 +188,23 @@ export const handleBulkEventCreate = async (
       InvoiceDate: moment().utc()
     }
     dispatch(postStudentBookingWithInvoiceAndLessons(invoice, updatedSelectedSlots));
-    socket.emit("newLessonsEvent", {
-      doerName: student.FirstName,
-      title: "New Intro Lesson",
-      message: "New Lesson Booked By student. Go to your calendar and contact your student fro further details",
-      recieverId: selectedTutor.academyId
-    })
+
+    // socket.emit("newLessonsEvent", {
+    //   doerName: student.FirstName,
+    //   title: "New Intro Lesson",
+    //   message: "New Lesson Booked By student. Go to your calendar and contact your student fro further details",
+    //   recieverId: selectedTutor.academyId
+    // })
+
+    emitSocketNotification("newLessonsEvent",
+      selectedTutor.academyId,
+      student.FirstName,
+      "New Intro Lesson",
+      "New Lesson Booked By student. Go to your calendar and contact your student fro further details",
+      "student",
+      student.AcademyId
+    )
+
   } else if (selectedSlots[0].type === "booked") {
     const invoice = {
       InvoiceId: generateRandomId(),
@@ -194,12 +215,20 @@ export const handleBulkEventCreate = async (
         calculateDiscount(lessons, selectedSlots, selectedTutor, student) : 0,
       InvoiceDate: moment().utc()
     }
-    socket.emit("newLessonsEvent", {
-      doerName: student.FirstName,
-      title: "New Booked Lesson",
-      message: "New Lesson Booked By student. Go to your calendar and contact your student fro further details",
-      recieverId: selectedTutor.academyId
-    })
+    emitSocketNotification("newLessonsEvent",
+      selectedTutor.academyId,
+      student.FirstName,
+      "New Booked Lesson",
+      "New Lesson Booked By student. Go to your calendar and contact your student fro further details",
+      "student",
+      student.AcademyId
+    )
+    // socket.emit("newLessonsEvent", {
+    //   doerName: student.FirstName,
+    //   title: "New Booked Lesson",
+    //   message: "New Lesson Booked By student. Go to your calendar and contact your student fro further details",
+    //   recieverId: selectedTutor.academyId
+    // })
     dispatch(postStudentBookingWithInvoiceAndLessons(invoice, updatedSelectedSlots));
   }
   else {

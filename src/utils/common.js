@@ -1,6 +1,7 @@
 import _ from "lodash";
-import { toast } from "react-toastify";
+import { socket } from "../config/socket"
 import moment from "moment";
+import { post_notification } from "../axios/common";
 
 export const formatName = (firstName, lastName) => {
   return `${firstName} ${lastName[0].toUpperCase()}.`;
@@ -104,11 +105,11 @@ export const unsavedChangesHelper = (fieldValues, tutor) => {
     (tutor.ZipCode !== undefined &&
       fieldValues.zipCode !== undefined &&
       tutor.ZipCode !== fieldValues.zipCode) ||
-      (tutor.VacationMode !== undefined &&
-        fieldValues.vacation_mode !== undefined &&
-        tutor.VacationMode !== fieldValues.vacation_mode) 
-        // (tutor.StartVacation !== undefined && fieldValues.start !== undefined && tutor.StartVacation !== fieldValues.start) ||
-        // (tutor.EndVacation !== undefined && fieldValues.end !== undefined && tutor.EndVacation !== fieldValues.end) 
+    (tutor.VacationMode !== undefined &&
+      fieldValues.vacation_mode !== undefined &&
+      tutor.VacationMode !== fieldValues.vacation_mode)
+    // (tutor.StartVacation !== undefined && fieldValues.start !== undefined && tutor.StartVacation !== fieldValues.start) ||
+    // (tutor.EndVacation !== undefined && fieldValues.end !== undefined && tutor.EndVacation !== fieldValues.end) 
   );
 };
 
@@ -198,7 +199,19 @@ export function generateRandomId(length = 10) {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
   for (let i = 0; i < length; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return `${Date.now()}-${result}`;
+}
+
+
+export const emitSocketNotification = (name, receiverId, doerName, title, message,role, senderId) => {
+  post_notification({senderId, receiverId, name:title, text:message, date: new Date(), role})
+  
+  socket.emit(name, {
+    title,
+    receiverId,
+    doerName,
+    message
+  })
 }

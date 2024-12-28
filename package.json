@@ -86,6 +86,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "eslint-plugin-import": "^2.31.0",
     "gh-pages": "^5.0.0",
     "surge": "^0.23.1"
   }

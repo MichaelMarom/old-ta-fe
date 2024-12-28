@@ -38,16 +38,16 @@ const Feedback = lazy(() => import('../pages/student/Feedback'));
 const SingleTutorFeedbacks = lazy(() => import('../pages/student/SingleTutorFeedbacks'));
 
 // admin components
-const AdminAccounting = lazy(() => import('../pages/admin/AdminAccounting'))
-const TutorNewSubject = lazy(() => import('../pages/admin/NewSubject'));
-const TutorTable = lazy(() => import('../pages/admin/Tutor'));
-const AddSMSMessages = lazy(() => import('../pages/admin/Marketing/AddSMSTemps'));
-const StudentTable = lazy(() => import('../pages/admin/Student'));
-const AdminChat = lazy(() => import('../pages/admin/Chat'));
-const EmailList = lazy(() => import('../pages/admin/EmailTemplates/List'));
-const EmailTempCreate = lazy(() => import('../pages/admin/EmailTemplates/Create'));
-const EmailTempEdit = lazy(() => import('../pages/admin/EmailTemplates/Edit'));
-const Send = lazy(() => import('../pages/admin/Marketing/Send'));
+const AdminAccounting = lazy(() => import('../pages/Admin/AdminAccounting'))
+const TutorNewSubject = lazy(() => import('../pages/Admin/NewSubject'));
+const TutorTable = lazy(() => import('../pages/Admin/Tutor'));
+const AddSMSMessages = lazy(() => import('../pages/Admin/Marketing/AddSMSTemps'));
+const StudentTable = lazy(() => import('../pages/Admin/Student'));
+const AdminChat = lazy(() => import('../pages/Admin/Chat'));
+const EmailList = lazy(() => import('../pages/Admin/EmailTemplates/List'));
+const EmailTempCreate = lazy(() => import('../pages/Admin/EmailTemplates/Create'));
+const EmailTempEdit = lazy(() => import('../pages/Admin/EmailTemplates/Edit'));
+const Send = lazy(() => import('../pages/Admin/Marketing/Send'));
 
 // common components
 const Login = lazy(() => import('../pages/Login'));
@@ -58,7 +58,6 @@ const Bids = lazy(() => import('../pages/student/MarketPlace/Bids'));
 const Ads = lazy(() => import('../pages/student/MarketPlace/Ad'));
 const StudentAdList = lazy(() => import('../pages/student/MarketPlace/StudentAdList'));
 const EditAd = lazy(() => import('../pages/student/MarketPlace/EditAd'));
-
 
 const rolePermissions = {
   tutor: [
