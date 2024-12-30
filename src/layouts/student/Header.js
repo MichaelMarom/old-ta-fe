@@ -29,6 +29,7 @@ import { toast } from "react-toastify";
 import FloatingMessage from "../../components/common/FloatingMessages";
 import { BiBell } from "react-icons/bi";
 import { setNotifications } from "../../redux/common/notifications";
+import { get_user_notification } from "../../axios/common";
 
 const Header = () => {
   const { signOut } = useClerk();
@@ -134,6 +135,10 @@ const Header = () => {
     }
   };
 
+  useEffect(() => {
+    student.AcademyId && get_user_notification(student.AcademyId).then(result => !result?.data?.response && dispatch(setNotifications(result)))
+  }, [student.AcademyId])
+
   const handleSignOut = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("student_user_id");
@@ -165,6 +170,7 @@ const Header = () => {
   useEffect(() => {
     socket.on('notification', (data) => {
       // toast.info(data.doerName)
+      console.log(notifications, 'deidjei')
       dispatch(setNotifications([...notifications, { ...data, date: new Date() }]))
       setIncomingNotificationMessage({ title: data.title, message: data.message, doerName: data.doerName });
     });
@@ -172,7 +178,7 @@ const Header = () => {
     return () => {
       socket.off('notification');
     };
-  }, []);
+  }, [notifications]);
   console.log(notifications)
 
   return (
@@ -481,9 +487,9 @@ const Header = () => {
           <div className="d m-0 p-2">
             {notifications.map((notification, index) => (
               <div key={index} className="p-2 border-bottom">
-                <strong>{notification.doerName}</strong>
+                <strong>{notification.doerName || notification.TutorScreenname || notification.ScreenName}</strong>
                 <br />
-                <span>{notification.message}</span>
+                <span>{notification.message || notification.text}</span>
                 <br />
                 <small className="text-muted">{showDate(notification.date, wholeDateFormat)}</small>
               </div>

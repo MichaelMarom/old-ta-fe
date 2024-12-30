@@ -39,6 +39,7 @@ export const subscribeToPushNotifications = async (subscription) => {
   }
 }
 
+// web-push
 export const showNotification = async (notificationObj) => {
   try {
     const response = await apiClient.post('/send-notification', notificationObj);
@@ -60,6 +61,15 @@ export const post_notification = async (notification) => {
 export const update_notification = async (id, body) => {
   try {
     const response = await apiClient.put(`/notification/${id}`, body);
+    return response.data;
+  } catch (err) {
+    showErrorToast(err);
+  }
+}
+
+export const get_user_notification = async (userId) => {
+  try {
+    const response = await apiClient.get(`/notification/${userId}`);
     return response.data;
   } catch (err) {
     showErrorToast(err);

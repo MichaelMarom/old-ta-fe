@@ -210,7 +210,7 @@ export const emitSocketNotification = (name, receiverId, doerName, title, messag
   
   socket.emit(name, {
     title,
-    receiverId,
+    recieverId:receiverId,
     doerName,
     message
   })

@@ -36,7 +36,7 @@ import { showDate } from "../../utils/moment";
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
 import { setLessons } from "../../redux/student/studentBookings";
 import { BiBell } from "react-icons/bi";
-import { showNotification, subscribeToPushNotifications } from "../../axios/common";
+import { get_user_notification, showNotification, subscribeToPushNotifications } from "../../axios/common";
 import { toast } from "react-toastify";
 import FloatingMessage from "../../components/common/FloatingMessages";
 import { setNotifications } from "../../redux/common/notifications";
@@ -107,7 +107,8 @@ const Header = () => {
           console.log(res, subscription);
         }
         catch (error) {
-          toast.error("Error subscribing to push notifications", error);
+          console.log(error)
+          // toast.error("Error subscribing to push notifications", error);
         }
       };
       handleServiceWorker();
@@ -124,7 +125,7 @@ const Header = () => {
     return () => {
       socket.off('notification');
     };
-  }, []);
+  }, [notifications]);
 
   const handleScrollLeft = () => {
     if (scrollRef.current) {
@@ -263,6 +264,10 @@ const Header = () => {
     });
     setFilteredSessions(filteredSessions);
   }, [sessions]);
+
+  useEffect(() => {
+    tutor.AcademyId && get_user_notification(tutor.AcademyId).then(result => !result?.data?.response && dispatch(setNotifications(result)))
+  }, [tutor.AcademyId])
 
   return (
     <div className="tutor-tab-header shadow-sm">
@@ -600,9 +605,9 @@ const Header = () => {
           <div className="d m-0 p-2">
             {notifications.map((notification, index) => (
               <div key={index} className="p-2 border-bottom">
-                <strong>{notification.doerName}</strong>
+                <strong>{notification.doerName || notification.TutorScreenname || notification.ScreenName}</strong>
                 <br />
-                <span>{notification.message}</span>
+                <span>{notification.message || notification.text}</span>
                 <br />
                 <small className="text-muted">{showDate(notification.date, wholeDateFormat)}</small>
               </div>

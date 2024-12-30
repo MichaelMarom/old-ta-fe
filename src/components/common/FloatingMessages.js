@@ -5,9 +5,10 @@ const FloatingMessage = ({ message, setIncomingNotificationMessage }) => {
     const [isVisible, setIsVisible] = useState(true);
 
     useEffect(() => {
-        const timeout = setTimeout(() =>{
+        const timeout = setTimeout(() => {
             setIncomingNotificationMessage({})
-            setIsVisible(false)}, 5000); // Automatically hide after 5 seconds
+            setIsVisible(false)
+        }, 5000); // Automatically hide after 5 seconds
 
         return () => clearTimeout(timeout); // Cleanup on unmount
     }, []);
@@ -22,7 +23,14 @@ const FloatingMessage = ({ message, setIncomingNotificationMessage }) => {
         <div
             className="alert alert-warning mt-2 p-0 p-2"
             role="alert"
-            style={{ width: "400px", position: "fixed", top: "10px", left: "50%", transform: "translateX(-50%)", zIndex: 1050 }}
+            style={{
+                width: "400px",
+                position: "fixed",
+                top: "10px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                zIndex: 1050
+            }}
         >
             <div className="d-flex justify-content-between w-100 align-items-center">
                 <div className="d-flex flex-column">
@@ -34,7 +42,6 @@ const FloatingMessage = ({ message, setIncomingNotificationMessage }) => {
         </div>
     );
 };
-
 
 export default FloatingMessage;
 
