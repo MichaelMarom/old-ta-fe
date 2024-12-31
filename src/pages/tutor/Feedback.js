@@ -17,6 +17,7 @@ import Actions from "../../components/common/Actions";
 import FeedbackModal from "../../components/common/FeedbackModal";
 import Loading from "../../components/common/Loading";
 import { updateStudentLesson } from "../../redux/student/studentBookings";
+import { emitSocketNotification } from "../../utils/common";
 
 const Feedback = () => {
   const dispatch = useDispatch();
@@ -84,7 +85,7 @@ const Feedback = () => {
   }, []);
 
   useEffect(() => {
-    console.log( rawQuestions,  'questoon');
+    console.log(rawQuestions, 'questoon');
   }, [rawQuestions])
 
   const handleEmojiClick = async (id, star) => {
@@ -101,7 +102,7 @@ const Feedback = () => {
       setQuestionLoading(false);
     }
   };
-  
+
   useEffect(() => {
     if (selectedEvent.id) {
       setQuestionLoading(true);
@@ -136,7 +137,7 @@ const Feedback = () => {
         "Please answer all questions and write valuabe feedback to your tutor"
       );
 
-      const updatedLesson = { ...selectedEvent };
+    const updatedLesson = { ...selectedEvent };
     delete updatedLesson.photo;
 
     setFeedbackData([
@@ -170,6 +171,15 @@ const Feedback = () => {
         ratingByTutor: questions.reduce((sum, q) => q.star + sum, 0) / 5,
       })
     );
+
+    emitSocketNotification('notif_incoming',
+      updatedLesson.studentId,
+      updatedLesson.tutorScreenName,
+      "Feedback Recieved",
+      `You have recieved feedback for lesson on date: ${showDate(convertToDate(updatedLesson.start))}`,
+      "tutor",
+      updatedLesson.tutorId
+    )
 
     toast.success("Saved Successfully")
     setQuestions(rawQuestions);

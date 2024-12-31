@@ -16,6 +16,9 @@ import Loading from "../../components/common/Loading";
 import _ from "lodash";
 
 import FeedbackModal from "../../components/common/FeedbackModal";
+import { emitSocketNotification } from "../../utils/common";
+import { showDate } from "../../utils/moment";
+import { convertToDate } from "../../components/common/Calendar/Calendar";
 
 const Feedback = () => {
   // const { sessions } = useSelector((state) => state.studentSessions);
@@ -71,9 +74,6 @@ const Feedback = () => {
     }
   }, [sessionsFetched]);
 
-  console.log(rawQuestions, "rawQ");
-  console.log(questions, "queston");
-
   useEffect(() => {
     const getAllFeedbackQuestion = async () => {
       const data = await get_all_feedback_questions();
@@ -85,7 +85,7 @@ const Feedback = () => {
     };
     getAllFeedbackQuestion();
   }, []);
-  
+
 
   const handleEmojiClick = async (id, star) => {
     // Deep clone `questions` to avoid modifying `rawQuestions`
@@ -93,13 +93,13 @@ const Feedback = () => {
     const questionIndex = updatedQuestions.findIndex(
       (question) => question.SID === id
     );
-  
+
     if (questionIndex !== -1) {
       updatedQuestions[questionIndex].star = star;
       setQuestions(updatedQuestions);
     }
   };
-  
+
 
   const handleRowSelect = (event) => {
     setSelectedEvent(event);
@@ -178,8 +178,16 @@ const Feedback = () => {
       })
     );
 
+    emitSocketNotification('feedback_given_by_student',
+      updatedLesson.tutorId,
+      updatedLesson.studentName,
+      "Feedback Recieved",
+      `You have recieved feedback for lesson on date: ${showDate(convertToDate(updatedLesson.start))}`,
+      "student",
+      updatedLesson.studentId
+    )
+
     toast.success("Saved Successfully");
-    console.log(rawQuestions);
     setQuestions([...rawQuestions]);
     setSelectedEvent({});
     setComment("");

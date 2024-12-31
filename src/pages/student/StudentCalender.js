@@ -79,7 +79,7 @@ const StudentCalender = () => {
     }, [student]);
 
     const handleEventClick = (event) => {
-        if( student.AcademyId !== event.studentId) return toast.warning("You cannot see details of another student lesson")
+        if (student.AcademyId !== event.studentId) return toast.warning("You cannot see details of another student lesson")
         if (isPastDate(convertToDate(event.end))) {
             setClickedSlot(event);
             setIsModalOpen(true);
@@ -108,6 +108,16 @@ const StudentCalender = () => {
                 start,
                 end,
             }));
+
+            emitSocketNotification('notif_incoming',
+                clickedSlot.studentId,
+                clickedSlot.tutorScreenName,
+                "Lesson Postponed",
+                `Lesson has been posponed from date: ${clickedSlot.start} to date: ${showDate(convertToDate(start))}`,
+                "tutor",
+                clickedSlot.tutorId
+            )
+
             setClickedSlot({});
         }
     };

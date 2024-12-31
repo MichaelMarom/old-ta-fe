@@ -63,6 +63,16 @@ export const handleDeleteSessionByTutor = (
   dispatch(
     updateStudentLesson(clickedSlot.id, { ...clickedSlot, request: "delete" })
   );
+
+  emitSocketNotification('notif_incoming',
+    clickedSlot.studentId,
+    clickedSlot.tutorScreenName,
+    "Tutor Removed Lesson",
+    `Tutor has removed lesson on date: ${showDate(convertToDate(clickedSlot.start))}`,
+    "student",
+    clickedSlot.tutorId
+  )
+
   toast.success(
     "You have Successfully sent Delete request! You are redirecting to Chat Page to Talk to your subject's student About this."
   );

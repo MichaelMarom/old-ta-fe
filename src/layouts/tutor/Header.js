@@ -40,6 +40,7 @@ import { get_user_notification, showNotification, subscribeToPushNotifications }
 import { toast } from "react-toastify";
 import FloatingMessage from "../../components/common/FloatingMessages";
 import { setNotifications } from "../../redux/common/notifications";
+import { convertToDate } from "../../components/common/Calendar/Calendar";
 
 const Header = () => {
   const { signOut } = useClerk();
@@ -603,15 +604,26 @@ const Header = () => {
             }}
           ></div>
           <div className="d m-0 p-2">
-            {notifications.map((notification, index) => (
-              <div key={index} className="p-2 border-bottom">
-                <strong>{notification.doerName || notification.TutorScreenname || notification.ScreenName}</strong>
-                <br />
-                <span>{notification.message || notification.text}</span>
-                <br />
-                <small className="text-muted">{showDate(notification.date, wholeDateFormat)}</small>
-              </div>
-            ))}
+            {notifications
+              // ?.sort((a, b) => {
+              //   const dateA = convertToDate(a.date)?.getTime() || 0;
+              //   const dateB = convertToDate(b.date)?.getTime() || 0;
+              //   return dateB - dateA;
+              // })
+              .map((notification) => (
+                <div key={notification.id || notification.date || Math.random()} className="p-2 border-bottom">
+                  <strong>
+                    {notification.doerName || notification.TutorScreenname || notification.ScreenName || 'Unknown'}
+                  </strong>
+                  <br />
+                  <span>{notification.message || notification.text || 'No message available'}</span>
+                  <br />
+                  <small className="text-muted">
+                    {showDate(notification.date, wholeDateFormat) || 'Invalid date'}
+                  </small>
+                </div>
+              ))}
+
           </div>
         </div>
       </div>
